@@ -5,6 +5,7 @@ import fs from "node:fs";
 import path from "node:path";
 import { revalidatePath } from "next/cache";
 import { redirect } from "next/navigation";
+import { exportCuration } from "@/lib/curation";
 import { db, PROJECT_ROOT } from "@/lib/db";
 
 const s = (f: FormData, k: string) => {
@@ -25,6 +26,7 @@ export async function saveCompany(f: FormData) {
     dart_fs: s(f, "dart_fs")?.toUpperCase() ?? null,
     dart_segment: s(f, "dart_segment"),
   });
+  exportCuration(); // data/curation.json 갱신 → git push로 공유
   revalidatePath("/", "layout");
   redirect(`/admin/stocks/${encodeURIComponent(ticker)}`);
 }
@@ -33,6 +35,7 @@ export async function deleteCompany(f: FormData) {
   const t = s(f, "ticker")!;
   db().prepare("DELETE FROM mappings WHERE ticker=?").run(t);
   db().prepare("DELETE FROM companies WHERE ticker=?").run(t);
+  exportCuration(); // data/curation.json 갱신 → git push로 공유
   revalidatePath("/", "layout");
   redirect("/admin");
 }
@@ -49,11 +52,13 @@ export async function saveMapping(f: FormData) {
      ON CONFLICT(ticker, series_id) DO UPDATE SET role=@role, confidence=@confidence, rationale=@rationale,
        caveat=@caveat, include_in_total=@include_in_total, sort=@sort`,
   ).run(row);
+  exportCuration(); // data/curation.json 갱신 → git push로 공유
   revalidatePath("/", "layout");
 }
 
 export async function deleteMapping(f: FormData) {
   db().prepare("DELETE FROM mappings WHERE id=?").run(Number(f.get("mapping_id")));
+  exportCuration(); // data/curation.json 갱신 → git push로 공유
   revalidatePath("/", "layout");
 }
 
@@ -69,17 +74,20 @@ export async function saveSeries(f: FormData) {
     id: s(f, "id"), label: s(f, "label"), source: s(f, "source"), reporter: s(f, "reporter"), flow: s(f, "flow"),
     region: s(f, "region"), hs: s(f, "hs"), partner: s(f, "partner"), spec,
   });
+  exportCuration(); // data/curation.json 갱신 → git push로 공유
   revalidatePath("/admin");
 }
 
 export async function saveTag(f: FormData) {
   db().prepare("INSERT OR REPLACE INTO hs_tags (hs_prefix, ticker, note) VALUES (?,?,?)")
     .run(s(f, "hs_prefix"), s(f, "ticker"), s(f, "note"));
+  exportCuration(); // data/curation.json 갱신 → git push로 공유
   revalidatePath("/", "layout");
 }
 
 export async function deleteTag(f: FormData) {
   db().prepare("DELETE FROM hs_tags WHERE hs_prefix=? AND ticker=?").run(s(f, "hs_prefix"), s(f, "ticker"));
+  exportCuration(); // data/curation.json 갱신 → git push로 공유
   revalidatePath("/", "layout");
 }
 

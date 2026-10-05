@@ -6,7 +6,7 @@ import json
 import sys
 from datetime import datetime
 
-from etl import breaks, census, dart, dart_segment, estat, kcs, sec, seed, surge
+from etl import breaks, census, curation, dart, dart_segment, estat, kcs, sec, seed, surge
 from etl.db import connect
 
 
@@ -84,7 +84,10 @@ def fetch_financials(con):
 
 def main():
     con = connect()
-    log("1) 시드"); apply_seed(con)
+    if curation.load(con):
+        log("1) 큐레이션: data/curation.json 적용")
+    else:
+        log("1) 시드 → data/curation.json 생성"); apply_seed(con); curation.export(con)
     log("2) 시계열"); fetch_series(con)
     log("3) 분기 매출 (SEC·DART)"); fetch_financials(con)
     log("3-1) 통계 단절 탐지"); n = breaks.scan(con, log); con.commit(); log(f"  경고 {n}건")

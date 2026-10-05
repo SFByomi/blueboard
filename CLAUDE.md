@@ -3,6 +3,16 @@
 글로벌 세관 무역 데이터(미국·일본·한국)를 미국/한국 종목에 매핑해 실적을 먼저 읽는 사이트. 한국 투자자 대상, 한국어 UI.
 기획: PLAN.md · 실행법: README.md
 
+## 사용자·범위 (결정 사항)
+- 한국 투자자 대상, AI·반도체 중심. 보유/관심: MU, SNDK, LITE, BE, IREN, NBIS, RXRX, ARKG, INSM, 두산(전자BG CCL), 삼성전기(MLCC). 비교군 FN.
+- 주가·컨센서스는 사용자가 따로 봄 → 이 프로젝트 범위는 무역데이터 수집·검증·매핑.
+- 작업 환경: 윈도우 PC, 맥북, claude.ai/code 클라우드 세션을 오가며 작업 → 모든 상태는 GitHub(SFByomi/blueboard)로 공유.
+
+## 큐레이션 = data/curation.json (git이 원본)
+- 종목·시리즈·매핑·HS태그는 `data/curation.json`이 원본. DB는 캐시라 언제든 재생성.
+- 관리 페이지에서 수정 → 웹이 curation.json 자동 저장 → **작업 끝나면 commit·push** (다른 환경에서 pull 후 `etl.build`로 반영).
+- 코드로 큐레이션을 바꿀 때도 DB 수정 후 `etl.curation.export` 또는 json 직접 수정 → commit.
+
 ## 구조
 - `etl/` Python 수집기 → `data/yomin.db`(SQLite, git 미포함 — `python -m etl.build`로 재생성)
   - 큐레이션(companies·series·mappings·hs_tags)은 `seed.py`로 INSERT OR IGNORE → 이후 관리 페이지 편집이 우선
