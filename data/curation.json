@@ -45,7 +45,7 @@
    "name_ko": "블룸에너지",
    "market": "NYSE",
    "sector": "전력·연료전지",
-   "thesis": "SOFC 연료전지 — 데이터센터 온사이트 전력. 델라웨어·프리몬트 생산. 연료전지 HS코드 확인 필요.",
+   "thesis": "SOFC 연료전지 — 데이터센터 온사이트 전력. 델라웨어(뉴어크)·프리몬트 생산. 파워모듈은 HS 8501.32(DC 발전기 750W~75kW)로 수출 — 델라웨어발은 대부분 한국(블룸SK퓨얼셀)향. 미국 내 매출은 무역 데이터에 안 잡힘.",
    "sec_ticker": "BE",
    "fy_note": "FY 12월",
    "sort": 40,
@@ -324,6 +324,17 @@
    "spec": "{\"dataset\": \"exports/statehs\", \"hs\": \"854141\", \"filters\": {\"STATE\": \"CA\", \"CTY_CODE\": \"-\"}}"
   },
   {
+   "id": "us_exp_de_fuelcell",
+   "label": "델라웨어 연료전지 파워모듈(DC 발전기 750W~75kW) 수출",
+   "source": "census",
+   "reporter": "🇺🇸 미국",
+   "flow": "수출",
+   "region": "델라웨어",
+   "hs": "8501.32",
+   "partner": "전세계",
+   "spec": "{\"dataset\": \"exports/statehs\", \"hs\": \"850132\", \"filters\": {\"STATE\": \"DE\", \"CTY_CODE\": \"-\"}}"
+  },
+  {
    "id": "us_imp_all_dram",
    "label": "전체 DRAM(1GB 초과) 수입",
    "source": "census",
@@ -568,6 +579,16 @@
    "sort": 10
   },
   {
+   "ticker": "BE",
+   "series_id": "us_exp_de_fuelcell",
+   "role": "회사출하",
+   "confidence": "중간",
+   "rationale": "델라웨어 8501.32 수출은 주 기계·전기기기(84·85장) 수출 3위(2025년 1.26억 달러) — Bloom 뉴어크 공장 물량으로 추정. 2025년 92%가 한국향(블룸SK퓨얼셀 구미 조립).",
+   "caveat": "한국(SK에코플랜트) 채널만 보여줌 — 미국 데이터센터 매출은 안 잡혀 분기 매출과 상관 -0.12. 프로젝트 단위로 들쭉날쭉. 합산 제외.",
+   "include_in_total": 0,
+   "sort": 10
+  },
+  {
    "ticker": "FN",
    "series_id": "us_imp_th_transceiver",
    "role": "회사출하",
@@ -808,6 +829,11 @@
    "hs_prefix": "847330",
    "ticker": "NBIS",
    "note": "컴퓨터 부품·GPU 보드"
+  },
+  {
+   "hs_prefix": "850132",
+   "ticker": "BE",
+   "note": "연료전지 파워모듈(DC 발전기)"
   },
   {
    "hs_prefix": "850164",
