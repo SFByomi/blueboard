@@ -9,6 +9,7 @@
 import os
 import re
 import sys
+from urllib.parse import quote, unquote
 
 import psycopg
 from dotenv import load_dotenv
@@ -33,12 +34,23 @@ def tables(lite) -> list[str]:
     return [t for (t,) in lite.execute("SELECT name FROM sqlite_master WHERE type='table' AND name NOT LIKE 'sqlite_%' ORDER BY name")]
 
 
+def normalize_url(url: str) -> str:
+    """비밀번호의 @·# 등을 퍼센트 인코딩 — 사용자가 Supabase 비밀번호를 그대로 붙여 넣어도 동작하게.
+    호스트에는 @가 없으므로 마지막 @를 사용자정보 경계로 본다. 이미 인코딩된 값은 그대로 유지."""
+    m = re.match(r"^(postgres(?:ql)?://)(.*)@([^@]*)$", url)
+    if not m:
+        return url
+    scheme, userinfo, rest = m.groups()
+    user, sep, pw = userinfo.partition(":")
+    return f"{scheme}{user}{sep}{quote(unquote(pw), safe='')}@{rest}"
+
+
 def publish(url: str, log=print):
     lite = connect()
     for t in ("companies", "series", "observations"):  # 수집이 통째로 실패한 DB로 사이트를 비우지 않게
         if not lite.execute(f"SELECT count(*) FROM {t}").fetchone()[0]:
             sys.exit(f"{t} 테이블이 비어 있어 게시를 중단합니다 (etl.build 결과 확인)")
-    with psycopg.connect(url, prepare_threshold=None) as pg:  # 풀러(트랜잭션 모드)와 호환되게 prepared statement 끔
+    with psycopg.connect(normalize_url(url), prepare_threshold=None) as pg:  # 풀러(트랜잭션 모드)와 호환되게 prepared statement 끔
         with pg.transaction():
             ensure_schema(pg)
             for t in tables(lite):
