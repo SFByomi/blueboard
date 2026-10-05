@@ -1,0 +1,24 @@
+# 비밀키 — 절대 커밋 금지 (.env.example만 공유)
+.env
+.env.*
+!.env.example
+
+# Python
+.venv/
+__pycache__/
+*.pyc
+
+# 데이터: 원본 캐시·DB는 ETL로 재생성 (python -m etl.build)
+data/raw/
+data/*.db
+data/*.db-*
+data/etl.log
+
+# Web
+web/node_modules/
+web/.next/
+web/next-env.d.ts
+
+# 기타
+scaffold.log
+NVIDIA Corporation/

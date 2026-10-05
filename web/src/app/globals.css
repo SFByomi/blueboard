@@ -1,0 +1,46 @@
+@import "tailwindcss";
+
+:root {
+  --bg: #0b0e1c;
+  --panel: #141830;
+  --panel2: #1a1f3a;
+  --line: #272d4d;
+  --fg: #e6e8f2;
+  --muted: #8a90ad;
+  --accent: #7c86ff;
+  --up: #22c55e;
+  --down: #ef4444;
+  color-scheme: dark;
+}
+
+@theme inline {
+  --color-bg: var(--bg);
+  --color-panel: var(--panel);
+  --color-panel2: var(--panel2);
+  --color-line: var(--line);
+  --color-fg: var(--fg);
+  --color-muted: var(--muted);
+  --color-accent: var(--accent);
+  --color-up: var(--up);
+  --color-down: var(--down);
+  --font-sans: var(--font-noto), system-ui, sans-serif;
+  --font-mono: var(--font-mono-jb), ui-monospace, monospace;
+}
+
+body {
+  background: var(--bg);
+  color: var(--fg);
+}
+
+.card {
+  @apply rounded-2xl border border-line bg-panel p-5;
+}
+.input {
+  @apply w-full rounded-lg border border-line bg-panel2 px-3 py-2 text-sm outline-none focus:border-accent;
+}
+.btn {
+  @apply rounded-lg bg-accent px-3 py-2 text-sm font-medium text-white hover:opacity-90 disabled:opacity-50;
+}
+.btn-ghost {
+  @apply rounded-lg border border-line px-3 py-1.5 text-xs text-muted hover:text-fg;
+}

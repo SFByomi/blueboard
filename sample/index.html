@@ -1,0 +1,258 @@
+<!doctype html>
+<html lang="ko">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Yomin 종목 샘플</title>
+<link href="https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@400;500;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+<script src="https://cdnjs.cloudflare.com/ajax/libs/echarts/5.5.0/echarts.min.js"></script>
+<style>
+:root{--bg:#0b0e1c;--panel:#141830;--panel2:#1a1f3a;--line:#272d4d;--text:#e6e8f2;--muted:#8a90ad;--accent:#7c86ff;--up:#22c55e;--down:#ef4444;--warn:#f59e0b}
+*{box-sizing:border-box}
+body{margin:0;background:var(--bg);color:var(--text);font-family:'Noto Sans KR',system-ui,sans-serif;font-size:14px}
+.wrap{max-width:1280px;margin:0 auto;padding:20px 16px 60px}
+.banner{background:#3b2a0a;border:1px solid #6b4a10;color:#fcd34d;padding:8px 12px;border-radius:8px;font-size:12px;margin-bottom:16px}
+.top{display:flex;justify-content:space-between;align-items:flex-end;flex-wrap:wrap;gap:12px;margin-bottom:16px}
+h1{margin:0;font-size:26px}
+.sub{color:var(--muted);margin-top:4px}
+.tabs{display:flex;gap:4px;background:var(--panel);padding:4px;border-radius:10px}
+.tabs button{background:none;border:0;color:var(--muted);padding:8px 16px;border-radius:8px;cursor:pointer;font:inherit;font-weight:500}
+.tabs button.on{background:var(--accent);color:#fff}
+.card{background:var(--panel);border:1px solid var(--line);border-radius:14px;padding:18px;margin-bottom:16px}
+.card h2{font-size:16px;margin:0 0 4px}
+.card .hint{color:var(--muted);font-size:12px;margin-bottom:14px}
+.kpis{display:grid;grid-template-columns:repeat(auto-fit,minmax(170px,1fr));gap:10px;margin-bottom:16px}
+.kpi{background:var(--panel2);border-left:3px solid var(--accent);border-radius:10px;padding:12px 14px}
+.kpi .l{color:var(--muted);font-size:12px}.kpi .v{font-size:20px;font-weight:700;margin-top:4px}
+.flows{display:grid;grid-template-columns:repeat(auto-fit,minmax(280px,1fr));gap:10px}
+.flow{background:var(--panel2);border:1px solid var(--line);border-radius:12px;padding:12px 14px;cursor:pointer;transition:.15s}
+.flow:hover{border-color:#3d4575}.flow.on{border-color:var(--accent);box-shadow:0 0 0 1px var(--accent)}
+.flow .h{display:flex;justify-content:space-between;align-items:center;gap:8px}
+.flow .c{font-weight:700}
+.flow .meta{color:var(--muted);font-size:12px;margin-top:6px;line-height:1.6}
+.flow .meta b{color:var(--text);font-weight:500}
+.tag{font-size:11px;padding:2px 8px;border-radius:99px;white-space:nowrap}
+.r-생산출하{background:#0f3d2e;color:#4ade80}.r-회사출하{background:#10304a;color:#60a5fa}.r-생산투입{background:#3d2a10;color:#fbbf24}.r-최종수요{background:#2e1f4a;color:#c084fc}.r-가격벤치마크{background:#3a1d2a;color:#f472b6}
+.conf{font-size:11px;color:var(--muted)}
+.spark{display:flex;justify-content:space-between;align-items:center;margin-top:8px}
+.spark .yoy{font-family:'JetBrains Mono',monospace;font-weight:500}
+.basis{margin-top:14px;background:var(--panel2);border-radius:10px;padding:12px 14px;font-size:13px;line-height:1.7;color:#c9cde3}
+.basis .w{color:var(--warn);font-size:12px;margin-top:6px}
+.chart{width:100%;height:380px}
+.grid2{display:grid;grid-template-columns:1fr 1fr;gap:16px}
+@media(max-width:860px){.grid2{grid-template-columns:1fr}.chart{height:320px}}
+table{width:100%;border-collapse:collapse;font-family:'JetBrains Mono',monospace;font-size:12px}
+th,td{padding:7px 10px;text-align:right;border-bottom:1px solid var(--line)}
+th:first-child,td:first-child{text-align:left}
+th{color:var(--muted);font-weight:500}
+.pos{color:var(--up)}.neg{color:var(--down)}
+.tbl{overflow-x:auto}
+.map{display:grid;grid-template-columns:auto 1fr;gap:6px 14px;font-size:13px}
+.qnote{font-size:12px;color:var(--muted);margin-top:8px}
+</style>
+</head>
+<body>
+<div class="wrap">
+  <div class="banner">⚠ UI 샘플입니다. 모든 수치·차트는 <b>가상 데이터</b>이며 실제 무역통계·실적이 아닙니다. 흐름 매핑(지역·HS)은 공개 정보 기반 가설로, 0단계에서 검증 필요.</div>
+
+  <div class="top">
+    <div><h1 id="name"></h1><div class="sub" id="sub"></div></div>
+    <div class="tabs" id="tabs"></div>
+  </div>
+
+  <div class="kpis" id="kpis"></div>
+
+  <div class="card">
+    <h2>무역데이터 추적 흐름</h2>
+    <div class="hint">큐레이터가 지정한 글로벌 세관 흐름 · 카드를 누르면 아래 상세가 바뀝니다</div>
+    <div class="flows" id="flows"></div>
+    <div class="basis" id="basis"></div>
+  </div>
+
+  <div class="card">
+    <h2 id="mainTitle"></h2>
+    <div class="hint">흐름별 금액(누적 막대, USD M) · 합산 YoY · 매출 YoY (점선 = 무역데이터 기반 추정)</div>
+    <div class="chart" id="cMain"></div>
+    <div class="qnote" id="qnote"></div>
+  </div>
+
+  <div class="card">
+    <h2>단가 YoY vs GPM</h2>
+    <div class="hint">단가 = 금액 ÷ 중량 · 가격 흐름이 마진에 선행하는지 확인</div>
+    <div class="chart" id="cPrice"></div>
+  </div>
+
+  <div class="grid2">
+    <div class="card"><h2 id="dTitle1"></h2><div class="hint">금액(USD M) / 단가(USD K/KG)</div><div class="chart" id="cD1"></div></div>
+    <div class="card"><h2>중량 YoY / 단가 YoY</h2><div class="hint">물량 vs 가격 분해</div><div class="chart" id="cD2"></div></div>
+  </div>
+
+  <div class="card">
+    <h2>무역 데이터 테이블 (최근 12개월)</h2>
+    <div class="tbl"><table id="tbl"></table></div>
+  </div>
+</div>
+
+<script>
+// ---------- 가상 데이터 생성 ----------
+const months=[];
+for(let y=2022;y<=2026;y++)for(let m=1;m<=12;m++){if(y===2026&&m>8)break;months.push(`${y}-${String(m).padStart(2,'0')}`)}
+const xAll=months.concat(['2026-09','2026-10','2026-11','2026-12']);
+const N=months.length;
+const rng=seed=>{let s=seed;return()=>{s=(s*16807)%2147483647;return(s-1)/2147483646}};
+const curve=knots=>{const p=knots.map(([k,v])=>[months.indexOf(k),v]);
+  return months.map((_,i)=>{for(let j=0;j<p.length-1;j++){const[a,va]=p[j],[b,vb]=p[j+1];if(i>=a&&i<=b)return va+(vb-va)*(i-a)/(b-a)}return p[p.length-1][1]})};
+
+const NAND_PRICE=[['2022-01',1],['2022-06',0.95],['2023-06',0.45],['2024-06',0.85],['2025-03',0.72],['2025-09',1.05],['2026-08',2.6]];
+const NAND_VOL=[['2022-01',1],['2023-03',0.8],['2024-06',1],['2026-08',1.15]];
+const OPT_PRICE=[['2022-01',1],['2023-06',0.92],['2024-06',1.05],['2026-08',1.35]];
+const OPT_VOL=[['2022-01',1],['2023-06',0.75],['2024-06',1.3],['2025-06',2.1],['2026-08',3.8]];
+
+const COS={
+SNDK:{name:'Sandisk',sub:'SNDK · NASDAQ · USD · 회계연도 6월말 종료',
+ kpi:[['주가','$—'],['시가총액','$—'],['다음 실적','2026년 10월 말 (FQ1)'],['반영된 무역월','7월·8월 / 9월 대기']],
+ rev:{k:0.62,gBase:0.26,gSlope:0.19},
+ flows:[
+  {c:'🇯🇵 일본 → 수출',region:'요카이치 세관지서 (미에현)',hs:'854232 메모리 IC (NAND)',partner:'말레이시아 · 중국',role:'생산출하',conf:'높음',
+   p0:14,kg0:21000,price:NAND_PRICE,vol:NAND_VOL,seed:11,
+   basis:'Sandisk의 NAND 웨이퍼는 Kioxia와의 JV 팹(요카이치·기타카미)에서 생산되어 말레이시아 페낭 조립·테스트 거점으로 이동합니다. 요카이치 세관지서의 메모리 IC 수출은 웨이퍼 출하량과 NAND 가격 사이클을 직접 반영하는 1차 흐름입니다.',
+   warn:'JV 구조상 Kioxia 물량이 섞여 있어 Sandisk 단독 분리 불가. 기타카미 팹 관할 세관 추가 확인 필요.'},
+  {c:'🇲🇾 말레이시아 → 수출',region:'페낭 (바투카완 조립·테스트)',hs:'852351 솔리드스테이트 저장장치',partner:'전세계',role:'회사출하',conf:'중간',
+   p0:6,kg0:52000,price:NAND_PRICE.map(([k,v])=>[k,0.6+0.4*v]),vol:[['2022-01',1],['2023-06',0.78],['2024-06',1.05],['2026-08',1.25]],seed:23,
+   basis:'페낭 거점에서 패키징된 SSD·메모리카드 완제품 수출입니다. 회사 매출 인식 시점에 가장 가까운 흐름입니다.',
+   warn:'말레이시아는 주(州) 단위 공개가 제한적 — 국가 합계로 대체될 수 있음. Micron·Western Digital 물량 혼재.'},
+  {c:'🇺🇸 미국 ← 수입',region:'전국 (Census HS10)',hs:'847170 저장장치 (SSD 등)',partner:'말레이시아 · 중국 · 태국',role:'최종수요',conf:'낮음',
+   p0:3.5,kg0:60000,price:NAND_PRICE.map(([k,v])=>[k,0.75+0.25*v]),vol:[['2022-01',1],['2023-06',0.85],['2025-06',1.2],['2026-08',1.45]],seed:37,
+   basis:'미국향 저장장치 수입은 데이터센터·PC 엔드마켓 수요를 보여줍니다. 회사 출하와는 시차가 있는 수요 측 지표입니다.',
+   warn:'HDD·타사 SSD 모두 포함 — 업황 지표로만 사용.'},
+  {c:'🇰🇷 한국 → 수출',region:'경기 화성·평택 / 충북 청주',hs:'854232 NAND 세번',partner:'전세계',role:'가격벤치마크',conf:'중간',
+   p0:18,kg0:9000,price:NAND_PRICE.map(([k,v])=>[k,v*1.05]),vol:[['2022-01',1],['2026-08',1.05]],seed:51,
+   basis:'삼성전자·SK하이닉스 NAND 수출 단가는 공개 시점이 빠르고(익월 15일, 10일 잠정) Sandisk의 판가 방향을 미리 보여주는 경쟁사 가격 벤치마크입니다.',
+   warn:'경쟁사 데이터 — 매출 합산 차트에서는 제외.',exclude:true},
+ ]},
+LITE:{name:'Lumentum',sub:'LITE · NASDAQ · USD · 회계연도 6월말 종료',
+ kpi:[['주가','$—'],['시가총액','$—'],['다음 실적','2026년 11월 초 (FQ1)'],['반영된 무역월','7월·8월 / 9월 대기']],
+ rev:{k:0.55,gBase:0.30,gSlope:0.06},
+ flows:[
+  {c:'🇺🇸 미국 → 수출',region:'캘리포니아 (산호세 InP 팹)',hs:'854141 레이저 다이오드·EML 칩',partner:'태국 · 중국',role:'생산출하',conf:'중간',
+   p0:95,kg0:900,price:OPT_PRICE,vol:OPT_VOL,seed:13,
+   basis:'산호세 InP 팹에서 생산된 EML·CW 레이저 칩이 태국(Fabrinet)·중국 모듈 조립 거점으로 이동합니다. 주(State) 단위 HS6 수출 데이터로 추적합니다.',
+   warn:'캘리포니아 주 전체 — Coherent 등 타사 물량 혼재 가능. 세관구역(샌프란시스코) 단위로 좁힐 수 있는지 확인 필요.'},
+  {c:'🇯🇵 일본 → 수출',region:'요코하마 세관 (사가미하라 팹)',hs:'854141 레이저 다이오드',partner:'태국 · 중국 · 미국',role:'생산출하',conf:'중간',
+   p0:80,kg0:700,price:OPT_PRICE,vol:OPT_VOL.map(([k,v])=>[k,0.9*v]),seed:29,
+   basis:'구 Oclaro 사가미하라 InP 팹은 데이터센터용 레이저 칩의 두 번째 생산 거점입니다.',
+   warn:'요코하마 세관 관할 범위가 넓음 — 지서 단위 분리 가능 여부 확인 필요.'},
+  {c:'🇹🇭 태국 → 수출',region:'촌부리 · 빠툼타니 (Fabrinet 위탁생산)',hs:'851762 광트랜시버',partner:'미국 · 전세계',role:'회사출하',conf:'중간',
+   p0:2.4,kg0:150000,price:OPT_PRICE.map(([k,v])=>[k,0.85+0.15*v]),vol:OPT_VOL.map(([k,v])=>[k,0.7+0.3*v*1.2]),seed:41,
+   basis:'Lumentum 트랜시버·모듈의 상당 부분이 태국 Fabrinet에서 위탁생산되어 출하됩니다. AI 데이터센터향 광모듈 출하의 대표 프록시입니다.',
+   warn:'Fabrinet은 NVIDIA·Coherent 등 다수 고객 물량을 함께 생산 — 업계 합산 지표 성격.'},
+  {c:'🇺🇸 미국 ← 수입',region:'샌프란시스코 세관구역',hs:'381800 화합물반도체 기판 (InP)',partner:'일본',role:'생산투입',conf:'낮음',
+   p0:4,kg0:2500,price:[['2022-01',1],['2026-08',1.3]],vol:OPT_VOL.map(([k,v])=>[k,0.8+0.2*v]),seed:59,
+   basis:'InP 기판은 일본(Sumitomo Electric 등) 공급 비중이 높습니다. 산호세 팹의 가동률·증설을 보여주는 생산 투입 지표입니다.',
+   warn:'실리콘 웨이퍼 포함 가능 — HS10 세번으로 InP만 분리되는지 확인 필요.',exclude:true},
+ ]}
+};
+
+function build(co){
+  co.flows.forEach(f=>{
+    const r=rng(f.seed),p=curve(f.price),v=curve(f.vol);
+    f.rows=months.map((ym,i)=>{
+      const price=f.p0*p[i]*(1+(r()-.5)*0.06);
+      const kg=f.kg0*v[i]*(1+0.07*Math.sin(i/12*2*Math.PI+1))*(1+(r()-.5)*0.28);
+      return{ym,price,kg,value:price*kg};
+    });
+    f.rows.forEach((d,i)=>{const b=f.rows[i-12];d.vYoY=b?(d.value/b.value-1)*100:null;d.kYoY=b?(d.kg/b.kg-1)*100:null;d.pYoY=b?(d.price/b.price-1)*100:null});
+  });
+  const inc=co.flows.filter(f=>!f.exclude);
+  co.total=months.map((_,i)=>inc.reduce((s,f)=>s+f.rows[i].value,0));
+  co.totalYoY=co.total.map((t,i)=>i>=12?(t/co.total[i-12]-1)*100:null);
+  // 분기 매출 (가상): 무역합산 × k × 노이즈
+  const r=rng(co.flows[0].seed*7),q=[];
+  for(let i=2;i<N;i+=3){const s=co.total[i-2]+co.total[i-1]+co.total[i];
+    const pIdx=(co.flows[0].rows[i].price/co.flows[0].p0);
+    q.push({i,ym:months[i],rev:s*co.rev.k*(1+(r()-.5)*0.08),gpm:Math.min(0.68,Math.max(0.08,co.rev.gBase+co.rev.gSlope*(pIdx-1)+(r()-.5)*0.03))})}
+  // 9월 분기 추정: 7·8월 평균 × 3
+  const est=(co.total[N-2]+co.total[N-1])/2*3*co.rev.k;
+  q.push({i:N,ym:'2026-09',rev:est,est:true});
+  q.push({i:N+3,ym:'2026-12',rev:est*1.06,est:true});
+  q.forEach((d,j)=>{const b=q[j-4];d.yoy=b?(d.rev/b.rev-1)*100:null});
+  co.q=q;
+}
+Object.values(COS).forEach(build);
+
+// ---------- 렌더 ----------
+const C=['#3b82f6','#10b981','#a78bfa','#f59e0b','#f472b6'];
+const ax={axisLine:{lineStyle:{color:'#3a4166'}},axisLabel:{color:'#8a90ad',fontSize:11},splitLine:{lineStyle:{color:'#1f2442'}}};
+const base=()=>({backgroundColor:'transparent',textStyle:{fontFamily:'Noto Sans KR'},
+  tooltip:{trigger:'axis',backgroundColor:'#1a1f3a',borderColor:'#2c3358',textStyle:{color:'#e6e8f2',fontSize:12},valueFormatter:v=>v==null?'-':(+v).toLocaleString(undefined,{maximumFractionDigits:1})},
+  legend:{bottom:0,textStyle:{color:'#aab0cc',fontSize:11},icon:'roundRect',itemWidth:10,itemHeight:10},
+  grid:{left:56,right:60,top:20,bottom:56}});
+const charts={};
+const ch=id=>charts[id]||(charts[id]=echarts.init(document.getElementById(id)));
+const pct=v=>v==null?'-':`${v>=0?'+':''}${v.toFixed(1)}%`;
+let cur='SNDK',sel=0;
+
+function render(){
+  const co=COS[cur];
+  document.getElementById('name').textContent=co.name;
+  document.getElementById('sub').textContent=co.sub;
+  document.getElementById('tabs').innerHTML=Object.keys(COS).map(k=>`<button class="${k===cur?'on':''}" data-k="${k}">${k}</button>`).join('');
+  document.getElementById('kpis').innerHTML=co.kpi.map(([l,v])=>`<div class="kpi"><div class="l">${l}</div><div class="v">${v}</div></div>`).join('')
+    +`<div class="kpi"><div class="l">추적 흐름 합산 YoY (8월)</div><div class="v ${co.totalYoY[N-1]>=0?'pos':'neg'}">${pct(co.totalYoY[N-1])}</div></div>`;
+  document.getElementById('flows').innerHTML=co.flows.map((f,i)=>{const d=f.rows[N-1];return`
+    <div class="flow ${i===sel?'on':''}" data-i="${i}">
+      <div class="h"><span class="c">${f.c}</span><span class="tag r-${f.role}">${f.role}</span></div>
+      <div class="meta">지역 <b>${f.region}</b><br>품목 <b>${f.hs}</b><br>상대국 <b>${f.partner}</b></div>
+      <div class="spark"><span class="conf">신뢰도 ${f.conf}${f.exclude?' · 합산 제외':''}</span><span class="yoy ${d.vYoY>=0?'pos':'neg'}">8월 YoY ${pct(d.vYoY)}</span></div>
+    </div>`}).join('');
+  const f=co.flows[sel];
+  document.getElementById('basis').innerHTML=`<b>근거 — ${f.c} · ${f.region}</b><br>${f.basis}<div class="w">⚠ ${f.warn}</div>`;
+  document.getElementById('mainTitle').textContent=`${co.name} (${cur}) · 추적 흐름 합산`;
+  document.getElementById('qnote').textContent='매출은 달력 분기로 단순화. 실제 서비스에서는 52/53주 회계분기에 맞춰 월간 데이터를 재집계합니다. 2026-09 분기는 7·8월 데이터만 반영된 추정치.';
+
+  const qArr=(key,estOnly)=>xAll.map(x=>{const d=co.q.find(q=>q.ym===x);if(!d)return null;
+    if(estOnly)return d.est||d.ym==='2026-06'?d[key]:null;return d.est?null:d[key]});
+  const inc=co.flows.filter(f=>!f.exclude);
+  ch('cMain').setOption({...base(),
+    xAxis:{type:'category',data:xAll,...ax,splitLine:{show:false}},
+    yAxis:[{type:'value',...ax,axisLabel:{...ax.axisLabel,formatter:v=>`${v}M`}},{type:'value',...ax,splitLine:{show:false},axisLabel:{...ax.axisLabel,formatter:'{value}%'}}],
+    series:[...inc.map((f,i)=>({name:`${f.c} ${f.hs.split(' ')[0]}`,type:'bar',stack:'t',barMaxWidth:12,itemStyle:{color:C[co.flows.indexOf(f)]},data:f.rows.map(d=>+(d.value/1000).toFixed(1))})),
+      {name:'합산 YoY',type:'line',yAxisIndex:1,symbol:'none',lineStyle:{color:'#22d3ee',width:2},itemStyle:{color:'#22d3ee'},data:co.totalYoY.map(v=>v==null?null:+v.toFixed(1))},
+      {name:'매출 YoY',type:'line',yAxisIndex:1,connectNulls:true,symbolSize:7,lineStyle:{color:'#34d399',width:2},itemStyle:{color:'#34d399'},data:qArr('yoy').map(v=>v==null?null:+v.toFixed(1))},
+      {name:'매출 YoY (추정)',type:'line',yAxisIndex:1,connectNulls:true,symbolSize:7,lineStyle:{color:'#34d399',type:'dashed'},itemStyle:{color:'#34d399'},data:qArr('yoy',true).map(v=>v==null?null:+v.toFixed(1)),
+       label:{show:true,position:'top',color:'#34d399',fontSize:10,formatter:p=>xAll[p.dataIndex]>'2026-06'?'EST':''}}]
+  },true);
+
+  ch('cPrice').setOption({...base(),
+    xAxis:{type:'category',data:months,...ax,splitLine:{show:false}},
+    yAxis:[{type:'value',...ax,axisLabel:{...ax.axisLabel,formatter:'{value}%'}},{type:'value',...ax,splitLine:{show:false},axisLabel:{...ax.axisLabel,formatter:v=>`${v}%`}}],
+    series:[...co.flows.map((f,i)=>({name:`단가 YoY · ${f.c}`,type:'line',symbol:'none',lineStyle:{width:1.6,color:C[i]},itemStyle:{color:C[i]},data:f.rows.map(d=>d.pYoY==null?null:+d.pYoY.toFixed(1))})),
+      {name:'GPM',type:'line',yAxisIndex:1,connectNulls:true,symbolSize:7,lineStyle:{color:'#fbbf24',width:2},itemStyle:{color:'#fbbf24'},data:months.map(x=>{const d=co.q.find(q=>q.ym===x&&!q.est);return d?+(d.gpm*100).toFixed(1):null})}]
+  },true);
+
+  document.getElementById('dTitle1').textContent=`금액 / 단가 — ${f.c} ${f.hs}`;
+  ch('cD1').setOption({...base(),
+    xAxis:{type:'category',data:months,...ax,splitLine:{show:false}},
+    yAxis:[{type:'value',...ax,axisLabel:{...ax.axisLabel,formatter:v=>`${v}M`}},{type:'value',...ax,splitLine:{show:false}}],
+    series:[{name:'금액',type:'bar',barMaxWidth:8,itemStyle:{color:C[sel]},data:f.rows.map(d=>+(d.value/1000).toFixed(1))},
+      {name:'단가',type:'line',yAxisIndex:1,symbol:'none',lineStyle:{color:'#f87171',width:2},itemStyle:{color:'#f87171'},data:f.rows.map(d=>+d.price.toFixed(2))}]
+  },true);
+  ch('cD2').setOption({...base(),
+    xAxis:{type:'category',data:months,...ax,splitLine:{show:false}},
+    yAxis:[{type:'value',...ax,axisLabel:{...ax.axisLabel,formatter:'{value}%'}}],
+    series:[{name:'중량 YoY',type:'bar',barMaxWidth:8,itemStyle:{color:'#a16207'},data:f.rows.map(d=>d.kYoY==null?null:+d.kYoY.toFixed(1))},
+      {name:'단가 YoY',type:'line',symbol:'none',lineStyle:{color:'#fb7185',width:2},itemStyle:{color:'#fb7185'},data:f.rows.map(d=>d.pYoY==null?null:+d.pYoY.toFixed(1))}]
+  },true);
+
+  const cls=v=>v==null?'':v>=0?'pos':'neg';
+  document.getElementById('tbl').innerHTML='<tr><th>기간</th><th>금액 (USD K)</th><th>중량 (KG)</th><th>단가 (USD K/KG)</th><th>금액 YoY</th><th>중량 YoY</th><th>단가 YoY</th></tr>'+
+    f.rows.slice(-12).reverse().map(d=>`<tr><td>${d.ym}</td><td>${d.value.toLocaleString(undefined,{maximumFractionDigits:1})}</td><td>${Math.round(d.kg).toLocaleString()}</td><td>${d.price.toFixed(4)}</td><td class="${cls(d.vYoY)}">${pct(d.vYoY)}</td><td class="${cls(d.kYoY)}">${pct(d.kYoY)}</td><td class="${cls(d.pYoY)}">${pct(d.pYoY)}</td></tr>`).join('');
+}
+
+document.getElementById('tabs').addEventListener('click',e=>{const k=e.target.dataset.k;if(k){cur=k;sel=0;render()}});
+document.getElementById('flows').addEventListener('click',e=>{const el=e.target.closest('.flow');if(el){sel=+el.dataset.i;render()}});
+window.addEventListener('resize',()=>Object.values(charts).forEach(c=>c.resize()));
+render();
+</script>
+</body>
+</html>
