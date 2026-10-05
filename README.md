@@ -21,17 +21,20 @@ verify/     0단계 상관 검증 스크립트 → reports/
 ## 처음 세팅 (새 PC)
 
 ```bash
+cp .env.example .env   # 키 4개 채우기
+bash scripts/setup.sh  # 맥·리눅스: venv + pip + npm 설치
+
+# 윈도우
 python -m venv .venv
 .venv/Scripts/pip install -r requirements.txt
 npm --prefix web install
-cp .env.example .env   # 키 4개 채우기
 ```
 
 ## 실행
 
 ```bash
-# 1) 데이터 갱신 (첫 실행 5~10분, 이후 캐시)
-.venv/Scripts/python -m etl.build
+# 1) 데이터 갱신 (첫 실행 5~10분, 이후 캐시) — 윈도우는 .venv/Scripts/python
+.venv/bin/python -m etl.build
 
 # 2) 사이트
 npm --prefix web run dev   # http://localhost:3000

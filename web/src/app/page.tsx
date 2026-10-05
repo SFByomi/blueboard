@@ -83,7 +83,7 @@ export default async function Home({ searchParams }: PageProps<"/">) {
                 </tr>
               );
             })}
-            {!rows.length && <tr><td colSpan={8} className="px-4 py-10 text-center text-muted">데이터가 없습니다. 루트에서 ETL을 실행하세요: .venv/Scripts/python -m etl.build</td></tr>}
+            {!rows.length && <tr><td colSpan={8} className="px-4 py-10 text-center text-muted">데이터가 없습니다. 루트에서 ETL을 실행하세요: .venv/bin/python -m etl.build (윈도우: .venv/Scripts/python)</td></tr>}
           </tbody>
         </table>
       </div>

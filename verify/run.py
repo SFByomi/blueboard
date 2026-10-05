@@ -1,6 +1,6 @@
 """0단계 검증: 미국 Census 무역 흐름 ↔ 회사 분기 매출(SEC) 비교.
 
-실행: .venv/Scripts/python verify/run.py
+실행: .venv/bin/python verify/run.py
 산출: reports/verification.md, reports/verification.json (차트용)
 """
 import json

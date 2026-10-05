@@ -1,6 +1,6 @@
 """전체 갱신: 시드 → 시계열 수집 → 매출 → 급등 탐지.
 
-실행 (프로젝트 루트): .venv/Scripts/python -m etl.build [--skip-surge]
+실행 (프로젝트 루트): .venv/bin/python -m etl.build [--skip-surge]
 """
 import json
 import sys
