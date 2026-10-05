@@ -25,3 +25,7 @@
 - 두산 전자BG ↔ 충북 증평군 CCL 수출: 금액 상관 0.97, YoY 0.83
 - Sandisk ↔ 간사이공항·나리타→말레이시아 메모리 수출 (Micron과는 무상관)
 - Lumentum/Fabrinet ↔ 태국산 광통신장비 미국 수입 (업계 합산)
+
+## 클라우드 세션
+- 세션 시작 시 `.claude/settings.json` SessionStart 훅이 `scripts/cloud-session-start.sh` 실행 (CLAUDE_CODE_REMOTE=true일 때만): 의존성 설치·키 .env 반영·도메인 점검·DB 확인.
+- 경고가 있으면 `cloud-setup` 스킬(.claude/skills/cloud-setup) 절차를 따른다.
