@@ -20,9 +20,12 @@
   - surge.py 급등 탐지 · breaks.py 통계 단절 경고
 - `web/` Next.js 16 (App Router, Turbopack). **Next 16은 학습 데이터와 다름 → `web/node_modules/next/dist/docs/` 확인 후 작성.** params는 Promise.
 - `verify/` 상관 검증 스크립트 (0단계)
+- 공개 사이트: GitHub Actions(`.github/workflows/etl.yml`)가 매일 `etl.build` → `etl.publish`(SQLite→Supabase Postgres 전체 교체), Vercel(`web/`)이 `DATABASE_URL`로 읽음.
+  - 웹 조회는 `web/src/lib/db.ts`의 `query()` 하나로 SQLite·Postgres 공용 → SQL은 양쪽 공통 문법, 파라미터 `?`.
+  - `DATABASE_URL`이 있으면 관리 페이지·서버 액션 비활성(`ADMIN_ENABLED`). 큐레이션 수정은 로컬에서만 → curation.json push.
 
 ## 키
-`.env`: CENSUS_API_KEY, ESTAT_APP_ID, DATA_GO_KR_KEY, DART_API_KEY. 절대 커밋 금지.
+`.env`: CENSUS_API_KEY, ESTAT_APP_ID, DATA_GO_KR_KEY, DART_API_KEY (+ 게시용 DATABASE_URL). 절대 커밋 금지. Actions에는 같은 이름의 저장소 Secrets.
 
 ## 데이터 소스 함정 (중요)
 - Census: 키 필수. 수출(exports) API는 대량 조회가 매우 느림 → 품목 단위로. 큰 장(84)은 500 에러 → 자동 분할.

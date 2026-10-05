@@ -9,11 +9,8 @@ export const dynamic = "force-dynamic";
 
 const SPEC_EXAMPLE = `{"dataset": "imports/hs", "hs": "8542320036", "filters": {"CTY_CODE": "5830"}}`;
 
-export default function Admin() {
-  const cos = companies();
-  const maps = allMappings();
-  const series = allSeries();
-  const alerts = allAlerts();
+export default async function Admin() {
+  const [cos, maps, series, alerts, builtAt] = await Promise.all([companies(), allMappings(), allSeries(), allAlerts(), meta("built_at")]);
   const logPath = path.join(PROJECT_ROOT, "data", "etl.log");
   const log = fs.existsSync(logPath) ? fs.readFileSync(logPath, "utf-8").split("\n").slice(-12).join("\n") : "";
 
@@ -30,7 +27,7 @@ export default function Admin() {
         <div className="flex flex-wrap items-center justify-between gap-3">
           <div>
             <h2 className="font-bold">데이터 갱신</h2>
-            <p className="text-xs text-muted">마지막 빌드 {meta("built_at")?.replace("T", " ") ?? "-"} · 시계열·매출·급등 탐지 (급등 포함 시 첫 실행 5~10분)</p>
+            <p className="text-xs text-muted">마지막 빌드 {builtAt?.replace("T", " ") ?? "-"} · 시계열·매출·급등 탐지 (급등 포함 시 첫 실행 5~10분)</p>
           </div>
           <form action={runEtl} className="flex items-center gap-3 text-sm">
             <label className="flex items-center gap-1 text-muted"><input type="checkbox" name="skip_surge" /> 급등 탐지 생략</label>

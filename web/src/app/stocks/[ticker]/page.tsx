@@ -4,25 +4,27 @@ import { Spark } from "@/components/Spark";
 import { StockView, type FlowData, type QuarterRow } from "@/components/StockView";
 import { corr, quarterize, sumSeries, toMonthly } from "@/lib/compute";
 import { money, pct, tone, usd } from "@/lib/format";
+import { ADMIN_ENABLED } from "@/lib/db";
 import { alertsFor, company, financials, mappingsFor, observations, surgeForTicker } from "@/lib/queries";
 
-export const dynamic = "force-dynamic";
+export const revalidate = 3600;
 
 const qYoY = (a: (number | null)[]) => a.map((v, i) => (i >= 4 && v != null && a[i - 4] ? v / a[i - 4]! - 1 : null));
 
 export default async function StockPage({ params }: PageProps<"/stocks/[ticker]">) {
   const { ticker: raw } = await params;
   const ticker = decodeURIComponent(raw);
-  const c = company(ticker);
+  const c = await company(ticker);
   if (!c) notFound();
 
-  const maps = mappingsFor(ticker);
+  const maps = await mappingsFor(ticker);
   const ids = maps.map((m) => m.series_id);
-  const m = toMonthly(observations(ids), ids);
-  const fin = financials(ticker).filter((f) => f.period_end >= "2021-01-01");
+  const [obs, allFin, alerts, relatedAll] = await Promise.all([observations(ids), financials(ticker), alertsFor(ids), surgeForTicker(ticker)]);
+  const related = relatedAll.slice(0, 8);
+  const m = toMonthly(obs, ids);
+  const fin = allFin.filter((f) => f.period_end >= "2021-01-01");
   const revYoY = qYoY(fin.map((f) => f.revenue));
 
-  const alerts = alertsFor(ids);
   const flows: FlowData[] = maps.map((mp) => {
     const qv = quarterize(m.months, m.value[mp.series_id], fin).map((q) => q.value);
     const ty = qYoY(qv);
@@ -51,7 +53,6 @@ export default async function StockPage({ params }: PageProps<"/stocks/[ticker]"
     return { start: s.toISOString().slice(0, 7), end: e.toISOString().slice(0, 7), months: q.months };
   })() : null;
 
-  const related = surgeForTicker(ticker).slice(0, 8);
 
   return (
     <div className="space-y-5">
@@ -60,7 +61,7 @@ export default async function StockPage({ params }: PageProps<"/stocks/[ticker]"
           <h1 className="text-3xl font-bold">{c.name_ko ?? c.name}</h1>
           <div className="mt-1 text-sm text-muted">{c.ticker} · {c.market} · {c.sector} · {c.fy_note}</div>
         </div>
-        <Link href={`/admin/stocks/${encodeURIComponent(c.ticker)}`} className="btn-ghost">매핑 편집</Link>
+        {ADMIN_ENABLED && <Link href={`/admin/stocks/${encodeURIComponent(c.ticker)}`} className="btn-ghost">매핑 편집</Link>}
       </div>
 
       <div className="grid gap-3 sm:grid-cols-2 lg:grid-cols-4">
@@ -73,7 +74,7 @@ export default async function StockPage({ params }: PageProps<"/stocks/[ticker]"
       {c.thesis && <div className="card text-sm leading-relaxed text-muted"><b className="text-fg">투자 포인트 · 매핑 메모</b><br />{c.thesis}</div>}
 
       {flows.length ? <StockView flows={flows} months={m.months} quarters={quarters} currency={fin.at(-1)?.currency ?? "USD"} /> : (
-        <div className="card text-sm text-muted">연결된 무역 흐름이 없습니다. <Link className="text-accent" href={`/admin/stocks/${encodeURIComponent(c.ticker)}`}>관리 페이지</Link>에서 추가하세요.</div>
+        <div className="card text-sm text-muted">연결된 무역 흐름이 없습니다.{ADMIN_ENABLED && <> <Link className="text-accent" href={`/admin/stocks/${encodeURIComponent(c.ticker)}`}>관리 페이지</Link>에서 추가하세요.</>}</div>
       )}
 
       {related.length > 0 && (

@@ -4,11 +4,11 @@ import { sumSeries, toMonthly, yoy } from "@/lib/compute";
 import { pct, tone } from "@/lib/format";
 import { allMappings, companies, observations } from "@/lib/queries";
 
-export const dynamic = "force-dynamic";
+export const revalidate = 3600; // 데이터는 하루 1회 갱신 — 1시간 캐시
 
-export default function Stocks() {
-  const list = companies();
-  const maps = allMappings();
+export default async function Stocks() {
+  const [list, maps] = await Promise.all([companies(), allMappings()]);
+  const obs = await observations([...new Set(maps.map((m) => m.series_id))]);
   return (
     <div className="space-y-5">
       <h1 className="text-2xl font-bold">종목</h1>
@@ -17,7 +17,7 @@ export default function Stocks() {
           const ms = maps.filter((m) => m.ticker === c.ticker);
           const inc = ms.filter((m) => m.include_in_total).map((m) => m.series_id);
           const ids = inc.length ? inc : ms.slice(0, 1).map((m) => m.series_id);
-          const m = toMonthly(observations(ids), ids);
+          const m = toMonthly(obs.filter((o) => ids.includes(o.series_id)), ids);
           const total = sumSeries(m, ids);
           const y = yoy(total);
           const lastI = total.findLastIndex((v) => v != null);

@@ -8,10 +8,9 @@ export const dynamic = "force-dynamic";
 
 export default async function EditStock({ params }: PageProps<"/admin/stocks/[ticker]">) {
   const ticker = decodeURIComponent((await params).ticker);
-  const c = company(ticker);
+  const c = await company(ticker);
   if (!c) notFound();
-  const maps = mappingsFor(ticker);
-  const series = allSeries();
+  const [maps, series] = await Promise.all([mappingsFor(ticker), allSeries()]);
 
   return (
     <div className="space-y-6">
