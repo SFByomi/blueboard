@@ -41,7 +41,7 @@ done
 # 3) 네트워크
 blocked=()
 for d in "${DOMAINS[@]}"; do
-  code=$(curl -s -o /dev/null -w "%{http_code}" --max-time 8 "https://$d/" 2>/dev/null || echo 000)
+  code=$(curl -s -o /dev/null -w "%{http_code}" --max-time 8 "https://$d/" 2>/dev/null) || code=000
   [ "$code" = "000" ] && blocked+=("$d")
 done
 
