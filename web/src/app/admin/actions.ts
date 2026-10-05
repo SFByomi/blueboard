@@ -87,7 +87,9 @@ const LOG = path.join(PROJECT_ROOT, "data", "etl.log");
 
 /** 로컬 전용: Python ETL을 백그라운드로 실행 (배포 환경에서는 스케줄러로 대체) */
 export async function runEtl(f: FormData) {
-  const py = path.join(PROJECT_ROOT, ".venv", "Scripts", "python.exe");
+  const py = process.platform === "win32"
+    ? path.join(PROJECT_ROOT, ".venv", "Scripts", "python.exe")
+    : path.join(PROJECT_ROOT, ".venv", "bin", "python"); // 리눅스(클라우드 세션)
   const args = ["-m", "etl.build", ...(f.get("skip_surge") ? ["--skip-surge"] : [])];
   const out = fs.openSync(LOG, "w");
   const p = spawn(py, args, { cwd: PROJECT_ROOT, detached: true, stdio: ["ignore", out, out], env: { ...process.env, PYTHONIOENCODING: "utf-8" } });
