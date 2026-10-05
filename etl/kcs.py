@@ -7,6 +7,7 @@
 """
 import json
 import os
+import time
 import xml.etree.ElementTree as ET
 from pathlib import Path
 
@@ -38,7 +39,14 @@ def _window(api, params, refresh):
     path = CACHE / api / f"{key}.json"
     if path.exists() and not refresh:
         return json.loads(path.read_text(encoding="utf-8"))
-    r = requests.get(API[api], params={"serviceKey": os.environ["DATA_GO_KR_KEY"], **params}, timeout=60)
+    for attempt in range(5):  # apis.data.go.kr는 TLS 연결이 자주 끊김(약 절반) → 재시도
+        try:
+            r = requests.get(API[api], params={"serviceKey": os.environ["DATA_GO_KR_KEY"], **params}, timeout=60)
+            break
+        except requests.ConnectionError:
+            if attempt == 4:
+                raise
+            time.sleep(2 ** attempt)
     r.raise_for_status()
     root = ET.fromstring(r.content)
     code = root.findtext(".//resultCode") or root.findtext(".//returnReasonCode")
