@@ -39,11 +39,11 @@ def _window(api, params, refresh):
     path = CACHE / api / f"{key}.json"
     if path.exists() and not refresh:
         return json.loads(path.read_text(encoding="utf-8"))
-    for attempt in range(5):  # apis.data.go.kr는 TLS 연결이 자주 끊김(약 절반) → 재시도
+    for attempt in range(5):  # apis.data.go.kr는 연결 끊김·응답 지연이 잦음 → 재시도
         try:
             r = requests.get(API[api], params={"serviceKey": os.environ["DATA_GO_KR_KEY"], **params}, timeout=60)
             break
-        except requests.ConnectionError:
+        except (requests.ConnectionError, requests.Timeout):
             if attempt == 4:
                 raise
             time.sleep(2 ** attempt)
