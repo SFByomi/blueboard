@@ -1,6 +1,7 @@
 import type { Metadata } from "next";
 import { JetBrains_Mono, Noto_Sans_KR } from "next/font/google";
 import Link from "next/link";
+import { ADMIN_ENABLED } from "@/lib/db";
 import "./globals.css";
 
 const noto = Noto_Sans_KR({ variable: "--font-noto", subsets: ["latin"], weight: ["400", "500", "700"] });
@@ -20,7 +21,7 @@ export default function RootLayout({ children }: LayoutProps<"/">) {
             <Link href="/" className="text-base font-bold">Yomin</Link>
             <Link href="/" className="text-muted hover:text-fg">급등 탐색</Link>
             <Link href="/stocks" className="text-muted hover:text-fg">종목</Link>
-            <Link href="/admin" className="ml-auto text-muted hover:text-fg">관리</Link>
+            {ADMIN_ENABLED && <Link href="/admin" className="ml-auto text-muted hover:text-fg">관리</Link>}
           </nav>
         </header>
         <main className="mx-auto max-w-7xl px-4 py-6">{children}</main>

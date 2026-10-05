@@ -1,6 +1,7 @@
 import Link from "next/link";
 import { Spark } from "@/components/Spark";
 import { pct, tone, usd } from "@/lib/format";
+import { ADMIN_ENABLED } from "@/lib/db";
 import { meta, surge, tagIndex } from "@/lib/queries";
 
 export const dynamic = "force-dynamic";
@@ -16,8 +17,7 @@ export default async function Home({ searchParams }: PageProps<"/">) {
   const sp = await searchParams;
   const scope = (sp.scope as keyof typeof SCOPES) in SCOPES ? (sp.scope as keyof typeof SCOPES) : "us_imp_world";
   const sort = (sp.sort as keyof typeof SORTS) in SORTS ? (sp.sort as keyof typeof SORTS) : "yoy3m";
-  const rows = surge(scope, sort, 40);
-  const related = tagIndex();
+  const [rows, related, builtAt] = await Promise.all([surge(scope, sort, 40), tagIndex(), meta("built_at")]);
   const q = (p: Record<string, string>) => `/?${new URLSearchParams({ scope, sort, ...p })}`;
 
   return (
@@ -26,7 +26,7 @@ export default async function Home({ searchParams }: PageProps<"/">) {
         <div>
           <h1 className="text-2xl font-bold">🚀 급등 탐색</h1>
           <p className="mt-1 text-sm text-muted">
-            기준월 {rows[0]?.month ?? "-"} · 월 2천만 달러 이상(국가별 5백만 달러) 품목 · 마지막 갱신 {meta("built_at")?.replace("T", " ") ?? "-"}
+            기준월 {rows[0]?.month ?? "-"} · 월 2천만 달러 이상(국가별 5백만 달러) 품목 · 마지막 갱신 {builtAt?.replace("T", " ") ?? "-"}
           </p>
         </div>
       </div>
@@ -77,7 +77,7 @@ export default async function Home({ searchParams }: PageProps<"/">) {
                       {tickers.map((t) => (
                         <Link key={t} href={`/stocks/${encodeURIComponent(t)}`} className="rounded bg-accent/20 px-2 py-0.5 text-xs text-accent hover:bg-accent/30">{t}</Link>
                       ))}
-                      {!tickers.length && <Link href={`/admin/tags?hs=${r.hs6}`} className="text-xs text-muted hover:text-fg">+ 종목 연결</Link>}
+                      {!tickers.length && ADMIN_ENABLED && <Link href={`/admin/tags?hs=${r.hs6}`} className="text-xs text-muted hover:text-fg">+ 종목 연결</Link>}
                     </div>
                   </td>
                 </tr>

@@ -1,0 +1,70 @@
+name: 데이터 갱신
+
+# 수집(etl.build, SQLite) → 공개 사이트 DB 게시(etl.publish, Supabase Postgres)
+# 필요한 저장소 Secrets: CENSUS_API_KEY, ESTAT_APP_ID, DATA_GO_KR_KEY, DART_API_KEY, DATABASE_URL
+on:
+  schedule:
+    - cron: "17 21 * * *" # 매일 06:17 KST
+  workflow_dispatch:
+  push:
+    branches: [main]
+    paths: ["data/curation.json", "etl/**", "requirements.txt"] # 큐레이션·수집 코드 변경 시 바로 반영
+
+concurrency:
+  group: etl
+  cancel-in-progress: false
+
+jobs:
+  etl:
+    runs-on: ubuntu-latest
+    timeout-minutes: 120
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.11"
+          cache: pip
+
+      - run: pip install -r requirements.txt
+
+      # 이전 실행의 DB와 바뀌지 않는 원본 캐시(DART XBRL, 관세청 과거 구간)를 이어 쓴다.
+      # DB를 이어 쓰므로 어떤 소스가 일시적으로 실패해도 그 시리즈는 이전 데이터가 유지된다.
+      # Census·e-Stat·SEC는 캐시하지 않음 → 매번 최신 월을 새로 받음.
+      - uses: actions/cache/restore@v4
+        with:
+          path: |
+            data/yomin.db
+            data/raw/dart
+            data/raw/kcs
+          key: etl-${{ github.run_id }}
+          restore-keys: etl-
+
+      - name: 수집
+        env:
+          CENSUS_API_KEY: ${{ secrets.CENSUS_API_KEY }}
+          ESTAT_APP_ID: ${{ secrets.ESTAT_APP_ID }}
+          DATA_GO_KR_KEY: ${{ secrets.DATA_GO_KR_KEY }}
+          DART_API_KEY: ${{ secrets.DART_API_KEY }}
+        run: |
+          set -o pipefail
+          python -m etl.build | tee etl.log
+
+      - uses: actions/cache/save@v4
+        if: always()
+        with:
+          path: |
+            data/yomin.db
+            data/raw/dart
+            data/raw/kcs
+          key: etl-${{ github.run_id }}
+
+      - name: 게시
+        env:
+          DATABASE_URL: ${{ secrets.DATABASE_URL }}
+        run: python -m etl.publish
+
+      - name: 실패한 시리즈 요약
+        if: always()
+        run: |
+          grep "✗" etl.log >> "$GITHUB_STEP_SUMMARY" || echo "실패한 시리즈 없음" >> "$GITHUB_STEP_SUMMARY"

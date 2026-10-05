@@ -1,15 +1,13 @@
 import Link from "next/link";
-import { db } from "@/lib/db";
-import { companies, hsTags } from "@/lib/queries";
+import { companies, hsNames, hsTags } from "@/lib/queries";
 import { deleteTag, saveTag } from "../actions";
 
 export const dynamic = "force-dynamic";
 
 export default async function Tags({ searchParams }: PageProps<"/admin/tags">) {
   const hs = String((await searchParams).hs ?? "");
-  const tags = hsTags();
-  const cos = companies();
-  const names = new Map((db().prepare("SELECT hs, coalesce(name_ko, name_en) n FROM hs_names").all() as { hs: string; n: string }[]).map((r) => [r.hs, r.n]));
+  const [tags, cos, hn] = await Promise.all([hsTags(), companies(), hsNames()]);
+  const names = new Map(hn.map((r) => [r.hs, r.n]));
 
   return (
     <div className="space-y-6">

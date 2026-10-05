@@ -51,6 +51,23 @@ npm --prefix web run dev   # http://localhost:3000
 | `DATA_GO_KR_KEY` | 한국 관세청 (품목·국가·시군구) | data.go.kr — API별 활용신청 필요 |
 | `DART_API_KEY` | 한국 상장사 분기 매출 | opendart.fss.or.kr |
 
-## 배포 전 할 일
-- 관리 페이지 인증 (현재 로컬 전용, 누구나 수정 가능)
-- SQLite → Postgres(Supabase) 이전, ETL은 스케줄러(GitHub Actions 등)로
+## 공개 사이트 (배포)
+
+```
+GitHub Actions (매일 06:17 KST)                     Vercel (web/, 서울 리전)
+  etl.build  → data/yomin.db (SQLite, 캐시 유지)       DATABASE_URL 있으면 Postgres 읽기
+  etl.publish → Supabase Postgres (전체 교체) ───────→  관리 페이지 404 · 1시간 캐시
+```
+
+- 큐레이션 원본은 계속 `data/curation.json`: 로컬 관리 페이지에서 수정 → commit·push → Actions가 바로 수집·게시
+- 웹은 `DATABASE_URL`이 없으면 지금처럼 `../data/yomin.db`(SQLite)를 읽고 관리 페이지가 켜짐 (로컬 작업용)
+- 수동 게시: `.env`에 `DATABASE_URL` 넣고 `.venv/bin/python -m etl.publish`
+
+### 처음 한 번 설정
+1. **Supabase**: 새 프로젝트(리전 Seoul) → Connect → **Transaction pooler** 주소(포트 6543)를 복사, `[YOUR-PASSWORD]` 자리에 DB 비밀번호
+2. **GitHub** 저장소 → Settings → Secrets and variables → Actions → New repository secret:
+   `CENSUS_API_KEY`, `ESTAT_APP_ID`, `DATA_GO_KR_KEY`, `DART_API_KEY`, `DATABASE_URL`
+3. **GitHub Actions** 탭 → "데이터 갱신" → Run workflow (첫 실행 20~40분)
+4. **Vercel**: Add New Project → `blueboard` 가져오기 → Root Directory `web` → Environment Variables에 `DATABASE_URL` → Deploy
+
+테이블은 `public` 스키마에 만들고 RLS를 켜 둔다(Supabase REST API로는 접근 불가, 웹·ETL은 DB 직접 접속).

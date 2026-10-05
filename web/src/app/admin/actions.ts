@@ -6,7 +6,13 @@ import path from "node:path";
 import { revalidatePath } from "next/cache";
 import { redirect } from "next/navigation";
 import { exportCuration } from "@/lib/curation";
-import { db, PROJECT_ROOT } from "@/lib/db";
+import { ADMIN_ENABLED, PROJECT_ROOT, sqlite } from "@/lib/db";
+
+// 공개 사이트(Postgres)에서는 서버 액션도 직접 호출될 수 있으므로 매 액션마다 막는다
+function db() {
+  if (!ADMIN_ENABLED) throw new Error("관리 기능은 로컬 환경에서만 사용할 수 있습니다");
+  return sqlite();
+}
 
 const s = (f: FormData, k: string) => {
   const v = String(f.get(k) ?? "").trim();
