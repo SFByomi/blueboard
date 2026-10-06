@@ -31,7 +31,7 @@ export function EstimateCard({ hist, labels }: { hist: RevEstimate[]; labels: Re
           {bias != null && Math.abs(bias) >= 0.05 && (
             <div className="mt-1 text-xs text-muted">최근 4분기 모델 편향 <span className={tone(bias)}>{pct(bias)}</span> — {bias < 0 ? "과소" : "과대"}추정 경향 감안</div>
           )}</div>
-        <div><div className="text-xs text-muted">모델</div><div className="text-sm">{e.method === "level" ? "무역 금액 회귀 (최근 12분기)" : "무역 전년비 회귀"}</div>
+        <div><div className="text-xs text-muted">모델</div><div className="text-sm">{e.method.startsWith("level") ? "무역 금액 회귀 (최근 12분기)" : "무역 전년비 회귀"}{e.method.endsWith("+bias") && <span className="text-muted"> + 최근 4분기 편향 보정</span>}</div>
           <div className="text-xs text-muted">단순 추세(직전 성장률 유지) 오차 {e.mape_naive == null ? "-" : pct(e.mape_naive, 1).replace("+", "")}</div></div>
       </div>
 
@@ -76,7 +76,7 @@ export function EstimateCard({ hist, labels }: { hist: RevEstimate[]; labels: Re
         </div>
       </div>
       <p className="text-xs leading-relaxed text-muted">
-        모델: 무역 전년비 회귀와 금액 회귀 중 백테스트 오차가 작은 쪽. 오차 12% 이하이면서 단순 추세보다 나을 때 &lsquo;신뢰&rsquo;.
+        모델: 무역 전년비 회귀·금액 회귀와 각각의 편향 보정판(직전 4분기 실적/예측 배율을 곱함 — 백테스트도 그 시점까지의 오차로만 보정) 중 백테스트 오차가 가장 작은 쪽. 오차 12% 이하이면서 단순 추세보다 나을 때 &lsquo;신뢰&rsquo;.
         컨센서스 금액은 데이터 제공처 약관상 표시하지 않고 괴리율만 보여줍니다. 투자 권유가 아닙니다.
       </p>
     </div>
