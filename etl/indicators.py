@@ -33,6 +33,8 @@ UNIT_PRICES = [
     ("UV_KR_FLASH", "한국 플래시 수출 단가 ($/kg)", "메모리 단가", "kr_exp_flash", "한국 관세청 플래시 메모리"),
     ("UV_US_TW_DRAM", "대만산 DRAM 미국 수입 단가 ($/개)", "메모리 단가", "us_imp_tw_dram", "Census 8542.32.0036 대만 금액/개수"),
     ("UV_US_SSD", "미국 SSD 수입 단가 ($/개)", "메모리 단가", "us_imp_all_ssd", "Census 8523.51 전체 금액/개수"),
+    ("UV_KR_SERVER", "한국 처리장치(서버 본체) 수출 단가 ($/kg)", "서버·스토리지", "kr_exp_server", "한국 관세청 8471.50"),
+    ("UV_KR_PCB", "한국 PCB 수출 단가 ($/kg)", "부품 단가", "kr_exp_pcb", "한국 관세청 8534"),
     ("UV_KR_MLCC", "한국 MLCC 수출 단가 ($/kg)", "부품 단가", "kr_exp_mlcc", "한국 관세청 8532.24"),
     ("UV_KR_CCL", "한국 CCL 수출 단가 ($/kg)", "부품 단가", "kr_exp_ccl", "한국 관세청 7410.21"),
 ]
