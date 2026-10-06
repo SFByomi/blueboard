@@ -2,6 +2,7 @@
 
 글로벌 세관 무역 데이터(미국·일본·한국)를 미국/한국 종목에 매핑해 실적을 먼저 읽는 사이트. 한국 투자자 대상, 한국어 UI.
 기획: PLAN.md · 실행법: README.md
+사이트 표시 이름은 **Investing Idea** (사용자의 텔레그램 채널명). 코드·DB 이름(yomin)은 그대로.
 
 ## 사용자·범위 (결정 사항)
 - 한국 투자자 대상, AI·반도체 중심. 보유/관심: MU, SNDK, LITE, BE, IREN, NBIS, RXRX, ARKG, INSM, 두산(전자BG CCL), 삼성전기(MLCC). 비교군 FN.
