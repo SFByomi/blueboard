@@ -24,17 +24,17 @@ export function IndexSection({ grp, defs, rows, compact = false }: { grp: string
       </div>
       {!compact && <PriceChart unit="지수" prefix="" height={260} lines={series.map((x, i) => ({ name: x.d.label, color: COLORS[i % COLORS.length], points: x.reb.filter(([m]) => m >= CHART_FROM).map(([m, v]) => [`${m}-01`, v]) }))} />}
       <div className="overflow-x-auto">
-        <table className="w-full min-w-[480px] whitespace-nowrap text-sm">
+        <table className="w-full text-sm">
           <thead className="text-xs text-muted"><tr className="border-b border-line">
-            <th className="py-2 text-left">지수</th><th className="text-right">최근</th><th className="text-right">3개월</th><th className="text-right">1년</th>
+            <th className="py-2 text-left">지수</th><th className="whitespace-nowrap pl-2 text-right">최근</th><th className="whitespace-nowrap pl-2 text-right">3개월</th><th className="whitespace-nowrap pl-2 text-right">1년</th>
           </tr></thead>
           <tbody className="font-mono">
             {series.map((x, i) => (
               <tr key={x.d.id} className="border-b border-line/50">
-                <td className="py-2 font-sans" title={x.d.note ?? ""}><span className="mr-2 inline-block h-2.5 w-2.5 rounded-sm" style={{ background: COLORS[i % COLORS.length] }} />{x.d.label}</td>
-                <td className="text-right">{x.last?.[1].toFixed(1)}</td>
-                <td className={`text-right ${tone(x.m3)}`}>{pct(x.m3)}</td>
-                <td className={`text-right ${tone(x.y1)}`}>{pct(x.y1)}</td>
+                <td className="py-2 pr-1 font-sans" title={x.d.note ?? ""}><span className="mr-2 inline-block h-2.5 w-2.5 rounded-sm" style={{ background: COLORS[i % COLORS.length] }} />{x.d.label}</td>
+                <td className="whitespace-nowrap pl-2 text-right">{x.last?.[1].toFixed(1)}</td>
+                <td className={`whitespace-nowrap pl-2 text-right ${tone(x.m3)}`}>{pct(x.m3)}</td>
+                <td className={`whitespace-nowrap pl-2 text-right ${tone(x.y1)}`}>{pct(x.y1)}</td>
               </tr>
             ))}
           </tbody>

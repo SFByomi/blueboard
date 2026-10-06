@@ -24,7 +24,7 @@ export function NavTabs({ admin }: { admin: boolean }) {
             key={t.href}
             href={t.href}
             aria-current={on ? "page" : undefined}
-            className={`rounded-lg px-3 py-1.5 transition ${t.href === "/admin" ? "ml-auto" : ""} ${
+            className={`shrink-0 rounded-lg px-3 py-1.5 transition ${
               on ? "bg-accent/20 font-bold text-accent" : "text-muted hover:bg-panel2 hover:text-fg"
             }`}
           >

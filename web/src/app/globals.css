@@ -44,3 +44,9 @@ body {
 .btn-ghost {
   @apply rounded-lg border border-line px-3 py-1.5 text-xs text-muted hover:text-fg;
 }
+
+/* 품목·국가명 한/영 전환 (components/Names.tsx, NameToggle.tsx) */
+html[data-names="en"] .nm-ko,
+html:not([data-names="en"]) .nm-en {
+  display: none;
+}

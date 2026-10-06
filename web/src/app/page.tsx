@@ -1,4 +1,5 @@
 import Link from "next/link";
+import { HsName } from "@/components/Names";
 import { Spark } from "@/components/Spark";
 import { money, pct, tone, usd } from "@/lib/format";
 import { meta, priceSnapshots, surge, tagIndex } from "@/lib/queries";
@@ -88,7 +89,7 @@ export default async function Home() {
           <div className="mt-2 space-y-1 text-sm">
             {top.map((r) => (
               <div key={`${r.hs6}${r.partner}`} className="flex items-center justify-between gap-3">
-                <span className="min-w-0 truncate">{r.name_ko ?? r.name_en ?? r.hs6} <span className="font-mono text-xs text-muted">{r.hs6}</span>
+                <span className="min-w-0 truncate"><HsName ko={r.name_ko} en={r.name_en} hs={r.hs6} /> <span className="font-mono text-xs text-muted">{r.hs6}</span>
                   {related(r.hs6).map((t) => <Link key={t} href={`/stocks/${encodeURIComponent(t)}`} className="ml-1 rounded bg-accent/20 px-1.5 text-xs text-accent">{t}</Link>)}
                 </span>
                 <span className="shrink-0 font-mono text-xs text-muted">{usd(r.value_usd)} <span className={tone(r.yoy3m)}>{pct(r.yoy3m)}</span></span>

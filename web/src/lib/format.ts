@@ -53,3 +53,21 @@ export const INDEX_FOR_GROUP: Record<string, string[]> = {
   메모리: ["메모리 단가", "반도체"], 반도체: ["반도체"], 광통신: ["네트워크"], "서버·네트워크": ["서버·스토리지", "네트워크"],
   "전력·냉각": ["전력·냉각"], "AI 클라우드": ["서버·스토리지"], "부품·소재": ["부품 단가", "반도체"],
 };
+
+// Census 국가명 → 한국어 (없으면 영문 그대로)
+const CTY_KO: Record<string, string> = {
+  AUSTRALIA: "호주", AUSTRIA: "오스트리아", BELGIUM: "벨기에", BRAZIL: "브라질", BULGARIA: "불가리아", CANADA: "캐나다",
+  CHINA: "중국", "COSTA RICA": "코스타리카", CROATIA: "크로아티아", "CZECH REPUBLIC": "체코", DENMARK: "덴마크", ESTONIA: "에스토니아",
+  FINLAND: "핀란드", FRANCE: "프랑스", GERMANY: "독일", "HONG KONG": "홍콩", HUNGARY: "헝가리", INDIA: "인도", INDONESIA: "인도네시아",
+  IRELAND: "아일랜드", ISRAEL: "이스라엘", ITALY: "이탈리아", JAPAN: "일본", "KOREA, SOUTH": "한국", MALAYSIA: "말레이시아",
+  MEXICO: "멕시코", NETHERLANDS: "네덜란드", "NEW ZEALAND": "뉴질랜드", NORWAY: "노르웨이", PHILIPPINES: "필리핀", POLAND: "폴란드",
+  PORTUGAL: "포르투갈", ROMANIA: "루마니아", "SAUDI ARABIA": "사우디아라비아", SINGAPORE: "싱가포르", SLOVAKIA: "슬로바키아",
+  SLOVENIA: "슬로베니아", "SOUTH AFRICA": "남아프리카공화국", SPAIN: "스페인", SWEDEN: "스웨덴", SWITZERLAND: "스위스", TAIWAN: "대만",
+  THAILAND: "태국", TURKEY: "튀르키예", "UNITED ARAB EMIRATES": "아랍에미리트", "UNITED KINGDOM": "영국", VIETNAM: "베트남",
+  CAMBODIA: "캄보디아", CHILE: "칠레", COLOMBIA: "콜롬비아", ARGENTINA: "아르헨티나", PERU: "페루", EGYPT: "이집트", MOROCCO: "모로코",
+  LITHUANIA: "리투아니아", LATVIA: "라트비아", LUXEMBOURG: "룩셈부르크", GREECE: "그리스", ICELAND: "아이슬란드", MALTA: "몰타",
+  "SRI LANKA": "스리랑카", BANGLADESH: "방글라데시", PAKISTAN: "파키스탄", "DOMINICAN REPUBLIC": "도미니카공화국", "EL SALVADOR": "엘살바도르",
+  HONDURAS: "온두라스", GUATEMALA: "과테말라", NICARAGUA: "니카라과", "TRINIDAD AND TOBAGO": "트리니다드토바고", QATAR: "카타르",
+  KUWAIT: "쿠웨이트", OMAN: "오만", BAHRAIN: "바레인", JORDAN: "요르단", "UKRAINE": "우크라이나", KAZAKHSTAN: "카자흐스탄", RUSSIA: "러시아",
+};
+export const ctyKo = (name: string | null) => (name ? CTY_KO[name] ?? name : null);
