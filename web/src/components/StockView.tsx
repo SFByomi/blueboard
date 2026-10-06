@@ -2,7 +2,8 @@
 
 import type { EChartsOption } from "echarts";
 import { useMemo, useState } from "react";
-import { pct, ROLE_STYLE, tone, usd } from "@/lib/format";
+import { yoy3m } from "@/lib/estimate";
+import { pct, ROLE_STYLE, STAGES, stageOf, tone, usd } from "@/lib/format";
 import { axis, baseOption, EChart } from "./EChart";
 
 export type FlowData = {
@@ -104,31 +105,46 @@ export function StockView({ flows, months, quarters, currency }: { flows: FlowDa
   return (
     <>
       <div className="card">
-        <h2 className="font-bold">무역데이터 추적 흐름</h2>
-        <p className="mb-3 text-xs text-muted">카드를 누르면 아래 상세가 바뀝니다 · 상관계수는 분기 매출 YoY 기준</p>
-        <div className="grid gap-3 md:grid-cols-2 xl:grid-cols-3">
-          {flows.map((x, i) => {
-            const li = x.values.findLastIndex((v) => v != null);
-            const y = derived[i].yoy[li];
+        <h2 className="font-bold">공급망 추적</h2>
+        <p className="mb-3 text-xs text-muted">부품 조달 → 생산거점 출하 → 고객향 반입 순 · 숫자는 최근 3개월 전년비(물량·단가 분해) · 카드를 누르면 아래 상세가 바뀝니다</p>
+        <div className="space-y-4">
+          {STAGES.map((st) => {
+            const idx = flows.map((x, i) => (stageOf(x.role) === st.key ? i : -1)).filter((i) => i >= 0);
+            if (!idx.length) return null;
             return (
-              <button key={x.id} onClick={() => setSel(i)}
-                className={`rounded-xl border bg-panel2 p-3 text-left transition ${i === sel ? "border-accent ring-1 ring-accent" : "border-line hover:border-[#3d4575]"}`}>
-                <div className="flex items-center justify-between gap-2">
-                  <span className="font-bold">{x.reporter} {x.flow}</span>
-                  <span className="flex items-center gap-1">
-                    {x.alerts.length > 0 && <span title={x.alerts.map((a) => `${a.month} ${a.detail}`).join(" / ")} className="rounded-full bg-amber-950 px-2 py-0.5 text-[11px] text-amber-300">⚠ 단절 {x.alerts.length}</span>}
-                    <span className={`rounded-full px-2 py-0.5 text-[11px] ${ROLE_STYLE[x.role] ?? "bg-panel text-muted"}`}>{x.role}</span>
-                  </span>
+              <div key={st.key}>
+                <div className="mb-2 flex flex-wrap items-baseline gap-2"><b className="text-sm">{st.title}</b><span className="text-xs text-muted">{st.desc}</span></div>
+                <div className="grid gap-3 md:grid-cols-2 xl:grid-cols-3">
+                  {idx.map((i) => {
+                    const x = flows[i];
+                    const v3 = yoy3m(x.values), q3 = yoy3m(x.qty.map((q, k) => (q && x.values[k] != null ? q : null)));
+                    const p3 = v3.value != null && q3.value != null ? (1 + v3.value) / (1 + q3.value) - 1 : null;
+                    return (
+                      <button key={x.id} onClick={() => setSel(i)}
+                        className={`min-w-0 rounded-xl border bg-panel2 p-3 text-left transition ${i === sel ? "border-accent ring-1 ring-accent" : "border-line hover:border-[#3d4575]"}`}>
+                        <div className="flex items-center justify-between gap-2">
+                          <span className="font-bold">{x.reporter} {x.flow}</span>
+                          <span className="flex items-center gap-1">
+                            {x.alerts.length > 0 && <span title={x.alerts.map((a) => `${a.month} ${a.detail}`).join(" / ")} className="rounded-full bg-amber-950 px-2 py-0.5 text-[11px] text-amber-300">⚠ 단절 {x.alerts.length}</span>}
+                            <span className={`rounded-full px-2 py-0.5 text-[11px] ${ROLE_STYLE[x.role] ?? "bg-panel text-muted"}`}>{x.role}</span>
+                          </span>
+                        </div>
+                        <div className="mt-1 text-sm">{x.label}</div>
+                        <div className="mt-1 text-xs leading-relaxed text-muted">
+                          지역 <span className="text-fg">{x.region}</span> · HS <span className="font-mono text-fg">{x.hs}</span> · 상대국 <span className="text-fg">{x.partner}</span>
+                        </div>
+                        <div className="mt-2 flex items-end justify-between gap-2 text-xs">
+                          <span className="text-muted">신뢰도 {x.confidence}{x.include ? "" : " · 합산 제외"}{x.corrYoY != null ? ` · 상관 ${x.corrYoY.toFixed(2)}` : ""}</span>
+                          <span className="text-right font-mono">
+                            <span className={`text-sm font-bold ${tone(v3.value)}`}>{pct(v3.value)}</span>
+                            {q3.value != null && <span className="block text-[11px] text-muted">물량 <span className={tone(q3.value)}>{pct(q3.value)}</span> · 단가 <span className={tone(p3)}>{pct(p3)}</span></span>}
+                          </span>
+                        </div>
+                      </button>
+                    );
+                  })}
                 </div>
-                <div className="mt-1 text-sm">{x.label}</div>
-                <div className="mt-1 text-xs leading-relaxed text-muted">
-                  지역 <span className="text-fg">{x.region}</span> · HS <span className="font-mono text-fg">{x.hs}</span> · 상대국 <span className="text-fg">{x.partner}</span>
-                </div>
-                <div className="mt-2 flex items-center justify-between text-xs">
-                  <span className="text-muted">신뢰도 {x.confidence}{x.include ? "" : " · 합산 제외"}{x.corrYoY != null ? ` · 상관 ${x.corrYoY.toFixed(2)} / 선행 ${x.corrLead?.toFixed(2) ?? "-"}` : ""}</span>
-                  <span className={`font-mono ${tone(y)}`}>{months[li]} {pct(y)}</span>
-                </div>
-              </button>
+              </div>
             );
           })}
         </div>

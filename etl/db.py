@@ -65,6 +65,8 @@ MIGRATIONS = [
     ("financials", "currency TEXT DEFAULT 'USD'"),
     ("companies", "dart_segment TEXT"),               # 사업부문 매출 사용: "ElectroMaterialsBg" 또는 "Component:Separate"
     ("financials", "basis TEXT"),                     # 매출 기준 표시 (예: "ElectroMaterialsBg 부문")
+    ("companies", "grp TEXT"),                        # 섹터 그룹 (종목 목록 묶음): 메모리·광통신·서버/네트워크·전력/냉각·AI 클라우드·기타
+    ("companies", "sites TEXT"),                      # 생산거점 JSON: [{"name","country","what"}] — 종목 페이지 공급망 요약
 ]
 
 

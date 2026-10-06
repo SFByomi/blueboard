@@ -3,6 +3,7 @@ import { query, queryOne } from "./db";
 export type Company = {
   ticker: string; name: string; name_ko: string | null; market: string | null; sector: string | null;
   thesis: string | null; sec_ticker: string | null; fy_note: string | null; sort: number; dart_fs: string | null; dart_segment: string | null;
+  grp: string | null; sites: string | null; // sites: 생산거점 JSON
 };
 export type Series = {
   id: string; label: string; source: string; reporter: string | null; flow: string | null; region: string | null;
@@ -85,3 +86,7 @@ export const priceSnapshots = () =>
     if (e.code === "42P01" || e.message?.includes("no such table")) return [] as PriceRow[];
     throw e;
   });
+
+export const allFinancials = () => query<Fin>("SELECT * FROM financials ORDER BY ticker, period_end");
+export const allMappingsLabeled = () =>
+  query<Mapping & { label: string }>("SELECT m.*, s.label FROM mappings m JOIN series s ON s.id = m.series_id ORDER BY m.ticker, m.sort, m.id");

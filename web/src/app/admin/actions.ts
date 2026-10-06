@@ -19,18 +19,28 @@ const s = (f: FormData, k: string) => {
   return v === "" ? null : v;
 };
 
+/** 생산거점 입력: 한 줄에 "이름 | 국가 | 생산품목" → JSON */
+function sitesJson(text: string | null) {
+  if (!text) return null;
+  const rows = text.split("\n").map((l) => l.split("|").map((x) => x.trim())).filter((r) => r[0]);
+  return JSON.stringify(rows.map(([name, country = "", what = ""]) => ({ name, country, what })));
+}
+
 export async function saveCompany(f: FormData) {
   const ticker = s(f, "ticker")!.toUpperCase();
   db().prepare(
-    `INSERT INTO companies (ticker, name, name_ko, market, sector, thesis, sec_ticker, fy_note, sort, dart_fs, dart_segment)
-     VALUES (@ticker, @name, @name_ko, @market, @sector, @thesis, @sec_ticker, @fy_note, @sort, @dart_fs, @dart_segment)
+    `INSERT INTO companies (ticker, name, name_ko, market, sector, thesis, sec_ticker, fy_note, sort, dart_fs, dart_segment, grp, sites)
+     VALUES (@ticker, @name, @name_ko, @market, @sector, @thesis, @sec_ticker, @fy_note, @sort, @dart_fs, @dart_segment, @grp, @sites)
      ON CONFLICT(ticker) DO UPDATE SET name=@name, name_ko=@name_ko, market=@market, sector=@sector,
-       thesis=@thesis, sec_ticker=@sec_ticker, fy_note=@fy_note, sort=@sort, dart_fs=@dart_fs, dart_segment=@dart_segment`,
+       thesis=@thesis, sec_ticker=@sec_ticker, fy_note=@fy_note, sort=@sort, dart_fs=@dart_fs, dart_segment=@dart_segment,
+       grp=@grp, sites=@sites`,
   ).run({
     ticker, name: s(f, "name") ?? ticker, name_ko: s(f, "name_ko"), market: s(f, "market"), sector: s(f, "sector"),
     thesis: s(f, "thesis"), sec_ticker: s(f, "sec_ticker"), fy_note: s(f, "fy_note"), sort: Number(s(f, "sort") ?? 100),
     dart_fs: s(f, "dart_fs")?.toUpperCase() ?? null,
     dart_segment: s(f, "dart_segment"),
+    grp: s(f, "grp"),
+    sites: sitesJson(s(f, "sites")),
   });
   exportCuration(); // data/curation.json 갱신 → git push로 공유
   revalidatePath("/", "layout");

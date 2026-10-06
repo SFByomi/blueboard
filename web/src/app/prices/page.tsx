@@ -21,7 +21,7 @@ function change(points: [string, number][], days: number) {
 const series = (rows: PriceRow[], item: string, stat: string): [string, number][] =>
   rows.filter((r) => r.item === item && r.stat === stat).map((r) => [r.date, r.value]);
 
-export default async function Compute() {
+export default async function Prices() {
   const rows = await priceSnapshots();
   const gpu = rows.filter((r) => r.kind === "gpu");
   const tok = rows.filter((r) => r.kind === "token");
@@ -32,7 +32,7 @@ export default async function Compute() {
   return (
     <div className="space-y-6">
       <div>
-        <h1 className="text-2xl font-bold">GPU·토큰 가격</h1>
+        <h1 className="text-2xl font-bold">가격·지수</h1>
         <p className="mt-1 text-sm text-muted">
           AI 컴퓨트 수급 지표 · {first ? `${first} ~ ${last} 일별 수집` : "수집 전"} · 매일 아침 갱신
         </p>
