@@ -1,6 +1,7 @@
 import type { Metadata } from "next";
 import { JetBrains_Mono, Noto_Sans_KR } from "next/font/google";
 import Link from "next/link";
+import { NavTabs } from "@/components/NavTabs";
 import { ADMIN_ENABLED } from "@/lib/db";
 import "./globals.css";
 
@@ -22,12 +23,9 @@ export default function RootLayout({ children }: LayoutProps<"/">) {
     <html lang="ko" className={`${noto.variable} ${mono.variable} antialiased`}>
       <body className="min-h-screen font-sans">
         <header className="sticky top-0 z-10 border-b border-line bg-bg/90 backdrop-blur">
-          <nav className="mx-auto flex max-w-7xl items-center gap-x-5 gap-y-1 overflow-x-auto whitespace-nowrap px-4 py-3 text-sm">
-            <Link href="/" className="text-base font-bold">Investing Idea</Link>
-            <Link href="/stocks" className="text-muted hover:text-fg">종목</Link>
-            <Link href="/prices" className="text-muted hover:text-fg">가격·지수</Link>
-            <Link href="/surge" className="text-muted hover:text-fg">급등 탐색</Link>
-            {ADMIN_ENABLED && <Link href="/admin" className="ml-auto text-muted hover:text-fg">관리</Link>}
+          <nav className="mx-auto flex max-w-7xl items-center gap-x-1 gap-y-1 overflow-x-auto whitespace-nowrap px-4 py-2.5 text-sm">
+            <Link href="/" className="mr-4 text-base font-bold">Investing Idea</Link>
+            <NavTabs admin={ADMIN_ENABLED} />
           </nav>
         </header>
         <main className="mx-auto max-w-7xl px-4 py-6">{children}</main>
