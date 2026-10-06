@@ -80,4 +80,8 @@ export const meta = async (key: string) => (await queryOne<{ value: string }>("S
 export type PriceRow = { date: string; kind: "gpu" | "token"; item: string; stat: string; value: number; n: number | null; detail: string | null };
 /** 가격 테이블은 첫 수집 전(새 DB·배포 직후)엔 없을 수 있음 → 빈 목록으로 (빌드가 실패하지 않게) */
 export const priceSnapshots = () =>
-  query<PriceRow>("SELECT * FROM price_snapshots ORDER BY date, item, stat").catch(() => [] as PriceRow[]);
+  query<PriceRow>("SELECT * FROM price_snapshots ORDER BY date, item, stat").catch((e: { code?: string; message?: string }) => {
+    // 테이블 없음(Postgres 42P01, SQLite "no such table")만 빈 목록 — 접속 실패 등은 그대로 오류로
+    if (e.code === "42P01" || e.message?.includes("no such table")) return [] as PriceRow[];
+    throw e;
+  });

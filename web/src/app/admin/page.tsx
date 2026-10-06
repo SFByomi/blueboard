@@ -20,6 +20,7 @@ export default async function Admin() {
         <h1 className="text-2xl font-bold">관리</h1>
         <div className="flex gap-2 text-sm">
           <Link href="/admin/tags" className="btn-ghost">품목 → 종목 태그</Link>
+          <Link href="/admin/ornn" className="btn-ghost">Ornn 지수 (개인용)</Link>
         </div>
       </div>
 
