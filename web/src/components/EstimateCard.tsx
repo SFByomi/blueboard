@@ -1,9 +1,9 @@
 import { PriceChart } from "@/components/ComputeCharts";
-import { estReliable, money, pct, tone } from "@/lib/format";
+import { estExtrap, estReliable, methodLabel, money, pct, tone } from "@/lib/format";
 import type { RevEstimate } from "@/lib/queries";
 
 type Bt = { q_end: string; actual: number; pred: number; naive: number | null };
-type Flow = { sid: string; lag: number; r2: number; months: number };
+type Flow = { sid: string; lag: number; r2: number; months: number; extrap?: boolean };
 
 /** 진행 분기 매출 추정 · 컨센서스 괴리 · 백테스트 (etl/estimates.py). 컨센 금액은 약관상 표시하지 않고 괴리율만 */
 export function EstimateCard({ hist, labels }: { hist: RevEstimate[]; labels: Record<string, string> }) {
@@ -31,8 +31,9 @@ export function EstimateCard({ hist, labels }: { hist: RevEstimate[]; labels: Re
           {bias != null && Math.abs(bias) >= 0.05 && (
             <div className="mt-1 text-xs text-muted">최근 4분기 모델 편향 <span className={tone(bias)}>{pct(bias)}</span> — {bias < 0 ? "과소" : "과대"}추정 경향 감안</div>
           )}</div>
-        <div><div className="text-xs text-muted">모델</div><div className="text-sm">{e.method.startsWith("level") ? "무역 금액 회귀 (최근 12분기)" : "무역 전년비 회귀"}{e.method.endsWith("+bias") && <span className="text-muted"> + 최근 4분기 편향 보정</span>}</div>
-          <div className="text-xs text-muted">단순 추세(직전 성장률 유지) 오차 {e.mape_naive == null ? "-" : pct(e.mape_naive, 1).replace("+", "")}</div></div>
+        <div><div className="text-xs text-muted">모델</div><div className="text-sm">{methodLabel(e.method)}</div>
+          <div className="text-xs text-muted">단순 추세(직전 성장률 유지) 오차 {e.mape_naive == null ? "-" : pct(e.mape_naive, 1).replace("+", "")}</div>
+          {estExtrap(e) && <div className="mt-1 text-xs text-down">입력 무역값이 과거 범위를 크게 벗어남 — 외삽이라 &lsquo;참고&rsquo;</div>}</div>
       </div>
 
       {gaps.length >= 2 && (
@@ -69,14 +70,14 @@ export function EstimateCard({ hist, labels }: { hist: RevEstimate[]; labels: Re
             {flows.map((f) => (
               <li key={f.sid} className="flex justify-between gap-2">
                 <span className="truncate">{labels[f.sid] ?? f.sid}</span>
-                <span className="shrink-0 text-xs text-muted">{f.lag ? `${f.lag}분기 선행` : `동행 · ${f.months}/3개월`} · R² {f.r2.toFixed(2)}</span>
+                <span className="shrink-0 text-xs text-muted">{f.lag ? `${f.lag}분기 선행` : `동행 · ${f.months}/3개월`} · R² {f.r2.toFixed(2)}{f.extrap ? " · 외삽" : ""}</span>
               </li>
             ))}
           </ul>
         </div>
       </div>
       <p className="text-xs leading-relaxed text-muted">
-        모델: 무역 전년비 회귀·금액 회귀와 각각의 편향 보정판(직전 4분기 실적/예측 배율을 곱함 — 백테스트도 그 시점까지의 오차로만 보정) 중 백테스트 오차가 가장 작은 쪽. 오차 12% 이하이면서 단순 추세보다 나을 때 &lsquo;신뢰&rsquo;.
+        흐름: 매출 연관도 A·B 중 단독 예측 오차가 작은 상위 1~3개. 모델: 전년비 회귀·금액 회귀, 각각의 편향 보정판(직전 4분기 실적/예측 배율 — 백테스트도 그 시점까지의 오차로만 보정), 두 계열 평균(앙상블) 중 백테스트(6분기 이상) 오차가 가장 작은 쪽. 오차 12% 이하이면서 단순 추세보다 나을 때 &lsquo;신뢰&rsquo;.
         컨센서스 금액은 데이터 제공처 약관상 표시하지 않고 괴리율만 보여줍니다. 투자 권유가 아닙니다.
       </p>
     </div>

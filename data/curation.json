@@ -597,6 +597,17 @@
    "spec": "{\"dataset\": \"exports/statehs\", \"hs\": \"841869\", \"filters\": {\"STATE\": \"TX\", \"CTY_CODE\": \"-\"}}"
   },
   {
+   "id": "us_imp_all_compsys",
+   "label": "컴퓨터 시스템(랙 단위 AI 서버 포함) 수입",
+   "source": "census",
+   "reporter": "🇺🇸 미국",
+   "flow": "수입",
+   "region": "전국",
+   "hs": "8471.49",
+   "partner": "전세계",
+   "spec": "{\"dataset\": \"imports/hs\", \"hs\": \"847149\", \"filters\": {\"CTY_CODE\": \"-\"}}"
+  },
+  {
    "id": "us_imp_all_dram",
    "label": "전체 DRAM(1GB 초과) 수입",
    "source": "census",
@@ -639,6 +650,28 @@
    "hs": "8532.24.0020",
    "partner": "전세계",
    "spec": "{\"dataset\": \"imports/hs\", \"hs\": \"8532240020\", \"filters\": {\"CTY_CODE\": \"-\"}}"
+  },
+  {
+   "id": "us_imp_all_server6",
+   "label": "서버·컴퓨팅 유닛 수입 (HS6 전체)",
+   "source": "census",
+   "reporter": "🇺🇸 미국",
+   "flow": "수입",
+   "region": "전국",
+   "hs": "8471.50",
+   "partner": "전세계",
+   "spec": "{\"dataset\": \"imports/hs\", \"hs\": \"847150\", \"filters\": {\"CTY_CODE\": \"-\"}}"
+  },
+  {
+   "id": "us_imp_all_servsys",
+   "label": "서버+컴퓨터 시스템 수입 합계 (AI 랙 분류 이동 흡수)",
+   "source": "census",
+   "reporter": "🇺🇸 미국",
+   "flow": "수입",
+   "region": "전국",
+   "hs": "8471.49+8471.50",
+   "partner": "전세계",
+   "spec": "{\"dataset\": \"imports/hs\", \"hs\": [\"847149\", \"847150\"], \"filters\": {\"CTY_CODE\": \"-\"}}"
   },
   {
    "id": "us_imp_all_ssd",
@@ -815,6 +848,17 @@
    "hs": "3818.00.009x",
    "partner": "일본",
    "spec": "{\"dataset\": \"imports/hs\", \"hs\": [\"3818000090\", \"3818000091\", \"3818000095\"], \"filters\": {\"CTY_CODE\": \"5880\", \"DISTRICT\": \"28\"}}"
+  },
+  {
+   "id": "us_imp_th_netequip6",
+   "label": "태국산 통신장비 수입 (HS6 전체)",
+   "source": "census",
+   "reporter": "🇺🇸 미국",
+   "flow": "수입",
+   "region": "전국",
+   "hs": "8517.62",
+   "partner": "태국",
+   "spec": "{\"dataset\": \"imports/hs\", \"hs\": \"851762\", \"filters\": {\"CTY_CODE\": \"5490\"}}"
   },
   {
    "id": "us_imp_th_switch",
@@ -1167,6 +1211,36 @@
    "sort": 30
   },
   {
+   "ticker": "DELL",
+   "series_id": "us_imp_all_servsys",
+   "role": "최종수요",
+   "confidence": "중간",
+   "rationale": "서버(8471.50)+시스템(8471.49) 미국 전체 수입 합계 — AI 랙이 두 세번을 오가며 신고되고 생산지도 대만↔멕시코로 이동해 합계가 안정적.",
+   "caveat": "업계 합산.",
+   "include_in_total": 0,
+   "sort": 34
+  },
+  {
+   "ticker": "DELL",
+   "series_id": "us_imp_all_compsys",
+   "role": "최종수요",
+   "confidence": "중간",
+   "rationale": "랙 단위 AI 서버(GB200 NVL72 등)는 '시스템'(8471.49)으로 신고되는 경우가 많아 서버(8471.50)만으론 AI 매출을 놓침. 매출과 전년비 0.70, 단독 예측 오차 2.3%.",
+   "caveat": "미국 전체 수입(업계 합산).",
+   "include_in_total": 0,
+   "sort": 35
+  },
+  {
+   "ticker": "DELL",
+   "series_id": "us_imp_all_server6",
+   "role": "최종수요",
+   "confidence": "중간",
+   "rationale": "서버(8471.50) 미국 전체 수입 — 대만→멕시코 등 생산지 이동에 영향받지 않는 합계.",
+   "caveat": "업계 합산.",
+   "include_in_total": 0,
+   "sort": 36
+  },
+  {
    "ticker": "FLNC",
    "series_id": "us_imp_az_cn_liion",
    "role": "생산투입",
@@ -1248,6 +1322,36 @@
   },
   {
    "ticker": "HPE",
+   "series_id": "us_imp_all_servsys",
+   "role": "최종수요",
+   "confidence": "중간",
+   "rationale": "서버(8471.50)+시스템(8471.49) 미국 전체 수입 합계 — AI 랙이 두 세번을 오가며 신고되고 생산지도 대만↔멕시코로 이동해 합계가 안정적.",
+   "caveat": "업계 합산.",
+   "include_in_total": 0,
+   "sort": 34
+  },
+  {
+   "ticker": "HPE",
+   "series_id": "us_imp_all_compsys",
+   "role": "최종수요",
+   "confidence": "낮음",
+   "rationale": "랙 단위 AI 서버 '시스템'(8471.49) 수입 — 업황.",
+   "caveat": "미국 전체 수입(업계 합산).",
+   "include_in_total": 0,
+   "sort": 35
+  },
+  {
+   "ticker": "HPE",
+   "series_id": "us_imp_all_server6",
+   "role": "최종수요",
+   "confidence": "중간",
+   "rationale": "서버(8471.50) 미국 전체 수입. 매출과 전년비 0.69·1분기 선행 0.92, 단독 예측 오차 4.3%.",
+   "caveat": "업계 합산.",
+   "include_in_total": 0,
+   "sort": 36
+  },
+  {
+   "ticker": "HPE",
    "series_id": "us_imp_my_netequip",
    "role": "생산출하",
    "confidence": "낮음",
@@ -1285,6 +1389,16 @@
    "caveat": "업계 합산(월 30억 달러대) — Lumentum 단독 아님.",
    "include_in_total": 1,
    "sort": 10
+  },
+  {
+   "ticker": "LITE",
+   "series_id": "us_imp_th_netequip6",
+   "role": "회사출하",
+   "confidence": "중간",
+   "rationale": "태국산 통신장비(8517.62 전체) — Fabrinet 위탁 트랜시버 포함. 매출과 전년비 0.88, 단독 예측 오차 3.1%.",
+   "caveat": "HS10(0090)보다 넓음 — 스위치 등 포함.",
+   "include_in_total": 0,
+   "sort": 15
   },
   {
    "ticker": "LITE",
@@ -1445,6 +1559,26 @@
    "caveat": "업계 전체. YoY 상관 0.07.",
    "include_in_total": 0,
    "sort": 20
+  },
+  {
+   "ticker": "SMCI",
+   "series_id": "us_imp_all_servsys",
+   "role": "최종수요",
+   "confidence": "낮음",
+   "rationale": "서버(8471.50)+시스템(8471.49) 미국 전체 수입 합계 — AI 랙이 두 세번을 오가며 신고되고 생산지도 대만↔멕시코로 이동해 합계가 안정적.",
+   "caveat": "업계 합산.",
+   "include_in_total": 0,
+   "sort": 34
+  },
+  {
+   "ticker": "SMCI",
+   "series_id": "us_imp_all_compsys",
+   "role": "최종수요",
+   "confidence": "낮음",
+   "rationale": "랙 단위 AI 서버 '시스템'(8471.49) 수입 — 업황.",
+   "caveat": "미국 전체 수입(업계 합산). 단독 예측 오차 40%대로 약함.",
+   "include_in_total": 0,
+   "sort": 35
   },
   {
    "ticker": "SNDK",

@@ -1,12 +1,13 @@
 """무역 데이터로 진행 중인 분기 매출 추정 + 컨센서스 괴리 + 백테스트.
 
 모델 (종목별):
-- 입력 흐름: flow_scores 등급 A·B인 매핑 최대 3개 (매출과 직접 연동이 숫자로 확인된 흐름만). 각 흐름의 선행 분기(best_lag) 사용
+- 입력 흐름: flow_scores 등급 A·B 매핑(매출과 직접 연동이 숫자로 확인된 흐름)을 단독 예측 오차로 순위 매겨 상위 1~3개 조합 중 최선. 각 흐름의 선행 분기(best_lag) 사용
 - 두 모델을 흐름마다 적합하고, 백테스트 오차가 작은 쪽을 종목별로 채택
   - yoy  : 매출 전년비(q) = a + b × 무역 전년비(q − lag) → 매출(T−4) × (1 + 예측). 계절성에 강하지만 급성장기엔 평균으로 끌려감
   - level: 매출(q) = a + b × 무역 금액(q − lag), 최근 12분기 → 급성장·급감 국면을 따라감
   - +bias: 위 예측에 '직전 4분기 실적/예측 배율 평균'을 곱한 보정판 (계속 낮게/높게 잡는 편향 제거).
     백테스트에서도 각 분기는 그 이전 4분기 오차로만 보정 → 미래 정보 없이 비교, 이겨야 채택
+  - ens  : 전년비 계열 최선과 금액 계열 최선의 평균 (두 모델이 엇갈리는 급변 국면 대비)
 - 진행 분기 T 예측: lag ≥ 1이면 이미 끝난 분기의 무역으로, lag 0이면 T에 들어온 달(1~3개월, 금액은 3개월로 환산)로
 - 결합: 흐름별 예측을 R²로 가중평균, 범위는 회귀 잔차 ±1 표준편차
 - 백테스트: 최근 8개 분기를 하나씩 빼고 그 이전 분기로만 다시 적합해 예측 → 평균 절대 오차(MAPE)를
@@ -28,6 +29,8 @@ MAX_FLOWS = 3
 LEVEL_WIN = 12  # 금액 모델 적합 창(분기)
 BIAS_N = 4       # 편향 보정에 쓰는 직전 분기 수
 BIAS_CAP = 1.5   # 보정 배율 상한 (±50%)
+MIN_BT = 6       # 백테스트 분기가 이보다 적으면 오차를 믿을 수 없어 후보 제외
+EXTRAP = 0.25    # 예측에 쓴 무역 값이 학습 범위를 25% 넘게 벗어나면 외삽 표시
 STALE_DAYS = 75  # 분기 말 + 75일이 지났는데 실적이 없으면 수집 누락으로 봄
 METHODS = ("yoy", "level")
 
@@ -49,6 +52,11 @@ def trade_yoy(ms: pd.Series, start, end, full=True) -> tuple[float | None, int]:
     return float(cur.sum() / prev.sum() - 1), len(cur)
 
 
+def _extrap(x: float, m: dict) -> bool:
+    span = m["xmax"] - m["xmin"]
+    return x > m["xmax"] + EXTRAP * span or x < m["xmin"] - EXTRAP * span
+
+
 def fit(xs: list, ys: list, min_n=MIN_PAIRS):
     d = pd.DataFrame({"x": xs, "y": ys}).dropna()
     if len(d) < min_n or d.x.std() == 0:
@@ -60,7 +68,7 @@ def fit(xs: list, ys: list, min_n=MIN_PAIRS):
     res = d.y - (a + b * d.x)
     sst = ((d.y - d.y.mean()) ** 2).sum()
     return {"a": a, "b": b, "r2": float(1 - (res ** 2).sum() / sst) if sst else 0.0,
-            "se": float((res ** 2).sum() / max(len(d) - 2, 1)) ** 0.5, "n": len(d)}
+            "se": float((res ** 2).sum() / max(len(d) - 2, 1)) ** 0.5, "n": len(d), "xmin": float(d.x.min()), "xmax": float(d.x.max())}
 
 
 def flow_pairs(ms: pd.Series, fin: pd.DataFrame, lag: int, upto: int):
@@ -101,7 +109,7 @@ def _one(method, ms, fin, k, lag, t_start, t_end, live):
         if not m or x is None:
             return None
         base = fin.revenue.iloc[k - 4]
-        return base * (1 + m["a"] + m["b"] * x), base * m["se"], m, months
+        return base * (1 + m["a"] + m["b"] * x), base * m["se"], {**m, "extrap": _extrap(x, m)}, months
     # level: 매출 ~ 무역 금액, 최근 LEVEL_WIN 분기 — 급성장기에 전년비 모델이 평균으로 끌려가는 걸 보완
     lo = max(k - LEVEL_WIN, lag)
     xsl = [trade_sum(ms, *(lambda q: (q.start, q.end))(fin.iloc[i - lag]))[0] for i in range(lo, k)]
@@ -109,7 +117,7 @@ def _one(method, ms, fin, k, lag, t_start, t_end, live):
     x, months = trade_sum(ms, xs, xe, full=not live)
     if not m or x is None:
         return None
-    return m["a"] + m["b"] * x, m["se"], m, months
+    return m["a"] + m["b"] * x, m["se"], {**m, "extrap": _extrap(x, m)}, months
 
 
 def predict(method, flows, fin: pd.DataFrame, k: int, t_start, t_end, live: bool):
@@ -119,7 +127,8 @@ def predict(method, flows, fin: pd.DataFrame, k: int, t_start, t_end, live: bool
         r = _one(method, ms, fin, k, lag, t_start, t_end, live)
         if r:
             rev, se, m, months = r
-            preds.append({"sid": sid, "lag": lag, "rev": float(rev), "se": float(se), "r2": m["r2"], "n": m["n"], "months": months})
+            preds.append({"sid": sid, "lag": lag, "rev": float(rev), "se": float(se), "r2": m["r2"], "n": m["n"], "months": months,
+                          "extrap": bool(m["extrap"])})
     if not preds:
         return None
     w = [max(p["r2"], 0.05) for p in preds]
@@ -167,6 +176,46 @@ def mape(bt: list[dict], key: str) -> float | None:
     return round(sum(e) / len(e), 4) if e else None
 
 
+def best_model(flows, fin: pd.DataFrame, t_start=None, t_end=None):
+    """yoy·level × (보정 없음·편향 보정) 중 백테스트 오차가 가장 작은 모델 → (mape, method, 진행분기 예측|None, backtest).
+    t_start가 None이면 백테스트만 (후보 탐색용)."""
+    cands = []
+    for method in METHODS:
+        p = predict(method, flows, fin, len(fin), t_start, t_end, live=True) if t_start is not None else {"rev": None, "se": 0, "flows": []}
+        if not p:
+            continue
+        bt = backtest(method, flows, fin)
+        if len(bt) >= MIN_BT:
+            cands.append((mape(bt, "pred"), method, p, bt))
+        # 편향 보정판: 최근 BIAS_N 분기 실적/예측 배율을 곱함 — 보정판도 백테스트로 이겨야 채택
+        btc = backtest(method, flows, fin, corrected=True)
+        recent = {}
+        for k in range(len(fin) - BIAS_N, len(fin)):
+            q = fin.iloc[k]
+            r = predict(method, flows, fin, k, q.start, q.end, live=False)
+            if r:
+                recent[k] = r["rev"]
+        f = bias_factor(recent, fin)
+        if len(btc) >= MIN_BT and f is not None:
+            pc = {**p, "rev": p["rev"] * f if p["rev"] is not None else None, "se": p["se"] * f, "bias": f}
+            cands.append((mape(btc, "pred"), f"{method}+bias", pc, btc))
+    # 앙상블: 전년비 계열 최선 + 금액 계열 최선의 평균 — 두 모델이 크게 엇갈리는 급변 국면에서 한쪽에 쏠리지 않게
+    fam = {}
+    for c in cands:
+        b = c[1].split("+")[0]
+        if b not in fam or c[0] < fam[b][0]:
+            fam[b] = c
+    if len(fam) == 2:
+        (_, m1, p1, b1), (_, m2, p2, b2) = fam["yoy"], fam["level"]
+        q2 = {r["q_end"]: r["pred"] for r in b2}
+        bt = [{**r, "pred": (r["pred"] + q2[r["q_end"]]) / 2} for r in b1 if r["q_end"] in q2]
+        if len(bt) >= MIN_BT:
+            pe = {**p1, "rev": (p1["rev"] + p2["rev"]) / 2 if p1["rev"] is not None and p2["rev"] is not None else None,
+                  "se": (p1["se"] + p2["se"]) / 2, "flows": p1["flows"] + [f for f in p2["flows"] if f["sid"] not in {g["sid"] for g in p1["flows"]}]}
+            cands.append((mape(bt, "pred"), f"ens({m1},{m2})", pe, bt))
+    return min(cands, key=lambda c: c[0]) if cands else None
+
+
 def match_consensus(con, sec_ticker: str | None, t_end: pd.Timestamp):
     if not sec_ticker:
         return None
@@ -182,9 +231,8 @@ def estimate_all(con, log=print) -> int:
     sel = con.execute("""SELECT f.ticker, f.series_id, f.best_lag FROM flow_scores f
                          WHERE f.grade IN ('A','B') ORDER BY f.ticker, f.best DESC""").fetchall()
     by: dict[str, list] = {}
-    for t, sid, lag in sel:
-        if len(by.setdefault(t, [])) < MAX_FLOWS:
-            by[t].append((sid, int(lag or 0)))
+    for t, sid, lag in sel:  # A·B 흐름 전부 후보 (상관으로 1차 거름) → 아래에서 예측 오차로 고름
+        by.setdefault(t, []).append((sid, int(lag or 0)))
     n = 0
     for ticker, picks in by.items():
         fin = fin_frame(con, ticker)
@@ -198,31 +246,18 @@ def estimate_all(con, log=print) -> int:
         if t_end + pd.Timedelta(days=STALE_DAYS) < pd.Timestamp(today):  # 이미 발표됐을 분기 — 매출 수집이 밀린 것
             log(f"  - {ticker}: {t_end:%Y-%m} 분기 실적이 아직 수집 안 됨 → 추정 건너뜀")
             continue
-        # 두 모델을 백테스트해 오차가 작은 쪽 채택 (같은 백테스트로 고르므로 약간 낙관적)
-        cands = []
-        for method in METHODS:
-            p = predict(method, flows, fin, len(fin), t_start, t_end, live=True)
-            if not p:
-                continue
-            bt = backtest(method, flows, fin)
-            if bt:
-                cands.append((mape(bt, "pred"), method, p, bt))
-            # 편향 보정판: 최근 BIAS_N 분기 실적/예측 배율을 곱함 — 보정판도 백테스트로 이겨야 채택
-            btc = backtest(method, flows, fin, corrected=True)
-            n = len(fin)
-            recent = {}
-            for k in range(n - BIAS_N, n):
-                q = fin.iloc[k]
-                r = predict(method, flows, fin, k, q.start, q.end, live=False)
-                if r:
-                    recent[k] = r["rev"]
-            f = bias_factor(recent, fin)
-            if btc and f is not None:
-                pc = {**p, "rev": p["rev"] * f, "se": p["se"] * f, "bias": f}
-                cands.append((mape(btc, "pred"), f"{method}+bias", pc, btc))
-        if not cands:
+        # 흐름별 단독 예측 오차로 순위 → 상위 1·2·3개 묶음 중 백테스트 오차가 가장 작은 조합·모델 채택
+        # (같은 백테스트로 고르므로 약간 낙관적 — 후보를 A·B 등급으로 먼저 거른 이유)
+        solo = [(r[0], f) for f in flows if (r := best_model([f], fin))]
+        ranked = [f for _, f in sorted(solo, key=lambda x: x[0])]
+        best = None
+        for k in range(1, min(MAX_FLOWS, len(ranked)) + 1):
+            r = best_model(ranked[:k], fin, t_start, t_end)
+            if r and (best is None or r[0] < best[0] - 0.002):  # 흐름을 늘려도 거의 안 나아지면 적은 쪽
+                best = r
+        if not best:
             continue
-        err, method, p, bt = min(cands, key=lambda c: c[0])
+        err, method, p, bt = best
         est, last = p["rev"], float(fin.revenue.iloc[-1])
         sec, cur = con.execute("SELECT sec_ticker, (SELECT currency FROM financials WHERE ticker=? ORDER BY period_end DESC LIMIT 1) FROM companies WHERE ticker=?",
                                (ticker, ticker)).fetchone()
