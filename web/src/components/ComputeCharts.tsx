@@ -11,7 +11,7 @@ export function PriceChart({ lines, unit, height = 220 }: { lines: Line[]; unit:
     ...baseOption(),
     grid: { left: 52, right: 16, top: 24, bottom: 56 },
     tooltip: { ...(baseOption().tooltip as object), valueFormatter: (v) => (v == null ? "-" : `$${Number(v).toFixed(2)}`) },
-    xAxis: { type: "time", ...axis, minInterval: 86400000, axisLabel: { ...axis.axisLabel, formatter: "{MM}-{dd}" }, splitLine: { show: false } },
+    xAxis: { type: "time", ...axis, minInterval: 86400000, splitNumber: 4, axisLabel: { ...axis.axisLabel, formatter: "{MM}-{dd}", hideOverlap: true }, splitLine: { show: false } },
     yAxis: { type: "value", name: unit, nameTextStyle: { color: "#8a90ad", fontSize: 11 }, scale: true, ...axis },
     series: lines.map((l) => ({
       name: l.name, type: "line", data: l.points, step: l.step ? "end" : undefined, showSymbol: l.points.length < 3,
