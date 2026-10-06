@@ -4,6 +4,8 @@
 """
 import json
 import sys
+import time
+from concurrent.futures import ThreadPoolExecutor, as_completed
 from datetime import datetime
 
 from etl import breaks, curation, dart, dart_segment, indicators, prices, scores, sec, seed, sources, surge
@@ -29,23 +31,36 @@ def apply_seed(con):
     con.commit()
 
 
+PARALLEL = {"census"}  # 동시 호출해도 되는 소스 (관세청은 연결 끊김이 잦아 순차, e-Stat은 환율 캐시 공유)
+
+
 def fetch_series(con):
-    for sid, source, spec in con.execute("SELECT id, source, spec FROM series").fetchall():
-        spec = json.loads(spec)
-        try:
-            df = sources.fetch(source, spec)
-        except Exception as e:  # noqa: BLE001 — 한 시리즈 실패가 전체를 막지 않게
-            log(f"  ✗ {sid}: {e}")
-            continue
-        unit = df["unit"].iloc[0] if "unit" in df and len(df) else None
-        con.execute("DELETE FROM observations WHERE series_id=?", (sid,))
-        con.executemany("INSERT INTO observations (series_id, month, value_usd, qty) VALUES (?,?,?,?)",
-                        [(sid, str(r.month), float(r.value_usd), float(r.qty) if "qty" in df and r.qty is not None and r.qty == r.qty else None)
-                         for r in df.itertuples()])
-        con.execute("UPDATE series SET last_month=?, unit=?, updated_at=? WHERE id=?",
-                    (str(df["month"].max()) if len(df) else None, unit, datetime.now().isoformat(timespec="seconds"), sid))
-        con.commit()
-        log(f"  ✓ {sid}: {len(df)}개월 ~{df['month'].max() if len(df) else '-'}")
+    rows = con.execute("SELECT id, source, spec FROM series").fetchall()
+    with ThreadPoolExecutor(6) as pool:  # Census 수출 조회는 건당 15~40초 → 병렬로 받고 DB 쓰기는 이 스레드에서
+        futs = {pool.submit(sources.fetch, src, json.loads(spec)): sid for sid, src, spec in rows if src in PARALLEL}
+        for f in as_completed(futs):
+            save_series(con, futs[f], f)
+    for sid, src, spec in rows:
+        if src not in PARALLEL:
+            save_series(con, sid, lambda src=src, spec=spec: sources.fetch(src, json.loads(spec)))
+
+
+def save_series(con, sid, job):
+    """job: 완료된 Future 또는 호출하면 DataFrame을 돌려주는 함수"""
+    try:
+        df = job.result() if hasattr(job, "result") else job()
+    except Exception as e:  # noqa: BLE001 — 한 시리즈 실패가 전체를 막지 않게
+        log(f"  ✗ {sid}: {e}")
+        return
+    unit = df["unit"].iloc[0] if "unit" in df and len(df) else None
+    con.execute("DELETE FROM observations WHERE series_id=?", (sid,))
+    con.executemany("INSERT INTO observations (series_id, month, value_usd, qty) VALUES (?,?,?,?)",
+                    [(sid, str(r.month), float(r.value_usd), float(r.qty) if "qty" in df and r.qty is not None and r.qty == r.qty else None)
+                     for r in df.itertuples()])
+    con.execute("UPDATE series SET last_month=?, unit=?, updated_at=? WHERE id=?",
+                (str(df["month"].max()) if len(df) else None, unit, datetime.now().isoformat(timespec="seconds"), sid))
+    con.commit()
+    log(f"  ✓ {sid}: {len(df)}개월 ~{df['month'].max() if len(df) else '-'}")
 
 
 def fetch_financials(con):
@@ -74,25 +89,28 @@ def fetch_financials(con):
 
 
 def main():
+    t0 = time.time()
+    step = lambda msg: log(f"{msg}  [{time.time() - t0:.0f}s]")  # noqa: E731 — 단계별 경과 시간 (Actions 지연 진단용)
     con = connect()
     if curation.load(con):
         log("1) 큐레이션: data/curation.json 적용")
     else:
         log("1) 시드 → data/curation.json 생성"); apply_seed(con); curation.export(con)
-    log("2) 시계열"); fetch_series(con)
-    log("3) 분기 매출 (SEC·DART)"); fetch_financials(con)
-    log("3-1) 통계 단절 탐지"); n = breaks.scan(con, log); con.commit(); log(f"  경고 {n}건")
-    log("3-2) 매출 상관 점수"); scores.score_all(con, log); con.commit()
+    step("2) 시계열"); fetch_series(con)
+    step("3) 분기 매출 (SEC·DART)"); fetch_financials(con)
+    step("3-1) 통계 단절 탐지"); n = breaks.scan(con, log); con.commit(); log(f"  경고 {n}건")
+    step("3-2) 매출 상관 점수"); scores.score_all(con, log); con.commit()
     if "--skip-surge" not in sys.argv:
-        log("4) 급등 탐지")
+        step("4) 급등 탐지")
         tagged = sorted({h for (h,) in con.execute("SELECT hs_prefix FROM hs_tags WHERE length(hs_prefix)=6")})
         n = surge.scan(con, tagged, log)
         con.commit()
         log(f"  ✓ 급등 후보 {n}건")
-    log("5) GPU 렌탈가·토큰 가격"); prices.collect(con, log)
-    log("6) 가격지수 (PPI·수출입 가격)"); indicators.collect(con, log)
+    step("5) GPU 렌탈가·토큰 가격"); prices.collect(con, log)
+    step("6) 가격지수 (PPI·수출입 가격)"); indicators.collect(con, log)
     con.execute("INSERT OR REPLACE INTO meta (key, value) VALUES ('built_at', ?)", (datetime.now().isoformat(timespec="seconds"),))
     con.commit()
+    step("완료")
 
 
 if __name__ == "__main__":

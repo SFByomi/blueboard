@@ -7,6 +7,7 @@
 import hashlib
 import json
 import os
+import threading
 from pathlib import Path
 
 import pandas as pd
@@ -52,7 +53,9 @@ def fetch(dataset: str, hs, filters: dict, start="2020-01", refresh=False) -> pd
             r.raise_for_status()
             rows = r.json()
         path.parent.mkdir(parents=True, exist_ok=True)
-        path.write_text(json.dumps(rows))
+        tmp = path.with_suffix(f".{threading.get_ident()}.tmp")  # 병렬 수집 중 같은 파일 동시 쓰기·반쯤 쓴 파일 읽기 방지
+        tmp.write_text(json.dumps(rows))
+        tmp.replace(path)
 
     df = pd.DataFrame(rows[1:], columns=rows[0])
     out = pd.DataFrame({"month": pd.PeriodIndex(df["time"], freq="M") if len(df) else pd.PeriodIndex([], freq="M"),
