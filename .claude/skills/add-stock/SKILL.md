@@ -29,8 +29,14 @@ description: 새 종목을 공급망 추적 방식으로 추가한다 — 생산
   .venv/bin/python -m etl.discover TICKER --sec TICKER --hs 847150 847170          # 미국 수입 × 상대국
   .venv/bin/python -m etl.discover TICKER --sec TICKER --hs 902780+902789 --state CA  # 주 수출 × 상대국 (+는 분할 세번 합산)
   .venv/bin/python -m etl.discover TICKER --hs 850132 --by state [--cty 5800]     # 주별 수출
+  .venv/bin/python -m etl.discover TICKER --hs 850440 853890 --state DE --flow imports  # 공장 주로 들어오는 부품·원자재
   ```
   결과 상위는 우연일 수 있다(수십 조합 중 최고). 생산거점·고객 구조로 설명되는 흐름만 3단계로 가져간다.
+- **① 부품 조달(투입)을 반드시 함께 본다** — 출하만 보면 "부품이 안 들어와 못 만드는" 상황을 놓친다
+  (예: FLNC는 중국산 셀 조달 차질로 출하 지연 → 애리조나행 중국산 배터리 수입이 관세 후 월 1.25억→1천만 달러).
+  - 미국 공장: `imports/statehs`(최종 목적지 주) × 핵심 부품 HS — 블룸 델라웨어 인버터, 버티브 사우스캐롤라이나 배전 부품, 슈퍼마이크로 캘리포니아 GPU 보드
+  - 해외 공장: 그 나라로 들어가는 부품 = 미국·한국·일본의 그 나라향 수출 (예: 멕시코 조립 → 미국의 멕시코향 CPU·메모리 수출)
+  - 큰 주(텍사스·캘리포니아)는 업계 합산이 되기 쉬움 → 신뢰도 낮음·caveat에 명시
 
 ## 3. 검증 — 반드시 숫자로
 ```bash
