@@ -21,6 +21,7 @@ export default function RootLayout({ children }: LayoutProps<"/">) {
             <Link href="/" className="text-base font-bold">Yomin</Link>
             <Link href="/" className="text-muted hover:text-fg">급등 탐색</Link>
             <Link href="/stocks" className="text-muted hover:text-fg">종목</Link>
+            <Link href="/compute" className="text-muted hover:text-fg">GPU·토큰</Link>
             {ADMIN_ENABLED && <Link href="/admin" className="ml-auto text-muted hover:text-fg">관리</Link>}
           </nav>
         </header>

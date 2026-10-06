@@ -18,6 +18,7 @@
   - 큐레이션(companies·series·mappings·hs_tags)은 `seed.py`로 INSERT OR IGNORE → 이후 관리 페이지 편집이 우선
   - 소스: census.py(미국) · estat.py(일본, 엔→달러) · kcs.py(한국 관세청, 시군구) · sec.py/dart.py/dart_segment.py(매출)
   - surge.py 급등 탐지 · breaks.py 통계 단절 경고
+  - prices.py GPU 렌탈가(Vast.ai 온디맨드 매물 중앙값)·토큰 가격(OpenRouter ~latest 플래그십) 일별 스냅샷 → `price_snapshots`. 과거 이력은 소스에 없어 Supabase에 누적(publish의 ACCUMULATE). Ornn·Silicon Data 지수는 재게시 금지 약관이라 링크만.
 - `web/` Next.js 16 (App Router, Turbopack). **Next 16은 학습 데이터와 다름 → `web/node_modules/next/dist/docs/` 확인 후 작성.** params는 Promise.
 - `verify/` 상관 검증 스크립트 (0단계)
 - 공개 사이트: GitHub Actions(`.github/workflows/etl.yml`)가 매일 `etl.build` → `etl.publish`(SQLite→Supabase Postgres 전체 교체), Vercel(`web/`)이 `DATABASE_URL`로 읽음.

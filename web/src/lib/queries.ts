@@ -76,3 +76,8 @@ export async function tagIndex() {
 }
 
 export const meta = async (key: string) => (await queryOne<{ value: string }>("SELECT value FROM meta WHERE key=?", [key]))?.value;
+
+export type PriceRow = { date: string; kind: "gpu" | "token"; item: string; stat: string; value: number; n: number | null; detail: string | null };
+/** 가격 테이블은 첫 수집 전(새 DB·배포 직후)엔 없을 수 있음 → 빈 목록으로 (빌드가 실패하지 않게) */
+export const priceSnapshots = () =>
+  query<PriceRow>("SELECT * FROM price_snapshots ORDER BY date, item, stat").catch(() => [] as PriceRow[]);
