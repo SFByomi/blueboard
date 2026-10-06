@@ -4,6 +4,7 @@
   python -m etl.discover TXG --sec TXG --hs 902780+902789 --state CA   # 캘리포니아 수출 × 상대국 (+는 분할 세번 합산)
   python -m etl.discover BE --hs 850132 --by state             # 주별 수출 (전세계향)
   python -m etl.discover AAON --hs 841582 --by state --cty 1220  # 주별 캐나다향 수출
+  python -m etl.discover BE --hs 282560 750400 --state DE --flow imports  # 델라웨어 공장으로 들어오는 원자재 (생산 투입)
 
 품목 하나당 Census 호출 1번(상대국·주를 한꺼번에 받음) → data/raw/census/discover_* 캐시.
 결과는 등급순 표 + curation.json series.spec에 그대로 붙일 수 있는 spec. 점수 정의는 etl/scores.py.
@@ -35,14 +36,17 @@ def _get(dataset: str, params: dict) -> list[list[str]]:
     return rows
 
 
-def panel(hs: str, by: str, state: str | None, cty: str | None, start: str) -> tuple[pd.DataFrame, dict]:
-    """월 × 상대(국가 또는 주) 금액 표. by='country' 이면 state가 있으면 주 수출, 없으면 미국 수입."""
-    if by == "state":
-        ds, comm, val, key = "exports/statehs", "E_COMMODITY", "ALL_VAL_MO", "STATE"
-        extra = {"CTY_CODE": cty} if cty else {}
-    elif state:
-        ds, comm, val, key = "exports/statehs", "E_COMMODITY", "ALL_VAL_MO", "CTY_CODE"
-        extra = {"STATE": state}
+STATE_DS = {"exports": ("exports/statehs", "E_COMMODITY", "ALL_VAL_MO"),   # 주(원산지) 수출
+            "imports": ("imports/statehs", "I_COMMODITY", "GEN_VAL_MO")}   # 주(최종 목적지) 수입 — 공장이 들여오는 부품·원자재
+
+
+def panel(hs: str, a, start: str) -> tuple[pd.DataFrame, dict]:
+    """월 × 상대(국가 또는 주) 금액 표.
+    by=state: 주별 (a.flow 수출/수입, a.cty로 상대국 필터) · a.state: 그 주의 a.flow를 상대국별 · 둘 다 없으면 미국 전체 수입 상대국별."""
+    if a.by == "state" or a.state:
+        ds, comm, val = STATE_DS[a.flow]
+        key = "STATE" if a.by == "state" else "CTY_CODE"
+        extra = ({"CTY_CODE": a.cty} if a.cty else {}) if a.by == "state" else {"STATE": a.state}
     else:
         ds, comm, val, key = "imports/hs", "I_COMMODITY", "GEN_VAL_MO", "CTY_CODE"
         extra = {}
@@ -60,21 +64,21 @@ def panel(hs: str, by: str, state: str | None, cty: str | None, start: str) -> t
     return p.sort_index(), {**names, TOTAL: "전체"}
 
 
-def combined(hs: str, by, state, cty, start) -> tuple[pd.DataFrame, dict]:
+def combined(hs: str, a, start) -> tuple[pd.DataFrame, dict]:
     """'902780+902789'처럼 +로 묶으면 합산 — HS 개정으로 쪼개진 세번을 이어 봄."""
     p, names = pd.DataFrame(), {}
     for h in hs.split("+"):
-        q, n = panel(h, by, state, cty, start)
+        q, n = panel(h, a, start)
         p, names = (q if p.empty else p.add(q, fill_value=0)), {**names, **n}
     return p, names
 
 
-def spec_for(hs: str, by: str, state: str | None, cty: str | None, part: str) -> dict:
+def spec_for(hs: str, a, part: str) -> dict:
     hs = hs.split("+") if "+" in hs else hs
-    if by == "state":
-        return {"dataset": "exports/statehs", "hs": hs, "filters": {"STATE": part, "CTY_CODE": cty or TOTAL}}
-    if state:
-        return {"dataset": "exports/statehs", "hs": hs, "filters": {"STATE": state, "CTY_CODE": part}}
+    if a.by == "state":
+        return {"dataset": STATE_DS[a.flow][0], "hs": hs, "filters": {"STATE": part, "CTY_CODE": a.cty or TOTAL}}
+    if a.state:
+        return {"dataset": STATE_DS[a.flow][0], "hs": hs, "filters": {"STATE": a.state, "CTY_CODE": part}}
     return {"dataset": "imports/hs", "hs": hs, "filters": {"CTY_CODE": part}}
 
 
@@ -86,6 +90,8 @@ def main():
     ap.add_argument("--by", choices=["country", "state"], default="country", help="상대국별(기본) 또는 미국 주별 수출")
     ap.add_argument("--state", help="by=country일 때: 이 주의 수출을 상대국별로 (없으면 미국 수입)")
     ap.add_argument("--cty", help="by=state일 때: 상대국 코드 필터 (예: 5700 중국)")
+    ap.add_argument("--flow", choices=["exports", "imports"], default="exports",
+                    help="주 단위(--state·--by state)일 때 수출(기본) 또는 수입(그 주로 들어오는 부품·원자재 = 생산 투입)")
     ap.add_argument("--top", type=int, default=15, help="품목별 금액 상위 몇 개 상대만 볼지")
     ap.add_argument("--show", type=int, default=25)
     ap.add_argument("--since", default="2021-01-01")
@@ -105,12 +111,13 @@ def main():
     if not hs_list:
         raise SystemExit("--hs를 주거나 관리 페이지에서 hs_tags를 먼저 등록하세요")
     start = f"{fin.start.min().year - 1}-01"  # 첫 분기 전년비용 1년 앞부터
-    where = f"{a.state} 수출" if a.state else "주별 수출" if a.by == "state" else "미국 수입"
+    fl = "수출" if a.flow == "exports" else "수입"
+    where = f"{a.state} {fl}" if a.state else f"주별 {fl}" if a.by == "state" else "미국 수입"
     print(f"{a.ticker} 매출 {len(fin)}분기 · {where} · 품목 {', '.join(hs_list)}")
 
     out = []
     for hs in hs_list:
-        p, names = combined(hs, a.by, a.state, a.cty, start)
+        p, names = combined(hs, a, start)
         if p.empty:
             print(f"  {hs}: 데이터 없음")
             continue
@@ -123,7 +130,7 @@ def main():
             if s["best"] is None:
                 continue
             out.append({"hs": hs, "part": part, "name": names.get(part, part), "share": recent.get(part, 0) / total if total else None,
-                        "spec": spec_for(hs, a.by, a.state, a.cty, part), **s})
+                        "spec": spec_for(hs, a, part), **s})
 
     order = {"A": 0, "B": 1, "C": 2, "D": 3}
     out.sort(key=lambda r: (order.get(r["grade"], 9), -r["best"]))

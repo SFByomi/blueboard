@@ -564,6 +564,17 @@
    "spec": "{\"dataset\": \"exports/statehs\", \"hs\": \"850132\", \"filters\": {\"STATE\": \"DE\", \"CTY_CODE\": \"-\"}}"
   },
   {
+   "id": "us_exp_mx_compparts",
+   "label": "미국 → 멕시코 컴퓨터 부품(GPU 보드·메인보드) 수출",
+   "source": "census",
+   "reporter": "🇺🇸 미국",
+   "flow": "수출",
+   "region": "전국",
+   "hs": "8473.30",
+   "partner": "멕시코",
+   "spec": "{\"dataset\": \"exports/statehs\", \"hs\": \"847330\", \"filters\": {\"STATE\": \"-\", \"CTY_CODE\": \"2010\"}}"
+  },
+  {
    "id": "us_exp_ok_hvac_ca",
    "label": "오클라호마 → 캐나다 공조기 수출",
    "source": "census",
@@ -641,6 +652,28 @@
    "spec": "{\"dataset\": \"imports/hs\", \"hs\": \"8523510000\", \"filters\": {\"CTY_CODE\": \"-\"}}"
   },
   {
+   "id": "us_imp_az_cn_liion",
+   "label": "애리조나로 들어오는 중국산 리튬이온 배터리 수입",
+   "source": "census",
+   "reporter": "🇺🇸 미국",
+   "flow": "수입",
+   "region": "애리조나",
+   "hs": "8507.60",
+   "partner": "중국",
+   "spec": "{\"dataset\": \"imports/statehs\", \"hs\": \"850760\", \"filters\": {\"STATE\": \"AZ\", \"CTY_CODE\": \"5700\"}}"
+  },
+  {
+   "id": "us_imp_ca_compparts",
+   "label": "캘리포니아로 들어오는 컴퓨터 부품(GPU 보드·메인보드) 수입",
+   "source": "census",
+   "reporter": "🇺🇸 미국",
+   "flow": "수입",
+   "region": "캘리포니아",
+   "hs": "8473.30",
+   "partner": "전세계",
+   "spec": "{\"dataset\": \"imports/statehs\", \"hs\": \"847330\", \"filters\": {\"STATE\": \"CA\", \"CTY_CODE\": \"-\"}}"
+  },
+  {
    "id": "us_imp_cn_liion",
    "label": "중국산 리튬이온 배터리(ESS 등) 수입",
    "source": "census",
@@ -650,6 +683,17 @@
    "hs": "8507.60.0020/0030/0090",
    "partner": "중국",
    "spec": "{\"dataset\": \"imports/hs\", \"hs\": [\"8507600020\", \"8507600030\", \"8507600090\"], \"filters\": {\"CTY_CODE\": \"5700\"}}"
+  },
+  {
+   "id": "us_imp_de_inverter",
+   "label": "델라웨어로 들어오는 전력변환장치(인버터) 수입",
+   "source": "census",
+   "reporter": "🇺🇸 미국",
+   "flow": "수입",
+   "region": "델라웨어",
+   "hs": "8504.40",
+   "partner": "전세계",
+   "spec": "{\"dataset\": \"imports/statehs\", \"hs\": \"850440\", \"filters\": {\"STATE\": \"DE\", \"CTY_CODE\": \"-\"}}"
   },
   {
    "id": "us_imp_kr_mlcc",
@@ -729,6 +773,39 @@
    "spec": "{\"dataset\": \"imports/hs\", \"hs\": \"8523510000\", \"filters\": {\"CTY_CODE\": \"5570\"}}"
   },
   {
+   "id": "us_imp_oh_mx_inverter",
+   "label": "오하이오로 들어오는 멕시코산 UPS·전력변환장치 수입",
+   "source": "census",
+   "reporter": "🇺🇸 미국",
+   "flow": "수입",
+   "region": "오하이오",
+   "hs": "8504.40",
+   "partner": "멕시코",
+   "spec": "{\"dataset\": \"imports/statehs\", \"hs\": \"850440\", \"filters\": {\"STATE\": \"OH\", \"CTY_CODE\": \"2010\"}}"
+  },
+  {
+   "id": "us_imp_ok_heatex",
+   "label": "오클라호마로 들어오는 산업용 열교환기 수입",
+   "source": "census",
+   "reporter": "🇺🇸 미국",
+   "flow": "수입",
+   "region": "오클라호마",
+   "hs": "8419.50",
+   "partner": "전세계",
+   "spec": "{\"dataset\": \"imports/statehs\", \"hs\": \"841950\", \"filters\": {\"STATE\": \"OK\", \"CTY_CODE\": \"-\"}}"
+  },
+  {
+   "id": "us_imp_sc_swgear_parts",
+   "label": "사우스캐롤라이나로 들어오는 배전반·개폐기 부품 수입",
+   "source": "census",
+   "reporter": "🇺🇸 미국",
+   "flow": "수입",
+   "region": "사우스캐롤라이나",
+   "hs": "8538.90",
+   "partner": "전세계",
+   "spec": "{\"dataset\": \"imports/statehs\", \"hs\": \"853890\", \"filters\": {\"STATE\": \"SC\", \"CTY_CODE\": \"-\"}}"
+  },
+  {
    "id": "us_imp_sf_jp_wafer",
    "label": "샌프란시스코 세관 일본산 화합물 웨이퍼(InP 등) 수입",
    "source": "census",
@@ -793,6 +870,17 @@
    "hs": "8471.50.0150",
    "partner": "대만",
    "spec": "{\"dataset\": \"imports/hs\", \"hs\": \"8471500150\", \"filters\": {\"CTY_CODE\": \"5830\"}}"
+  },
+  {
+   "id": "us_imp_tx_mx_hvacparts",
+   "label": "텍사스로 들어오는 멕시코산 냉동·히트펌프 부품 수입",
+   "source": "census",
+   "reporter": "🇺🇸 미국",
+   "flow": "수입",
+   "region": "텍사스",
+   "hs": "8418.99",
+   "partner": "멕시코",
+   "spec": "{\"dataset\": \"imports/statehs\", \"hs\": \"841899\", \"filters\": {\"STATE\": \"TX\", \"CTY_CODE\": \"2010\"}}"
   },
   {
    "id": "us_imp_vn_liion",
@@ -930,6 +1018,26 @@
   },
   {
    "ticker": "AAON",
+   "series_id": "us_imp_ok_heatex",
+   "role": "생산투입",
+   "confidence": "낮음",
+   "rationale": "털사(오클라호마) 공장으로 들어오는 열교환기 — 공조기 핵심 부품. 매출과 전년비 0.51, 최근 8분기 0.77.",
+   "caveat": "오클라호마 전체 수입, 금액 작음(월 500만 달러 안팎).",
+   "include_in_total": 0,
+   "sort": 5
+  },
+  {
+   "ticker": "AAON",
+   "series_id": "us_imp_tx_mx_hvacparts",
+   "role": "생산투입",
+   "confidence": "낮음",
+   "rationale": "텍사스 HVAC 공장들로 들어오는 멕시코산 냉동·히트펌프 부품 — 업계 생산 선행. 두 분기 선행 전년비 0.88, 최근 8분기 0.86.",
+   "caveat": "텍사스 HVAC 업계 합산(Lennox·Daikin·Trane 등) — AAON 롱뷰 비중은 작음.",
+   "include_in_total": 0,
+   "sort": 6
+  },
+  {
+   "ticker": "AAON",
    "series_id": "us_exp_ok_hvac_ca",
    "role": "생산출하",
    "confidence": "낮음",
@@ -967,6 +1075,16 @@
    "caveat": "HPE·Cisco 혼재 — 합산 제외.",
    "include_in_total": 0,
    "sort": 20
+  },
+  {
+   "ticker": "BE",
+   "series_id": "us_imp_de_inverter",
+   "role": "생산투입",
+   "confidence": "중간",
+   "rationale": "뉴어크(델라웨어) 공장으로 들어오는 인버터·전력변환장치 — 연료전지 시스템 부품. 매출과 전년비 0.70·금액 0.85, 대만산 약 절반. 최근 12개월 월평균 2,150만 달러(전년 500만).",
+   "caveat": "델라웨어 전체 수입(다른 업체 포함 가능). 블룸 증설 시기와 맞물려 급증.",
+   "include_in_total": 0,
+   "sort": 5
   },
   {
    "ticker": "BE",
@@ -1010,6 +1128,16 @@
   },
   {
    "ticker": "DELL",
+   "series_id": "us_exp_mx_compparts",
+   "role": "생산투입",
+   "confidence": "중간",
+   "rationale": "멕시코 ODM 조립 라인으로 들어가는 미국산 GPU 보드·메인보드 — 서버 생산 투입. 매출과 전년비 0.68·한 분기 선행 0.73.",
+   "caveat": "멕시코 서버 조립 업계 합산(Dell·HPE·Supermicro 위탁생산 공용). 미국 컴퓨터 부품 수출의 60%가 멕시코향.",
+   "include_in_total": 0,
+   "sort": 5
+  },
+  {
+   "ticker": "DELL",
    "series_id": "us_imp_mx_storage",
    "role": "회사출하",
    "confidence": "중간",
@@ -1040,6 +1168,16 @@
   },
   {
    "ticker": "FLNC",
+   "series_id": "us_imp_az_cn_liion",
+   "role": "생산투입",
+   "confidence": "낮음",
+   "rationale": "애리조나(굿이어 모듈 공장)로 들어오는 중국산 리튬이온 배터리·셀 — 셀 조달 차질을 보는 흐름. 매출과 전년비 0.61. 관세 이후 월 1.25억→1천만 달러로 급감.",
+   "caveat": "애리조나 전체(태양광+저장 사업자·LG엔솔 공장 포함). 미국산 셀(AESC) 전환 이후엔 상관 약해질 수 있음.",
+   "include_in_total": 0,
+   "sort": 5
+  },
+  {
+   "ticker": "FLNC",
    "series_id": "us_imp_vn_liion",
    "role": "회사출하",
    "confidence": "낮음",
@@ -1067,6 +1205,16 @@
    "caveat": "NVIDIA·Cisco 등 고객 물량 합산.",
    "include_in_total": 1,
    "sort": 10
+  },
+  {
+   "ticker": "HPE",
+   "series_id": "us_exp_mx_compparts",
+   "role": "생산투입",
+   "confidence": "중간",
+   "rationale": "과달라하라 위탁생산으로 들어가는 미국산 GPU 보드·메인보드 — 서버 생산 투입. 매출과 전년비 0.58·한 분기 선행 0.80.",
+   "caveat": "멕시코 서버 조립 업계 합산(Dell·HPE·Supermicro 위탁생산 공용). 미국 컴퓨터 부품 수출의 60%가 멕시코향.",
+   "include_in_total": 0,
+   "sort": 5
   },
   {
    "ticker": "HPE",
@@ -1270,6 +1418,16 @@
   },
   {
    "ticker": "SMCI",
+   "series_id": "us_imp_ca_compparts",
+   "role": "생산투입",
+   "confidence": "중간",
+   "rationale": "산호세(캘리포니아) 랙 조립으로 들어오는 컴퓨터 부품(GPU 베이스보드·메인보드). 매출과 전년비 0.64·금액 0.96, 최근 8분기 0.73.",
+   "caveat": "캘리포니아 전체(다른 서버 조립사 포함). 월 46억 달러 규모로 AI 서버 업황 성격도 있음.",
+   "include_in_total": 0,
+   "sort": 5
+  },
+  {
+   "ticker": "SMCI",
    "series_id": "us_imp_tw_server",
    "role": "생산투입",
    "confidence": "낮음",
@@ -1367,6 +1525,26 @@
    "caveat": "YoY 0.10. HS2022로 3822.00 → 3822.19 등 분할, 합산.",
    "include_in_total": 0,
    "sort": 30
+  },
+  {
+   "ticker": "VRT",
+   "series_id": "us_imp_oh_mx_inverter",
+   "role": "회사출하",
+   "confidence": "중간",
+   "rationale": "멕시코(몬테레이·레이노사) 생산 UPS·전력변환장치가 오하이오(본사·통합 공장)로 반입. 매출과 전년비 0.81·한 분기 선행 0.68, 최근 8분기 0.73.",
+   "caveat": "오하이오 전체 수입 — 다른 전력기기 업체 포함 가능.",
+   "include_in_total": 0,
+   "sort": 5
+  },
+  {
+   "ticker": "VRT",
+   "series_id": "us_imp_sc_swgear_parts",
+   "role": "생산투입",
+   "confidence": "낮음",
+   "rationale": "앤더슨(사우스캐롤라이나, E+I Engineering) 배전·버스웨이 공장으로 들어오는 개폐기·배전반 부품. 매출과 전년비 0.68·한 분기 선행 0.69.",
+   "caveat": "사우스캐롤라이나 전체 수입.",
+   "include_in_total": 0,
+   "sort": 6
   },
   {
    "ticker": "VRT",
