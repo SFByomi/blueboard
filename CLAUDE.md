@@ -6,7 +6,7 @@
 
 ## 사용자·범위 (결정 사항)
 - 한국 투자자 대상, AI·반도체 중심. 보유/관심: MU, SNDK, LITE, BE, IREN, NBIS, RXRX, TXG, INSM, 두산(전자BG CCL), 삼성전기(MLCC). 비교군 FN.
-- 주가·컨센서스는 사용자가 따로 봄 → 이 프로젝트 범위는 무역데이터 수집·검증·매핑.
+- 주가는 사용자가 따로 봄. 매출 컨센서스는 무역 추정과의 괴리율로만 공개(원 금액은 로컬). 범위는 무역데이터 수집·검증·매핑·매출 추정.
 - 작업 환경: 윈도우 PC, 맥북, claude.ai/code 클라우드 세션을 오가며 작업 → 모든 상태는 GitHub(SFByomi/blueboard)로 공유.
 
 ## 큐레이션 = data/curation.json (git이 원본)
@@ -20,6 +20,7 @@
   - 소스: census.py(미국) · estat.py(일본, 엔→달러) · kcs.py(한국 관세청, 시군구) · sec.py/dart.py/dart_segment.py(매출)
   - surge.py 급등 탐지 · breaks.py 통계 단절 경고
   - **상관 모델(핵심 원칙: 어떤 품목이 매출과 직접 연결되는지 숫자로)**: scores.py가 빌드마다 모든 매핑을 분기 매출과 비교 → `flow_scores`(전년비 상관 0~2분기 선행·최근 8분기·등급 A~D). check.py로 개별 검증, discover.py로 HS×국가/주 후보 자동 탐색
+  - **진행 분기 매출 추정**: estimates.py가 A·B 흐름으로 전년비·금액 회귀 중 백테스트 오차가 작은 모델을 골라 추정 → `revenue_estimates`(Supabase 누적: 추정·괴리율 추이). consensus.py가 야후 매출 컨센서스 수집 → `consensus`는 **재게시 금지라 로컬 전용**(publish.PRIVATE), 공개엔 괴리율만. 원 금액은 /admin/consensus
   - prices.py GPU 렌탈가(Vast.ai 온디맨드 매물 중앙값)·토큰 가격(OpenRouter ~latest 플래그십) 일별 스냅샷 → `price_snapshots`. 과거 이력은 소스에 없어 Supabase에 누적(publish의 ACCUMULATE). Ornn·Silicon Data 지수는 재게시 금지 약관이라 링크만.
 - `web/` Next.js 16 (App Router, Turbopack). **Next 16은 학습 데이터와 다름 → `web/node_modules/next/dist/docs/` 확인 후 작성.** params는 Promise.
 - `verify/` 상관 검증 스크립트 (0단계)

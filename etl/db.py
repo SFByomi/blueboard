@@ -68,6 +68,22 @@ CREATE TABLE IF NOT EXISTS flow_scores (       -- 매핑별 매출 상관 점수
   grade TEXT,                                        -- A·B·C·D (표본 부족은 NULL)
   PRIMARY KEY (ticker, series_id)
 );
+CREATE TABLE IF NOT EXISTS consensus (         -- 분기 매출 컨센서스 (etl/consensus.py, 야후). 재게시 금지 → 게시하지 않음(로컬 전용)
+  date TEXT NOT NULL, ticker TEXT NOT NULL, period TEXT NOT NULL,   -- ticker = sec_ticker, period: 0q·+1q
+  end_date TEXT, avg REAL, low REAL, high REAL, n INTEGER,
+  PRIMARY KEY (date, ticker, period)
+);
+CREATE TABLE IF NOT EXISTS revenue_estimates ( -- 무역 기반 진행 분기 매출 추정 일별 스냅샷 (etl/estimates.py) — Supabase에 누적
+  date TEXT NOT NULL, ticker TEXT NOT NULL,
+  q_start TEXT, q_end TEXT,                          -- 추정 대상 분기
+  est REAL, low REAL, high REAL, yoy REAL,           -- 추정 매출·범위(±1σ)·예측 전년비
+  last_actual REAL, months INTEGER,                  -- 직전 분기 실적, 반영된 무역 개월 수(흐름 중 최소)
+  flows TEXT,                                        -- 사용 흐름 JSON [{sid, lag, yoy, se, r2, n, months}]
+  mape REAL, mape_naive REAL, bt_n INTEGER, backtest TEXT,  -- 백테스트 평균 절대 오차 (모델 vs 직전 성장률 유지), 분기별 JSON
+  cons_gap REAL, cons_end TEXT,                      -- 추정/컨센서스 − 1 (컨센 금액 자체는 게시 안 함)
+  currency TEXT, method TEXT,                        -- method: yoy(전년비 회귀) | level(금액 회귀) — 백테스트로 선택
+  PRIMARY KEY (date, ticker)
+);
 """
 
 

@@ -112,3 +112,25 @@ export const flowScores = (ticker?: string) =>
       throw e;
     },
   );
+
+export type RevEstimate = {
+  date: string; ticker: string; q_start: string; q_end: string;
+  est: number; low: number; high: number; yoy: number; last_actual: number; months: number;
+  flows: string; mape: number | null; mape_naive: number | null; bt_n: number; backtest: string;
+  cons_gap: number | null; cons_end: string | null; currency: string; method: string;
+};
+const noTable = <T,>(e: { code?: string; message?: string }): T[] => {
+  if (e.code === "42P01" || e.message?.includes("no such table")) return [];
+  throw e;
+};
+/** 종목별 최신 진행 분기 매출 추정 (etl/estimates.py) */
+export const latestEstimates = () =>
+  query<RevEstimate>("SELECT * FROM revenue_estimates WHERE date = (SELECT max(date) FROM revenue_estimates) ORDER BY ticker").catch(noTable<RevEstimate>);
+/** 한 종목의 날짜별 추정 이력 (추정·컨센 괴리율 추이) */
+export const estimateHistory = (ticker: string) =>
+  query<RevEstimate>("SELECT * FROM revenue_estimates WHERE ticker=? ORDER BY date", [ticker]).catch(noTable<RevEstimate>);
+
+export type Consensus = { date: string; ticker: string; period: string; end_date: string | null; avg: number; low: number | null; high: number | null; n: number | null };
+/** 컨센서스 원 금액 — 로컬 SQLite에만 있음(게시 안 함). 관리 화면 전용 */
+export const latestConsensus = () =>
+  query<Consensus>("SELECT * FROM consensus WHERE date = (SELECT max(date) FROM consensus) ORDER BY ticker, period").catch(noTable<Consensus>);

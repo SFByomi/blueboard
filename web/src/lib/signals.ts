@@ -1,4 +1,4 @@
-import { estimateNextQuarter, yoy3m } from "./estimate";
+import { yoy3m } from "./estimate";
 import { sumSeries, toMonthly } from "./compute";
 import { allFinancials, allMappingsLabeled, companies, observations, type Company } from "./queries";
 
@@ -6,7 +6,7 @@ export type Signal = {
   c: Company;
   flowLabel: string | null; flows: number; proxy: boolean; // proxy: 합산 대상이 없어 첫 흐름(업황)으로 대신
   month: string | null; yoy3m: number | null; spark: number[];
-  revYoY: number | null; currency: string; est: ReturnType<typeof estimateNextQuarter>;
+  revYoY: number | null; currency: string;
 };
 
 /** 종목별 공급망 신호: 매출 합산 대상 흐름(없으면 첫 흐름)의 최근 3개월 YoY, 매출 YoY, 진행 분기 추정 */
@@ -30,7 +30,6 @@ export async function stockSignals(): Promise<Signal[]> {
       month: y.index >= 0 ? m.months[y.index] : null, yoy3m: y.value,
       spark: total.slice(-24).map((v) => v ?? 0),
       revYoY, currency: fin.at(-1)?.currency ?? "USD",
-      est: inc.length ? estimateNextQuarter(m.months, total, fin) : null,
     };
   });
 }
