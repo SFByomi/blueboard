@@ -7,7 +7,8 @@
   python -m etl.discover BE --hs 282560 750400 --state DE --flow imports  # 델라웨어 공장으로 들어오는 원자재 (생산 투입)
 
 품목 하나당 Census 호출 1번(상대국·주를 한꺼번에 받음) → data/raw/census/discover_* 캐시.
-결과는 등급순 표 + curation.json series.spec에 그대로 붙일 수 있는 spec. 점수 정의는 etl/scores.py.
+결과는 '이 흐름 하나로 매출을 예측했을 때의 백테스트 오차'(etl/estimates.best_model) 순 표 + curation.json series.spec에
+그대로 붙일 수 있는 spec. 상관 등급(etl/scores.py)도 함께 표시 — 상관이 높아도 금액 예측은 틀릴 수 있어 예측오차로 정렬.
 상위 후보도 반드시 생산거점·고객 구조로 근거를 확인한 뒤 등록할 것 — 수십 개를 훑으면 우연히 높은 상관이 나온다.
 """
 import argparse
@@ -19,6 +20,7 @@ import requests
 
 from etl import census, sec
 from etl.db import connect
+from etl.estimates import best_model
 from etl.scores import evaluate, fin_frame, quarterly
 
 TOTAL = "-"
@@ -117,7 +119,11 @@ def main():
 
     out = []
     for hs in hs_list:
-        p, names = combined(hs, a, start)
+        try:
+            p, names = combined(hs, a, start)
+        except requests.HTTPError as e:  # Census가 큰 품목·일시 장애로 500을 줄 때 — 그 품목만 건너뜀
+            print(f"  {hs}: 조회 실패 ({e.response.status_code})")
+            continue
         if p.empty:
             print(f"  {hs}: 데이터 없음")
             continue
@@ -129,18 +135,21 @@ def main():
             s = evaluate(quarterly(m, fin), rev)
             if s["best"] is None:
                 continue
+            ms = m.set_index("month")["value_usd"].sort_index()
+            fc = best_model([(part, int(s["best_lag"] or 0), ms)], fin)  # 이 흐름 하나로 매출을 예측했을 때 백테스트 오차
             out.append({"hs": hs, "part": part, "name": names.get(part, part), "share": recent.get(part, 0) / total if total else None,
-                        "spec": spec_for(hs, a, part), **s})
+                        "spec": spec_for(hs, a, part), "fc": fc[0] if fc else None, "fc_m": fc[1] if fc else "", **s})
 
-    order = {"A": 0, "B": 1, "C": 2, "D": 3}
-    out.sort(key=lambda r: (order.get(r["grade"], 9), -r["best"]))
+    # 정렬: 매출 예측 백테스트 오차(작을수록 좋음) — 상관이 높아도 금액 예측은 틀릴 수 있어서
+    out.sort(key=lambda r: (r["fc"] is None, r["fc"] if r["fc"] is not None else 9, -r["best"]))
     f = lambda v: f"{v:5.2f}" if v is not None else "    -"  # noqa: E731
-    print(f"\n  {'품목':13} {'상대':22} {'비중':>5} {'등급':>2} {'n':>3} {'금액':>5} {'YoY':>5} {'+1Q':>5} {'+2Q':>5} {'최근8':>5}")
+    print(f"\n  {'품목':13} {'상대':22} {'비중':>5} {'등급':>2} {'n':>3} {'금액':>5} {'YoY':>5} {'+1Q':>5} {'+2Q':>5} {'최근8':>5} {'예측오차':>7}")
     for r in out[: a.show]:
         share = f"{r['share']:5.0%}" if r["share"] is not None else "    -"
-        print(f"  {r['hs'][:13]:13} {r['name'][:22]:22} {share} {r['grade']:>3} {r['n_yoy']:3} {f(r['level'])} {f(r['yoy0'])} {f(r['yoy1'])} {f(r['yoy2'])} {f(r['recent'])}")
+        fc = f"{r['fc']:6.1%}" if r["fc"] is not None else "     -"
+        print(f"  {r['hs'][:13]:13} {r['name'][:22]:22} {share} {r['grade']:>3} {r['n_yoy']:3} {f(r['level'])} {f(r['yoy0'])} {f(r['yoy1'])} {f(r['yoy2'])} {f(r['recent'])} {fc} {r['fc_m']}")
     print("\n상위 후보 spec (series.spec에 그대로 사용):")
-    for r in [r for r in out if r["grade"] in ("A", "B")][:8]:
+    for r in [r for r in out if r["grade"] in ("A", "B") and r["fc"] is not None][:8]:
         print(f"  [{r['grade']}] {r['name']}: {json.dumps(r['spec'], ensure_ascii=False)}")
     print(f"\n※ {len(out)}개 조합을 훑었으므로 일부는 우연히 높을 수 있음 — 생산거점·고객 근거가 있는 흐름만 등록")
 

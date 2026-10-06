@@ -72,6 +72,14 @@ const CTY_KO: Record<string, string> = {
 };
 export const ctyKo = (name: string | null) => (name ? CTY_KO[name] ?? name : null);
 
-/** 백테스트상 쓸 만한 추정인지: 오차 12% 이하이고 '직전 성장률 유지'보다 나을 때 */
-export const estReliable = (e: { mape: number | null; mape_naive: number | null }) =>
-  e.mape != null && e.mape <= 0.12 && (e.mape_naive == null || e.mape < e.mape_naive);
+export const estExtrap = (e: { flows: string }) => (JSON.parse(e.flows) as { extrap?: boolean }[]).some((f) => f.extrap);
+/** 백테스트상 쓸 만한 추정인지: 오차 12% 이하, '직전 성장률 유지'보다 정확, 과거 범위 밖 외삽이 아닐 때 */
+export const estReliable = (e: { mape: number | null; mape_naive: number | null; flows: string }) =>
+  e.mape != null && e.mape <= 0.12 && (e.mape_naive == null || e.mape < e.mape_naive) && !estExtrap(e);
+
+/** 추정 모델 이름 (etl/estimates.py method: yoy | level | +bias | ens(a,b)) */
+export function methodLabel(m: string): string {
+  const one = (x: string) => (x.startsWith("level") ? "금액 회귀" : "전년비 회귀") + (x.endsWith("+bias") ? "+편향 보정" : "");
+  const ens = m.match(/^ens\((.+),(.+)\)$/);
+  return ens ? `앙상블 (${one(ens[1])} · ${one(ens[2])})` : one(m);
+}
