@@ -5,7 +5,7 @@ import { priceSnapshots, type PriceRow } from "@/lib/queries";
 export const revalidate = 3600;
 
 const GPU_COLORS: Record<string, string> = {
-  "H100 SXM": "#60a5fa", "H100 NVL": "#93c5fd", H200: "#f59e0b", "H200 NVL": "#fbbf24", B200: "#34d399", B300: "#a78bfa",
+  "H100 SXM": "#60a5fa", "H100 NVL": "#22d3ee", H200: "#f59e0b", "H200 NVL": "#f472b6", B200: "#34d399", B300: "#a78bfa",
 };
 const TOKEN_COLORS = ["#f472b6", "#a78bfa", "#60a5fa", "#34d399"];
 
@@ -43,43 +43,47 @@ export default async function Compute() {
       <section className="space-y-3">
         <div className="flex flex-wrap items-baseline justify-between gap-2">
           <h2 className="text-lg font-bold">GPU 렌탈가 <span className="text-sm font-normal text-muted">$ / GPU·시간, 온디맨드</span></h2>
-          <span className="text-xs text-muted">Vast.ai 마켓플레이스 대여 가능 매물 기준 · 실선 중앙값, 점선 하위 25%</span>
+          <span className="text-xs text-muted">Vast.ai 마켓플레이스 대여 가능 매물의 중앙값 · 범례를 누르면 기종을 켜고 끕니다</span>
         </div>
         <div className="rounded-lg border border-line bg-panel2 px-4 py-3 text-sm leading-relaxed">
-          이 탭의 GPU 가격은 <b>Vast.ai 공개 매물로 Yomin이 직접 계산한 지수</b>입니다.
+          이 탭의 GPU 가격은 <b>Vast.ai 공개 매물로 Investing Idea가 직접 계산한 지수</b>입니다.
           실제 거래 체결가 기반 지수(Ornn OCPI)는 재게시가 허용되지 않아 여기 싣지 않으니, 아래 사이트에서 확인하세요.
           <div className="mt-1 flex flex-wrap gap-x-4 gap-y-1">
             <a className="text-accent" href="https://data.ornn.com/markets" target="_blank" rel="noreferrer">Ornn OCPI (H100·H200·B200 등) →</a>
             <a className="text-accent" href="https://www.silicondata.com/products/silicon-index/h100" target="_blank" rel="noreferrer">Silicon Data H100 지수 →</a>
           </div>
         </div>
-        <div className="grid gap-4 md:grid-cols-2 xl:grid-cols-3">
-          {gpus.map((g) => {
-            const med = series(gpu, g, "median"), p25 = series(gpu, g, "p25");
-            const lastRow = gpu.filter((r) => r.item === g && r.stat === "median").at(-1)!;
-            const w = change(med, 7), m = change(med, 30);
-            return (
-              <div key={g} className="card min-w-0">
-                <div className="flex items-start justify-between gap-2">
-                  <div>
-                    <div className="font-bold">{g}</div>
-                    <div className="text-xs text-muted">GPU {lastRow.n}장 · {lastRow.detail}</div>
-                  </div>
-                  <div className="text-right">
-                    <div className="font-mono text-xl font-bold">${lastRow.value.toFixed(2)}</div>
-                    <div className="font-mono text-xs">
-                      <span className={tone(w)}>1주 {pct(w)}</span> · <span className={tone(m)}>1달 {pct(m)}</span>
-                    </div>
-                  </div>
-                </div>
-                <PriceChart unit="$/GPU·h" lines={[
-                  { name: "중앙값", color: GPU_COLORS[g], points: med },
-                  { name: "하위 25%", color: GPU_COLORS[g], points: p25, dashed: true },
-                ]} />
-              </div>
-            );
-          })}
-        </div>
+        {gpus.length > 0 && (
+          <div className="card min-w-0 space-y-4">
+            <PriceChart unit="$/GPU·h" height={320} lines={gpus.map((g) => ({ name: g, color: GPU_COLORS[g], points: series(gpu, g, "median") }))} />
+            <div className="overflow-x-auto">
+              <table className="w-full min-w-[560px] whitespace-nowrap text-sm">
+                <thead className="text-xs text-muted"><tr className="border-b border-line">
+                  <th className="py-2 text-left">기종</th><th className="text-right">중앙값</th><th className="text-right">하위 25%</th>
+                  <th className="text-right">1주</th><th className="text-right">1달</th><th className="text-right">대여 가능 GPU</th>
+                </tr></thead>
+                <tbody className="font-mono">
+                  {gpus.map((g) => {
+                    const med = series(gpu, g, "median");
+                    const last = gpu.filter((r) => r.item === g && r.stat === "median").at(-1)!;
+                    const p25 = series(gpu, g, "p25").at(-1)?.[1];
+                    const w = change(med, 7), m = change(med, 30);
+                    return (
+                      <tr key={g} className="border-b border-line/50">
+                        <td className="py-2 font-sans font-bold"><span className="mr-2 inline-block h-2.5 w-2.5 rounded-sm" style={{ background: GPU_COLORS[g] }} />{g}</td>
+                        <td className="text-right font-bold">${last.value.toFixed(2)}</td>
+                        <td className="text-right text-muted">{p25 != null ? `$${p25.toFixed(2)}` : "-"}</td>
+                        <td className={`text-right ${tone(w)}`}>{pct(w)}</td>
+                        <td className={`text-right ${tone(m)}`}>{pct(m)}</td>
+                        <td className="text-right text-muted">{last.n}장 <span className="text-xs">({last.detail?.replace("vast.ai ", "")})</span></td>
+                      </tr>
+                    );
+                  })}
+                </tbody>
+              </table>
+            </div>
+          </div>
+        )}
         <p className="text-xs leading-relaxed text-muted">
           스팟 매물 가격이라 IREN·NBIS가 실제 받는 장기계약 단가와는 다릅니다. GPU 공급이 빠듯한지(가격↑·매물↓) 남는지(가격↓·매물↑)를 보는 업황 신호로 쓰세요.
           매물이 기종당 수십 개 수준이라 하루 단위로는 출렁일 수 있습니다.
@@ -92,7 +96,7 @@ export default async function Compute() {
           <span className="text-xs text-muted">OpenRouter 정가 · 각 회사 최신 플래그십</span>
         </div>
         <div className="card overflow-x-auto">
-          <table className="w-full text-sm">
+          <table className="w-full min-w-[560px] whitespace-nowrap text-sm">
             <thead className="text-xs text-muted"><tr className="border-b border-line">
               <th className="py-2 text-left">모델</th><th className="text-left">현재 가리키는 모델</th>
               <th className="text-right">입력</th><th className="text-right">출력</th><th className="text-right">출력 1달</th>
