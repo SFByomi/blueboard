@@ -8,7 +8,7 @@ on:
   workflow_dispatch:
   push:
     branches: [main]
-    paths: ["data/curation.json", "etl/**", "requirements.txt"] # 큐레이션·수집 코드 변경 시 바로 반영
+    paths: ["data/curation.json", "data/hs_names_ko.json", "etl/**", "requirements.txt"] # 큐레이션·수집 코드 변경 시 바로 반영
 
 concurrency:
   group: etl

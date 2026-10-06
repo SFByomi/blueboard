@@ -5,7 +5,7 @@ import { money, pct, tone, usd } from "@/lib/format";
 import { meta, priceSnapshots, surge, tagIndex } from "@/lib/queries";
 import { stockSignals, type Signal } from "@/lib/signals";
 
-export const revalidate = 3600;
+export const revalidate = 600; // 데이터는 하루 1회 게시 — 게시 후 10분 안에 반영
 
 function Row({ s }: { s: Signal }) {
   return (

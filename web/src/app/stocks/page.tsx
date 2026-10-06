@@ -5,7 +5,7 @@ import { GROUPS, pct, tone } from "@/lib/format";
 import { flowScores } from "@/lib/queries";
 import { stockSignals } from "@/lib/signals";
 
-export const revalidate = 3600; // 데이터는 하루 1회 갱신 — 1시간 캐시
+export const revalidate = 600; // 데이터는 하루 1회 게시 — 게시 후 10분 안에 반영
 
 export default async function Stocks() {
   const [sig, scores] = await Promise.all([stockSignals(), flowScores()]);
