@@ -5,9 +5,12 @@ import { StockView, type FlowData, type QuarterRow } from "@/components/StockVie
 import { corr, quarterize, sumSeries, toMonthly } from "@/lib/compute";
 import { money, pct, tone, usd } from "@/lib/format";
 import { ADMIN_ENABLED } from "@/lib/db";
-import { alertsFor, company, financials, mappingsFor, observations, surgeForTicker } from "@/lib/queries";
+import { alertsFor, company, financials, mappingsFor, observations, priceSnapshots, surgeForTicker } from "@/lib/queries";
 
 export const revalidate = 3600;
+
+const NEOCLOUD = new Set(["IREN", "NBIS"]); // GPU 렌탈가가 핵심 업황인 종목
+const NEO_GPUS = ["H100 SXM", "H200", "B200"];
 
 const qYoY = (a: (number | null)[]) => a.map((v, i) => (i >= 4 && v != null && a[i - 4] ? v / a[i - 4]! - 1 : null));
 
@@ -21,6 +24,8 @@ export default async function StockPage({ params }: PageProps<"/stocks/[ticker]"
   const ids = maps.map((m) => m.series_id);
   const [obs, allFin, alerts, relatedAll] = await Promise.all([observations(ids), financials(ticker), alertsFor(ids), surgeForTicker(ticker)]);
   const related = relatedAll.slice(0, 8);
+  const prices = NEOCLOUD.has(ticker) ? await priceSnapshots() : [];
+  const gpuLatest = NEO_GPUS.map((g) => prices.filter((r) => r.kind === "gpu" && r.item === g && r.stat === "median").at(-1)).filter((r) => r != null);
   const m = toMonthly(obs, ids);
   const fin = allFin.filter((f) => f.period_end >= "2021-01-01");
   const revYoY = qYoY(fin.map((f) => f.revenue));
@@ -72,6 +77,18 @@ export default async function StockPage({ params }: PageProps<"/stocks/[ticker]"
       </div>
 
       {c.thesis && <div className="card text-sm leading-relaxed text-muted"><b className="text-fg">투자 포인트 · 매핑 메모</b><br />{c.thesis}</div>}
+
+      {gpuLatest.length > 0 && (
+        <Link href="/compute" className="card block transition hover:border-accent">
+          <div className="flex flex-wrap items-baseline justify-between gap-2">
+            <b>GPU 렌탈가 (업황)</b>
+            <span className="text-xs text-muted">{gpuLatest[0].date} · Vast.ai 온디맨드 중앙값 · 전체 보기 →</span>
+          </div>
+          <div className="mt-2 grid grid-cols-3 gap-3 font-mono">
+            {gpuLatest.map((r) => <div key={r.item}><div className="text-xs text-muted">{r.item}</div><div className="text-lg font-bold">${r.value.toFixed(2)}<span className="text-xs font-normal text-muted">/h</span></div></div>)}
+          </div>
+        </Link>
+      )}
 
       {flows.length ? <StockView flows={flows} months={m.months} quarters={quarters} currency={fin.at(-1)?.currency ?? "USD"} /> : (
         <div className="card text-sm text-muted">연결된 무역 흐름이 없습니다.{ADMIN_ENABLED && <> <Link className="text-accent" href={`/admin/stocks/${encodeURIComponent(c.ticker)}`}>관리 페이지</Link>에서 추가하세요.</>}</div>

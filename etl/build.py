@@ -6,7 +6,7 @@ import json
 import sys
 from datetime import datetime
 
-from etl import breaks, census, curation, dart, dart_segment, estat, kcs, sec, seed, surge
+from etl import breaks, census, curation, dart, dart_segment, estat, kcs, prices, sec, seed, surge
 from etl.db import connect
 
 
@@ -97,6 +97,7 @@ def main():
         n = surge.scan(con, tagged, log)
         con.commit()
         log(f"  ✓ 급등 후보 {n}건")
+    log("5) GPU 렌탈가·토큰 가격"); prices.collect(con, log)
     con.execute("INSERT OR REPLACE INTO meta (key, value) VALUES ('built_at', ?)", (datetime.now().isoformat(timespec="seconds"),))
     con.commit()
 

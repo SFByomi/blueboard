@@ -51,6 +51,12 @@ CREATE TABLE IF NOT EXISTS alerts (
   series_id TEXT NOT NULL, month TEXT NOT NULL, kind TEXT NOT NULL, detail TEXT,
   PRIMARY KEY (series_id, month, kind)
 );
+CREATE TABLE IF NOT EXISTS price_snapshots (   -- GPU 렌탈가·토큰 가격 일별 스냅샷 (etl/prices.py)
+  date TEXT NOT NULL, kind TEXT NOT NULL,            -- kind: 'gpu' | 'token'
+  item TEXT NOT NULL, stat TEXT NOT NULL,            -- gpu: 'H100 SXM' / median·p25 · token: 'Opus' / input·output
+  value REAL, n INTEGER, detail TEXT,                -- n: GPU 수(매물 기준) · detail: 실제 모델 ID 등
+  PRIMARY KEY (date, kind, item, stat)
+);
 """
 
 

@@ -76,3 +76,6 @@ export async function tagIndex() {
 }
 
 export const meta = async (key: string) => (await queryOne<{ value: string }>("SELECT value FROM meta WHERE key=?", [key]))?.value;
+
+export type PriceRow = { date: string; kind: "gpu" | "token"; item: string; stat: string; value: number; n: number | null; detail: string | null };
+export const priceSnapshots = () => query<PriceRow>("SELECT * FROM price_snapshots ORDER BY date, item, stat");
