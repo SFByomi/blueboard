@@ -31,7 +31,7 @@ export default async function StockPage({ params }: PageProps<"/stocks/[ticker]"
     NEOCLOUD.has(ticker) || idxGroups.length ? priceSnapshots() : Promise.resolve([]),
     idxGroups.length ? indicators() : Promise.resolve([]),
   ]);
-  const gpuLatest = NEO_GPUS.map((g) => prices.filter((r) => r.kind === "gpu" && r.item === g && r.stat === "median").at(-1)).filter((r) => r != null);
+  const gpuLatest = (NEOCLOUD.has(ticker) ? NEO_GPUS : []).map((g) => prices.filter((r) => r.kind === "gpu" && r.item === g && r.stat === "median").at(-1)).filter((r) => r != null);
   const m = toMonthly(obs, ids);
   const fin = allFin.filter((f) => f.period_end >= "2021-01-01");
   const revYoY = qYoY(fin.map((f) => f.revenue));

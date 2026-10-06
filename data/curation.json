@@ -166,6 +166,21 @@
    "sites": "[{\"name\": \"수원 본사 (수출 신고지)\", \"country\": \"한국 경기\", \"what\": \"MLCC\"}, {\"name\": \"부산 강서구\", \"country\": \"한국 부산\", \"what\": \"MLCC 생산\"}, {\"name\": \"톈진·필리핀\", \"country\": \"중국·필리핀\", \"what\": \"MLCC\"}]"
   },
   {
+   "ticker": "DELL",
+   "name": "Dell Technologies",
+   "name_ko": "델",
+   "market": "NYSE",
+   "sector": "서버·스토리지·PC",
+   "thesis": "AI 서버(ISG)가 성장 견인. 멕시코·말레이시아·중국 생산 → 미국 반입. 부품·재공품 재고가 출하에 선행.",
+   "sec_ticker": "DELL",
+   "fy_note": "FY 1월말 종료",
+   "sort": 200,
+   "dart_fs": null,
+   "dart_segment": null,
+   "grp": "서버·네트워크",
+   "sites": "[{\"name\": \"멕시코 ODM (치와와 등)\", \"country\": \"멕시코\", \"what\": \"서버·스토리지 조립\"}, {\"name\": \"페낭\", \"country\": \"말레이시아\", \"what\": \"서버·PC\"}, {\"name\": \"샤먼\", \"country\": \"중국\", \"what\": \"PC·서버\"}, {\"name\": \"첸나이\", \"country\": \"인도\", \"what\": \"PC\"}]"
+  },
+  {
    "ticker": "FN",
    "name": "Fabrinet",
    "name_ko": "패브리넷",
@@ -179,6 +194,141 @@
    "dart_segment": null,
    "grp": "광통신",
    "sites": "[{\"name\": \"촌부리·파인허스트\", \"country\": \"태국\", \"what\": \"광모듈 위탁생산\"}, {\"name\": \"뉴저지·캘리포니아\", \"country\": \"미국\", \"what\": \"소량\"}]"
+  },
+  {
+   "ticker": "HPE",
+   "name": "Hewlett Packard Enterprise",
+   "name_ko": "HPE",
+   "market": "NYSE",
+   "sector": "서버·네트워킹",
+   "thesis": "서버·네트워킹(Juniper 인수)·스토리지. 멕시코·말레이시아발 네트워킹 장비 반입이 핵심 흐름.",
+   "sec_ticker": "HPE",
+   "fy_note": "FY 10월말 종료",
+   "sort": 210,
+   "dart_fs": null,
+   "dart_segment": null,
+   "grp": "서버·네트워크",
+   "sites": "[{\"name\": \"과달라하라 위탁생산\", \"country\": \"멕시코\", \"what\": \"서버·네트워킹\"}, {\"name\": \"말레이시아 위탁생산\", \"country\": \"말레이시아\", \"what\": \"네트워킹\"}, {\"name\": \"쿠트나호라\", \"country\": \"체코\", \"what\": \"유럽향 서버\"}]"
+  },
+  {
+   "ticker": "NTAP",
+   "name": "NetApp",
+   "name_ko": "넷앱",
+   "market": "NASDAQ",
+   "sector": "스토리지",
+   "thesis": "올플래시 스토리지. 과달라하라 위탁생산 → 라레도 경로 반입. 수량과 단가를 나눠 볼 것.",
+   "sec_ticker": "NTAP",
+   "fy_note": "FY 4월말 종료",
+   "sort": 220,
+   "dart_fs": null,
+   "dart_segment": null,
+   "grp": "서버·네트워크",
+   "sites": "[{\"name\": \"과달라하라 (Jabil 등)\", \"country\": \"멕시코\", \"what\": \"스토리지 시스템\"}, {\"name\": \"네덜란드·싱가포르\", \"country\": \"유럽·아시아\", \"what\": \"지역 조립\"}]"
+  },
+  {
+   "ticker": "SMCI",
+   "name": "Super Micro Computer",
+   "name_ko": "슈퍼마이크로",
+   "market": "NASDAQ",
+   "sector": "AI 서버",
+   "thesis": "AI 서버 랙. 미국(산호세) 조립 중심이라 무역 흐름은 부품 투입 쪽. 랙 통합·테스트 지연에 따른 매출 이연 리스크.",
+   "sec_ticker": "SMCI",
+   "fy_note": "FY 6월말 종료",
+   "sort": 230,
+   "dart_fs": null,
+   "dart_segment": null,
+   "grp": "서버·네트워크",
+   "sites": "[{\"name\": \"산호세\", \"country\": \"미국 캘리포니아\", \"what\": \"랙 조립·테스트\"}, {\"name\": \"바더\", \"country\": \"대만\", \"what\": \"서버 생산\"}, {\"name\": \"조호르\", \"country\": \"말레이시아\", \"what\": \"신규 생산\"}]"
+  },
+  {
+   "ticker": "ANET",
+   "name": "Arista Networks",
+   "name_ko": "아리스타",
+   "market": "NYSE",
+   "sector": "데이터센터 스위치",
+   "thesis": "AI 백엔드 이더넷 스위치. 태국·멕시코·말레이시아 위탁생산(Celestica·Jabil) → 미국 반입.",
+   "sec_ticker": "ANET",
+   "fy_note": "FY 12월말 종료",
+   "sort": 240,
+   "dart_fs": null,
+   "dart_segment": null,
+   "grp": "서버·네트워크",
+   "sites": "[{\"name\": \"Celestica 태국\", \"country\": \"태국\", \"what\": \"스위치 위탁생산\"}, {\"name\": \"Jabil 멕시코\", \"country\": \"멕시코\", \"what\": \"스위치 위탁생산\"}, {\"name\": \"말레이시아 위탁생산\", \"country\": \"말레이시아\", \"what\": \"스위치\"}]"
+  },
+  {
+   "ticker": "COHR",
+   "name": "Coherent",
+   "name_ko": "코히런트",
+   "market": "NYSE",
+   "sector": "광통신·레이저",
+   "thesis": "광트랜시버·레이저·소재. 말레이시아(이포)·중국(우시)·베트남 생산. 광모듈 판매가 상승 흐름 주시.",
+   "sec_ticker": "COHR",
+   "fy_note": "FY 6월말 종료",
+   "sort": 250,
+   "dart_fs": null,
+   "dart_segment": null,
+   "grp": "광통신",
+   "sites": "[{\"name\": \"이포\", \"country\": \"말레이시아\", \"what\": \"광트랜시버\"}, {\"name\": \"우시\", \"country\": \"중국\", \"what\": \"광모듈·소재\"}, {\"name\": \"베트남\", \"country\": \"베트남\", \"what\": \"광트랜시버\"}, {\"name\": \"셔먼\", \"country\": \"미국 텍사스\", \"what\": \"InP 웨이퍼\"}]"
+  },
+  {
+   "ticker": "VRT",
+   "name": "Vertiv",
+   "name_ko": "버티브",
+   "market": "NYSE",
+   "sector": "데이터센터 전력·냉각",
+   "thesis": "UPS·전력분배·액체냉각. 멕시코(몬테레이·레이노사)·중국·인도 생산 → 미국 반입. 납기와 생산능력이 실적 좌우.",
+   "sec_ticker": "VRT",
+   "fy_note": "FY 12월말 종료",
+   "sort": 260,
+   "dart_fs": null,
+   "dart_segment": null,
+   "grp": "전력·냉각",
+   "sites": "[{\"name\": \"몬테레이·레이노사\", \"country\": \"멕시코\", \"what\": \"전력분배·UPS\"}, {\"name\": \"중국 공장\", \"country\": \"중국\", \"what\": \"전력·냉각\"}, {\"name\": \"인도 공장\", \"country\": \"인도\", \"what\": \"전력·냉각\"}, {\"name\": \"오하이오 등\", \"country\": \"미국\", \"what\": \"냉각·조립\"}]"
+  },
+  {
+   "ticker": "AAON",
+   "name": "AAON",
+   "name_ko": "에이온",
+   "market": "NASDAQ",
+   "sector": "공조·데이터센터 냉각",
+   "thesis": "공조·데이터센터 냉각(BasX). 미국 내 생산 위주라 무역은 수출 일부만 잡힘 — 공조 장비 생산자가 지수를 같이 볼 것.",
+   "sec_ticker": "AAON",
+   "fy_note": "FY 12월말 종료",
+   "sort": 270,
+   "dart_fs": null,
+   "dart_segment": null,
+   "grp": "전력·냉각",
+   "sites": "[{\"name\": \"털사\", \"country\": \"미국 오클라호마\", \"what\": \"공조기\"}, {\"name\": \"롱뷰\", \"country\": \"미국 텍사스\", \"what\": \"코일·냉각\"}, {\"name\": \"레드먼드 (BasX)\", \"country\": \"미국 오리건\", \"what\": \"데이터센터 냉각\"}, {\"name\": \"멤피스\", \"country\": \"미국 테네시\", \"what\": \"신규 공장\"}]"
+  },
+  {
+   "ticker": "FLNC",
+   "name": "Fluence Energy",
+   "name_ko": "플루언스",
+   "market": "NASDAQ",
+   "sector": "ESS(에너지저장)",
+   "thesis": "ESS 배터리 시스템. 베트남 위탁생산·중국 셀 조달 → 미국 프로젝트. 프로젝트 인도 시점에 매출이 몰림.",
+   "sec_ticker": "FLNC",
+   "fy_note": "FY 9월말 종료",
+   "sort": 280,
+   "dart_fs": null,
+   "dart_segment": null,
+   "grp": "전력·냉각",
+   "sites": "[{\"name\": \"베트남 위탁생산\", \"country\": \"베트남\", \"what\": \"배터리 큐브 조립\"}, {\"name\": \"중국 셀 공급\", \"country\": \"중국\", \"what\": \"배터리 셀\"}, {\"name\": \"미국 (유타·애리조나)\", \"country\": \"미국\", \"what\": \"현지 조립\"}]"
+  },
+  {
+   "ticker": "MRVL",
+   "name": "Marvell Technology",
+   "name_ko": "마벨",
+   "market": "NASDAQ",
+   "sector": "맞춤 ASIC·광 DSP",
+   "thesis": "맞춤 AI ASIC·전광(광 DSP). TSMC(대만) 생산·대만/동남아 후공정이라 미국 수입에 직접 안 잡힘 — 대만 수출 데이터 추가 시 핵심 흐름 보강.",
+   "sec_ticker": "MRVL",
+   "fy_note": "FY 1월말 종료",
+   "sort": 290,
+   "dart_fs": null,
+   "dart_segment": null,
+   "grp": "반도체",
+   "sites": "[{\"name\": \"TSMC\", \"country\": \"대만\", \"what\": \"웨이퍼\"}, {\"name\": \"대만·동남아 OSAT\", \"country\": \"대만·말레이시아\", \"what\": \"패키징·테스트\"}]"
   }
  ],
  "series": [
@@ -304,6 +454,28 @@
    "spec": "{\"api\": \"item\", \"hs\": \"8532240000\", \"flow\": \"export\"}"
   },
   {
+   "id": "kr_exp_pcb",
+   "label": "한국 인쇄회로기판(PCB) 수출",
+   "source": "kcs",
+   "reporter": "🇰🇷 한국",
+   "flow": "수출",
+   "region": "전국",
+   "hs": "8534",
+   "partner": "전세계",
+   "spec": "{\"api\": \"item\", \"hs\": \"853400\", \"flow\": \"export\"}"
+  },
+  {
+   "id": "kr_exp_server",
+   "label": "한국 처리장치(서버 본체) 수출",
+   "source": "kcs",
+   "reporter": "🇰🇷 한국",
+   "flow": "수출",
+   "region": "전국",
+   "hs": "8471.50",
+   "partner": "전세계",
+   "spec": "{\"api\": \"item\", \"hs\": \"847150\", \"flow\": \"export\"}"
+  },
+  {
    "id": "kr_sgg_gimcheon_ccl",
    "label": "경북 김천시 CCL 수출",
    "source": "kcs",
@@ -359,6 +531,28 @@
    "spec": "{\"dataset\": \"exports/statehs\", \"hs\": \"850132\", \"filters\": {\"STATE\": \"DE\", \"CTY_CODE\": \"-\"}}"
   },
   {
+   "id": "us_exp_ok_hvac_ca",
+   "label": "오클라호마 → 캐나다 공조기 수출",
+   "source": "census",
+   "reporter": "🇺🇸 미국",
+   "flow": "수출",
+   "region": "오클라호마",
+   "hs": "8415.82",
+   "partner": "캐나다",
+   "spec": "{\"dataset\": \"exports/statehs\", \"hs\": \"841582\", \"filters\": {\"STATE\": \"OK\", \"CTY_CODE\": \"1220\"}}"
+  },
+  {
+   "id": "us_exp_tx_chiller",
+   "label": "텍사스 냉각장비 수출",
+   "source": "census",
+   "reporter": "🇺🇸 미국",
+   "flow": "수출",
+   "region": "텍사스",
+   "hs": "8418.69",
+   "partner": "전세계",
+   "spec": "{\"dataset\": \"exports/statehs\", \"hs\": \"841869\", \"filters\": {\"STATE\": \"TX\", \"CTY_CODE\": \"-\"}}"
+  },
+  {
    "id": "us_imp_all_dram",
    "label": "전체 DRAM(1GB 초과) 수입",
    "source": "census",
@@ -379,6 +573,17 @@
    "hs": "8473.30.1180",
    "partner": "전세계",
    "spec": "{\"dataset\": \"imports/hs\", \"hs\": \"8473301180\", \"filters\": {\"CTY_CODE\": \"-\"}}"
+  },
+  {
+   "id": "us_imp_all_indcooling",
+   "label": "산업용 냉각장비 수입 (데이터센터 냉각 포함)",
+   "source": "census",
+   "reporter": "🇺🇸 미국",
+   "flow": "수입",
+   "region": "전국",
+   "hs": "8419.89.9540",
+   "partner": "전세계",
+   "spec": "{\"dataset\": \"imports/hs\", \"hs\": \"8419899540\", \"filters\": {\"CTY_CODE\": \"-\"}}"
   },
   {
    "id": "us_imp_all_mlcc",
@@ -414,6 +619,17 @@
    "spec": "{\"dataset\": \"imports/hs\", \"hs\": \"8523510000\", \"filters\": {\"CTY_CODE\": \"-\"}}"
   },
   {
+   "id": "us_imp_cn_liion",
+   "label": "중국산 리튬이온 배터리(ESS 등) 수입",
+   "source": "census",
+   "reporter": "🇺🇸 미국",
+   "flow": "수입",
+   "region": "전국",
+   "hs": "8507.60.0020/0030/0090",
+   "partner": "중국",
+   "spec": "{\"dataset\": \"imports/hs\", \"hs\": [\"8507600020\", \"8507600030\", \"8507600090\"], \"filters\": {\"CTY_CODE\": \"5700\"}}"
+  },
+  {
    "id": "us_imp_kr_mlcc",
    "label": "한국산 MLCC 수입",
    "source": "census",
@@ -434,6 +650,50 @@
    "hs": "8471.50.0150",
    "partner": "멕시코",
    "spec": "{\"dataset\": \"imports/hs\", \"hs\": \"8471500150\", \"filters\": {\"CTY_CODE\": \"2010\"}}"
+  },
+  {
+   "id": "us_imp_mx_storage",
+   "label": "멕시코산 저장장치(스토리지 시스템) 수입",
+   "source": "census",
+   "reporter": "🇺🇸 미국",
+   "flow": "수입",
+   "region": "전국",
+   "hs": "8471.70.9000",
+   "partner": "멕시코",
+   "spec": "{\"dataset\": \"imports/hs\", \"hs\": \"8471709000\", \"filters\": {\"CTY_CODE\": \"2010\"}}"
+  },
+  {
+   "id": "us_imp_mx_switch",
+   "label": "멕시코산 스위치·라우터 수입",
+   "source": "census",
+   "reporter": "🇺🇸 미국",
+   "flow": "수입",
+   "region": "전국",
+   "hs": "8517.62.0020",
+   "partner": "멕시코",
+   "spec": "{\"dataset\": \"imports/hs\", \"hs\": \"8517620020\", \"filters\": {\"CTY_CODE\": \"2010\"}}"
+  },
+  {
+   "id": "us_imp_mx_switchboard",
+   "label": "멕시코산 배전반·스위치보드(1kV 이하) 수입",
+   "source": "census",
+   "reporter": "🇺🇸 미국",
+   "flow": "수입",
+   "region": "전국",
+   "hs": "8537.10.9120",
+   "partner": "멕시코",
+   "spec": "{\"dataset\": \"imports/hs\", \"hs\": \"8537109120\", \"filters\": {\"CTY_CODE\": \"2010\"}}"
+  },
+  {
+   "id": "us_imp_my_netequip",
+   "label": "말레이시아산 통신장비(트랜시버 포함) 수입",
+   "source": "census",
+   "reporter": "🇺🇸 미국",
+   "flow": "수입",
+   "region": "전국",
+   "hs": "8517.62.0090",
+   "partner": "말레이시아",
+   "spec": "{\"dataset\": \"imports/hs\", \"hs\": \"8517620090\", \"filters\": {\"CTY_CODE\": \"5570\"}}"
   },
   {
    "id": "us_imp_my_ssd",
@@ -458,6 +718,17 @@
    "spec": "{\"dataset\": \"imports/hs\", \"hs\": [\"3818000090\", \"3818000091\", \"3818000095\"], \"filters\": {\"CTY_CODE\": \"5880\", \"DISTRICT\": \"28\"}}"
   },
   {
+   "id": "us_imp_th_switch",
+   "label": "태국산 스위치·라우터 수입",
+   "source": "census",
+   "reporter": "🇺🇸 미국",
+   "flow": "수입",
+   "region": "전국",
+   "hs": "8517.62.0020",
+   "partner": "태국",
+   "spec": "{\"dataset\": \"imports/hs\", \"hs\": \"8517620020\", \"filters\": {\"CTY_CODE\": \"5490\"}}"
+  },
+  {
    "id": "us_imp_th_transceiver",
    "label": "태국산 광통신장비(트랜시버 포함) 수입",
    "source": "census",
@@ -480,6 +751,17 @@
    "spec": "{\"dataset\": \"imports/hs\", \"hs\": \"8542320036\", \"filters\": {\"CTY_CODE\": \"5830\"}}"
   },
   {
+   "id": "us_imp_tw_otheric",
+   "label": "대만산 기타 집적회로(ASIC 등) 수입",
+   "source": "census",
+   "reporter": "🇺🇸 미국",
+   "flow": "수입",
+   "region": "전국",
+   "hs": "8542.39",
+   "partner": "대만",
+   "spec": "{\"dataset\": \"imports/hs\", \"hs\": \"854239\", \"filters\": {\"CTY_CODE\": \"5830\"}}"
+  },
+  {
    "id": "us_imp_tw_server",
    "label": "대만산 서버·컴퓨팅 유닛 수입",
    "source": "census",
@@ -489,6 +771,28 @@
    "hs": "8471.50.0150",
    "partner": "대만",
    "spec": "{\"dataset\": \"imports/hs\", \"hs\": \"8471500150\", \"filters\": {\"CTY_CODE\": \"5830\"}}"
+  },
+  {
+   "id": "us_imp_vn_liion",
+   "label": "베트남산 리튬이온 배터리(ESS 등) 수입",
+   "source": "census",
+   "reporter": "🇺🇸 미국",
+   "flow": "수입",
+   "region": "전국",
+   "hs": "8507.60.0020/0030/0090",
+   "partner": "베트남",
+   "spec": "{\"dataset\": \"imports/hs\", \"hs\": [\"8507600020\", \"8507600030\", \"8507600090\"], \"filters\": {\"CTY_CODE\": \"5520\"}}"
+  },
+  {
+   "id": "us_imp_vn_transceiver",
+   "label": "베트남산 통신장비(트랜시버 포함) 수입",
+   "source": "census",
+   "reporter": "🇺🇸 미국",
+   "flow": "수입",
+   "region": "전국",
+   "hs": "8517.62.0090",
+   "partner": "베트남",
+   "spec": "{\"dataset\": \"imports/hs\", \"hs\": \"8517620090\", \"filters\": {\"CTY_CODE\": \"5520\"}}"
   }
  ],
  "mappings": [
@@ -531,6 +835,16 @@
    "caveat": "대만 외 중국·동남아 기판업체 향은 별도.",
    "include_in_total": 0,
    "sort": 6
+  },
+  {
+   "ticker": "000150.KS",
+   "series_id": "kr_exp_pcb",
+   "role": "최종수요",
+   "confidence": "낮음",
+   "rationale": "CCL이 들어가는 한국 PCB 수출 — 고객(기판업체) 업황과 단가.",
+   "caveat": "업계 전체.",
+   "include_in_total": 0,
+   "sort": 7
   },
   {
    "ticker": "000150.KS",
@@ -593,6 +907,46 @@
    "sort": 30
   },
   {
+   "ticker": "AAON",
+   "series_id": "us_exp_ok_hvac_ca",
+   "role": "생산출하",
+   "confidence": "낮음",
+   "rationale": "털사(오클라호마) 공장 → 캐나다 수출. YoY 0.46.",
+   "caveat": "수출은 매출의 일부 — 미국 내 출하는 무역에 안 잡힘.",
+   "include_in_total": 1,
+   "sort": 10
+  },
+  {
+   "ticker": "AAON",
+   "series_id": "us_exp_tx_chiller",
+   "role": "생산출하",
+   "confidence": "낮음",
+   "rationale": "롱뷰(텍사스) 공장 냉각장비 수출. 한 분기 선행 YoY 0.49.",
+   "caveat": "텍사스 타사 물량 다수.",
+   "include_in_total": 0,
+   "sort": 20
+  },
+  {
+   "ticker": "ANET",
+   "series_id": "us_imp_th_switch",
+   "role": "회사출하",
+   "confidence": "중간",
+   "rationale": "태국 위탁생산(Celestica 등) 스위치 반입. YoY 0.52, 한 분기 선행 0.67, 금액 0.96.",
+   "caveat": "Cisco 등 혼재.",
+   "include_in_total": 1,
+   "sort": 10
+  },
+  {
+   "ticker": "ANET",
+   "series_id": "us_imp_mx_switch",
+   "role": "회사출하",
+   "confidence": "낮음",
+   "rationale": "멕시코 위탁생산(Jabil 등) 스위치. YoY 0.42.",
+   "caveat": "HPE·Cisco 혼재 — 합산 제외.",
+   "include_in_total": 0,
+   "sort": 20
+  },
+  {
    "ticker": "ARKG",
    "series_id": "us_imp_all_reagent",
    "role": "최종수요",
@@ -613,6 +967,86 @@
    "sort": 10
   },
   {
+   "ticker": "COHR",
+   "series_id": "us_imp_vn_transceiver",
+   "role": "회사출하",
+   "confidence": "낮음",
+   "rationale": "베트남 생산 광트랜시버 반입. YoY 0.41, 한 분기 선행 0.64.",
+   "caveat": "레이저·소재 부문 매출 포함이라 상관 제한적.",
+   "include_in_total": 1,
+   "sort": 10
+  },
+  {
+   "ticker": "COHR",
+   "series_id": "us_imp_my_netequip",
+   "role": "생산출하",
+   "confidence": "낮음",
+   "rationale": "말레이시아(이포) 광모듈 생산 경로. 금액 0.89, YoY 0.16.",
+   "caveat": "타사 통신장비 혼재.",
+   "include_in_total": 0,
+   "sort": 20
+  },
+  {
+   "ticker": "COHR",
+   "series_id": "us_imp_th_transceiver",
+   "role": "가격벤치마크",
+   "confidence": "중간",
+   "rationale": "태국 트랜시버(LITE·FN 경로) — 경쟁사 업황.",
+   "caveat": "경쟁사 데이터.",
+   "include_in_total": 0,
+   "sort": 30
+  },
+  {
+   "ticker": "DELL",
+   "series_id": "us_imp_mx_storage",
+   "role": "회사출하",
+   "confidence": "중간",
+   "rationale": "멕시코 ODM 경로 스토리지 반입. 분기 매출과 YoY 상관 0.85, 금액 0.93.",
+   "caveat": "HPE·NetApp 물량 혼재.",
+   "include_in_total": 1,
+   "sort": 10
+  },
+  {
+   "ticker": "DELL",
+   "series_id": "us_imp_mx_server",
+   "role": "회사출하",
+   "confidence": "중간",
+   "rationale": "멕시코 생산 서버 반입 (ISG). YoY 0.58, 금액 0.87.",
+   "caveat": "HPE·기타 OEM 혼재 — 멕시코 서버 수입의 대부분이 OEM 몫.",
+   "include_in_total": 1,
+   "sort": 20
+  },
+  {
+   "ticker": "DELL",
+   "series_id": "us_imp_tw_server",
+   "role": "최종수요",
+   "confidence": "낮음",
+   "rationale": "대만 ODM 서버 반입 — 한 분기 선행 YoY 0.86 (AI 서버 사이클).",
+   "caveat": "하이퍼스케일러 직구매(ODM) 물량이 대부분.",
+   "include_in_total": 0,
+   "sort": 30
+  },
+  {
+   "ticker": "FLNC",
+   "series_id": "us_imp_vn_liion",
+   "role": "회사출하",
+   "confidence": "낮음",
+   "rationale": "베트남 위탁생산 ESS 배터리 반입. 분할 세번 합산 후 YoY 0.29 — 프로젝트 인도 시점과 어긋나 상관 약함.",
+   "caveat": "2026년부터 0020이 0030(BESS 하우징 완전 내장)·0090으로 분할 → 합산. 타사 배터리 혼재, 프로젝트 단위로 들쭉날쭉.",
+   "include_in_total": 1,
+   "sort": 10
+  },
+  {
+   "ticker": "FLNC",
+   "series_id": "us_imp_cn_liion",
+   "role": "생산투입",
+   "confidence": "낮음",
+   "rationale": "중국산 셀·배터리 조달. YoY 0.46.",
+   "caveat": "업계 전체, 관세 변수 큼.",
+   "include_in_total": 0,
+   "sort": 20
+  },
+  {
    "ticker": "FN",
    "series_id": "us_imp_th_transceiver",
    "role": "회사출하",
@@ -621,6 +1055,46 @@
    "caveat": "NVIDIA·Cisco 등 고객 물량 합산.",
    "include_in_total": 1,
    "sort": 10
+  },
+  {
+   "ticker": "HPE",
+   "series_id": "us_imp_mx_switch",
+   "role": "회사출하",
+   "confidence": "중간",
+   "rationale": "멕시코 생산 스위치·라우터 반입 (네트워킹, Juniper 포함). YoY 0.82.",
+   "caveat": "Cisco·Arista 등 혼재.",
+   "include_in_total": 1,
+   "sort": 10
+  },
+  {
+   "ticker": "HPE",
+   "series_id": "us_imp_mx_server",
+   "role": "회사출하",
+   "confidence": "낮음",
+   "rationale": "멕시코 생산 서버 반입. YoY 0.69.",
+   "caveat": "Dell 등 혼재.",
+   "include_in_total": 1,
+   "sort": 20
+  },
+  {
+   "ticker": "HPE",
+   "series_id": "us_imp_mx_storage",
+   "role": "회사출하",
+   "confidence": "낮음",
+   "rationale": "멕시코 경로 스토리지. YoY 0.76.",
+   "caveat": "Dell·NetApp 혼재 — 합산 제외.",
+   "include_in_total": 0,
+   "sort": 30
+  },
+  {
+   "ticker": "HPE",
+   "series_id": "us_imp_my_netequip",
+   "role": "생산출하",
+   "confidence": "낮음",
+   "rationale": "말레이시아 통신장비 반입. YoY 0.52, 금액 0.94.",
+   "caveat": "트랜시버 등 타사 물량 다수.",
+   "include_in_total": 0,
+   "sort": 40
   },
   {
    "ticker": "IREN",
@@ -671,6 +1145,26 @@
    "caveat": "2026-07 세번 분할(0095→0091/0095) 합산 처리.",
    "include_in_total": 0,
    "sort": 30
+  },
+  {
+   "ticker": "MRVL",
+   "series_id": "us_imp_tw_otheric",
+   "role": "최종수요",
+   "confidence": "낮음",
+   "rationale": "대만산 기타 IC(맞춤 ASIC 등) 수입. YoY 0.44.",
+   "caveat": "팹리스라 회사 출하가 직접 안 잡힘 — 대만 수출 데이터 추가 시 보강.",
+   "include_in_total": 0,
+   "sort": 10
+  },
+  {
+   "ticker": "MRVL",
+   "series_id": "us_imp_th_transceiver",
+   "role": "최종수요",
+   "confidence": "낮음",
+   "rationale": "광 DSP가 들어가는 태국 트랜시버 흐름 — 전광(electro-optics) 업황.",
+   "caveat": "YoY 상관 0.08.",
+   "include_in_total": 0,
+   "sort": 20
   },
   {
    "ticker": "MU",
@@ -753,6 +1247,36 @@
    "sort": 20
   },
   {
+   "ticker": "NTAP",
+   "series_id": "us_imp_mx_storage",
+   "role": "회사출하",
+   "confidence": "중간",
+   "rationale": "과달라하라 위탁생산 → 라레도 경로 스토리지. YoY 0.43, 금액 0.53.",
+   "caveat": "Dell·HPE 혼재. 금액보다 수량 증가를 같이 볼 것.",
+   "include_in_total": 1,
+   "sort": 10
+  },
+  {
+   "ticker": "SMCI",
+   "series_id": "us_imp_tw_server",
+   "role": "생산투입",
+   "confidence": "낮음",
+   "rationale": "대만(바더) 생산분·서브어셈블리 반입. 금액 상관 0.88, YoY 0.36.",
+   "caveat": "미국(산호세) 조립이 중심이라 매출과 시차·괴리 큼. 대만 ODM 물량 혼재.",
+   "include_in_total": 0,
+   "sort": 10
+  },
+  {
+   "ticker": "SMCI",
+   "series_id": "us_imp_all_gpuboard",
+   "role": "생산투입",
+   "confidence": "낮음",
+   "rationale": "GPU 보드 등 서버 부품 수입 — 미국 조립 투입.",
+   "caveat": "업계 전체. YoY 상관 0.07.",
+   "include_in_total": 0,
+   "sort": 20
+  },
+  {
    "ticker": "SNDK",
    "series_id": "jp_exp_mem_to_my",
    "role": "생산출하",
@@ -801,6 +1325,26 @@
    "caveat": "경쟁사 데이터.",
    "include_in_total": 0,
    "sort": 50
+  },
+  {
+   "ticker": "VRT",
+   "series_id": "us_imp_mx_switchboard",
+   "role": "회사출하",
+   "confidence": "낮음",
+   "rationale": "멕시코(몬테레이·레이노사) 전력분배 장비 반입. YoY 0.44, 한 분기 선행 0.67.",
+   "caveat": "Schneider·Eaton 등 혼재.",
+   "include_in_total": 1,
+   "sort": 10
+  },
+  {
+   "ticker": "VRT",
+   "series_id": "us_imp_all_indcooling",
+   "role": "최종수요",
+   "confidence": "중간",
+   "rationale": "산업용 냉각장비 수입(데이터센터 액체냉각 포함). YoY 0.48, 한 분기 선행 0.71.",
+   "caveat": "업계 전체.",
+   "include_in_total": 0,
+   "sort": 20
   }
  ],
  "hs_tags": [
@@ -830,6 +1374,31 @@
    "note": "동박적층판(CCL)"
   },
   {
+   "hs_prefix": "841582",
+   "ticker": "AAON",
+   "note": "공조기"
+  },
+  {
+   "hs_prefix": "841869",
+   "ticker": "AAON",
+   "note": "냉각장비"
+  },
+  {
+   "hs_prefix": "841989",
+   "ticker": "VRT",
+   "note": "산업용 냉각"
+  },
+  {
+   "hs_prefix": "847150",
+   "ticker": "DELL",
+   "note": "서버"
+  },
+  {
+   "hs_prefix": "847150",
+   "ticker": "HPE",
+   "note": "서버"
+  },
+  {
    "hs_prefix": "847150",
    "ticker": "IREN",
    "note": "서버"
@@ -838,6 +1407,26 @@
    "hs_prefix": "847150",
    "ticker": "NBIS",
    "note": "서버"
+  },
+  {
+   "hs_prefix": "847150",
+   "ticker": "SMCI",
+   "note": "서버"
+  },
+  {
+   "hs_prefix": "847170",
+   "ticker": "DELL",
+   "note": "스토리지"
+  },
+  {
+   "hs_prefix": "847170",
+   "ticker": "HPE",
+   "note": "스토리지"
+  },
+  {
+   "hs_prefix": "847170",
+   "ticker": "NTAP",
+   "note": "스토리지"
   },
   {
    "hs_prefix": "847170",
@@ -875,14 +1464,39 @@
    "note": "전력변환장치"
   },
   {
+   "hs_prefix": "850760",
+   "ticker": "FLNC",
+   "note": "리튬이온 배터리"
+  },
+  {
+   "hs_prefix": "851762",
+   "ticker": "ANET",
+   "note": "스위치"
+  },
+  {
+   "hs_prefix": "851762",
+   "ticker": "COHR",
+   "note": "광트랜시버"
+  },
+  {
    "hs_prefix": "851762",
    "ticker": "FN",
    "note": "광통신·네트워크 장비"
   },
   {
    "hs_prefix": "851762",
+   "ticker": "HPE",
+   "note": "네트워크 장비"
+  },
+  {
+   "hs_prefix": "851762",
    "ticker": "LITE",
    "note": "광통신·네트워크 장비"
+  },
+  {
+   "hs_prefix": "851762",
+   "ticker": "MRVL",
+   "note": "광 DSP·네트워크"
   },
   {
    "hs_prefix": "852351",
@@ -893,6 +1507,11 @@
    "hs_prefix": "853224",
    "ticker": "009150.KS",
    "note": "MLCC"
+  },
+  {
+   "hs_prefix": "853710",
+   "ticker": "VRT",
+   "note": "전력분배"
   },
   {
    "hs_prefix": "854141",
@@ -913,6 +1532,11 @@
    "hs_prefix": "854232",
    "ticker": "SNDK",
    "note": "메모리 IC"
+  },
+  {
+   "hs_prefix": "854239",
+   "ticker": "MRVL",
+   "note": "기타 IC"
   },
   {
    "hs_prefix": "900110",
