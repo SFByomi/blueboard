@@ -115,6 +115,11 @@ TradeSeries (source, reporter, flow, region, hs, partner)
   - 대만 재정부 관세서 무역통계(HS·국가·월): TSMC·ODM·후공정 → MRVL·SMCI·AI 서버 ODM 흐름 보강, 대만 월매출 공시(MOPS)
   - 홍콩 통계처 재수출: 중국 경유 반도체·부품
   - 중국 해관총서 성(省)별 수출: Dell 등 중국 생산권역 하드웨어 수출
+- 대만 데이터 연동 메모 (2026-10 확인)
+  - 관세서 HS 세관별 통계(portal.sw.nat.gov.tw)는 해외(클라우드 세션·GitHub Actions 미국 서버)에서 TLS 연결이 안 됨 → 한국 PC에서 수집기 실행 후 결과만 push, 또는 한국 리전 러너 필요
+  - 財政部 통계 DB(web02.mof.gov.tw)는 접속되지만 대분류뿐이라 HS·세관 수준 불가
+  - 일본 미러(구레→대만 메모리 수출, 일본의 대만산 메모리 수입)는 마이크론 매출과 무관(D)·데이터 없음 확인
+  - 우선 마이크론 대만 팹은 미국의 대만산 메모리 수입(us_imp_tw_mem6, A)으로 부분 추적
 - 후속 후보
   - 부품 유통 판매가(DigiKey·Mouser API): 광모듈(Coherent·Broadcom 품번), 퓨즈(Littelfuse·Bel Fuse) 등 판매가 지수
   - 한국 업체 세관·시군구 수출 바스켓(심텍 청주 등 기판·패키지 기판) 종목 추가

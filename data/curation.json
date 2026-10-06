@@ -894,6 +894,17 @@
    "spec": "{\"dataset\": \"imports/hs\", \"hs\": \"8542320036\", \"filters\": {\"CTY_CODE\": \"5830\"}}"
   },
   {
+   "id": "us_imp_tw_mem6",
+   "label": "대만산 메모리 IC 수입 (HS6 전체, HBM 포함)",
+   "source": "census",
+   "reporter": "🇺🇸 미국",
+   "flow": "수입",
+   "region": "전국",
+   "hs": "8542.32",
+   "partner": "대만",
+   "spec": "{\"dataset\": \"imports/hs\", \"hs\": \"854232\", \"filters\": {\"CTY_CODE\": \"5830\"}}"
+  },
+  {
    "id": "us_imp_tw_otheric",
    "label": "대만산 기타 집적회로(ASIC 등) 수입",
    "source": "census",
@@ -1449,6 +1460,16 @@
    "caveat": "월별로 0인 달이 있음(다른 세관 경유 추정) — 합산 제외, 추세 참고용.",
    "include_in_total": 0,
    "sort": 10
+  },
+  {
+   "ticker": "MU",
+   "series_id": "us_imp_tw_mem6",
+   "role": "회사출하",
+   "confidence": "중간",
+   "rationale": "마이크론 타이중·타오위안 팹(D램·HBM 패키징)발 미국향 메모리. 매출과 전년비 0.83·최근 8분기 0.96 (A).",
+   "caveat": "미국향만 — 대만 팹 물량 대부분은 아시아 서버 조립사로 가서 대만 자체 수출 통계가 있어야 전체가 보임(대만 데이터 연동 예정). SK하이닉스·삼성의 대만 경유분 포함 가능.",
+   "include_in_total": 0,
+   "sort": 15
   },
   {
    "ticker": "MU",
