@@ -4,9 +4,10 @@ import { Spark } from "@/components/Spark";
 import { StockView, type FlowData, type QuarterRow } from "@/components/StockView";
 import { corr, quarterize, sumSeries, toMonthly } from "@/lib/compute";
 import { estimateNextQuarter } from "@/lib/estimate";
-import { money, parseSites, pct, tone, usd } from "@/lib/format";
+import { IndexSection } from "@/components/IndexSection";
+import { INDEX_FOR_GROUP, money, parseSites, pct, tone, usd } from "@/lib/format";
 import { ADMIN_ENABLED } from "@/lib/db";
-import { alertsFor, company, financials, mappingsFor, observations, priceSnapshots, surgeForTicker } from "@/lib/queries";
+import { alertsFor, company, financials, indicators, mappingsFor, observations, priceSnapshots, surgeForTicker } from "@/lib/queries";
 
 export const revalidate = 3600;
 
@@ -25,7 +26,11 @@ export default async function StockPage({ params }: PageProps<"/stocks/[ticker]"
   const ids = maps.map((m) => m.series_id);
   const [obs, allFin, alerts, relatedAll] = await Promise.all([observations(ids), financials(ticker), alertsFor(ids), surgeForTicker(ticker)]);
   const related = relatedAll.slice(0, 8);
-  const prices = NEOCLOUD.has(ticker) ? await priceSnapshots() : [];
+  const idxGroups = INDEX_FOR_GROUP[c.grp ?? ""] ?? [];
+  const [prices, defs] = await Promise.all([
+    NEOCLOUD.has(ticker) || idxGroups.length ? priceSnapshots() : Promise.resolve([]),
+    idxGroups.length ? indicators() : Promise.resolve([]),
+  ]);
   const gpuLatest = NEO_GPUS.map((g) => prices.filter((r) => r.kind === "gpu" && r.item === g && r.stat === "median").at(-1)).filter((r) => r != null);
   const m = toMonthly(obs, ids);
   const fin = allFin.filter((f) => f.period_end >= "2021-01-01");
@@ -115,6 +120,12 @@ export default async function StockPage({ params }: PageProps<"/stocks/[ticker]"
 
       {flows.length ? <StockView flows={flows} months={m.months} quarters={quarters} currency={fin.at(-1)?.currency ?? "USD"} /> : (
         <div className="card text-sm text-muted">연결된 무역 흐름이 없습니다.{ADMIN_ENABLED && <> <Link className="text-accent" href={`/admin/stocks/${encodeURIComponent(c.ticker)}`}>관리 페이지</Link>에서 추가하세요.</>}</div>
+      )}
+
+      {idxGroups.length > 0 && defs.length > 0 && (
+        <div className="grid gap-4 xl:grid-cols-2">
+          {idxGroups.map((g) => <IndexSection key={g} grp={`관련 가격지수 · ${g}`} defs={defs.filter((d) => d.grp === g)} rows={prices.filter((r) => r.kind === "index")} compact />)}
+        </div>
       )}
 
       {related.length > 0 && (

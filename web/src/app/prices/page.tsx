@@ -1,6 +1,7 @@
 import { PriceChart } from "@/components/ComputeCharts";
 import { pct, tone } from "@/lib/format";
-import { priceSnapshots, type PriceRow } from "@/lib/queries";
+import { IndexSection } from "@/components/IndexSection";
+import { indicators, priceSnapshots, type PriceRow } from "@/lib/queries";
 
 export const revalidate = 3600;
 
@@ -22,23 +23,26 @@ const series = (rows: PriceRow[], item: string, stat: string): [string, number][
   rows.filter((r) => r.item === item && r.stat === stat).map((r) => [r.date, r.value]);
 
 export default async function Prices() {
-  const rows = await priceSnapshots();
+  const [rows, defs] = await Promise.all([priceSnapshots(), indicators()]);
+  const idx = rows.filter((r) => r.kind === "index");
+  const idxGroups = [...new Set(defs.map((d) => d.grp))];
   const gpu = rows.filter((r) => r.kind === "gpu");
   const tok = rows.filter((r) => r.kind === "token");
   const gpus = Object.keys(GPU_COLORS).filter((g) => gpu.some((r) => r.item === g));
   const models = [...new Set(tok.map((r) => r.item))];
-  const first = rows[0]?.date, last = rows.at(-1)?.date;
+  const daily = rows.filter((r) => r.kind !== "index");
+  const first = daily[0]?.date, last = daily.at(-1)?.date;
 
   return (
     <div className="space-y-6">
       <div>
         <h1 className="text-2xl font-bold">가격·지수</h1>
         <p className="mt-1 text-sm text-muted">
-          AI 컴퓨트 수급 지표 · {first ? `${first} ~ ${last} 일별 수집` : "수집 전"} · 매일 아침 갱신
+          GPU·토큰 가격(일별) · 공급망 가격지수(월별) · {first ? `GPU·토큰 ${first} ~ ${last} 수집` : "수집 전"} · 매일 아침 갱신
         </p>
       </div>
 
-      {!rows.length && <div className="card text-sm text-muted">아직 수집된 가격이 없습니다. 매일 아침 데이터 갱신 때 첫 값이 쌓입니다.</div>}
+      {!daily.length && <div className="card text-sm text-muted">아직 수집된 가격이 없습니다. 매일 아침 데이터 갱신 때 첫 값이 쌓입니다.</div>}
 
       <section className="space-y-3">
         <div className="flex flex-wrap items-baseline justify-between gap-2">
@@ -129,6 +133,18 @@ export default async function Prices() {
           정가는 신모델 출시·가격 인하 때만 계단식으로 바뀝니다. 같은 성능의 토큰이 싸지는 속도가 GPU 수요(추론 물량)와 GPU 클라우드 마진을 가르는 변수입니다.
         </p>
       </section>
+
+      {idxGroups.length > 0 && (
+        <section className="space-y-3">
+          <div className="flex flex-wrap items-baseline justify-between gap-2">
+            <h2 className="text-lg font-bold">공급망 가격지수 <span className="text-sm font-normal text-muted">생산자물가·수출입 가격 (BLS)</span></h2>
+            <span className="text-xs text-muted">물량이 아니라 단가 사이클 — 매출 = 물량 × 단가의 단가 쪽</span>
+          </div>
+          <div className="grid gap-4 xl:grid-cols-2">
+            {idxGroups.map((g) => <IndexSection key={g} grp={g} defs={defs.filter((d) => d.grp === g)} rows={idx} />)}
+          </div>
+        </section>
+      )}
     </div>
   );
 }

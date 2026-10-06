@@ -51,6 +51,9 @@ CREATE TABLE IF NOT EXISTS alerts (
   series_id TEXT NOT NULL, month TEXT NOT NULL, kind TEXT NOT NULL, detail TEXT,
   PRIMARY KEY (series_id, month, kind)
 );
+CREATE TABLE IF NOT EXISTS indicators (          -- 가격지수 정의 (etl/indicators.py가 매번 덮어씀). 값은 price_snapshots(kind='index')
+  id TEXT PRIMARY KEY, label TEXT NOT NULL, grp TEXT NOT NULL, unit TEXT, source TEXT, note TEXT, sort INTEGER DEFAULT 100
+);
 CREATE TABLE IF NOT EXISTS price_snapshots (   -- GPU 렌탈가·토큰 가격 일별 스냅샷 (etl/prices.py)
   date TEXT NOT NULL, kind TEXT NOT NULL,            -- kind: 'gpu' | 'token'
   item TEXT NOT NULL, stat TEXT NOT NULL,            -- gpu: 'H100 SXM' / median·p25 · token: 'Opus' / input·output

@@ -47,3 +47,9 @@ export type Site = { name: string; country: string; what: string };
 export function parseSites(json: string | null): Site[] {
   try { return json ? (JSON.parse(json) as Site[]) : []; } catch { return []; }
 }
+
+/** 종목 섹터 그룹 → 종목 페이지에 붙일 가격지수 그룹 (etl/indicators.py의 그룹명) */
+export const INDEX_FOR_GROUP: Record<string, string[]> = {
+  메모리: ["반도체"], 반도체: ["반도체"], 광통신: ["네트워크"], "서버·네트워크": ["서버·스토리지", "네트워크"],
+  "전력·냉각": ["전력·냉각"], "AI 클라우드": ["서버·스토리지"], "부품·소재": ["반도체"],
+};

@@ -6,7 +6,7 @@ import json
 import sys
 from datetime import datetime
 
-from etl import breaks, curation, dart, dart_segment, prices, sec, seed, sources, surge
+from etl import breaks, curation, dart, dart_segment, indicators, prices, sec, seed, sources, surge
 from etl.db import connect
 
 
@@ -89,6 +89,7 @@ def main():
         con.commit()
         log(f"  ✓ 급등 후보 {n}건")
     log("5) GPU 렌탈가·토큰 가격"); prices.collect(con, log)
+    log("6) 가격지수 (PPI·수출입 가격)"); indicators.collect(con, log)
     con.execute("INSERT OR REPLACE INTO meta (key, value) VALUES ('built_at', ?)", (datetime.now().isoformat(timespec="seconds"),))
     con.commit()
 
