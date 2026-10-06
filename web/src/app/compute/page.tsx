@@ -38,6 +38,8 @@ export default async function Compute() {
         </p>
       </div>
 
+      {!rows.length && <div className="card text-sm text-muted">아직 수집된 가격이 없습니다. 매일 아침 데이터 갱신 때 첫 값이 쌓입니다.</div>}
+
       <section className="space-y-3">
         <div className="flex flex-wrap items-baseline justify-between gap-2">
           <h2 className="text-lg font-bold">GPU 렌탈가 <span className="text-sm font-normal text-muted">$ / GPU·시간, 온디맨드</span></h2>
