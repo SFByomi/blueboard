@@ -3,7 +3,8 @@ import { pct, tone } from "@/lib/format";
 import { IndexSection } from "@/components/IndexSection";
 import { indicators, priceSnapshots, type PriceRow } from "@/lib/queries";
 
-export const revalidate = 600; // 데이터는 하루 1회 게시 — 게시 후 10분 안에 반영
+// 게시 직후 바로 보이도록 요청마다 렌더 (ISR 캐시가 게시 후에도 이전 데이터로 남던 문제). DB가 작아 부담 없음
+export const dynamic = "force-dynamic";
 
 const GPU_COLORS: Record<string, string> = {
   "H100 SXM": "#60a5fa", "H100 NVL": "#22d3ee", H200: "#f59e0b", "H200 NVL": "#f472b6", B200: "#34d399", B300: "#a78bfa",
