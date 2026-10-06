@@ -143,6 +143,12 @@ export default async function Prices() {
           <div className="grid gap-4 xl:grid-cols-2">
             {idxGroups.map((g) => <IndexSection key={g} grp={g} defs={defs.filter((d) => d.grp === g)} rows={idx} />)}
           </div>
+          <p className="text-xs leading-relaxed text-muted">
+            메모리 단가는 한국·미국 무역통계의 금액÷수량으로 직접 계산한 값입니다 (월별, 제품 구성 변화도 섞임).
+            DDR5 RDIMM 스팟·계약가는 출처 약관상 재게시가 안 되어 링크로 안내합니다:{" "}
+            <a className="text-accent" href="https://www.memorymarket.com/price/ems/100263" target="_blank" rel="noreferrer">MemoryMarket DDR5 RDIMM 64GB</a> ·{" "}
+            <a className="text-accent" href="https://memoryindex.io/ddr5-price" target="_blank" rel="noreferrer">MemoryIndex DDR5</a>
+          </p>
         </section>
       )}
     </div>
