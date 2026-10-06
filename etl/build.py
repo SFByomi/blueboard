@@ -63,6 +63,19 @@ def save_series(con, sid, job):
     log(f"  ✓ {sid}: {len(df)}개월 ~{df['month'].max() if len(df) else '-'}")
 
 
+def apply_hs_names_ko(con):
+    """data/hs_names_ko.json(git 원본)의 HS6 한국어 품목명 적용. seed의 짧은 이름이 있으면 그걸 유지."""
+    path = curation.PATH.parent / "hs_names_ko.json"
+    if not path.exists():
+        return
+    names = json.loads(path.read_text(encoding="utf-8"))
+    con.executemany("INSERT INTO hs_names (hs, name_ko) VALUES (?,?) ON CONFLICT(hs) DO UPDATE SET name_ko=coalesce(hs_names.name_ko, excluded.name_ko)",
+                    list(names.items()))
+    missing = [h for (h,) in con.execute("SELECT DISTINCT s.hs6 FROM surge s LEFT JOIN hs_names n ON n.hs=s.hs6 WHERE n.name_ko IS NULL")]
+    if missing:  # 새로 급등 목록에 들어온 품목 — hs_names_ko.json에 추가할 것 (그 전까진 영문 표시)
+        log(f"  한국어 품목명 없음 {len(missing)}개: {', '.join(missing[:20])}{' …' if len(missing) > 20 else ''}")
+
+
 def fetch_financials(con):
     targets = con.execute("SELECT ticker, sec_ticker, dart_fs, dart_segment FROM companies "
                           "WHERE sec_ticker IS NOT NULL OR dart_fs IS NOT NULL OR dart_segment IS NOT NULL").fetchall()
@@ -106,6 +119,7 @@ def main():
         n = surge.scan(con, tagged, log)
         con.commit()
         log(f"  ✓ 급등 후보 {n}건")
+    apply_hs_names_ko(con); con.commit()
     step("5) GPU 렌탈가·토큰 가격"); prices.collect(con, log)
     step("6) 가격지수 (PPI·수출입 가격)"); indicators.collect(con, log)
     con.execute("INSERT OR REPLACE INTO meta (key, value) VALUES ('built_at', ?)", (datetime.now().isoformat(timespec="seconds"),))

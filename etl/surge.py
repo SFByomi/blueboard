@@ -116,7 +116,8 @@ def scan(con, tagged_hs6: list[str], log=print):
         df = pd.concat([x for x in parts if len(x)])
         latest = pd.Period(df["month"].max(), freq="M")
         rows += [{**r, "scope": scope} for r in metrics(df, latest, MIN_WORLD)]
-        con.executemany("INSERT OR IGNORE INTO hs_names (hs, name_en) VALUES (?, ?)",
+        con.executemany("INSERT INTO hs_names (hs, name_en) VALUES (?, ?) "  # 시드가 한국어 이름만 넣어둔 행도 영문 채움
+                        "ON CONFLICT(hs) DO UPDATE SET name_en=coalesce(hs_names.name_en, excluded.name_en)",
                         df[["hs6", "desc"]].drop_duplicates("hs6").values.tolist())
     parts = [p for p in _parallel(by_country, tagged_hs6, "국가별 ", log) if len(p)]
     if parts:

@@ -1,6 +1,7 @@
 import type { Metadata } from "next";
 import { JetBrains_Mono, Noto_Sans_KR } from "next/font/google";
 import Link from "next/link";
+import { NameToggle, NAME_INIT } from "@/components/NameToggle";
 import { NavTabs } from "@/components/NavTabs";
 import { ADMIN_ENABLED } from "@/lib/db";
 import "./globals.css";
@@ -20,13 +21,19 @@ export const metadata: Metadata = {
 
 export default function RootLayout({ children }: LayoutProps<"/">) {
   return (
-    <html lang="ko" className={`${noto.variable} ${mono.variable} antialiased`}>
+    <html lang="ko" className={`${noto.variable} ${mono.variable} antialiased`} suppressHydrationWarning>
+      <head>
+        <script dangerouslySetInnerHTML={{ __html: NAME_INIT }} />
+      </head>
       <body className="min-h-screen font-sans">
         <header className="sticky top-0 z-10 border-b border-line bg-bg/90 backdrop-blur">
-          <nav className="mx-auto flex max-w-7xl items-center gap-x-1 gap-y-1 overflow-x-auto whitespace-nowrap px-4 py-2.5 text-sm">
-            <Link href="/" className="mr-4 text-base font-bold">Investing Idea</Link>
-            <NavTabs admin={ADMIN_ENABLED} />
-          </nav>
+          <div className="mx-auto flex max-w-7xl items-center gap-2 px-4">
+            <nav className="flex min-w-0 flex-1 items-center gap-1 overflow-x-auto whitespace-nowrap py-2.5 text-sm">
+              <Link href="/" className="mr-3 shrink-0 text-base font-bold">Investing Idea</Link>
+              <NavTabs admin={ADMIN_ENABLED} />
+            </nav>
+            <NameToggle />
+          </div>
         </header>
         <main className="mx-auto max-w-7xl px-4 py-6">{children}</main>
         <footer className="mx-auto max-w-7xl px-4 pb-10 text-xs text-muted">

@@ -1,4 +1,5 @@
 import Link from "next/link";
+import { CtyName, HsName } from "@/components/Names";
 import { Spark } from "@/components/Spark";
 import { pct, tone, usd } from "@/lib/format";
 import { ADMIN_ENABLED } from "@/lib/db";
@@ -62,8 +63,8 @@ export default async function Surge({ searchParams }: PageProps<"/surge">) {
                 <tr key={`${r.hs6}-${r.partner}`} className="border-b border-line/60 hover:bg-panel2">
                   <td className="px-4 py-3 text-muted">{i + 1}</td>
                   <td className="px-2 py-3">
-                    <div className="font-medium">{r.name_ko ?? r.name_en ?? r.hs6}{r.partner !== "-" && <span className="text-muted"> · {r.partner_name}</span>}</div>
-                    <div className="font-mono text-xs text-muted">{r.hs6}{r.name_ko && r.name_en ? ` · ${r.name_en}` : ""}</div>
+                    <div className="font-medium"><HsName ko={r.name_ko} en={r.name_en} hs={r.hs6} />{r.partner !== "-" && <span className="text-muted"> · <CtyName name={r.partner_name} /></span>}</div>
+                    <div className="font-mono text-xs text-muted">{r.hs6}</div>
                   </td>
                   <td className="px-2 py-3 text-right font-mono">{usd(r.value_usd)}</td>
                   <td className="px-2 py-3"><Spark values={JSON.parse(r.spark)} /></td>
