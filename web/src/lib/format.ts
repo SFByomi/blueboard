@@ -71,3 +71,7 @@ const CTY_KO: Record<string, string> = {
   KUWAIT: "쿠웨이트", OMAN: "오만", BAHRAIN: "바레인", JORDAN: "요르단", "UKRAINE": "우크라이나", KAZAKHSTAN: "카자흐스탄", RUSSIA: "러시아",
 };
 export const ctyKo = (name: string | null) => (name ? CTY_KO[name] ?? name : null);
+
+/** 백테스트상 쓸 만한 추정인지: 오차 12% 이하이고 '직전 성장률 유지'보다 나을 때 */
+export const estReliable = (e: { mape: number | null; mape_naive: number | null }) =>
+  e.mape != null && e.mape <= 0.12 && (e.mape_naive == null || e.mape < e.mape_naive);

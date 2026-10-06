@@ -1,8 +1,8 @@
 import Link from "next/link";
 import { HsName } from "@/components/Names";
 import { Spark } from "@/components/Spark";
-import { money, pct, tone, usd } from "@/lib/format";
-import { meta, priceSnapshots, surge, tagIndex } from "@/lib/queries";
+import { estReliable, money, pct, tone, usd } from "@/lib/format";
+import { latestEstimates, meta, priceSnapshots, surge, tagIndex } from "@/lib/queries";
 import { stockSignals, type Signal } from "@/lib/signals";
 
 // 게시 직후 바로 보이도록 요청마다 렌더 (ISR 캐시가 게시 후에도 이전 데이터로 남던 문제). DB가 작아 부담 없음
@@ -22,13 +22,15 @@ function Row({ s }: { s: Signal }) {
 }
 
 export default async function Home() {
-  const [sig, prices, top, related, builtAt] = await Promise.all([
-    stockSignals(), priceSnapshots(), surge("us_imp_world", "yoy3m", 6), tagIndex(), meta("built_at"),
+  const [sig, prices, top, related, builtAt, estRows] = await Promise.all([
+    stockSignals(), priceSnapshots(), surge("us_imp_world", "yoy3m", 6), tagIndex(), meta("built_at"), latestEstimates(),
   ]);
   const ranked = sig.filter((s) => s.yoy3m != null).sort((a, b) => b.yoy3m! - a.yoy3m!);
   const half = Math.ceil(ranked.length / 2); // 상위 절반 = 가속, 하위 절반 = 둔화 (겹치지 않게)
   const up = ranked.slice(0, Math.min(half, 6)), down = ranked.slice(half).reverse().slice(0, 6);
-  const ests = sig.filter((s) => s.est);
+  const names = Object.fromEntries(sig.map((s) => [s.c.ticker, s.c.name_ko ?? s.c.name]));
+  // 신뢰 추정 먼저, 그 안에서 컨센 괴리 큰 순
+  const ests = [...estRows].sort((a, b) => Number(estReliable(b)) - Number(estReliable(a)) || Math.abs(b.cons_gap ?? 0) - Math.abs(a.cons_gap ?? 0));
   const gpu = ["H100 SXM", "H200", "B200"].map((g) => prices.filter((r) => r.kind === "gpu" && r.item === g && r.stat === "median").at(-1)).filter((r) => r != null);
 
   return (
@@ -52,28 +54,33 @@ export default async function Home() {
       {ests.length > 0 && (
         <section className="card min-w-0">
           <div className="flex flex-wrap items-baseline justify-between gap-2">
-            <h2 className="font-bold">진행 분기 매출 추정</h2>
-            <span className="text-xs text-muted">무역 흐름 → 매출 회귀 (R² 0.5 이상만) · ±1 표준오차</span>
+            <h2 className="font-bold">진행 분기 매출 추정 · 컨센서스 괴리</h2>
+            <span className="text-xs text-muted">매출 연관도 A·B 흐름 회귀 · 백테스트 오차로 신뢰도 표시</span>
           </div>
           <div className="mt-2 overflow-x-auto">
-            <table className="w-full min-w-[560px] whitespace-nowrap text-sm">
+            <table className="w-full min-w-[640px] whitespace-nowrap text-sm">
               <thead className="text-xs text-muted"><tr className="border-b border-line">
                 <th className="py-2 text-left">종목</th><th className="text-left">분기</th><th className="text-right">추정 매출</th>
-                <th className="text-right">직전 분기 대비</th><th className="text-right">R² · n</th>
+                <th className="text-right">직전 분기 대비</th><th className="text-right">컨센 대비</th><th className="text-right">백테스트 오차</th>
               </tr></thead>
               <tbody className="font-mono">
-                {ests.map((s) => (
-                  <tr key={s.c.ticker} className="border-b border-line/50">
-                    <td className="py-2 font-sans"><Link className="font-bold hover:text-accent" href={`/stocks/${encodeURIComponent(s.c.ticker)}`}>{s.c.name_ko ?? s.c.name}</Link></td>
-                    <td className="text-xs text-muted">{s.est!.start}~{s.est!.end} ({s.est!.months}/3개월)</td>
-                    <td className="text-right font-bold">{money(s.est!.value, s.currency)} <span className="text-xs font-normal text-muted">±{money(s.est!.high - s.est!.value, s.currency)}</span></td>
-                    <td className={`text-right ${tone(s.est!.value / s.est!.lastActual - 1)}`}>{pct(s.est!.value / s.est!.lastActual - 1)}</td>
-                    <td className="text-right text-xs text-muted">{s.est!.r2.toFixed(2)} · {s.est!.n}</td>
-                  </tr>
-                ))}
+                {ests.map((e) => {
+                  const ok = estReliable(e);
+                  return (
+                    <tr key={e.ticker} className={`border-b border-line/50 ${ok ? "" : "opacity-60"}`}>
+                      <td className="py-2 font-sans"><Link className="font-bold hover:text-accent" href={`/stocks/${encodeURIComponent(e.ticker)}`}>{names[e.ticker] ?? e.ticker}</Link></td>
+                      <td className="text-xs text-muted">{e.q_start.slice(0, 7)}~{e.q_end.slice(0, 7)}</td>
+                      <td className="text-right font-bold">{money(e.est, e.currency)}</td>
+                      <td className={`text-right ${tone(e.est / e.last_actual - 1)}`}>{pct(e.est / e.last_actual - 1)}</td>
+                      <td className={`text-right font-bold ${e.cons_gap == null ? "text-muted" : tone(e.cons_gap)}`}>{e.cons_gap == null ? "-" : pct(e.cons_gap)}</td>
+                      <td className="text-right text-xs"><span className={`mr-1 rounded px-1.5 py-0.5 font-sans ${ok ? "bg-up/20 text-up" : "bg-panel2 text-muted"}`}>{ok ? "신뢰" : "참고"}</span>{pct(e.mape, 1).replace("+", "")}</td>
+                    </tr>
+                  );
+                })}
               </tbody>
             </table>
           </div>
+          <p className="mt-2 text-xs text-muted">컨센 대비 = 무역 기반 추정 ÷ 애널리스트 컨센서스 − 1 (컨센 금액은 제공처 약관상 비공개). 신뢰 = 백테스트 오차 12% 이하이면서 &lsquo;직전 성장률 유지&rsquo;보다 정확. 한국 종목은 부문 매출이라 컨센 비교 없음.</p>
         </section>
       )}
 

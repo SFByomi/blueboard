@@ -22,7 +22,9 @@ load_dotenv(ROOT / ".env")
 
 # 소스에 과거 이력이 없어 매일 쌓는 테이블: 테이블 → 기본키. Actions 캐시(SQLite)는 언제든 사라질 수 있으므로
 # 이 테이블들은 통째 교체하지 않고 Postgres에 누적한다.
-ACCUMULATE = {"price_snapshots": ("date", "kind", "item", "stat")}
+ACCUMULATE = {"price_snapshots": ("date", "kind", "item", "stat"), "revenue_estimates": ("date", "ticker")}
+# 재게시가 금지된 원천 데이터 → 로컬 SQLite에만 (야후 컨센서스). 공개 쪽에는 괴리율만 나감
+PRIVATE = {"consensus"}
 
 
 def pg_type(sql: str) -> str:
@@ -32,7 +34,10 @@ def pg_type(sql: str) -> str:
 
 def ensure_schema(pg):
     # ALTER TABLE은 이미 적용돼 있어도 AccessExclusiveLock을 잡아 사이트 조회와 교착 → 필요할 때만 실행
-    pg.execute(pg_type(SCHEMA))
+    schema = SCHEMA
+    for t in PRIVATE:  # 로컬 전용 테이블은 Postgres에 만들지도 않음
+        schema = re.sub(rf"CREATE TABLE IF NOT EXISTS {t} \(.*?\n\);\n", "", schema, flags=re.S)
+    pg.execute(pg_type(schema))
     have = {(t, c) for t, c in pg.execute("SELECT table_name, column_name FROM information_schema.columns WHERE table_schema='public'")}
     for table, col in MIGRATIONS:
         if (table, col.split()[0]) not in have:
@@ -45,7 +50,8 @@ def enable_rls(pg, table):
 
 
 def tables(lite) -> list[str]:
-    return [t for (t,) in lite.execute("SELECT name FROM sqlite_master WHERE type='table' AND name NOT LIKE 'sqlite_%' ORDER BY name")]
+    return [t for (t,) in lite.execute("SELECT name FROM sqlite_master WHERE type='table' AND name NOT LIKE 'sqlite_%' ORDER BY name")
+            if t not in PRIVATE]
 
 
 def normalize_url(url: str) -> str:

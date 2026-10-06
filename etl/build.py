@@ -8,7 +8,7 @@ import time
 from concurrent.futures import ThreadPoolExecutor, as_completed
 from datetime import datetime
 
-from etl import breaks, curation, dart, dart_segment, indicators, prices, scores, sec, seed, sources, surge
+from etl import breaks, consensus, curation, dart, dart_segment, estimates, indicators, prices, scores, sec, seed, sources, surge
 from etl.db import connect
 
 
@@ -113,6 +113,8 @@ def main():
     step("3) 분기 매출 (SEC·DART)"); fetch_financials(con)
     step("3-1) 통계 단절 탐지"); n = breaks.scan(con, log); con.commit(); log(f"  경고 {n}건")
     step("3-2) 매출 상관 점수"); scores.score_all(con, log); con.commit()
+    step("3-3) 컨센서스 (로컬 전용)"); consensus.collect(con, log); con.commit()
+    step("3-4) 진행 분기 매출 추정·백테스트"); estimates.estimate_all(con, log); con.commit()
     if "--skip-surge" not in sys.argv:
         step("4) 급등 탐지")
         tagged = sorted({h for (h,) in con.execute("SELECT hs_prefix FROM hs_tags WHERE length(hs_prefix)=6")})

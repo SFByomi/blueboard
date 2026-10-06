@@ -21,6 +21,7 @@ export default async function Admin() {
         <div className="flex gap-2 text-sm">
           <Link href="/admin/tags" className="btn-ghost">품목 → 종목 태그</Link>
           <Link href="/admin/ornn" className="btn-ghost">Ornn 지수 (개인용)</Link>
+          <Link href="/admin/consensus" className="btn-ghost">컨센서스 (개인용)</Link>
         </div>
       </div>
 
