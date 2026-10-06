@@ -22,12 +22,29 @@ export function sqlite(): Database.Database {
   return g.__yominDb;
 }
 
+// 동시에 보내는 Postgres 쿼리 수를 연결 수 이하로 제한 — postgres.js 내부 대기열에 쌓이면
+// Supabase 트랜잭션 풀러에서 응답이 멈추는 일이 있었음(홈: 동시 7개 → 504). 남는 쿼리는 여기서 기다림.
+const PG_MAX = 5;
+let pgActive = 0;
+const pgWaiting: (() => void)[] = [];
+async function withSlot<T>(fn: () => Promise<T>): Promise<T> {
+  if (pgActive < PG_MAX) pgActive++;
+  else await new Promise<void>((r) => pgWaiting.push(r)); // 끝난 쿼리가 슬롯을 그대로 넘겨줌
+  try {
+    return await fn();
+  } finally {
+    const next = pgWaiting.shift();
+    if (next) next();
+    else pgActive--;
+  }
+}
+
 function pg(): postgres.Sql {
   // Supabase 풀러(트랜잭션 모드)는 prepared statement를 지원하지 않음.
   // 동시 쿼리가 연결 수(max)보다 많으면 postgres.js가 한 연결에 쿼리를 파이프라이닝하는데(기본 100개),
   // 트랜잭션 풀러에서 이게 간헐적으로 멈춤 → 홈(동시 7개)만 504가 났음. 파이프라이닝을 끄고 남는 쿼리는 대기열로.
   g.__yominPg ??= postgres(process.env.DATABASE_URL!, {
-    prepare: false, max: 5, idle_timeout: 20, connect_timeout: 10,
+    prepare: false, max: PG_MAX, idle_timeout: 20, connect_timeout: 10,
     ...({ max_pipeline: 1 } as object), // 타입 정의엔 없지만 postgres.js 3.4 옵션 (src/index.js)
   });
   return g.__yominPg;
@@ -37,7 +54,8 @@ function pg(): postgres.Sql {
 export async function query<T>(text: string, params: unknown[] = []): Promise<T[]> {
   if (USE_PG) {
     let i = 0;
-    const rows = await pg().unsafe(text.replace(/\?/g, () => `$${++i}`), params as postgres.ParameterOrJSON<never>[]);
+    const sql = text.replace(/\?/g, () => `$${++i}`);
+    const rows = await withSlot(() => pg().unsafe(sql, params as postgres.ParameterOrJSON<never>[]));
     return Array.from(rows) as T[];
   }
   return sqlite().prepare(text).all(...params) as T[];
