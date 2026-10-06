@@ -34,7 +34,7 @@ export default async function Compute() {
       <div>
         <h1 className="text-2xl font-bold">GPU·토큰 가격</h1>
         <p className="mt-1 text-sm text-muted">
-          네오클라우드(IREN·NBIS 등) 업황 지표 · {first ? `${first} ~ ${last} 일별 수집` : "수집 전"} · 매일 아침 갱신
+          AI 컴퓨트 수급 지표 · {first ? `${first} ~ ${last} 일별 수집` : "수집 전"} · 매일 아침 갱신
         </p>
       </div>
 
@@ -85,7 +85,7 @@ export default async function Compute() {
           </div>
         )}
         <p className="text-xs leading-relaxed text-muted">
-          스팟 매물 가격이라 IREN·NBIS가 실제 받는 장기계약 단가와는 다릅니다. GPU 공급이 빠듯한지(가격↑·매물↓) 남는지(가격↓·매물↑)를 보는 업황 신호로 쓰세요.
+          스팟 매물 가격이라 GPU 클라우드 업체가 실제 받는 장기계약 단가와는 다릅니다. GPU 공급이 빠듯한지(가격↑·매물↓) 남는지(가격↓·매물↑)를 보는 업황 신호로 쓰세요.
           매물이 기종당 수십 개 수준이라 하루 단위로는 출렁일 수 있습니다.
         </p>
       </section>
@@ -126,7 +126,7 @@ export default async function Compute() {
           </div>
         )}
         <p className="text-xs leading-relaxed text-muted">
-          정가는 신모델 출시·가격 인하 때만 계단식으로 바뀝니다. 같은 성능의 토큰이 싸지는 속도가 GPU 수요(추론 물량)와 네오클라우드 마진을 가르는 변수입니다.
+          정가는 신모델 출시·가격 인하 때만 계단식으로 바뀝니다. 같은 성능의 토큰이 싸지는 속도가 GPU 수요(추론 물량)와 GPU 클라우드 마진을 가르는 변수입니다.
         </p>
       </section>
     </div>
