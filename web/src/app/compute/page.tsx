@@ -45,6 +45,14 @@ export default async function Compute() {
           <h2 className="text-lg font-bold">GPU 렌탈가 <span className="text-sm font-normal text-muted">$ / GPU·시간, 온디맨드</span></h2>
           <span className="text-xs text-muted">Vast.ai 마켓플레이스 대여 가능 매물 기준 · 실선 중앙값, 점선 하위 25%</span>
         </div>
+        <div className="rounded-lg border border-line bg-panel2 px-4 py-3 text-sm leading-relaxed">
+          이 탭의 GPU 가격은 <b>Vast.ai 공개 매물로 Yomin이 직접 계산한 지수</b>입니다.
+          실제 거래 체결가 기반 지수(Ornn OCPI)는 재게시가 허용되지 않아 여기 싣지 않으니, 아래 사이트에서 확인하세요.
+          <div className="mt-1 flex flex-wrap gap-x-4 gap-y-1">
+            <a className="text-accent" href="https://data.ornn.com/markets" target="_blank" rel="noreferrer">Ornn OCPI (H100·H200·B200 등) →</a>
+            <a className="text-accent" href="https://www.silicondata.com/products/silicon-index/h100" target="_blank" rel="noreferrer">Silicon Data H100 지수 →</a>
+          </div>
+        </div>
         <div className="grid gap-4 md:grid-cols-2 xl:grid-cols-3">
           {gpus.map((g) => {
             const med = series(gpu, g, "median"), p25 = series(gpu, g, "p25");
@@ -74,9 +82,7 @@ export default async function Compute() {
         </div>
         <p className="text-xs leading-relaxed text-muted">
           스팟 매물 가격이라 IREN·NBIS가 실제 받는 장기계약 단가와는 다릅니다. GPU 공급이 빠듯한지(가격↑·매물↓) 남는지(가격↓·매물↑)를 보는 업황 신호로 쓰세요.
-          매물이 기종당 수십 개 수준이라 하루 단위로는 출렁일 수 있습니다. 거래 기반 지수 참고:{" "}
-          <a className="text-accent" href="https://data.ornn.com/markets" target="_blank" rel="noreferrer">Ornn OCPI</a> ·{" "}
-          <a className="text-accent" href="https://www.silicondata.com/products/silicon-index/h100" target="_blank" rel="noreferrer">Silicon Data SDH100RT</a>
+          매물이 기종당 수십 개 수준이라 하루 단위로는 출렁일 수 있습니다.
         </p>
       </section>
 
