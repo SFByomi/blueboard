@@ -4,6 +4,8 @@
 """
 import json
 import os
+import threading
+from concurrent.futures import ThreadPoolExecutor, as_completed
 from datetime import date
 from pathlib import Path
 
@@ -34,7 +36,9 @@ def _census(dataset, params, name):
     r = requests.get(f"{BASE}/{dataset}", params={**params, "key": os.environ["CENSUS_API_KEY"]}, timeout=300)
     rows = [] if r.status_code == 204 else (r.raise_for_status() or r.json())
     path.parent.mkdir(parents=True, exist_ok=True)
-    path.write_text(json.dumps(rows))
+    tmp = path.with_suffix(f".{threading.get_ident()}.tmp")
+    tmp.write_text(json.dumps(rows))
+    tmp.replace(path)
     return rows
 
 
@@ -90,30 +94,31 @@ def metrics(df: pd.DataFrame, latest: pd.Period, min_value: float) -> list[dict]
     return out
 
 
+def _parallel(fn, keys, label, log, workers=6) -> list:
+    """Census 조회를 동시에 (수출 API는 건당 15~40초). 한 건 실패가 전체를 막지 않게 로그만 남김."""
+    out = []
+    with ThreadPoolExecutor(workers) as pool:
+        futs = {pool.submit(fn, k): k for k in keys}
+        for f in as_completed(futs):
+            try:
+                out.append(f.result())
+                log(f"  surge {label}{futs[f]}")
+            except Exception as e:  # noqa: BLE001
+                log(f"  ✗ {label}{futs[f]}: {e}")
+    return out
+
+
 def scan(con, tagged_hs6: list[str], log=print):
     rows = []
     # 수입: 장(章) 전체 스캔 / 수출: Census 수출 API가 대량 조회에 매우 느려 관심 HS6만 품목 단위로 조회
     for flow, scope, prefixes in [("imports", "us_imp_world", CHAPTERS), ("exports", "us_exp_world", tagged_hs6)]:
-        parts = []
-        for ch in prefixes:
-            log(f"  surge {flow} ch{ch}")
-            try:
-                parts.append(world_hs6(flow, ch))
-            except Exception as e:  # noqa: BLE001 — 한 장(章) 실패가 전체를 막지 않게
-                log(f"  ✗ {flow} ch{ch}: {e}")
+        parts = _parallel(lambda ch, flow=flow: world_hs6(flow, ch), prefixes, f"{flow} ch", log)
         df = pd.concat([x for x in parts if len(x)])
         latest = pd.Period(df["month"].max(), freq="M")
         rows += [{**r, "scope": scope} for r in metrics(df, latest, MIN_WORLD)]
         con.executemany("INSERT OR IGNORE INTO hs_names (hs, name_en) VALUES (?, ?)",
                         df[["hs6", "desc"]].drop_duplicates("hs6").values.tolist())
-    parts = []
-    for hs6 in tagged_hs6:
-        log(f"  surge 국가별 {hs6}")
-        try:
-            parts.append(by_country(hs6))
-        except Exception as e:  # noqa: BLE001
-            log(f"  ✗ 국가별 {hs6}: {e}")
-    parts = [p for p in parts if len(p)]
+    parts = [p for p in _parallel(by_country, tagged_hs6, "국가별 ", log) if len(p)]
     if parts:
         df = pd.concat(parts)
         rows += [{**r, "scope": "us_imp_cty"} for r in metrics(df, pd.Period(df["month"].max(), freq="M"), MIN_CTY)]
