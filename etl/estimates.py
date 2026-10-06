@@ -5,6 +5,8 @@
 - 두 모델을 흐름마다 적합하고, 백테스트 오차가 작은 쪽을 종목별로 채택
   - yoy  : 매출 전년비(q) = a + b × 무역 전년비(q − lag) → 매출(T−4) × (1 + 예측). 계절성에 강하지만 급성장기엔 평균으로 끌려감
   - level: 매출(q) = a + b × 무역 금액(q − lag), 최근 12분기 → 급성장·급감 국면을 따라감
+  - +bias: 위 예측에 '직전 4분기 실적/예측 배율 평균'을 곱한 보정판 (계속 낮게/높게 잡는 편향 제거).
+    백테스트에서도 각 분기는 그 이전 4분기 오차로만 보정 → 미래 정보 없이 비교, 이겨야 채택
 - 진행 분기 T 예측: lag ≥ 1이면 이미 끝난 분기의 무역으로, lag 0이면 T에 들어온 달(1~3개월, 금액은 3개월로 환산)로
 - 결합: 흐름별 예측을 R²로 가중평균, 범위는 회귀 잔차 ±1 표준편차
 - 백테스트: 최근 8개 분기를 하나씩 빼고 그 이전 분기로만 다시 적합해 예측 → 평균 절대 오차(MAPE)를
@@ -24,6 +26,8 @@ MIN_PAIRS = 8   # 회귀 최소 분기 수
 BACKTEST = 8    # 백테스트 분기 수
 MAX_FLOWS = 3
 LEVEL_WIN = 12  # 금액 모델 적합 창(분기)
+BIAS_N = 4       # 편향 보정에 쓰는 직전 분기 수
+BIAS_CAP = 1.5   # 보정 배율 상한 (±50%)
 STALE_DAYS = 75  # 분기 말 + 75일이 지났는데 실적이 없으면 수집 누락으로 봄
 METHODS = ("yoy", "level")
 
@@ -123,17 +127,39 @@ def predict(method, flows, fin: pd.DataFrame, k: int, t_start, t_end, live: bool
             "se": sum(p["se"] * wi for p, wi in zip(preds, w)) / sum(w), "flows": preds}
 
 
-def backtest(method, flows, fin: pd.DataFrame) -> list[dict]:
-    out = []
-    for k in range(max(len(fin) - BACKTEST, 4 + MIN_PAIRS), len(fin)):
+def backtest(method, flows, fin: pd.DataFrame, corrected=False) -> list[dict]:
+    """최근 BACKTEST 분기 예측. corrected면 각 분기 예측을 '그 이전 BIAS_N 분기의 예측 대비 실적 배율'로 보정
+    (그 시점에 알 수 있던 오차만 쓰므로 미래 정보 없음)."""
+    first = max(len(fin) - BACKTEST, 4 + MIN_PAIRS)
+    raw = {}
+    for k in range(max(first - BIAS_N, 4 + MIN_PAIRS), len(fin)):
         q = fin.iloc[k]
         p = predict(method, flows, fin, k, q.start, q.end, live=False)
-        if not p:
+        if p:
+            raw[k] = p["rev"]
+    out = []
+    for k in range(first, len(fin)):
+        if k not in raw:
             continue
+        pred = raw[k]
+        if corrected:
+            f = bias_factor({j: raw[j] for j in range(k - BIAS_N, k) if j in raw}, fin)
+            if f is None:
+                continue
+            pred *= f
+        q = fin.iloc[k]
         naive_g = fin.revenue.iloc[k - 1] / fin.revenue.iloc[k - 5] - 1 if k >= 5 else None
-        out.append({"q_end": q.end.strftime("%Y-%m-%d"), "actual": float(q.revenue), "pred": float(p["rev"]),
+        out.append({"q_end": q.end.strftime("%Y-%m-%d"), "actual": float(q.revenue), "pred": float(pred),
                     "naive": float(fin.revenue.iloc[k - 4] * (1 + naive_g)) if naive_g is not None else None})
     return out
+
+
+def bias_factor(preds: dict, fin: pd.DataFrame) -> float | None:
+    """직전 분기들의 실적/예측 배율 평균 (2개 이상일 때). 과소추정이 이어지면 1보다 커져 위로 보정"""
+    r = [fin.revenue.iloc[j] / v for j, v in preds.items() if v > 0]
+    if len(r) < 2:
+        return None
+    return float(min(max(sum(r) / len(r), 1 / BIAS_CAP), BIAS_CAP))
 
 
 def mape(bt: list[dict], key: str) -> float | None:
@@ -176,9 +202,24 @@ def estimate_all(con, log=print) -> int:
         cands = []
         for method in METHODS:
             p = predict(method, flows, fin, len(fin), t_start, t_end, live=True)
+            if not p:
+                continue
             bt = backtest(method, flows, fin)
-            if p and bt:
+            if bt:
                 cands.append((mape(bt, "pred"), method, p, bt))
+            # 편향 보정판: 최근 BIAS_N 분기 실적/예측 배율을 곱함 — 보정판도 백테스트로 이겨야 채택
+            btc = backtest(method, flows, fin, corrected=True)
+            n = len(fin)
+            recent = {}
+            for k in range(n - BIAS_N, n):
+                q = fin.iloc[k]
+                r = predict(method, flows, fin, k, q.start, q.end, live=False)
+                if r:
+                    recent[k] = r["rev"]
+            f = bias_factor(recent, fin)
+            if btc and f is not None:
+                pc = {**p, "rev": p["rev"] * f, "se": p["se"] * f, "bias": f}
+                cands.append((mape(btc, "pred"), f"{method}+bias", pc, btc))
         if not cands:
             continue
         err, method, p, bt = min(cands, key=lambda c: c[0])
