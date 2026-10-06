@@ -23,6 +23,8 @@ API = {
     "item_cty": "https://apis.data.go.kr/1220000/nitemtrade/getNitemtradeList",
     "sigungu": "https://apis.data.go.kr/1220000/sigunguperprlstperacrs/getSigunguPerPrlstPerAcrs",
 }
+_unreachable = False  # 한 번 접속 실패가 확정되면 같은 실행의 나머지 관세청 호출은 즉시 실패
+
 SIDO = {"서울": "11", "부산": "26", "대구": "27", "인천": "28", "광주": "29", "대전": "30", "울산": "31", "세종": "36",
         "경기": "41", "충북": "43", "충남": "44", "전남": "46", "경북": "47", "경남": "48", "제주": "50", "강원": "51", "전북": "52"}
 
@@ -39,12 +41,16 @@ def _window(api, params, refresh):
     path = CACHE / api / f"{key}.json"
     if path.exists() and not refresh:
         return json.loads(path.read_text(encoding="utf-8"))
-    for attempt in range(5):  # apis.data.go.kr는 연결 끊김·응답 지연이 잦음 → 재시도
+    global _unreachable
+    if _unreachable:  # 이번 실행에서 이미 접속 불가 확인 → 시리즈마다 수 분씩 기다리지 않고 바로 건너뜀 (DB의 이전 값 유지)
+        raise RuntimeError("관세청 API 접속 불가 — 이번 실행은 건너뜀")
+    for attempt in range(3):  # apis.data.go.kr는 연결 끊김·응답 지연이 잦음 → 재시도
         try:
-            r = requests.get(API[api], params={"serviceKey": os.environ["DATA_GO_KR_KEY"], **params}, timeout=60)
+            r = requests.get(API[api], params={"serviceKey": os.environ["DATA_GO_KR_KEY"], **params}, timeout=(10, 60))
             break
         except (requests.ConnectionError, requests.Timeout):
-            if attempt == 4:
+            if attempt == 2:
+                _unreachable = True  # 해외(GitHub Actions 미국 서버)에서 접속이 막히는 경우가 있음
                 raise
             time.sleep(2 ** attempt)
     r.raise_for_status()
