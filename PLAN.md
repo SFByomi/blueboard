@@ -118,6 +118,7 @@ TradeSeries (source, reporter, flow, region, hs, partner)
 - 후속 후보
   - 부품 유통 판매가(DigiKey·Mouser API): 광모듈(Coherent·Broadcom 품번), 퓨즈(Littelfuse·Bel Fuse) 등 판매가 지수
   - 한국 업체 세관·시군구 수출 바스켓(심텍 청주 등 기판·패키지 기판) 종목 추가
+  - TXG(10x Genomics) 매핑 재검토: 현재는 캘리포니아→중국 분석기기 수출(YoY 0.71, 업계 합산·2025-12 수출 급감)만 임시 등록. 싱가포르 소모품 공장 흐름, 소모품(3822) 국가별, 경쟁사(Illumina 등) 비교로 다시 탐색 (`etl.discover TXG --sec TXG ...`)
   - Ornn OCPI·DDR5 RDIMM 시세: 재게시 라이선스 문의(legal@ornn.com 등) — 받기 전까진 링크만
   - BLS v2 키(무료) — 지금은 FRED 경유로 충분
 
