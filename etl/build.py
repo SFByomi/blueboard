@@ -6,7 +6,7 @@ import json
 import sys
 from datetime import datetime
 
-from etl import breaks, curation, dart, dart_segment, indicators, prices, sec, seed, sources, surge
+from etl import breaks, curation, dart, dart_segment, indicators, prices, scores, sec, seed, sources, surge
 from etl.db import connect
 
 
@@ -82,6 +82,7 @@ def main():
     log("2) 시계열"); fetch_series(con)
     log("3) 분기 매출 (SEC·DART)"); fetch_financials(con)
     log("3-1) 통계 단절 탐지"); n = breaks.scan(con, log); con.commit(); log(f"  경고 {n}건")
+    log("3-2) 매출 상관 점수"); scores.score_all(con, log); con.commit()
     if "--skip-surge" not in sys.argv:
         log("4) 급등 탐지")
         tagged = sorted({h for (h,) in con.execute("SELECT hs_prefix FROM hs_tags WHERE length(hs_prefix)=6")})
