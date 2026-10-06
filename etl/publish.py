@@ -9,6 +9,7 @@
 import os
 import re
 import sys
+import time
 from urllib.parse import quote, unquote
 
 import psycopg
@@ -30,9 +31,17 @@ def pg_type(sql: str) -> str:
 
 
 def ensure_schema(pg):
+    # ALTER TABLE은 이미 적용돼 있어도 AccessExclusiveLock을 잡아 사이트 조회와 교착 → 필요할 때만 실행
     pg.execute(pg_type(SCHEMA))
+    have = {(t, c) for t, c in pg.execute("SELECT table_name, column_name FROM information_schema.columns WHERE table_schema='public'")}
     for table, col in MIGRATIONS:
-        pg.execute(f"ALTER TABLE {table} ADD COLUMN IF NOT EXISTS {pg_type(col)}")
+        if (table, col.split()[0]) not in have:
+            pg.execute(f"ALTER TABLE {table} ADD COLUMN IF NOT EXISTS {pg_type(col)}")
+
+
+def enable_rls(pg, table):
+    if not pg.execute("SELECT relrowsecurity FROM pg_class WHERE oid = %s::regclass", (table,)).fetchone()[0]:
+        pg.execute(f"ALTER TABLE {table} ENABLE ROW LEVEL SECURITY")
 
 
 def tables(lite) -> list[str]:
@@ -75,7 +84,7 @@ def publish(url: str, log=print):
                     keys, rest = ACCUMULATE[t], [c for c in cols if c not in ACCUMULATE[t]]
                     pg.execute(f"INSERT INTO {t} ({', '.join(cols)}) SELECT {', '.join(cols)} FROM {target} "
                                f"ON CONFLICT ({', '.join(keys)}) DO UPDATE SET {', '.join(f'{c}=excluded.{c}' for c in rest)}")
-                pg.execute(f"ALTER TABLE {t} ENABLE ROW LEVEL SECURITY")
+                enable_rls(pg, t)
                 log(f"  ✓ {t}: {len(rows)}행{' (누적)' if t in ACCUMULATE else ''}")
     lite.close()
 
@@ -85,4 +94,12 @@ if __name__ == "__main__":
     if not url:
         sys.exit("DATABASE_URL이 없습니다 (.env 또는 환경변수에 Supabase 접속 주소 필요)")
     print("Postgres 게시")
-    publish(url)
+    for attempt in range(3):  # 사이트 조회와 잠금 충돌(교착)하면 트랜잭션이 통째로 롤백됨 → 잠시 후 재시도
+        try:
+            publish(url)
+            break
+        except (psycopg.errors.DeadlockDetected, psycopg.errors.LockNotAvailable) as e:
+            if attempt == 2:
+                raise
+            print(f"  잠금 충돌로 재시도: {e.__class__.__name__}")
+            time.sleep(10)
