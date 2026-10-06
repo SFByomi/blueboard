@@ -7,9 +7,14 @@ import "./globals.css";
 const noto = Noto_Sans_KR({ variable: "--font-noto", subsets: ["latin"], weight: ["400", "500", "700"] });
 const mono = JetBrains_Mono({ variable: "--font-mono-jb", subsets: ["latin"] });
 
+const DESC = "미국·일본·한국 세관 데이터와 가격지수로 AI·반도체 공급망의 흐름을 추적합니다.";
+
 export const metadata: Metadata = {
-  title: "Investing Idea — 무역데이터로 먼저 읽는 실적",
-  description: "글로벌 세관 무역 데이터를 종목에 매핑해 실적을 먼저 읽습니다.",
+  metadataBase: new URL("https://buywhenitgoesup.vercel.app"),
+  title: { default: "Investing Idea — Supply Chain Intelligence", template: "%s · Investing Idea" },
+  description: DESC,
+  openGraph: { title: "Investing Idea — Supply Chain Intelligence", description: DESC, siteName: "Investing Idea", locale: "ko_KR", type: "website" },
+  twitter: { card: "summary_large_image", title: "Investing Idea — Supply Chain Intelligence", description: DESC },
 };
 
 export default function RootLayout({ children }: LayoutProps<"/">) {

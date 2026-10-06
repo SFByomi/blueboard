@@ -33,7 +33,7 @@ export default async function Home() {
     <div className="space-y-6">
       <div>
         <h1 className="text-2xl font-bold">공급망 신호</h1>
-        <p className="mt-1 text-sm text-muted">수요가 아니라 실제 출하로 실적을 먼저 읽습니다 · 최근 3개월 전년비 · 마지막 갱신 {builtAt?.replace("T", " ") ?? "-"}</p>
+        <p className="mt-1 text-sm text-muted">AI·반도체 공급망 출하 흐름 · 최근 3개월 전년비 · 마지막 갱신 {builtAt?.replace("T", " ") ?? "-"}</p>
       </div>
 
       <div className="grid gap-4 lg:grid-cols-2">

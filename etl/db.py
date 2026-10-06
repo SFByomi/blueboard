@@ -60,6 +60,14 @@ CREATE TABLE IF NOT EXISTS price_snapshots (   -- GPU 렌탈가·토큰 가격 �
   value REAL, n INTEGER, detail TEXT,                -- n: GPU 수(매물 기준) · detail: 실제 모델 ID 등
   PRIMARY KEY (date, kind, item, stat)
 );
+CREATE TABLE IF NOT EXISTS flow_scores (       -- 매핑별 매출 상관 점수 (etl/scores.py가 매 빌드 덮어씀)
+  ticker TEXT NOT NULL, series_id TEXT NOT NULL,
+  n INTEGER, n_yoy INTEGER,                          -- 금액·전년비 비교 분기 수
+  level REAL, yoy0 REAL, yoy1 REAL, yoy2 REAL,       -- 금액 상관, 전년비 상관(무역 0·1·2분기 선행)
+  best REAL, best_lag INTEGER, recent REAL,          -- 최고 전년비 상관·선행 분기, 최근 8분기 상관
+  grade TEXT,                                        -- A·B·C·D (표본 부족은 NULL)
+  PRIMARY KEY (ticker, series_id)
+);
 """
 
 

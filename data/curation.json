@@ -106,21 +106,6 @@
    "sites": null
   },
   {
-   "ticker": "ARKG",
-   "name": "ARK Genomic Revolution ETF",
-   "name_ko": "ARK 유전체 ETF",
-   "market": "CBOE",
-   "sector": "유전체 ETF",
-   "thesis": "보유 종목 바스켓. 분석기기·진단시약 무역은 약한 업황 프록시.",
-   "sec_ticker": null,
-   "fy_note": "ETF",
-   "sort": 80,
-   "dart_fs": null,
-   "dart_segment": null,
-   "grp": "바이오",
-   "sites": null
-  },
-  {
    "ticker": "INSM",
    "name": "Insmed",
    "name_ko": "인스메드",
@@ -329,6 +314,21 @@
    "dart_segment": null,
    "grp": "반도체",
    "sites": "[{\"name\": \"TSMC\", \"country\": \"대만\", \"what\": \"웨이퍼\"}, {\"name\": \"대만·동남아 OSAT\", \"country\": \"대만·말레이시아\", \"what\": \"패키징·테스트\"}]"
+  },
+  {
+   "ticker": "TXG",
+   "name": "10x Genomics",
+   "name_ko": "10x 지노믹스",
+   "market": "NASDAQ",
+   "sector": "단일세포·공간 유전체 장비",
+   "thesis": "단일세포·공간 유전체 분석 장비(Chromium·Visium·Xenium)와 소모품. 캘리포니아 생산 위주라 무역은 수출(특히 중국향) 일부만 잡힘 — 업황 참고용.",
+   "sec_ticker": "TXG",
+   "fy_note": "FY 12월말 종료",
+   "sort": 320,
+   "dart_fs": null,
+   "dart_segment": null,
+   "grp": "바이오",
+   "sites": "[{\"name\": \"플레전턴\", \"country\": \"미국 캘리포니아\", \"what\": \"장비·소모품 생산\"}, {\"name\": \"싱가포르\", \"country\": \"싱가포르\", \"what\": \"소모품 생산\"}]"
   }
  ],
  "series": [
@@ -509,6 +509,28 @@
    "spec": "{\"api\": \"sigungu\", \"hs\": \"853224\", \"flow\": \"export\", \"sido\": \"41\", \"sgg\": \"경기도 수원시\"}"
   },
   {
+   "id": "us_exp_ca_cn_labinst",
+   "label": "캘리포니아 → 중국 분석기기 수출",
+   "source": "census",
+   "reporter": "🇺🇸 미국",
+   "flow": "수출",
+   "region": "캘리포니아",
+   "hs": "9027.80/89",
+   "partner": "중국",
+   "spec": "{\"dataset\": \"exports/statehs\", \"hs\": [\"902780\", \"902789\"], \"filters\": {\"STATE\": \"CA\", \"CTY_CODE\": \"5700\"}}"
+  },
+  {
+   "id": "us_exp_ca_cn_reagent",
+   "label": "캘리포니아 → 중국 진단·실험 시약 수출",
+   "source": "census",
+   "reporter": "🇺🇸 미국",
+   "flow": "수출",
+   "region": "캘리포니아",
+   "hs": "3822.00/19",
+   "partner": "중국",
+   "spec": "{\"dataset\": \"exports/statehs\", \"hs\": [\"382200\", \"382219\"], \"filters\": {\"STATE\": \"CA\", \"CTY_CODE\": \"5700\"}}"
+  },
+  {
    "id": "us_exp_ca_laser",
    "label": "캘리포니아 LED·레이저다이오드 수출",
    "source": "census",
@@ -518,6 +540,17 @@
    "hs": "8541.41",
    "partner": "전세계",
    "spec": "{\"dataset\": \"exports/statehs\", \"hs\": \"854141\", \"filters\": {\"STATE\": \"CA\", \"CTY_CODE\": \"-\"}}"
+  },
+  {
+   "id": "us_exp_ca_reagent",
+   "label": "캘리포니아 진단·실험 시약 수출",
+   "source": "census",
+   "reporter": "🇺🇸 미국",
+   "flow": "수출",
+   "region": "캘리포니아",
+   "hs": "3822.00/19",
+   "partner": "전세계",
+   "spec": "{\"dataset\": \"exports/statehs\", \"hs\": [\"382200\", \"382219\"], \"filters\": {\"STATE\": \"CA\", \"CTY_CODE\": \"-\"}}"
   },
   {
    "id": "us_exp_de_fuelcell",
@@ -595,17 +628,6 @@
    "hs": "8532.24.0020",
    "partner": "전세계",
    "spec": "{\"dataset\": \"imports/hs\", \"hs\": \"8532240020\", \"filters\": {\"CTY_CODE\": \"-\"}}"
-  },
-  {
-   "id": "us_imp_all_reagent",
-   "label": "진단·실험용 시약 수입",
-   "source": "census",
-   "reporter": "🇺🇸 미국",
-   "flow": "수입",
-   "region": "전국",
-   "hs": "3822.19",
-   "partner": "전세계",
-   "spec": "{\"dataset\": \"imports/hs\", \"hs\": \"382219\", \"filters\": {\"CTY_CODE\": \"-\"}}"
   },
   {
    "id": "us_imp_all_ssd",
@@ -945,16 +967,6 @@
    "caveat": "HPE·Cisco 혼재 — 합산 제외.",
    "include_in_total": 0,
    "sort": 20
-  },
-  {
-   "ticker": "ARKG",
-   "series_id": "us_imp_all_reagent",
-   "role": "최종수요",
-   "confidence": "낮음",
-   "rationale": "진단·실험 시약 수요.",
-   "caveat": "매우 넓은 품목.",
-   "include_in_total": 0,
-   "sort": 10
   },
   {
    "ticker": "BE",
@@ -1327,6 +1339,36 @@
    "sort": 50
   },
   {
+   "ticker": "TXG",
+   "series_id": "us_exp_ca_cn_labinst",
+   "role": "생산출하",
+   "confidence": "중간",
+   "rationale": "플레전턴(캘리포니아) 생산 장비(Chromium·Xenium 등)의 중국향 수출. YoY 0.71.",
+   "caveat": "캘리포니아 분석기기 업계 합산 — 표본 22분기로 우연 상관 가능. 합산 제외.",
+   "include_in_total": 0,
+   "sort": 10
+  },
+  {
+   "ticker": "TXG",
+   "series_id": "us_exp_ca_cn_reagent",
+   "role": "생산출하",
+   "confidence": "낮음",
+   "rationale": "캘리포니아 시약(소모품) 중국향 수출. 한 분기 선행 YoY 0.47.",
+   "caveat": "업계 합산. 매출 대부분인 소모품의 미국 내 판매는 무역에 안 잡힘.",
+   "include_in_total": 0,
+   "sort": 20
+  },
+  {
+   "ticker": "TXG",
+   "series_id": "us_exp_ca_reagent",
+   "role": "최종수요",
+   "confidence": "낮음",
+   "rationale": "캘리포니아 진단·실험 시약 수출 전체 — 생명과학 도구 업황.",
+   "caveat": "YoY 0.10. HS2022로 3822.00 → 3822.19 등 분할, 합산.",
+   "include_in_total": 0,
+   "sort": 30
+  },
+  {
    "ticker": "VRT",
    "series_id": "us_imp_mx_switchboard",
    "role": "회사출하",
@@ -1365,7 +1407,7 @@
   },
   {
    "hs_prefix": "382219",
-   "ticker": "ARKG",
+   "ticker": "TXG",
    "note": "진단·실험 시약"
   },
   {
@@ -1544,8 +1586,8 @@
    "note": "광섬유"
   },
   {
-   "hs_prefix": "902780",
-   "ticker": "ARKG",
+   "hs_prefix": "902789",
+   "ticker": "TXG",
    "note": "분석기기"
   }
  ]

@@ -98,3 +98,17 @@ export const indicators = () =>
     if (e.code === "42P01" || e.message?.includes("no such table")) return [] as Indicator[];
     throw e;
   });
+
+export type FlowScore = {
+  ticker: string; series_id: string; n: number; n_yoy: number; level: number | null;
+  yoy0: number | null; yoy1: number | null; yoy2: number | null;
+  best: number | null; best_lag: number | null; recent: number | null; grade: "A" | "B" | "C" | "D" | null;
+};
+/** 매핑별 매출 상관 점수 (etl/scores.py) — 첫 수집 전엔 테이블이 없을 수 있음 */
+export const flowScores = (ticker?: string) =>
+  query<FlowScore>(`SELECT * FROM flow_scores${ticker ? " WHERE ticker=?" : ""} ORDER BY ticker, best DESC NULLS LAST`, ticker ? [ticker] : []).catch(
+    (e: { code?: string; message?: string }) => {
+      if (e.code === "42P01" || e.message?.includes("no such table")) return [] as FlowScore[];
+      throw e;
+    },
+  );
