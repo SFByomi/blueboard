@@ -11,7 +11,8 @@ import { INDEX_FOR_GROUP, money, parseSites, pct, tone, usd } from "@/lib/format
 import { ADMIN_ENABLED } from "@/lib/db";
 import { alertsFor, company, financials, flowScores, indicators, mappingsFor, observations, priceSnapshots, surgeForTicker } from "@/lib/queries";
 
-export const revalidate = 600; // 데이터는 하루 1회 게시 — 게시 후 10분 안에 반영
+// 게시 직후 바로 보이도록 요청마다 렌더 (ISR 캐시가 게시 후에도 이전 데이터로 남던 문제). DB가 작아 부담 없음
+export const dynamic = "force-dynamic";
 
 const NEOCLOUD = new Set(["IREN", "NBIS"]); // GPU 렌탈가가 핵심 업황인 종목
 const NEO_GPUS = ["H100 SXM", "H200", "B200"];
