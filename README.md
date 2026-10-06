@@ -58,7 +58,7 @@ npm --prefix web run dev   # http://localhost:3000
 ```
 GitHub Actions (매일 06:17 KST)                     Vercel (web/, 서울 리전)
   etl.build  → data/yomin.db (SQLite, 캐시 유지)       DATABASE_URL 있으면 Postgres 읽기
-  etl.publish → Supabase Postgres (전체 교체) ───────→  관리 페이지 404 · 1시간 캐시
+  etl.publish → Supabase Postgres (전체 교체) ───────→  관리 페이지 404 · 10분 캐시
 ```
 
 - 큐레이션 원본은 계속 `data/curation.json`: 로컬 관리 페이지에서 수정 → commit·push → Actions가 바로 수집·게시
