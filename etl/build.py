@@ -6,7 +6,7 @@ import json
 import sys
 from datetime import datetime
 
-from etl import breaks, census, curation, dart, dart_segment, estat, kcs, prices, sec, seed, surge
+from etl import breaks, curation, dart, dart_segment, indicators, prices, sec, seed, sources, surge
 from etl.db import connect
 
 
@@ -33,16 +33,7 @@ def fetch_series(con):
     for sid, source, spec in con.execute("SELECT id, source, spec FROM series").fetchall():
         spec = json.loads(spec)
         try:
-            if source == "census":
-                df = census.fetch(spec["dataset"], spec["hs"], spec["filters"])
-            elif source == "estat":
-                df = estat.monthly_usd(spec["flow"], spec["hs9"], spec["offices"], spec.get("country"))
-            elif source == "kcs":
-                df = kcs.fetch(spec["api"], spec["hs"], spec.get("flow", "export"), spec.get("cnty"),
-                               sido=spec.get("sido"), sgg=spec.get("sgg"))
-            else:
-                log(f"  ? {sid}: 지원하지 않는 source {source}")
-                continue
+            df = sources.fetch(source, spec)
         except Exception as e:  # noqa: BLE001 — 한 시리즈 실패가 전체를 막지 않게
             log(f"  ✗ {sid}: {e}")
             continue
@@ -98,6 +89,7 @@ def main():
         con.commit()
         log(f"  ✓ 급등 후보 {n}건")
     log("5) GPU 렌탈가·토큰 가격"); prices.collect(con, log)
+    log("6) 가격지수 (PPI·수출입 가격)"); indicators.collect(con, log)
     con.execute("INSERT OR REPLACE INTO meta (key, value) VALUES ('built_at', ?)", (datetime.now().isoformat(timespec="seconds"),))
     con.commit()
 

@@ -51,6 +51,9 @@ CREATE TABLE IF NOT EXISTS alerts (
   series_id TEXT NOT NULL, month TEXT NOT NULL, kind TEXT NOT NULL, detail TEXT,
   PRIMARY KEY (series_id, month, kind)
 );
+CREATE TABLE IF NOT EXISTS indicators (          -- 가격지수 정의 (etl/indicators.py가 매번 덮어씀). 값은 price_snapshots(kind='index')
+  id TEXT PRIMARY KEY, label TEXT NOT NULL, grp TEXT NOT NULL, unit TEXT, source TEXT, note TEXT, sort INTEGER DEFAULT 100
+);
 CREATE TABLE IF NOT EXISTS price_snapshots (   -- GPU 렌탈가·토큰 가격 일별 스냅샷 (etl/prices.py)
   date TEXT NOT NULL, kind TEXT NOT NULL,            -- kind: 'gpu' | 'token'
   item TEXT NOT NULL, stat TEXT NOT NULL,            -- gpu: 'H100 SXM' / median·p25 · token: 'Opus' / input·output
@@ -65,6 +68,8 @@ MIGRATIONS = [
     ("financials", "currency TEXT DEFAULT 'USD'"),
     ("companies", "dart_segment TEXT"),               # 사업부문 매출 사용: "ElectroMaterialsBg" 또는 "Component:Separate"
     ("financials", "basis TEXT"),                     # 매출 기준 표시 (예: "ElectroMaterialsBg 부문")
+    ("companies", "grp TEXT"),                        # 섹터 그룹 (종목 목록 묶음): 메모리·광통신·서버/네트워크·전력/냉각·AI 클라우드·기타
+    ("companies", "sites TEXT"),                      # 생산거점 JSON: [{"name","country","what"}] — 종목 페이지 공급망 요약
 ]
 
 

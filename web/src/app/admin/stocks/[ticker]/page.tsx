@@ -1,6 +1,6 @@
 import Link from "next/link";
 import { notFound } from "next/navigation";
-import { CONFIDENCES, ROLES } from "@/lib/format";
+import { CONFIDENCES, GROUPS, parseSites, ROLES } from "@/lib/format";
 import { allSeries, company, mappingsFor } from "@/lib/queries";
 import { deleteCompany, deleteMapping, saveCompany, saveMapping } from "../../actions";
 
@@ -26,8 +26,10 @@ export default async function EditStock({ params }: PageProps<"/admin/stocks/[ti
         <Field name="market" label="시장" v={c.market} /><Field name="sector" label="섹터" v={c.sector} />
         <Field name="sec_ticker" label="SEC 티커" v={c.sec_ticker} /><Field name="fy_note" label="회계연도" v={c.fy_note} />
         <Field name="sort" label="정렬" v={String(c.sort)} />
+        <Select name="grp" label="섹터 그룹" options={GROUPS} v={c.grp ?? "기타"} />
         <Field name="dart_fs" label="DART 재무 (한국: CFS 연결 / OFS 별도)" v={c.dart_fs} />
         <Field name="dart_segment" label="사업부문 매출 (XBRL 키워드, 예: Component, Component:Separate)" v={c.dart_segment} />
+        <label className="text-xs text-muted md:col-span-4">생산거점 (한 줄에 이름 | 국가 | 생산품목)<textarea name="sites" defaultValue={parseSites(c.sites).map((x) => [x.name, x.country, x.what].join(" | ")).join("\n")} rows={3} className="input mt-1 font-mono" /></label>
         <label className="text-xs text-muted md:col-span-4">투자 포인트·매핑 메모<textarea name="thesis" defaultValue={c.thesis ?? ""} rows={3} className="input mt-1" /></label>
         <button className="btn md:col-span-4">저장</button>
       </form>

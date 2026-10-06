@@ -3,6 +3,7 @@ import { query, queryOne } from "./db";
 export type Company = {
   ticker: string; name: string; name_ko: string | null; market: string | null; sector: string | null;
   thesis: string | null; sec_ticker: string | null; fy_note: string | null; sort: number; dart_fs: string | null; dart_segment: string | null;
+  grp: string | null; sites: string | null; // sites: 생산거점 JSON
 };
 export type Series = {
   id: string; label: string; source: string; reporter: string | null; flow: string | null; region: string | null;
@@ -77,11 +78,23 @@ export async function tagIndex() {
 
 export const meta = async (key: string) => (await queryOne<{ value: string }>("SELECT value FROM meta WHERE key=?", [key]))?.value;
 
-export type PriceRow = { date: string; kind: "gpu" | "token"; item: string; stat: string; value: number; n: number | null; detail: string | null };
+export type PriceRow = { date: string; kind: "gpu" | "token" | "index"; item: string; stat: string; value: number; n: number | null; detail: string | null };
 /** 가격 테이블은 첫 수집 전(새 DB·배포 직후)엔 없을 수 있음 → 빈 목록으로 (빌드가 실패하지 않게) */
 export const priceSnapshots = () =>
   query<PriceRow>("SELECT * FROM price_snapshots ORDER BY date, item, stat").catch((e: { code?: string; message?: string }) => {
     // 테이블 없음(Postgres 42P01, SQLite "no such table")만 빈 목록 — 접속 실패 등은 그대로 오류로
     if (e.code === "42P01" || e.message?.includes("no such table")) return [] as PriceRow[];
+    throw e;
+  });
+
+export const allFinancials = () => query<Fin>("SELECT * FROM financials ORDER BY ticker, period_end");
+export const allMappingsLabeled = () =>
+  query<Mapping & { label: string }>("SELECT m.*, s.label FROM mappings m JOIN series s ON s.id = m.series_id ORDER BY m.ticker, m.sort, m.id");
+
+export type Indicator = { id: string; label: string; grp: string; unit: string | null; source: string | null; note: string | null; sort: number };
+/** 가격지수 정의 — 첫 수집 전엔 테이블이 없을 수 있음 */
+export const indicators = () =>
+  query<Indicator>("SELECT * FROM indicators ORDER BY sort").catch((e: { code?: string; message?: string }) => {
+    if (e.code === "42P01" || e.message?.includes("no such table")) return [] as Indicator[];
     throw e;
   });

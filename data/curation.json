@@ -11,7 +11,9 @@
    "fy_note": "FY 8월말 종료",
    "sort": 10,
    "dart_fs": null,
-   "dart_segment": null
+   "dart_segment": null,
+   "grp": "메모리",
+   "sites": "[{\"name\": \"히로시마 팹\", \"country\": \"일본\", \"what\": \"DRAM·HBM 전공정\"}, {\"name\": \"타이중·타오위안 팹\", \"country\": \"대만\", \"what\": \"DRAM 전공정·HBM 패키징\"}, {\"name\": \"페낭·사나이\", \"country\": \"말레이시아\", \"what\": \"조립·테스트\"}, {\"name\": \"보이시·매너서스\", \"country\": \"미국\", \"what\": \"R&D·DRAM\"}]"
   },
   {
    "ticker": "SNDK",
@@ -24,7 +26,9 @@
    "fy_note": "FY 6월말 종료",
    "sort": 20,
    "dart_fs": null,
-   "dart_segment": null
+   "dart_segment": null,
+   "grp": "메모리",
+   "sites": "[{\"name\": \"요카이치·기타카미 (Kioxia JV)\", \"country\": \"일본\", \"what\": \"NAND 웨이퍼\"}, {\"name\": \"페낭\", \"country\": \"말레이시아\", \"what\": \"조립·테스트·SSD\"}, {\"name\": \"상하이\", \"country\": \"중국\", \"what\": \"조립·테스트\"}]"
   },
   {
    "ticker": "LITE",
@@ -37,7 +41,9 @@
    "fy_note": "FY 6월말 종료",
    "sort": 30,
    "dart_fs": null,
-   "dart_segment": null
+   "dart_segment": null,
+   "grp": "광통신",
+   "sites": "[{\"name\": \"산호세\", \"country\": \"미국\", \"what\": \"InP 레이저 칩\"}, {\"name\": \"사가미하라\", \"country\": \"일본\", \"what\": \"레이저·광소자\"}, {\"name\": \"Fabrinet 촌부리 (위탁)\", \"country\": \"태국\", \"what\": \"광트랜시버 조립\"}]"
   },
   {
    "ticker": "BE",
@@ -50,7 +56,9 @@
    "fy_note": "FY 12월",
    "sort": 40,
    "dart_fs": null,
-   "dart_segment": null
+   "dart_segment": null,
+   "grp": "전력·냉각",
+   "sites": "[{\"name\": \"뉴어크\", \"country\": \"미국 델라웨어\", \"what\": \"연료전지 파워모듈\"}, {\"name\": \"프리몬트\", \"country\": \"미국 캘리포니아\", \"what\": \"시스템 조립\"}, {\"name\": \"블룸SK퓨얼셀 구미\", \"country\": \"한국\", \"what\": \"한국향 조립\"}]"
   },
   {
    "ticker": "IREN",
@@ -63,7 +71,9 @@
    "fy_note": "FY 6월말 종료 (해외발행인, 20-F/10-K 확인)",
    "sort": 50,
    "dart_fs": null,
-   "dart_segment": null
+   "dart_segment": null,
+   "grp": "AI 클라우드",
+   "sites": "[{\"name\": \"차일드레스\", \"country\": \"미국 텍사스\", \"what\": \"GPU 데이터센터\"}, {\"name\": \"브리티시컬럼비아\", \"country\": \"캐나다\", \"what\": \"GPU·채굴 데이터센터\"}]"
   },
   {
    "ticker": "NBIS",
@@ -76,7 +86,9 @@
    "fy_note": "FY 12월 (20-F)",
    "sort": 60,
    "dart_fs": null,
-   "dart_segment": null
+   "dart_segment": null,
+   "grp": "AI 클라우드",
+   "sites": "[{\"name\": \"멘살라\", \"country\": \"핀란드\", \"what\": \"GPU 데이터센터\"}, {\"name\": \"캔자스시티·뉴저지\", \"country\": \"미국\", \"what\": \"GPU 데이터센터\"}]"
   },
   {
    "ticker": "RXRX",
@@ -89,7 +101,9 @@
    "fy_note": "FY 12월",
    "sort": 70,
    "dart_fs": null,
-   "dart_segment": null
+   "dart_segment": null,
+   "grp": "바이오",
+   "sites": null
   },
   {
    "ticker": "ARKG",
@@ -102,7 +116,9 @@
    "fy_note": "ETF",
    "sort": 80,
    "dart_fs": null,
-   "dart_segment": null
+   "dart_segment": null,
+   "grp": "바이오",
+   "sites": null
   },
   {
    "ticker": "INSM",
@@ -115,7 +131,9 @@
    "fy_note": "FY 12월",
    "sort": 90,
    "dart_fs": null,
-   "dart_segment": null
+   "dart_segment": null,
+   "grp": "바이오",
+   "sites": null
   },
   {
    "ticker": "000150.KS",
@@ -128,7 +146,9 @@
    "fy_note": "FY 12월",
    "sort": 100,
    "dart_fs": "OFS",
-   "dart_segment": "ElectroMaterialsBg"
+   "dart_segment": "ElectroMaterialsBg",
+   "grp": "부품·소재",
+   "sites": "[{\"name\": \"증평 공장\", \"country\": \"한국 충북\", \"what\": \"CCL(동박적층판)\"}, {\"name\": \"김천 공장\", \"country\": \"한국 경북\", \"what\": \"CCL\"}]"
   },
   {
    "ticker": "009150.KS",
@@ -141,7 +161,9 @@
    "fy_note": "FY 12월",
    "sort": 110,
    "dart_fs": "CFS",
-   "dart_segment": "Component"
+   "dart_segment": "Component",
+   "grp": "부품·소재",
+   "sites": "[{\"name\": \"수원 본사 (수출 신고지)\", \"country\": \"한국 경기\", \"what\": \"MLCC\"}, {\"name\": \"부산 강서구\", \"country\": \"한국 부산\", \"what\": \"MLCC 생산\"}, {\"name\": \"톈진·필리핀\", \"country\": \"중국·필리핀\", \"what\": \"MLCC\"}]"
   },
   {
    "ticker": "FN",
@@ -154,7 +176,9 @@
    "fy_note": "FY 6월말 종료",
    "sort": 200,
    "dart_fs": null,
-   "dart_segment": null
+   "dart_segment": null,
+   "grp": "광통신",
+   "sites": "[{\"name\": \"촌부리·파인허스트\", \"country\": \"태국\", \"what\": \"광모듈 위탁생산\"}, {\"name\": \"뉴저지·캘리포니아\", \"country\": \"미국\", \"what\": \"소량\"}]"
   }
  ],
  "series": [
