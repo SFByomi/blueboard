@@ -23,8 +23,13 @@ export function sqlite(): Database.Database {
 }
 
 function pg(): postgres.Sql {
-  // Supabase 풀러(트랜잭션 모드)는 prepared statement를 지원하지 않음
-  g.__yominPg ??= postgres(process.env.DATABASE_URL!, { prepare: false, max: 5, idle_timeout: 20 });
+  // Supabase 풀러(트랜잭션 모드)는 prepared statement를 지원하지 않음.
+  // 동시 쿼리가 연결 수(max)보다 많으면 postgres.js가 한 연결에 쿼리를 파이프라이닝하는데(기본 100개),
+  // 트랜잭션 풀러에서 이게 간헐적으로 멈춤 → 홈(동시 7개)만 504가 났음. 파이프라이닝을 끄고 남는 쿼리는 대기열로.
+  g.__yominPg ??= postgres(process.env.DATABASE_URL!, {
+    prepare: false, max: 5, idle_timeout: 20, connect_timeout: 10,
+    ...({ max_pipeline: 1 } as object), // 타입 정의엔 없지만 postgres.js 3.4 옵션 (src/index.js)
+  });
   return g.__yominPg;
 }
 
