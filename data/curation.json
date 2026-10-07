@@ -329,6 +329,51 @@
    "dart_segment": null,
    "grp": "바이오",
    "sites": "[{\"name\": \"플레전턴\", \"country\": \"미국 캘리포니아\", \"what\": \"장비·소모품 생산\"}, {\"name\": \"싱가포르\", \"country\": \"싱가포르\", \"what\": \"소모품 생산\"}]"
+  },
+  {
+   "market": "NASDAQ",
+   "dart_fs": null,
+   "dart_segment": null,
+   "grp": "보안",
+   "ticker": "PANW",
+   "name": "Palo Alto Networks",
+   "name_ko": "팔로알토 네트웍스",
+   "sector": "사이버보안",
+   "thesis": "네트워크·클라우드·SOC 통합 보안 플랫폼. 소프트웨어라 무역 흐름이 없어 랜섬웨어 피해 공개 건수(보안 업황)를 프록시로 씀 — 매출과 전년비 상관은 약함(C).",
+   "sec_ticker": "PANW",
+   "fy_note": "FY 7월말 종료",
+   "sort": 330,
+   "sites": "[]"
+  },
+  {
+   "market": "NASDAQ",
+   "dart_fs": null,
+   "dart_segment": null,
+   "grp": "보안",
+   "ticker": "CRWD",
+   "name": "CrowdStrike",
+   "name_ko": "크라우드스트라이크",
+   "sector": "사이버보안",
+   "thesis": "엔드포인트·클라우드 보안(Falcon). 랜섬웨어 피해 건수가 매출 성장률에 약 2분기 선행하는 경향(전년비 상관 0.56, B) — 다만 최근 8분기는 역상관이라 업황 참고용.",
+   "sec_ticker": "CRWD",
+   "fy_note": "FY 1월말 종료",
+   "sort": 340,
+   "sites": "[]"
+  },
+  {
+   "market": "NYSE",
+   "dart_fs": null,
+   "dart_segment": null,
+   "grp": "보안",
+   "ticker": "RBRK",
+   "name": "Rubrik",
+   "name_ko": "루브릭",
+   "sector": "사이버보안",
+   "thesis": "백업·복구 기반 데이터 보안(랜섬웨어 복구). 2024년 상장이라 표본이 짧음 — 랜섬웨어 건수와 1분기 선행 상관 0.69(표본 9분기, 최대 C).",
+   "sec_ticker": "RBRK",
+   "fy_note": "FY 1월말 종료",
+   "sort": 350,
+   "sites": "[]"
   }
  ],
  "series": [
@@ -958,6 +1003,17 @@
    "hs": "8517.62.0090",
    "partner": "베트남",
    "spec": "{\"dataset\": \"imports/hs\", \"hs\": \"8517620090\", \"filters\": {\"CTY_CODE\": \"5520\"}}"
+  },
+  {
+   "id": "sec_ransomware",
+   "label": "랜섬웨어 피해 공개 건수 (전 세계, 월)",
+   "source": "ransomware",
+   "reporter": "🌐 보안사고",
+   "flow": "피해 공개",
+   "region": "랜섬웨어 유출 사이트",
+   "hs": "-",
+   "partner": "전세계",
+   "spec": "{}"
   }
  ],
  "mappings": [
@@ -1720,6 +1776,36 @@
    "caveat": "업계 전체.",
    "include_in_total": 0,
    "sort": 20
+  },
+  {
+   "ticker": "PANW",
+   "series_id": "sec_ransomware",
+   "role": "최종수요",
+   "confidence": "낮음",
+   "rationale": "랜섬웨어 공격이 늘면 기업 보안 예산·플랫폼 도입이 뒤따른다는 가설의 업황 지표. 매출과 전년비 상관 0.30(동행), 최근 8분기 0.07 — 직접 연동은 약함.",
+   "caveat": "구독 매출이라 분기 변동이 작고, 공격 건수는 그룹 단속·유출 사이트 폐쇄로 출렁임. 회사 물량 아님.",
+   "include_in_total": 0,
+   "sort": 10
+  },
+  {
+   "ticker": "CRWD",
+   "series_id": "sec_ransomware",
+   "role": "최종수요",
+   "confidence": "낮음",
+   "rationale": "랜섬웨어 피해 건수 전년비가 매출 전년비에 2분기 선행(0.56). 공격 증가 → 엔드포인트 보안 수요 가설과 방향은 맞음.",
+   "caveat": "2023년 급증 후 둘 다 성장률이 꺾인 공통 추세가 상관을 키웠을 수 있음 — 최근 8분기는 −0.41. 업황 참고용.",
+   "include_in_total": 0,
+   "sort": 10
+  },
+  {
+   "ticker": "RBRK",
+   "series_id": "sec_ransomware",
+   "role": "최종수요",
+   "confidence": "낮음",
+   "rationale": "랜섬웨어 복구(백업 불변성)가 핵심 제품 — 피해 건수가 1분기 선행(0.69).",
+   "caveat": "상장(2024) 이후 표본 9분기뿐이라 우연일 수 있음. 업황 참고용.",
+   "include_in_total": 0,
+   "sort": 10
   }
  ],
  "hs_tags": [

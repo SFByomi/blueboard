@@ -1,13 +1,15 @@
 import { T } from "@/components/Names";
-import { PriceChart } from "@/components/ComputeCharts";
+import { CountBars, PriceChart } from "@/components/ComputeCharts";
+import Link from "next/link";
 import { pct, tone } from "@/lib/format";
 import { IndexSection } from "@/components/IndexSection";
-import { indicators, priceSnapshots, type PriceRow } from "@/lib/queries";
+import { flowScores, indicators, observations, priceSnapshots, type PriceRow } from "@/lib/queries";
 
 // 게시 직후 바로 보이도록 요청마다 렌더 (ISR 캐시가 게시 후에도 이전 데이터로 남던 문제). DB가 작아 부담 없음
 export const dynamic = "force-dynamic";
 
 const GPU_COLORS: Record<string, string> = {
+  "A100 SXM4": "#94a3b8", "A100 PCIE": "#64748b",
   "H100 SXM": "#60a5fa", "H100 NVL": "#22d3ee", H200: "#f59e0b", "H200 NVL": "#f472b6", B200: "#34d399", B300: "#a78bfa",
 };
 const TOKEN_COLORS = ["#f472b6", "#a78bfa", "#60a5fa", "#34d399"];
@@ -25,7 +27,9 @@ const series = (rows: PriceRow[], item: string, stat: string): [string, number][
   rows.filter((r) => r.item === item && r.stat === stat).map((r) => [r.date, r.value]);
 
 export default async function Prices() {
-  const [rows, defs] = await Promise.all([priceSnapshots(), indicators()]);
+  const [rows, defs, rw, fs] = await Promise.all([priceSnapshots(), indicators(), observations(["sec_ransomware"]).catch(() => []), flowScores()]);
+  const sec = fs.filter((r) => r.series_id === "sec_ransomware").sort((a, b) => (b.best ?? -9) - (a.best ?? -9));
+  const SEC_KO: Record<string, string> = { PANW: "팔로알토", CRWD: "크라우드스트라이크", RBRK: "루브릭" };
   const idx = rows.filter((r) => r.kind === "index");
   const idxGroups = [...new Set(defs.map((d) => d.grp))];
   const gpu = rows.filter((r) => r.kind === "gpu");
@@ -143,6 +147,26 @@ export default async function Prices() {
           정가는 신모델 출시·가격 인하 때만 계단식으로 바뀝니다. 같은 성능의 토큰이 싸지는 속도가 GPU 수요(추론 물량)와 GPU 클라우드 마진을 가르는 변수입니다.
         </p>
       </section>
+
+      {rw.length > 0 && (
+        <section className="space-y-3">
+          <div className="flex flex-wrap items-baseline justify-between gap-2">
+            <h2 className="text-lg font-bold"><T ko="보안 업황 · 랜섬웨어 피해 공개 건수" en="Security · ransomware victims posted" /> <span className="text-sm font-normal text-muted">월별, 전 세계</span></h2>
+            <span className="text-xs text-muted">ransomware.live 유출 사이트 집계 · 최근 2개월은 늦게 공개되는 피해로 늘어날 수 있음</span>
+          </div>
+          <div className="card min-w-0">
+            <CountBars name="피해 공개 건수" months={rw.map((o) => o.month)} values={rw.map((o) => o.value_usd ?? 0)} />
+          </div>
+          <p className="text-xs leading-relaxed text-muted">
+            공격이 늘면 보안 예산이 뒤따른다는 가설의 업황 지표. 매출과 전년비 상관(지표가 0~2분기 앞설 때 중 최고):{" "}
+            {sec.map((r, i) => (
+              <span key={r.ticker}>{i > 0 && " · "}<Link className="text-accent" href={`/stocks/${r.ticker}`}>{SEC_KO[r.ticker] ?? r.ticker}</Link>{" "}
+                {r.best == null ? "-" : `${r.best.toFixed(2)} (${r.best_lag ? `${r.best_lag}분기 선행` : "동행"}, ${r.grade ?? "-"}${r.recent != null && r.recent < 0 ? ", 최근 8분기 역상관" : ""})`}</span>
+            ))}
+            {" "}— 구독 매출이라 직접 연동은 약하니 방향 참고용으로 보세요.
+          </p>
+        </section>
+      )}
 
       {idxGroups.length > 0 && (
         <section className="space-y-3">
