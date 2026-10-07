@@ -1,3 +1,4 @@
+import { T } from "@/components/Names";
 import { pct, tone } from "@/lib/format";
 import type { Indicator, PriceRow } from "@/lib/queries";
 import { PriceChart } from "./ComputeCharts";
@@ -26,7 +27,7 @@ export function IndexSection({ grp, defs, rows, compact = false }: { grp: string
       <div className="overflow-x-auto">
         <table className="w-full text-sm">
           <thead className="text-xs text-muted"><tr className="border-b border-line">
-            <th className="py-2 text-left">지수</th><th className="whitespace-nowrap pl-2 text-right">최근</th><th className="whitespace-nowrap pl-2 text-right">3개월</th><th className="whitespace-nowrap pl-2 text-right">1년</th>
+            <th className="py-2 text-left"><T ko="지수" en="Index" /></th><th className="whitespace-nowrap pl-2 text-right"><T ko="최근" en="Latest" /></th><th className="whitespace-nowrap pl-2 text-right"><T ko="3개월" en="3M" /></th><th className="whitespace-nowrap pl-2 text-right"><T ko="1년" en="1Y" /></th>
           </tr></thead>
           <tbody className="font-mono">
             {series.map((x, i) => (

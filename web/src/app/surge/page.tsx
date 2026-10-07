@@ -1,7 +1,7 @@
 import Link from "next/link";
-import { CtyName, HsName } from "@/components/Names";
+import { CtyName, HsName, T } from "@/components/Names";
 import { Spark } from "@/components/Spark";
-import { pct, tone, usd } from "@/lib/format";
+import { baseEffect, pct, tone, usd } from "@/lib/format";
 import { ADMIN_ENABLED } from "@/lib/db";
 import { meta, surge, tagIndex } from "@/lib/queries";
 
@@ -25,10 +25,11 @@ export default async function Surge({ searchParams }: PageProps<"/surge">) {
     <div className="space-y-5">
       <div className="flex flex-wrap items-end justify-between gap-3">
         <div>
-          <h1 className="text-2xl font-bold">🚀 급등 탐색</h1>
+          <h1 className="text-2xl font-bold">🚀 <T ko="급등 탐색" en="Surge scanner" /></h1>
           <p className="mt-1 text-sm text-muted">
             기준월 {rows[0]?.month ?? "-"} · 월 2천만 달러 이상(국가별 5백만 달러) 품목 · 마지막 갱신 {builtAt?.replace("T", " ") ?? "-"}
           </p>
+          <p className="text-xs text-muted">* 200% 넘는 증가율은 전년 같은 기간 금액이 작아 생긴 기저효과일 수 있음 — 금액도 함께 보세요. 3M YoY는 전년 3개월 금액이 충분할 때만 계산.</p>
         </div>
       </div>
 
@@ -47,13 +48,13 @@ export default async function Surge({ searchParams }: PageProps<"/surge">) {
           <thead className="text-xs text-muted">
             <tr className="border-b border-line">
               <th className="px-4 py-3 text-left">#</th>
-              <th className="px-2 py-3 text-left">품목</th>
-              <th className="px-2 py-3 text-right">월 금액</th>
-              <th className="px-2 py-3">24개월</th>
+              <th className="px-2 py-3 text-left"><T ko="품목" en="Item" /></th>
+              <th className="px-2 py-3 text-right"><T ko="월 금액" en="Monthly value" /></th>
+              <th className="px-2 py-3"><T ko="24개월" en="24 months" /></th>
               <th className="px-2 py-3 text-right">MoM</th>
               <th className="px-2 py-3 text-right">YoY</th>
               <th className="px-2 py-3 text-right">3M YoY</th>
-              <th className="px-4 py-3 text-left">관련 종목</th>
+              <th className="px-4 py-3 text-left"><T ko="관련 종목" en="Related stocks" /></th>
             </tr>
           </thead>
           <tbody>
@@ -69,9 +70,9 @@ export default async function Surge({ searchParams }: PageProps<"/surge">) {
                   <td className="px-2 py-3 text-right font-mono">{usd(r.value_usd)}</td>
                   <td className="px-2 py-3"><Spark values={JSON.parse(r.spark)} /></td>
                   <td className={`px-2 py-3 text-right font-mono ${tone(r.mom)}`}>{pct(r.mom)}</td>
-                  <td className={`px-2 py-3 text-right font-mono ${tone(r.yoy)}`}>{pct(r.yoy)}</td>
+                  <td className={`px-2 py-3 text-right font-mono ${tone(r.yoy)}`} title={baseEffect(r.yoy)}>{pct(r.yoy)}{baseEffect(r.yoy) && <sup>*</sup>}</td>
                   <td className="px-2 py-3 text-right">
-                    <span className={`rounded-md px-2 py-1 font-mono font-medium ${r.yoy3m != null && r.yoy3m >= 0 ? "bg-emerald-950 text-emerald-300" : "bg-red-950 text-red-300"}`}>{pct(r.yoy3m)}</span>
+                    <span className={`rounded-md px-2 py-1 font-mono font-medium ${r.yoy3m != null && r.yoy3m >= 0 ? "bg-emerald-950 text-emerald-300" : "bg-red-950 text-red-300"}`} title={baseEffect(r.yoy3m)}>{pct(r.yoy3m)}{baseEffect(r.yoy3m) && <sup>*</sup>}</span>
                   </td>
                   <td className="px-4 py-3">
                     <div className="flex flex-wrap gap-1">

@@ -74,8 +74,23 @@ export const ctyKo = (name: string | null) => (name ? CTY_KO[name] ?? name : nul
 
 export const estExtrap = (e: { flows: string }) => (JSON.parse(e.flows) as { extrap?: boolean }[]).some((f) => f.extrap);
 /** 백테스트상 쓸 만한 추정인지: 오차 12% 이하, '직전 성장률 유지'보다 정확, 과거 범위 밖 외삽이 아닐 때 */
-export const estReliable = (e: { mape: number | null; mape_naive: number | null; flows: string }) =>
-  e.mape != null && e.mape <= 0.12 && (e.mape_naive == null || e.mape < e.mape_naive) && !estExtrap(e);
+export const estReliable = (e: { mape: number | null; mape_naive: number | null; flows: string; reliable?: number | null }) =>
+  e.reliable != null ? !!e.reliable : e.mape != null && e.mape <= 0.12 && (e.mape_naive == null || e.mape < e.mape_naive) && !estExtrap(e);
+/** '참고'인 이유 (ETL estimates.reliability) */
+export const estCaution = (e: { caution?: string | null }): string[] => (e.caution ? JSON.parse(e.caution) : []);
+/** 추정 오차범위 (±, 추정 대비 비율) */
+export const estRange = (e: { est: number; high: number }) => (e.est ? (e.high - e.est) / Math.abs(e.est) : null);
+/** 매수·매도 검토 트리거: 신뢰 추정 + 컨센 괴리 10% 이상(오차범위 밖) + 실적 발표 30일 이내 */
+export function watchFlag(e: { mape: number | null; mape_naive: number | null; flows: string; reliable?: number | null; cons_gap: number | null; est: number; high: number }, next?: string | null) {
+  const d = dday(next), r = estRange(e);
+  return estReliable(e) && e.cons_gap != null && Math.abs(e.cons_gap) >= 0.1 && (r == null || Math.abs(e.cons_gap) > r) && d != null && d >= 0 && d <= 30;
+}
+/** 실적 발표까지 남은 일수 */
+export function dday(d: string | null | undefined, today = new Date()): number | null {
+  if (!d) return null;
+  const t = Date.UTC(today.getUTCFullYear(), today.getUTCMonth(), today.getUTCDate());
+  return Math.round((Date.parse(d) - t) / 864e5);
+}
 
 /** 추정 모델 이름 (etl/estimates.py method: yoy | level | +bias | ens(a,b)) */
 export function methodLabel(m: string): string {
@@ -83,3 +98,14 @@ export function methodLabel(m: string): string {
   const ens = m.match(/^ens\((.+),(.+)\)$/);
   return ens ? `앙상블 (${one(ens[1])} · ${one(ens[2])})` : one(m);
 }
+
+/** "2026-07" ± n개월 */
+export function shiftMonth(m: string, n: number): string {
+  const [y, mo] = m.split("-").map(Number);
+  const t = y * 12 + (mo - 1) + n;
+  return `${Math.floor(t / 12)}-${String((t % 12) + 1).padStart(2, "0")}`;
+}
+
+/** 극단적 증가율(±200% 초과)에 붙일 기저효과 안내 — 없으면 undefined */
+export const baseEffect = (v: number | null | undefined) =>
+  v != null && Math.abs(v) > 2 ? "전년 같은 기간 금액이 작아 생긴 기저효과일 수 있음 — 금액 자체도 함께 보세요" : undefined;

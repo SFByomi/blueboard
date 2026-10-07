@@ -1,7 +1,8 @@
+import { T } from "@/components/Names";
 import Link from "next/link";
 import { GradeBadge } from "@/components/FlowScores";
 import { Spark } from "@/components/Spark";
-import { GROUPS, pct, tone } from "@/lib/format";
+import { baseEffect, GROUPS, pct, tone } from "@/lib/format";
 import { flowScores } from "@/lib/queries";
 import { stockSignals } from "@/lib/signals";
 
@@ -16,7 +17,7 @@ export default async function Stocks() {
   return (
     <div className="space-y-6">
       <div>
-        <h1 className="text-2xl font-bold">종목</h1>
+        <h1 className="text-2xl font-bold"><T ko="종목" en="Stocks" /></h1>
         <p className="mt-1 text-sm text-muted">섹터별 · 숫자는 주요 출하 흐름의 최근 3개월 전년비 (업황 = 회사 흐름이 없어 업계 지표로 대신) · 연관도 = 매출과 가장 잘 맞는 흐름의 등급</p>
       </div>
       {groups.map((g) => {
@@ -35,7 +36,7 @@ export default async function Stocks() {
                     </div>
                     {s.yoy3m != null && (
                       <div className="shrink-0 text-right">
-                        <div className={`font-mono text-lg font-bold ${tone(s.yoy3m)}`}>{pct(s.yoy3m)}</div>
+                        <div className={`font-mono text-lg font-bold ${tone(s.yoy3m)}`} title={baseEffect(s.yoy3m)}>{pct(s.yoy3m)}{baseEffect(s.yoy3m) && <sup>*</sup>}</div>
                         <div className="text-xs text-muted">{s.month} 3M</div>
                       </div>
                     )}

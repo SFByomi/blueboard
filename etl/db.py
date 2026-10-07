@@ -73,6 +73,9 @@ CREATE TABLE IF NOT EXISTS consensus (         -- 분기 매출 컨센서스 (et
   end_date TEXT, avg REAL, low REAL, high REAL, n INTEGER,
   PRIMARY KEY (date, ticker, period)
 );
+CREATE TABLE IF NOT EXISTS earnings_calendar (  -- 다음 실적 발표 예정일 (etl/consensus.py, 야후 calendarEvents) — 사실 정보라 게시
+  ticker TEXT PRIMARY KEY, next_date TEXT, updated TEXT
+);
 CREATE TABLE IF NOT EXISTS revenue_estimates ( -- 무역 기반 진행 분기 매출 추정 일별 스냅샷 (etl/estimates.py) — Supabase에 누적
   date TEXT NOT NULL, ticker TEXT NOT NULL,
   q_start TEXT, q_end TEXT,                          -- 추정 대상 분기
@@ -93,7 +96,9 @@ MIGRATIONS = [
     ("companies", "dart_segment TEXT"),               # 사업부문 매출 사용: "ElectroMaterialsBg" 또는 "Component:Separate"
     ("financials", "basis TEXT"),                     # 매출 기준 표시 (예: "ElectroMaterialsBg 부문")
     ("companies", "grp TEXT"),                        # 섹터 그룹 (종목 목록 묶음): 메모리·광통신·서버/네트워크·전력/냉각·AI 클라우드·기타
-    ("companies", "sites TEXT"),                      # 생산거점 JSON: [{"name","country","what"}] — 종목 페이지 공급망 요약
+    ("companies", "sites TEXT"),
+    ("revenue_estimates", "reliable INTEGER"),          # 1 = 신뢰 (etl/estimates.reliability)
+    ("revenue_estimates", "caution TEXT"),              # 신뢰가 아닌 이유 JSON 목록                      # 생산거점 JSON: [{"name","country","what"}] — 종목 페이지 공급망 요약
 ]
 
 

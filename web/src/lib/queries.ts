@@ -118,6 +118,7 @@ export type RevEstimate = {
   est: number; low: number; high: number; yoy: number; last_actual: number; months: number;
   flows: string; mape: number | null; mape_naive: number | null; bt_n: number; backtest: string;
   cons_gap: number | null; cons_end: string | null; currency: string; method: string;
+  reliable?: number | null; caution?: string | null; // ETL 판정 (구버전 행엔 없음)
 };
 const noTable = <T,>(e: { code?: string; message?: string }): T[] => {
   if (e.code === "42P01" || e.message?.includes("no such table")) return [];
@@ -126,6 +127,13 @@ const noTable = <T,>(e: { code?: string; message?: string }): T[] => {
 /** 종목별 최신 진행 분기 매출 추정 (etl/estimates.py) */
 export const latestEstimates = () =>
   query<RevEstimate>("SELECT * FROM revenue_estimates WHERE date = (SELECT max(date) FROM revenue_estimates) ORDER BY ticker").catch(noTable<RevEstimate>);
+/** 다음 실적 발표 예정일 (야후 calendarEvents) */
+export const earningsDates = () =>
+  query<{ ticker: string; next_date: string | null }>("SELECT ticker, next_date FROM earnings_calendar").catch(noTable<{ ticker: string; next_date: string | null }>)
+    .then((r) => Object.fromEntries(r.filter((x) => x.next_date && x.next_date >= new Date().toISOString().slice(0, 10)).map((x) => [x.ticker, x.next_date!])) as Record<string, string>);
+/** 가장 최근 추정 날짜 — 그날 추정이 없는 종목(모델 탈락)의 옛 추정을 숨기는 기준 */
+export const estimateDate = () =>
+  query<{ d: string | null }>("SELECT max(date) AS d FROM revenue_estimates").then((r) => r[0]?.d ?? null).catch(() => null);
 /** 한 종목의 날짜별 추정 이력 (추정·컨센 괴리율 추이) */
 export const estimateHistory = (ticker: string) =>
   query<RevEstimate>("SELECT * FROM revenue_estimates WHERE ticker=? ORDER BY date", [ticker]).catch(noTable<RevEstimate>);

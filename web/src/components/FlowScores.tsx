@@ -1,3 +1,4 @@
+import { T } from "@/components/Names";
 import { STAGES, stageOf } from "@/lib/format";
 import type { FlowScore } from "@/lib/queries";
 
@@ -30,19 +31,19 @@ export function FlowScores({ rows }: { rows: Row[] }) {
   return (
     <div className="card min-w-0">
       <div className="flex flex-wrap items-baseline justify-between gap-2">
-        <h2 className="font-bold">매출 연관도</h2>
+        <h2 className="font-bold"><T ko="매출 연관도" en="Revenue linkage" /></h2>
         <span className="text-xs text-muted">분기 매출 vs 무역 흐름 · 전년비 상관 기준 등급</span>
       </div>
       <div className="mt-3 overflow-x-auto">
         <table className="w-full min-w-[640px] text-sm">
           <thead className="text-xs text-muted">
             <tr className="border-b border-line text-left">
-              <th className="py-1.5 pr-2 font-normal">흐름</th>
-              <th className="px-2 font-normal">등급</th>
-              <th className="px-2 text-right font-normal">전년비 상관</th>
-              <th className="px-2 text-right font-normal">최근 8분기</th>
-              <th className="px-2 text-right font-normal">금액 상관</th>
-              <th className="pl-2 text-right font-normal">표본</th>
+              <th className="py-1.5 pr-2 font-normal"><T ko="흐름" en="Flow" /></th>
+              <th className="px-2 font-normal"><T ko="등급" en="Grade" /></th>
+              <th className="px-2 text-right font-normal"><T ko="전년비 상관" en="YoY corr." /></th>
+              <th className="px-2 text-right font-normal"><T ko="최근 8분기" en="Last 8Q" /></th>
+              <th className="px-2 text-right font-normal"><T ko="금액 상관" en="Level corr." /></th>
+              <th className="pl-2 text-right font-normal"><T ko="표본" en="Samples" /></th>
             </tr>
           </thead>
           <tbody>
@@ -63,7 +64,7 @@ export function FlowScores({ rows }: { rows: Row[] }) {
         </table>
       </div>
       <p className="mt-3 text-xs leading-relaxed text-muted">
-        전년비 상관은 계절성·장기 추세를 걷어낸 실제 연동(무역이 0~2분기 앞설 때 중 최고). 등급 A ≥0.7 · B ≥0.5 · C ≥0.3, 표본이 짧으면 최대 C.
+        전년비 상관은 계절성·장기 추세를 걷어낸 실제 연동(무역이 0~2분기 앞설 때 중 최고). 등급 A ≥0.7(직접 연동) · B ≥0.5(연동) · C ≥0.3(업황 참고) · D &lt;0.3(연관 약함 — 매출 추정에 안 씀) · &lsquo;-&rsquo;는 비교할 분기가 부족(상장·실적 공시가 짧음). 표본이 짧으면 최대 C.
         금액 상관은 둘 다 성장하기만 해도 높게 나와 참고용. 최근 8분기가 크게 낮으면(빨강) 관계가 약해지는 중.
       </p>
     </div>

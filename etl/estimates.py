@@ -176,6 +176,26 @@ def mape(bt: list[dict], key: str) -> float | None:
     return round(sum(e) / len(e), 4) if e else None
 
 
+def reliability(con, err, naive, bt_n, flows) -> list[str]:
+    """'신뢰'가 아닌 이유 목록 (비면 신뢰). 웹은 이 결과를 그대로 표시"""
+    why = []
+    if bt_n < MIN_BT:
+        why.append(f"백테스트 {bt_n}분기뿐")
+    if err is None or err > 0.12:
+        why.append("백테스트 오차 12% 초과")
+    if naive is not None and err is not None and err >= naive:
+        why.append("단순 추세보다 정확하지 않음")
+    if max(f["r2"] for f in flows) < 0.4:
+        why.append("근거 흐름 설명력(R²) 0.4 미만")
+    if any(f.get("extrap") for f in flows):
+        why.append("과거 범위 밖 외삽")
+    cut = (pd.Timestamp.today() - pd.DateOffset(months=24)).strftime("%Y-%m")
+    for f in flows:  # 금액이 끊기는 단절(재분류·수준 변화)이 최근 2년 안에 있으면 회귀 근거가 흔들림
+        if con.execute("SELECT 1 FROM alerts WHERE series_id=? AND kind IN ('price_break','level_break') AND month>=?", (f["sid"], cut)).fetchone():
+            why.append(f"근거 흐름 통계 단절({f['sid']})")
+    return why
+
+
 def best_model(flows, fin: pd.DataFrame, t_start=None, t_end=None):
     """yoy·level × (보정 없음·편향 보정) 중 백테스트 오차가 가장 작은 모델 → (mape, method, 진행분기 예측|None, backtest).
     t_start가 None이면 백테스트만 (후보 탐색용)."""
@@ -262,11 +282,16 @@ def estimate_all(con, log=print) -> int:
         sec, cur = con.execute("SELECT sec_ticker, (SELECT currency FROM financials WHERE ticker=? ORDER BY period_end DESC LIMIT 1) FROM companies WHERE ticker=?",
                                (ticker, ticker)).fetchone()
         cons = match_consensus(con, sec, t_end)
-        con.execute("INSERT INTO revenue_estimates VALUES (?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)", (
+        naive = mape(bt, "naive")
+        caution = reliability(con, err, naive, len(bt), p["flows"])
+        cols = ("date, ticker, q_start, q_end, est, low, high, yoy, last_actual, months, flows, mape, mape_naive, bt_n, backtest, "
+                "cons_gap, cons_end, currency, method, reliable, caution")
+        con.execute(f"INSERT INTO revenue_estimates ({cols}) VALUES ({','.join('?' * 21)})", (
             today, ticker, t_start.strftime("%Y-%m-%d"), t_end.strftime("%Y-%m-%d"), est, est - p["se"], est + p["se"],
             est / float(fin.revenue.iloc[-4]) - 1, last, min(f["months"] for f in p["flows"]),
             json.dumps([{k: (round(v, 4) if isinstance(v, float) and abs(v) < 1e6 else v) for k, v in f.items()} for f in p["flows"]]),
-            err, mape(bt, "naive"), len(bt), json.dumps(bt), (est / cons[1] - 1) if cons else None, cons[0] if cons else None, cur or "USD", method))
+            err, naive, len(bt), json.dumps(bt), (est / cons[1] - 1) if cons else None, cons[0] if cons else None, cur or "USD", method,
+            int(not caution), json.dumps(caution, ensure_ascii=False)))
         n += 1
         gap = f" · 컨센 대비 {est / cons[1] - 1:+.1%}" if cons else ""
         log(f"  ✓ {ticker}: {t_end:%Y-%m} 분기 직전 대비 {est / last - 1:+.1%} [{method}] · 백테스트 오차 {err:.1%} (단순추세 {mape(bt, 'naive') or 0:.1%}){gap}")

@@ -3,6 +3,7 @@
 세번 재분류·신고 기준 변경은 '진짜 업황 변화'와 달리 한 달 사이에 수준이 계단식으로 바뀌고 그대로 유지된다.
 - price_break : 단가(금액/수량)가 직전 6개월 중앙값 대비 ×3 이상 변했는데 수량은 ×1.5 이내 → 재분류 의심
 - level_break : (수량 없는 시리즈) 금액 수준이 ×3 이상 바뀌어 유지
+- unit_change : 수량 ×3 이상·단가 ÷3 이하(또는 반대)로 동시에 변함 → 금액은 이어지나 수량 단위가 바뀐 것
 - gap         : 앞뒤로 값이 있는데 0/결측인 달이 2개월 이상 연속 (세관 경유 변경 등)
 변화 후 수준이 최소 2개월 유지돼야 경고(일시적 급등락은 급등 탐지가 담당).
 """
@@ -37,6 +38,10 @@ def detect(df: pd.DataFrame) -> list[dict]:
             if pr and qr and (pr >= RATIO or pr <= 1 / RATIO) and 1 / QTY_STABLE <= qr <= QTY_STABLE:
                 out.append({"month": df["month"].iloc[i], "kind": "price_break",
                             "detail": f"단가 ×{pr:.2f} (수량 ×{qr:.2f}) — 세번 재분류·신고기준 변경 의심"})
+            elif pr and qr and ((pr <= 1 / RATIO and qr >= RATIO) or (pr >= RATIO and qr <= 1 / RATIO)):
+                # 수량이 늘고 단가가 같은 비율로 줄었으면(또는 반대) 금액은 이어지고 '세는 단위'만 바뀐 것
+                out.append({"month": df["month"].iloc[i], "kind": "unit_change",
+                            "detail": f"수량 ×{qr:.2f}·단가 ×{pr:.2f} — 수량 단위 변경 의심(금액은 유효, 물량·단가 분해는 무의미)"})
         else:
             lr = _shift(v.iloc[win_b], v.iloc[win_a])
             if lr and (lr >= RATIO or lr <= 1 / RATIO):

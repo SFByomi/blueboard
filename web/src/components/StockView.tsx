@@ -1,9 +1,10 @@
 "use client";
 
+import { T } from "@/components/Names";
 import type { EChartsOption } from "echarts";
 import { useMemo, useState } from "react";
 import { yoy3m } from "@/lib/estimate";
-import { pct, ROLE_STYLE, STAGES, stageOf, tone, usd } from "@/lib/format";
+import { baseEffect, pct, ROLE_STYLE, shiftMonth, STAGES, stageOf, tone, usd } from "@/lib/format";
 import { axis, baseOption, EChart } from "./EChart";
 
 export type FlowData = {
@@ -105,7 +106,7 @@ export function StockView({ flows, months, quarters, currency }: { flows: FlowDa
   return (
     <>
       <div className="card">
-        <h2 className="font-bold">공급망 추적</h2>
+        <h2 className="font-bold"><T ko="공급망 추적" en="Supply chain tracking" /></h2>
         <p className="mb-3 text-xs text-muted">부품 조달 → 생산거점 출하 → 고객향 반입 순 · 숫자는 최근 3개월 전년비(물량·단가 분해) · 카드를 누르면 아래 상세가 바뀝니다</p>
         <div className="space-y-4">
           {STAGES.map((st) => {
@@ -119,6 +120,8 @@ export function StockView({ flows, months, quarters, currency }: { flows: FlowDa
                     const x = flows[i];
                     const v3 = yoy3m(x.values), q3 = yoy3m(x.qty.map((q, k) => (q && x.values[k] != null ? q : null)));
                     const p3 = v3.value != null && q3.value != null ? (1 + v3.value) / (1 + q3.value) - 1 : null;
+                    // 최근 15개월 안에 수량 단위 변경·재분류가 있으면 전년비 물량·단가 분해는 비교 불가
+                    const recentBreak = x.alerts.some((a) => (a.kind === "unit_change" || a.kind === "price_break") && a.month >= (x.lastMonth ? shiftMonth(x.lastMonth, -14) : ""));
                     return (
                       <button key={x.id} onClick={() => setSel(i)}
                         className={`min-w-0 rounded-xl border bg-panel2 p-3 text-left transition ${i === sel ? "border-accent ring-1 ring-accent" : "border-line hover:border-[#3d4575]"}`}>
@@ -136,8 +139,9 @@ export function StockView({ flows, months, quarters, currency }: { flows: FlowDa
                         <div className="mt-2 flex items-end justify-between gap-2 text-xs">
                           <span className="text-muted">신뢰도 {x.confidence}{x.include ? "" : " · 합산 제외"}{x.corrYoY != null ? ` · 상관 ${x.corrYoY.toFixed(2)}` : ""}</span>
                           <span className="text-right font-mono">
-                            <span className={`text-sm font-bold ${tone(v3.value)}`}>{pct(v3.value)}</span>
-                            {q3.value != null && <span className="block text-[11px] text-muted">물량 <span className={tone(q3.value)}>{pct(q3.value)}</span> · 단가 <span className={tone(p3)}>{pct(p3)}</span></span>}
+                            <span className={`text-sm font-bold ${tone(v3.value)}`} title={baseEffect(v3.value)}>{pct(v3.value)}{baseEffect(v3.value) ? <sup className="text-amber-300">*</sup> : null}</span>
+                            {q3.value != null && !recentBreak && <span className="block text-[11px] text-muted">물량 <span className={tone(q3.value)}>{pct(q3.value)}</span> · 단가 <span className={tone(p3)}>{pct(p3)}</span></span>}
+                            {q3.value != null && recentBreak && <span className="block text-[11px] text-amber-300">수량 단위 변경 — 물량·단가 분해 생략</span>}
                           </span>
                         </div>
                       </button>
@@ -161,13 +165,13 @@ export function StockView({ flows, months, quarters, currency }: { flows: FlowDa
       </div>
 
       <div className="card">
-        <h2 className="font-bold">추적 흐름 합산 vs 매출</h2>
+        <h2 className="font-bold"><T ko="추적 흐름 합산 vs 매출" en="Tracked flows vs revenue" /></h2>
         <p className="text-xs text-muted">막대 = 흐름별 월 금액(USD M, {inc.length ? "합산 대상" : "업황 프록시"}) · 선 = 합산 YoY, 분기 매출 YoY(분기 종료월)</p>
         <EChart option={main} height={380} />
       </div>
 
       <div className="grid gap-5 lg:grid-cols-2">
-        <div className="card"><h2 className="font-bold">금액 / 단가 — {f.label}</h2><EChart option={detail1} height={320} /></div>
+        <div className="card"><h2 className="font-bold"><T ko="금액 / 단가" en="Value / unit price" /> — {f.label}</h2><EChart option={detail1} height={320} /></div>
         <div className="card"><h2 className="font-bold">YoY 분해 {hasQty ? "(금액 = 수량 × 단가)" : ""}</h2><EChart option={detail2} height={320} /></div>
       </div>
 
@@ -177,8 +181,8 @@ export function StockView({ flows, months, quarters, currency }: { flows: FlowDa
         <h2 className="mb-3 font-bold">데이터 테이블 — {f.label}</h2>
         <table className="w-full font-mono text-xs">
           <thead className="text-muted"><tr className="border-b border-line">
-            <th className="py-2 text-left">월</th><th className="text-right">금액</th><th className="text-right">수량{f.unit ? ` (${f.unit})` : ""}</th>
-            <th className="text-right">단가</th><th className="text-right">금액 YoY</th><th className="text-right">수량 YoY</th><th className="text-right">단가 YoY</th>
+            <th className="py-2 text-left"><T ko="월" en="Month" /></th><th className="text-right"><T ko="금액" en="Value" /></th><th className="text-right">수량{f.unit ? ` (${f.unit})` : ""}</th>
+            <th className="text-right"><T ko="단가" en="Unit price" /></th><th className="text-right"><T ko="금액" en="Value" /> YoY</th><th className="text-right"><T ko="수량 YoY" en="Qty YoY" /></th><th className="text-right"><T ko="단가" en="Unit price" /> YoY</th>
           </tr></thead>
           <tbody>
             {last12.map(({ m, i }) => (

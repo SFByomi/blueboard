@@ -1,19 +1,21 @@
 "use client";
 
 import Link from "next/link";
+import { T } from "@/components/Names";
 import { usePathname } from "next/navigation";
 
-const TABS = [
-  { href: "/", label: "공급망 신호" },
-  { href: "/stocks", label: "종목" },
-  { href: "/prices", label: "가격·지수" },
-  { href: "/surge", label: "급등 탐색" },
+const TABS: { href: string; label: string; en: string }[] = [
+  { href: "/", label: "공급망 신호", en: "Signals" },
+  { href: "/stocks", label: "종목", en: "Stocks" },
+  { href: "/prices", label: "가격·지수", en: "Prices" },
+  { href: "/surge", label: "급등 탐색", en: "Surge" },
+  { href: "/about", label: "소개", en: "About" },
 ];
 
 /** 상단 탭 — 현재 페이지 탭을 강조 (종목 상세 /stocks/MU 도 '종목' 탭) */
 export function NavTabs({ admin }: { admin: boolean }) {
   const path = usePathname();
-  const tabs = admin ? [...TABS, { href: "/admin", label: "관리" }] : TABS;
+  const tabs = admin ? [...TABS, { href: "/admin", label: "관리", en: "Admin" }] : TABS;
   const active = (href: string) => (href === "/" ? path === "/" : path === href || path.startsWith(`${href}/`));
   return (
     <>
@@ -28,7 +30,7 @@ export function NavTabs({ admin }: { admin: boolean }) {
               on ? "bg-accent/20 font-bold text-accent" : "text-muted hover:bg-panel2 hover:text-fg"
             }`}
           >
-            {t.label}
+            <T ko={t.label} en={t.en} />
           </Link>
         );
       })}
