@@ -73,6 +73,10 @@ CREATE TABLE IF NOT EXISTS consensus (         -- 분기 매출 컨센서스 (et
   end_date TEXT, avg REAL, low REAL, high REAL, n INTEGER,
   PRIMARY KEY (date, ticker, period)
 );
+CREATE TABLE IF NOT EXISTS kr_share (   -- 미국 수입 중 한국산 비중 (3개월 합 기준, etl/surge.py)
+  hs6 TEXT PRIMARY KEY, month TEXT, kr_usd REAL, world_usd REAL, share REAL, share_ago REAL, change REAL,
+  spark TEXT                    -- 최근 24개월 3개월 이동 비중(%) JSON
+);
 CREATE TABLE IF NOT EXISTS earnings_calendar (  -- 다음 실적 발표 예정일 (etl/consensus.py, 야후 calendarEvents) — 사실 정보라 게시
   ticker TEXT PRIMARY KEY, next_date TEXT, updated TEXT, last_reported TEXT
 );
