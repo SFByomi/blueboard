@@ -1,22 +1,23 @@
 import { T } from "@/components/Names";
 import { PriceChart } from "@/components/ComputeCharts";
-import { dday, estCaution, estExtrap, estRange, estReliable, methodLabel, money, pct, tone, watchFlag } from "@/lib/format";
+import { dday, estCaution, estExtrap, estRange, estReliable, estReported, methodLabel, money, pct, tone, watchFlag } from "@/lib/format";
 import type { RevEstimate } from "@/lib/queries";
 
 type Bt = { q_end: string; actual: number; pred: number; naive: number | null };
 type Flow = { sid: string; lag: number; r2: number; months: number; extrap?: boolean };
 
 /** 진행 분기 매출 추정 · 컨센서스 괴리 · 백테스트 (etl/estimates.py). 컨센 금액은 약관상 표시하지 않고 괴리율만 */
-export function EstimateCard({ hist, labels, nextEarn }: { hist: RevEstimate[]; labels: Record<string, string>; nextEarn?: string | null }) {
+export function EstimateCard({ hist, labels, nextEarn, lastReported }: { hist: RevEstimate[]; labels: Record<string, string>; nextEarn?: string | null; lastReported?: string | null }) {
   const e = hist.at(-1);
   if (!e) return null;
   const bt: Bt[] = JSON.parse(e.backtest);
   const flows: Flow[] = JSON.parse(e.flows);
-  const ok = estReliable(e);
+  const rep = estReported(e, lastReported);
+  const ok = estReliable(e) && !rep;
   const why = estCaution(e);
   const range = estRange(e);
   const d = dday(nextEarn);
-  const watch = watchFlag(e, nextEarn);
+  const watch = watchFlag(e, nextEarn, lastReported);
   const cur = e.currency;
   const recent = bt.slice(-4);
   const bias = recent.length ? recent.reduce((a, b) => a + (b.pred / b.actual - 1), 0) / recent.length : null; // 최근 4분기 평균 편향
@@ -24,13 +25,14 @@ export function EstimateCard({ hist, labels, nextEarn }: { hist: RevEstimate[]; 
   return (
     <div className="card min-w-0 space-y-4">
       <div className="flex flex-wrap items-baseline justify-between gap-2">
-        <h2 className="font-bold">진행 분기 매출 추정 <span className="text-sm font-normal text-muted">{e.q_start.slice(0, 7)} ~ {e.q_end.slice(0, 7)}</span></h2>
+        <h2 className="font-bold">{rep ? "발표된 분기 매출 추정" : "진행 분기 매출 추정"} <span className="text-sm font-normal text-muted">{e.q_start.slice(0, 7)} ~ {e.q_end.slice(0, 7)}</span></h2>
         <span className="flex flex-wrap gap-1">
           {watch && <span className="rounded bg-accent/20 px-2 py-0.5 text-xs text-accent" title="신뢰 추정 · 컨센 괴리 10% 이상 · 실적 발표 30일 이내">주목</span>}
-          <span className={`rounded px-2 py-0.5 text-xs ${ok ? "bg-up/20 text-up" : "bg-panel2 text-muted"}`}>{ok ? "신뢰" : "참고"} · 백테스트 오차 {pct(e.mape, 1).replace("+", "")}</span>
+          <span className={`rounded px-2 py-0.5 text-xs ${ok ? "bg-up/20 text-up" : "bg-panel2 text-muted"}`}>{rep ? "발표됨" : ok ? "신뢰" : "참고"} · 백테스트 오차 {pct(e.mape, 1).replace("+", "")}</span>
         </span>
       </div>
-      {!ok && why.length > 0 && <div className="rounded bg-panel2 px-3 py-2 text-xs text-muted">참고인 이유: {why.join(" · ")}</div>}
+      {rep && <div className="rounded bg-panel2 px-3 py-2 text-xs text-muted">이 분기 실적은 이미 발표됐습니다. SEC 공시(10-Q·10-K)가 들어오면 실적과 비교해 백테스트에 반영하고 다음 분기 추정으로 넘어갑니다 — 그 전까지는 참고용입니다.</div>}
+      {!rep && !ok && why.length > 0 && <div className="rounded bg-panel2 px-3 py-2 text-xs text-muted">참고인 이유: {why.join(" · ")}</div>}
       <div className="grid gap-3 sm:grid-cols-3">
         <div><div className="text-xs text-muted">무역 기반 추정</div><div className="text-2xl font-bold">{money(e.est, cur)}</div>
           <div className="text-xs text-muted">오차범위 ±{money(e.high - e.est, cur)}{range != null ? ` (±${(range * 100).toFixed(0)}%)` : ""} · 직전 분기 대비 <span className={tone(e.est / e.last_actual - 1)}>{pct(e.est / e.last_actual - 1)}</span></div></div>
@@ -38,7 +40,7 @@ export function EstimateCard({ hist, labels, nextEarn }: { hist: RevEstimate[]; 
           <div className={`text-2xl font-bold ${e.cons_gap == null ? "text-muted" : tone(e.cons_gap)}`}>{e.cons_gap == null ? "-" : pct(e.cons_gap)}</div>
           <div className="text-xs text-muted">{e.cons_gap == null ? "비교 가능한 컨센서스 없음" : `추정 ÷ 컨센 − 1 (${e.date} 기준)`}</div>
           {e.cons_gap != null && range != null && Math.abs(e.cons_gap) < range && <div className="mt-1 text-xs text-muted">괴리가 오차범위(±{(range * 100).toFixed(0)}%) 안 — 의미 있는 차이로 보기 어려움</div>}
-          {nextEarn && <div className="mt-1 text-xs text-muted">실적 발표 {nextEarn} (D-{d}) — 발표 후 실적과 비교해 정확도 갱신</div>}
+          {nextEarn && !rep && <div className="mt-1 text-xs text-muted">실적 발표 {nextEarn} (D-{d}) — 발표 후 실적과 비교해 정확도 갱신</div>}
           {bias != null && Math.abs(bias) >= 0.05 && (
             <div className="mt-1 text-xs text-muted">최근 4분기 모델 편향 <span className={tone(bias)}>{pct(bias)}</span> — {bias < 0 ? "과소" : "과대"}추정 경향 감안</div>
           )}</div>

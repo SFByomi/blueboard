@@ -22,7 +22,7 @@ export default function About() {
       </div>
 
       <Sec ko="운영" en="Operator">
-        <p>텔레그램 채널 <b>Investing Idea</b> 운영자가 개인적으로 만들고 운영합니다. 한국 투자자를 위해 미국·일본·한국 세관 통계를 모아 AI·반도체 종목에 매핑합니다.</p>
+        <p>텔레그램 채널 <a className="font-bold text-accent" href="https://t.me/buywhenitgoesup" target="_blank" rel="noreferrer">Investing Idea (@buywhenitgoesup)</a> 운영자가 개인적으로 만들고 운영합니다. 한국 투자자를 위해 미국·일본·한국 세관 통계를 모아 AI·반도체 종목에 매핑합니다.</p>
       </Sec>
 
       <Sec ko="방법론" en="Methodology">

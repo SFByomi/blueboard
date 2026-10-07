@@ -131,6 +131,11 @@ export const latestEstimates = () =>
 export const earningsDates = () =>
   query<{ ticker: string; next_date: string | null }>("SELECT ticker, next_date FROM earnings_calendar").catch(noTable<{ ticker: string; next_date: string | null }>)
     .then((r) => Object.fromEntries(r.filter((x) => x.next_date && x.next_date >= new Date().toISOString().slice(0, 10)).map((x) => [x.ticker, x.next_date!])) as Record<string, string>);
+/** 실적 발표가 끝난 마지막 분기 말일 (야후 earningsHistory) — 컬럼 추가 전 DB면 빈 값 */
+export const reportedQuarters = () =>
+  query<{ ticker: string; last_reported: string | null }>("SELECT ticker, last_reported FROM earnings_calendar")
+    .then((r) => Object.fromEntries(r.filter((x) => x.last_reported).map((x) => [x.ticker, x.last_reported!])) as Record<string, string>)
+    .catch(() => ({}) as Record<string, string>);
 /** 가장 최근 추정 날짜 — 그날 추정이 없는 종목(모델 탈락)의 옛 추정을 숨기는 기준 */
 export const estimateDate = () =>
   query<{ d: string | null }>("SELECT max(date) AS d FROM revenue_estimates").then((r) => r[0]?.d ?? null).catch(() => null);

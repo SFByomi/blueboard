@@ -7,9 +7,9 @@ import { EstimateCard } from "@/components/EstimateCard";
 import { FlowScores } from "@/components/FlowScores";
 import { CtyName, HsName } from "@/components/Names";
 import { IndexSection } from "@/components/IndexSection";
-import { INDEX_FOR_GROUP, dday, money, parseSites, pct, tone, usd } from "@/lib/format";
+import { INDEX_FOR_GROUP, dday, estReported, money, parseSites, pct, tone, usd } from "@/lib/format";
 import { ADMIN_ENABLED } from "@/lib/db";
-import { alertsFor, company, earningsDates, estimateDate, estimateHistory, financials, flowScores, indicators, mappingsFor, observations, priceSnapshots, surgeForTicker } from "@/lib/queries";
+import { alertsFor, company, earningsDates, estimateDate, estimateHistory, financials, flowScores, indicators, mappingsFor, observations, priceSnapshots, reportedQuarters, surgeForTicker } from "@/lib/queries";
 
 // 게시 직후 바로 보이도록 요청마다 렌더 (ISR 캐시가 게시 후에도 이전 데이터로 남던 문제). DB가 작아 부담 없음
 export const dynamic = "force-dynamic";
@@ -27,11 +27,11 @@ export default async function StockPage({ params }: PageProps<"/stocks/[ticker]"
 
   const maps = await mappingsFor(ticker);
   const ids = maps.map((m) => m.series_id);
-  const [obs, allFin, alerts, relatedAll, scores, estAll, estDate, earn] = await Promise.all([
-    observations(ids), financials(ticker), alertsFor(ids), surgeForTicker(ticker), flowScores(ticker), estimateHistory(ticker), estimateDate(), earningsDates()]);
+  const [obs, allFin, alerts, relatedAll, scores, estAll, estDate, earn, done] = await Promise.all([
+    observations(ids), financials(ticker), alertsFor(ids), surgeForTicker(ticker), flowScores(ticker), estimateHistory(ticker), estimateDate(), earningsDates(), reportedQuarters()]);
   // 최신 빌드에서 추정이 빠진 종목(예: 백테스트 분기 부족으로 탈락)은 옛 추정을 보여주지 않음
   const estHist = estAll.at(-1)?.date === estDate ? estAll : [];
-  const nextEarn = earn[ticker] ?? null;
+  const nextEarn = earn[ticker] ?? null, lastReported = done[ticker] ?? null;
   const related = relatedAll.slice(0, 8);
   const idxGroups = INDEX_FOR_GROUP[c.grp ?? ""] ?? [];
   const [prices, defs] = await Promise.all([
@@ -89,7 +89,7 @@ export default async function StockPage({ params }: PageProps<"/stocks/[ticker]"
         <Kpi label={`최근 분기 매출${fin.at(-1)?.basis ? ` · ${fin.at(-1)!.basis}` : ""}`} value={fin.length ? money(fin.at(-1)!.revenue, fin.at(-1)!.currency) : "-"} sub={fin.at(-1)?.period_end} />
         <Kpi label="매출 YoY" value={pct(revYoY.at(-1))} cls={tone(revYoY.at(-1))} />
         {est ? (
-          <Kpi label={`진행 분기 매출 추정 (${est.q_start.slice(0, 7)}~${est.q_end.slice(0, 7)})`} value={money(est.est, est.currency)}
+          <Kpi label={`${estReported(est, lastReported) ? "발표된 분기(공시 반영 전) 추정" : "진행 분기 매출 추정"} (${est.q_start.slice(0, 7)}~${est.q_end.slice(0, 7)})`} value={money(est.est, est.currency)}
             sub={`직전 대비 ${pct(est.est / est.last_actual - 1)}${est.cons_gap != null ? ` · 컨센 대비 ${pct(est.cons_gap)}` : ""} · 백테스트 오차 ${pct(est.mape, 1).replace("+", "")}`} />
         ) : (
           <Kpi label="진행 중 분기 무역 반영" value={nextQ ? `${nextQ.months} / 3개월` : "-"} sub={nextQ ? `${nextQ.start} ~ ${nextQ.end} · 추정은 매출 연관도 A·B 흐름이 있을 때만` : "실적 데이터 없음"} />
@@ -129,7 +129,7 @@ export default async function StockPage({ params }: PageProps<"/stocks/[ticker]"
         <div className="card text-sm text-muted">연결된 무역 흐름이 없습니다.{ADMIN_ENABLED && <> <Link className="text-accent" href={`/admin/stocks/${encodeURIComponent(c.ticker)}`}>관리 페이지</Link>에서 추가하세요.</>}</div>
       )}
 
-      <EstimateCard hist={estHist} nextEarn={nextEarn} labels={Object.fromEntries(maps.map((mp) => [mp.series_id, mp.label]))} />
+      <EstimateCard hist={estHist} nextEarn={nextEarn} lastReported={lastReported} labels={Object.fromEntries(maps.map((mp) => [mp.series_id, mp.label]))} />
 
       <FlowScores rows={scores.flatMap((sc) => {
         const mp = maps.find((x) => x.series_id === sc.series_id);
