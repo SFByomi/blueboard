@@ -52,12 +52,27 @@ export function observations(ids: string[]) {
 
 export const financials = (t: string) => query<Fin>("SELECT * FROM financials WHERE ticker=? ORDER BY period_end", [t]);
 
-export function surge(scope: string, sort: "yoy3m" | "mom" | "yoy" | "z", limit = 30) {
+/** AI·반도체 관심 분야 HS 장(章): 화학·의약·구리·기계·전자·광학/의료기기 (etl/surge.TECH_CHAPTERS) */
+export const TECH_CHAPTERS = ["28", "29", "30", "38", "74", "84", "85", "90"];
+
+export function surge(scope: string, sort: "yoy3m" | "mom" | "yoy" | "z", limit = 30, chapters?: string[]) {
+  const ch = chapters?.length ? ` AND substr(s.hs6, 1, 2) IN (${chapters.map(() => "?").join(",")})` : "";
   return query<SurgeRow>(
     `SELECT s.*, n.name_ko, n.name_en FROM surge s LEFT JOIN hs_names n ON n.hs = s.hs6
-     WHERE s.scope=? AND s.${sort} IS NOT NULL ORDER BY s.${sort} DESC LIMIT ?`,
-    [scope, limit],
+     WHERE s.scope=? AND s.${sort} IS NOT NULL${ch} ORDER BY s.${sort} DESC LIMIT ?`,
+    [scope, ...(chapters ?? []), limit],
   );
+}
+
+export type KrShare = { hs6: string; month: string; kr_usd: number; world_usd: number; share: number; share_ago: number | null; change: number | null; spark: string; name_ko: string | null; name_en: string | null };
+/** 미국 수입 중 한국산 비중 (3개월 합) — 첫 수집 전엔 테이블이 없을 수 있음 */
+export function krShare(sort: "change" | "share", limit = 40, chapters?: string[]) {
+  const ch = chapters?.length ? ` AND substr(k.hs6, 1, 2) IN (${chapters.map(() => "?").join(",")})` : "";
+  return query<KrShare>(
+    `SELECT k.*, n.name_ko, n.name_en FROM kr_share k LEFT JOIN hs_names n ON n.hs = k.hs6
+     WHERE k.${sort} IS NOT NULL${ch} ORDER BY k.${sort} DESC LIMIT ?`,
+    [...(chapters ?? []), limit],
+  ).catch(noTable<KrShare>);
 }
 
 export async function surgeForTicker(ticker: string) {

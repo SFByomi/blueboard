@@ -2,7 +2,7 @@ import Link from "next/link";
 import { HsName, T } from "@/components/Names";
 import { Spark } from "@/components/Spark";
 import { baseEffect, dday, estRange, estReliable, estReported, money, pct, tone, usd, watchFlag } from "@/lib/format";
-import { earningsDates, latestEstimates, reportedQuarters, meta, priceSnapshots, surge, tagIndex } from "@/lib/queries";
+import { earningsDates, latestEstimates, reportedQuarters, TECH_CHAPTERS, meta, priceSnapshots, surge, tagIndex } from "@/lib/queries";
 import { stockSignals, type Signal } from "@/lib/signals";
 
 // 게시 직후 바로 보이도록 요청마다 렌더 (ISR 캐시가 게시 후에도 이전 데이터로 남던 문제). DB가 작아 부담 없음
@@ -23,7 +23,7 @@ function Row({ s }: { s: Signal }) {
 
 export default async function Home() {
   const [sig, prices, top, related, builtAt, estRows, earn, done] = await Promise.all([
-    stockSignals(), priceSnapshots(), surge("us_imp_world", "yoy3m", 6), tagIndex(), meta("built_at"), latestEstimates(), earningsDates(), reportedQuarters(),
+    stockSignals(), priceSnapshots(), surge("us_imp_world", "yoy3m", 6, TECH_CHAPTERS), tagIndex(), meta("built_at"), latestEstimates(), earningsDates(), reportedQuarters(),
   ]);
   const ranked = sig.filter((s) => s.yoy3m != null).sort((a, b) => b.yoy3m! - a.yoy3m!);
   const half = Math.ceil(ranked.length / 2); // 상위 절반 / 하위 절반 (겹치지 않게) — 하위도 플러스일 수 있어 '둔화'가 아니라 상대 순위
@@ -100,7 +100,7 @@ export default async function Home() {
           <p className="mt-2 text-xs text-muted">GPU 렌탈가 · 토큰 가격 · 서버·스토리지 가격지수</p>
         </Link>
         <section className="card min-w-0">
-          <div className="flex items-baseline justify-between"><h2 className="font-bold"><T ko="급등 품목" en="Surging items" /></h2><Link href="/surge" className="text-xs text-muted hover:text-fg">전체 보기 →</Link></div>
+          <div className="flex items-baseline justify-between"><h2 className="font-bold"><T ko="급등 품목" en="Surging items" /> <span className="text-xs font-normal text-muted">전자·기계·화학 등 관심 분야</span></h2><Link href="/surge?f=tech" className="text-xs text-muted hover:text-fg">전체 보기 →</Link></div>
           <div className="mt-2 space-y-1 text-sm">
             {top.map((r) => (
               <div key={`${r.hs6}${r.partner}`} className="flex items-center justify-between gap-3">
