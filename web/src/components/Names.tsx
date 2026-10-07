@@ -17,3 +17,8 @@ export function HsName({ ko, en, hs }: { ko: string | null; en: string | null; h
 export function CtyName({ name }: { name: string | null }) {
   return <HsName ko={ctyKo(name)} en={name} />;
 }
+
+/** UI 문구 한/영 (탭·제목·표 머리) — 토글은 품목명과 같은 html[data-names] */
+export function T({ ko, en }: { ko: string; en: string }) {
+  return <HsName ko={ko} en={en} />;
+}

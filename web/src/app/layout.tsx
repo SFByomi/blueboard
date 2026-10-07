@@ -37,7 +37,8 @@ export default function RootLayout({ children }: LayoutProps<"/">) {
         </header>
         <main className="mx-auto max-w-7xl px-4 py-6">{children}</main>
         <footer className="mx-auto max-w-7xl px-4 pb-10 text-xs text-muted">
-          출처: U.S. Census Bureau, 일본 재무성 무역통계(e-Stat), 한국 관세청, SEC EDGAR·DART, BLS, Vast.ai, OpenRouter. 투자 권유가 아닙니다.
+          출처: U.S. Census Bureau, 일본 재무성 무역통계(e-Stat), 한국 관세청, SEC EDGAR·DART, BLS, Vast.ai, OpenRouter. 투자 권유가 아닙니다.{" "}
+          <Link href="/about" className="text-accent">운영·방법론 소개 →</Link>
         </footer>
       </body>
     </html>

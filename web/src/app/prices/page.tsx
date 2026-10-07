@@ -1,3 +1,4 @@
+import { T } from "@/components/Names";
 import { PriceChart } from "@/components/ComputeCharts";
 import { pct, tone } from "@/lib/format";
 import { IndexSection } from "@/components/IndexSection";
@@ -33,11 +34,17 @@ export default async function Prices() {
   const models = [...new Set(tok.map((r) => r.item))];
   const daily = rows.filter((r) => r.kind !== "index");
   const first = daily[0]?.date, last = daily.at(-1)?.date;
+  const days = new Set(daily.map((r) => r.date)).size;
+  // 이력이 짧아 1주·1달 변화가 아직 계산 안 되면 열 자체를 숨김
+  const gpuW = gpus.some((g) => change(series(gpu, g, "median"), 7) != null);
+  const gpuM = gpus.some((g) => change(series(gpu, g, "median"), 30) != null);
+  const tokM = models.some((md) => change(series(tok, md, "output"), 30) != null);
+  const short = days > 0 && days < 30 ? `데이터 ${days}일치 — 매일 쌓이는 중이라 추세 판단은 이르니 참고만` : null;
 
   return (
     <div className="space-y-6">
       <div>
-        <h1 className="text-2xl font-bold">가격·지수</h1>
+        <h1 className="text-2xl font-bold"><T ko="가격·지수" en="Prices & indices" /></h1>
         <p className="mt-1 text-sm text-muted">
           GPU·토큰 가격(일별) · 공급망 가격지수(월별) · {first ? `GPU·토큰 ${first} ~ ${last} 수집` : "수집 전"} · 매일 아침 갱신
         </p>
@@ -47,7 +54,7 @@ export default async function Prices() {
 
       <section className="space-y-3">
         <div className="flex flex-wrap items-baseline justify-between gap-2">
-          <h2 className="text-lg font-bold">GPU 렌탈가 <span className="text-sm font-normal text-muted">$ / GPU·시간, 온디맨드</span></h2>
+          <h2 className="text-lg font-bold"><T ko="GPU 렌탈가" en="GPU rental price" /> <span className="text-sm font-normal text-muted">$ / GPU·시간, 온디맨드</span></h2>
           <span className="text-xs text-muted">Vast.ai 마켓플레이스 대여 가능 매물의 중앙값 · 범례를 누르면 기종을 켜고 끕니다</span>
         </div>
         <div className="rounded-lg border border-line bg-panel2 px-4 py-3 text-sm leading-relaxed">
@@ -60,12 +67,13 @@ export default async function Prices() {
         </div>
         {gpus.length > 0 && (
           <div className="card min-w-0 space-y-4">
+            {short && <div className="text-xs text-muted">{short}</div>}
             <PriceChart unit="$/GPU·h" height={320} lines={gpus.map((g) => ({ name: g, color: GPU_COLORS[g], points: series(gpu, g, "median") }))} />
             <div className="overflow-x-auto">
               <table className="w-full min-w-[560px] whitespace-nowrap text-sm">
                 <thead className="text-xs text-muted"><tr className="border-b border-line">
-                  <th className="py-2 text-left">기종</th><th className="text-right">중앙값</th><th className="text-right">하위 25%</th>
-                  <th className="text-right">1주</th><th className="text-right">1달</th><th className="text-right">대여 가능 GPU</th>
+                  <th className="py-2 text-left"><T ko="기종" en="GPU" /></th><th className="text-right"><T ko="중앙값" en="Median" /></th><th className="text-right"><T ko="하위 25%" en="Bottom 25%" /></th>
+                  {gpuW && <th className="text-right"><T ko="1주" en="1W" /></th>}{gpuM && <th className="text-right"><T ko="1달" en="1M" /></th>}<th className="text-right"><T ko="대여 가능 GPU" en="Available GPUs" /></th>
                 </tr></thead>
                 <tbody className="font-mono">
                   {gpus.map((g) => {
@@ -78,8 +86,8 @@ export default async function Prices() {
                         <td className="py-2 font-sans font-bold"><span className="mr-2 inline-block h-2.5 w-2.5 rounded-sm" style={{ background: GPU_COLORS[g] }} />{g}</td>
                         <td className="text-right font-bold">${last.value.toFixed(2)}</td>
                         <td className="text-right text-muted">{p25 != null ? `$${p25.toFixed(2)}` : "-"}</td>
-                        <td className={`text-right ${tone(w)}`}>{pct(w)}</td>
-                        <td className={`text-right ${tone(m)}`}>{pct(m)}</td>
+                        {gpuW && <td className={`text-right ${tone(w)}`}>{pct(w)}</td>}
+                        {gpuM && <td className={`text-right ${tone(m)}`}>{pct(m)}</td>}
                         <td className="text-right text-muted">{last.n}장 <span className="text-xs">({last.detail?.replace("vast.ai ", "")})</span></td>
                       </tr>
                     );
@@ -97,14 +105,14 @@ export default async function Prices() {
 
       <section className="space-y-3">
         <div className="flex flex-wrap items-baseline justify-between gap-2">
-          <h2 className="text-lg font-bold">프런티어 모델 토큰 가격 <span className="text-sm font-normal text-muted">$ / 100만 토큰</span></h2>
+          <h2 className="text-lg font-bold"><T ko="프런티어 모델 토큰 가격" en="Frontier model token prices" /> <span className="text-sm font-normal text-muted">$ / 100만 토큰</span></h2>
           <span className="text-xs text-muted">OpenRouter 정가 · 각 회사 최신 플래그십</span>
         </div>
         <div className="card overflow-x-auto">
           <table className="w-full min-w-[560px] whitespace-nowrap text-sm">
             <thead className="text-xs text-muted"><tr className="border-b border-line">
-              <th className="py-2 text-left">모델</th><th className="text-left">현재 가리키는 모델</th>
-              <th className="text-right">입력</th><th className="text-right">출력</th><th className="text-right">출력 1달</th>
+              <th className="py-2 text-left"><T ko="모델" en="Model" /></th><th className="text-left"><T ko="현재 가리키는 모델" en="Current model" /></th>
+              <th className="text-right"><T ko="입력" en="Input" /></th><th className="text-right"><T ko="출력" en="Output" /></th>{tokM && <th className="text-right"><T ko="출력" en="Output" /> 1달</th>}
             </tr></thead>
             <tbody className="font-mono">
               {models.map((md) => {
@@ -117,7 +125,7 @@ export default async function Prices() {
                     <td className="text-xs text-muted">{detail}</td>
                     <td className="text-right">${inp.at(-1)?.[1].toFixed(2)}</td>
                     <td className="text-right">${out.at(-1)?.[1].toFixed(2)}</td>
-                    <td className={`text-right ${tone(c)}`}>{pct(c)}</td>
+                    {tokM && <td className={`text-right ${tone(c)}`}>{pct(c)}</td>}
                   </tr>
                 );
               })}
@@ -126,7 +134,8 @@ export default async function Prices() {
         </div>
         {models.length > 0 && (
           <div className="card">
-            <h3 className="font-bold">출력 토큰 가격 추이</h3>
+            <h3 className="font-bold"><T ko="출력" en="Output" /> 토큰 가격 추이</h3>
+            {short && <div className="text-xs text-muted">{short}</div>}
             <PriceChart unit="$/M" height={260} lines={models.map((md, i) => ({ name: md, color: TOKEN_COLORS[i % TOKEN_COLORS.length], points: series(tok, md, "output"), step: true }))} />
           </div>
         )}
@@ -138,7 +147,7 @@ export default async function Prices() {
       {idxGroups.length > 0 && (
         <section className="space-y-3">
           <div className="flex flex-wrap items-baseline justify-between gap-2">
-            <h2 className="text-lg font-bold">공급망 가격지수 <span className="text-sm font-normal text-muted">생산자물가·수출입 가격 (BLS)</span></h2>
+            <h2 className="text-lg font-bold"><T ko="공급망 가격지수" en="Supply chain price indices" /> <span className="text-sm font-normal text-muted">생산자물가·수출입 가격 (BLS)</span></h2>
             <span className="text-xs text-muted">물량이 아니라 단가 사이클 — 매출 = 물량 × 단가의 단가 쪽</span>
           </div>
           <div className="grid gap-4 xl:grid-cols-2">

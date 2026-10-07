@@ -87,7 +87,8 @@ def metrics(df: pd.DataFrame, latest: pd.Period, min_value: float) -> list[dict]
             "hs6": hs6, "partner": partner, "partner_name": g["partner_name"].iloc[0], "desc": g["desc"].iloc[0],
             "month": str(latest), "value_usd": float(L),
             "mom": ratio(L, s.iloc[-2]), "yoy": ratio(L, s.iloc[-13]),
-            "yoy3m": ratio(s.iloc[-3:].sum(), s.iloc[-15:-12].sum(), 3),
+            # 3개월 전년비도 같은 기준: 전년 같은 3개월 '각 달'이 기준값 이상일 때만 (→ 3M 값이 있으면 YoY도 항상 있음)
+            "yoy3m": (s.iloc[-3:].sum() / s.iloc[-15:-12].sum() - 1) if s.iloc[-15:-12].min() >= floor else None,
             "z": float((L - prev12.mean()) / sd) if sd > 0 else None,
             "spark": json.dumps([round(v / 1e6, 2) for v in s.reindex(months).values]),
         })
