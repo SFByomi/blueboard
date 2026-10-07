@@ -80,10 +80,16 @@ export const estReliable = (e: { mape: number | null; mape_naive: number | null;
 export const estCaution = (e: { caution?: string | null }): string[] => (e.caution ? JSON.parse(e.caution) : []);
 /** 추정 오차범위 (±, 추정 대비 비율) */
 export const estRange = (e: { est: number; high: number }) => (e.est ? (e.high - e.est) / Math.abs(e.est) : null);
+/** 추정 대상 분기가 이미 실적 발표됨 (SEC 공시 반영 전) — 야후 분기 말일은 달 말일로 찍혀 보름 여유 */
+export function estReported(e: { q_end: string }, lastReported?: string | null): boolean {
+  if (!lastReported) return false;
+  const d = new Date(e.q_end); d.setDate(d.getDate() - 15);
+  return lastReported >= d.toISOString().slice(0, 10);
+}
 /** 매수·매도 검토 트리거: 신뢰 추정 + 컨센 괴리 10% 이상(오차범위 밖) + 실적 발표 30일 이내 */
-export function watchFlag(e: { mape: number | null; mape_naive: number | null; flows: string; reliable?: number | null; cons_gap: number | null; est: number; high: number }, next?: string | null) {
+export function watchFlag(e: { q_end: string; mape: number | null; mape_naive: number | null; flows: string; reliable?: number | null; cons_gap: number | null; est: number; high: number }, next?: string | null, lastReported?: string | null) {
   const d = dday(next), r = estRange(e);
-  return estReliable(e) && e.cons_gap != null && Math.abs(e.cons_gap) >= 0.1 && (r == null || Math.abs(e.cons_gap) > r) && d != null && d >= 0 && d <= 30;
+  return !estReported(e, lastReported) && estReliable(e) && e.cons_gap != null && Math.abs(e.cons_gap) >= 0.1 && (r == null || Math.abs(e.cons_gap) > r) && d != null && d >= 0 && d <= 30;
 }
 /** 실적 발표까지 남은 일수 */
 export function dday(d: string | null | undefined, today = new Date()): number | null {
