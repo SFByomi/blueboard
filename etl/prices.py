@@ -12,7 +12,7 @@ from datetime import date
 import requests
 
 VAST = "https://console.vast.ai/api/v0/bundles/"
-GPUS = ["H100 SXM", "H100 NVL", "H200", "H200 NVL", "B200", "B300"]
+GPUS = ["A100 SXM4", "A100 PCIE", "H100 SXM", "H100 NVL", "H200", "H200 NVL", "B200", "B300"]
 
 OPENROUTER = "https://openrouter.ai/api/v1/models"
 TOKENS = {  # 표시 이름: OpenRouter 모델 ID (최신 플래그십 별칭)

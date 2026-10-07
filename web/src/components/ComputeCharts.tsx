@@ -20,3 +20,19 @@ export function PriceChart({ lines, unit, height = 220, prefix = "$" }: { lines:
   };
   return <EChart option={option} height={height} />;
 }
+
+/** 월별 건수 막대 + 3개월 평균 선 (예: 랜섬웨어 피해 공개 건수) */
+export function CountBars({ months, values, name, height = 260 }: { months: string[]; values: number[]; name: string; height?: number }) {
+  const avg3 = values.map((_, i) => (i >= 2 ? +((values[i] + values[i - 1] + values[i - 2]) / 3).toFixed(0) : null));
+  const option: EChartsOption = {
+    ...baseOption(),
+    grid: { left: 48, right: 16, top: 24, bottom: 56 },
+    xAxis: { type: "category", data: months, ...axis, splitLine: { show: false } },
+    yAxis: { type: "value", name: "건", nameTextStyle: { color: "#8a90ad", fontSize: 11 }, ...axis },
+    series: [
+      { name, type: "bar", data: values, barMaxWidth: 10, itemStyle: { color: "#60a5fa" } },
+      { name: "3개월 평균", type: "line", data: avg3, symbol: "none", lineStyle: { color: "#f87171", width: 2 }, itemStyle: { color: "#f87171" } },
+    ],
+  };
+  return <EChart option={option} height={height} />;
+}

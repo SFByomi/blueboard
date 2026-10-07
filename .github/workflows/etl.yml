@@ -28,7 +28,7 @@ jobs:
 
       - run: pip install -r requirements.txt
 
-      # 이전 실행의 DB와 바뀌지 않는 원본 캐시(DART XBRL, 관세청 과거 구간, 급등 탐지 월별 캐시)를 이어 쓴다.
+      # 이전 실행의 DB와 바뀌지 않는 원본 캐시(DART XBRL, 관세청 과거 구간, 급등 탐지 월별 캐시, 랜섬웨어 월별)를 이어 쓴다.
       # DB를 이어 쓰므로 어떤 소스가 일시적으로 실패해도 그 시리즈는 이전 데이터가 유지된다.
       # Census·e-Stat·SEC는 캐시하지 않음 → 매번 최신 월을 새로 받음.
       - uses: actions/cache/restore@v4
@@ -38,6 +38,7 @@ jobs:
             data/raw/dart
             data/raw/kcs
             data/raw/surge
+            data/raw/ransomware
           key: etl-${{ github.run_id }}
           restore-keys: etl-
 
@@ -59,6 +60,7 @@ jobs:
             data/raw/dart
             data/raw/kcs
             data/raw/surge
+            data/raw/ransomware
           key: etl-${{ github.run_id }}
 
       - name: 게시
