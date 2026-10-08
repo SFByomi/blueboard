@@ -60,6 +60,9 @@ def collect(con, log=print) -> int:
             trend, nxt, done = revenue_trend(s, crumb, sym)
             rows += [(today, sym, t["period"], t["end_date"], t["avg"], t["low"], t["high"], t["n"]) for t in trend]
             con.execute("INSERT OR REPLACE INTO earnings_calendar (ticker, next_date, updated, last_reported) VALUES (?,?,?,?)", (tick[sym], nxt, today, done))  # 없으면 NULL로 지난 날짜 지움
+            if done and not con.execute("SELECT 1 FROM earnings_reports WHERE ticker=? AND q_end=?", (tick[sym], done)).fetchone():
+                con.execute("INSERT INTO earnings_reports VALUES (?,?,?)", (tick[sym], done, today))  # 발표를 처음 본 날 → 그 전 추정이 '발표 전 고정'
+
         except Exception as e:  # noqa: BLE001
             log(f"  ✗ 컨센서스 {sym}: {e}")
     con.executemany("INSERT OR REPLACE INTO consensus VALUES (?,?,?,?,?,?,?,?)", rows)
