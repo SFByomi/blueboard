@@ -79,6 +79,7 @@ def apply_hs_names_ko(con):
 def fetch_financials(con):
     targets = con.execute("SELECT ticker, sec_ticker, dart_fs, dart_segment FROM companies "
                           "WHERE sec_ticker IS NOT NULL OR dart_fs IS NOT NULL OR dart_segment IS NOT NULL").fetchall()
+    store = json.loads(guidance.STORE.read_text()) if guidance.STORE.exists() else {}
     for ticker, sec_ticker, dart_fs, dart_seg in targets:
         basis = None
         try:
@@ -99,6 +100,12 @@ def fetch_financials(con):
         con.execute("DELETE FROM financials WHERE ticker=?", (ticker,))
         con.executemany("INSERT INTO financials (ticker, period_end, period_start, revenue, currency, basis) VALUES (?,?,?,?,?,?)",
                         [(ticker, r.end.strftime("%Y-%m-%d"), r.start.strftime("%Y-%m-%d"), float(r.revenue), cur, basis) for r in q.itertuples()])
+        if sec_ticker and not dart_seg and not dart_fs and len(q):  # 10-Q 전에 실적 보도자료로 먼저 (과거 일치율 90% 이상 회사만)
+            _, press = guidance.actuals(store, sec_ticker, [e.strftime("%Y-%m-%d") for e in q.end], [float(v) for v in q.revenue])
+            for x in press:
+                con.execute("INSERT OR REPLACE INTO financials (ticker, period_end, period_start, revenue, currency, basis) VALUES (?,?,?,?,?,?)",
+                            (ticker, x["end"].strftime("%Y-%m-%d"), x["start"].strftime("%Y-%m-%d"), x["revenue"], cur, "보도자료"))
+                log(f"  ✓ 매출 {ticker}: {x['end']:%Y-%m} 분기 {x['revenue'] / 1e6:,.0f}M — 실적 보도자료({x['filed']}), 10-Q 전")
         con.commit()
         log(f"  ✓ 매출 {ticker}: {len(q)}분기 ({cur}{', ' + basis if basis else ''})")
 
@@ -112,13 +119,13 @@ def main():
     else:
         log("1) 시드 → data/curation.json 생성"); apply_seed(con); curation.export(con)
     step("2) 시계열"); fetch_series(con)
-    step("3) 분기 매출 (SEC·DART)"); fetch_financials(con)
+    step("3) 회사 매출 가이던스·실적 보도자료")
+    guidance.collect([t for (t,) in con.execute("SELECT sec_ticker FROM companies WHERE sec_ticker IS NOT NULL ORDER BY sec_ticker")], log)
+    step("3-0) 분기 매출 (SEC·DART)"); fetch_financials(con)
     step("3-1) 통계 단절 탐지"); n = breaks.scan(con, log); con.commit(); log(f"  경고 {n}건")
     step("3-2) 매출 상관 점수"); scores.score_all(con, log); con.commit()
     step("3-3) 컨센서스 (로컬 전용)"); consensus.collect(con, log); con.commit()
-    step("3-4) 회사 매출 가이던스 (실적 보도자료)")
-    guidance.collect([t for (t,) in con.execute("SELECT sec_ticker FROM companies WHERE sec_ticker IS NOT NULL ORDER BY sec_ticker")], log)
-    step("3-5) 진행 분기 매출 추정·백테스트"); estimates.estimate_all(con, log); con.commit()
+    step("3-4) 진행 분기 매출 추정·백테스트"); estimates.estimate_all(con, log); con.commit()
     if "--skip-surge" not in sys.argv:
         step("4) 급등 탐지")
         tagged = sorted({h for (h,) in con.execute("SELECT hs_prefix FROM hs_tags WHERE length(hs_prefix)=6")})
