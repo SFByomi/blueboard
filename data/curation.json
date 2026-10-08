@@ -1239,6 +1239,72 @@
    "hs": "8544.60",
    "partner": "미국",
    "spec": "{\"api\": \"item_cty\", \"hs\": \"854460\", \"flow\": \"export\", \"cnty\": \"US\"}"
+  },
+  {
+   "id": "us_plan_gas",
+   "label": "미국 계획 중 가스발전 용량 (EIA 860M)",
+   "source": "eia_planned",
+   "reporter": "🇺🇸 미국",
+   "flow": "발전 계획",
+   "region": "전국",
+   "hs": "-",
+   "partner": "미국",
+   "spec": "{\"metric\": \"gas\"}"
+  },
+  {
+   "id": "us_plan_gas_uc",
+   "label": "미국 가스발전 착공·완공 대기 용량",
+   "source": "eia_planned",
+   "reporter": "🇺🇸 미국",
+   "flow": "발전 계획",
+   "region": "전국",
+   "hs": "-",
+   "partner": "미국",
+   "spec": "{\"metric\": \"gas_uc\"}"
+  },
+  {
+   "id": "us_plan_battery",
+   "label": "미국 계획 중 배터리 저장장치 용량",
+   "source": "eia_planned",
+   "reporter": "🇺🇸 미국",
+   "flow": "발전 계획",
+   "region": "전국",
+   "hs": "-",
+   "partner": "미국",
+   "spec": "{\"metric\": \"battery\"}"
+  },
+  {
+   "id": "us_plan_solar",
+   "label": "미국 계획 중 태양광 용량",
+   "source": "eia_planned",
+   "reporter": "🇺🇸 미국",
+   "flow": "발전 계획",
+   "region": "전국",
+   "hs": "-",
+   "partner": "미국",
+   "spec": "{\"metric\": \"solar\"}"
+  },
+  {
+   "id": "us_elec_va_com",
+   "label": "버지니아 상업용 전력 판매 (데이터센터 밀집)",
+   "source": "eia_retail",
+   "reporter": "🇺🇸 미국",
+   "flow": "전력 판매",
+   "region": "버지니아",
+   "hs": "-",
+   "partner": "미국",
+   "spec": "{\"state\": \"VA\", \"sector\": \"COM\"}"
+  },
+  {
+   "id": "us_elec_us_com",
+   "label": "미국 상업용 전력 판매",
+   "source": "eia_retail",
+   "reporter": "🇺🇸 미국",
+   "flow": "전력 판매",
+   "region": "전국",
+   "hs": "-",
+   "partner": "미국",
+   "spec": "{\"state\": \"US\", \"sector\": \"COM\"}"
   }
  ],
  "mappings": [
@@ -2209,6 +2275,56 @@
    "confidence": "낮음",
    "rationale": "미국 데이터센터 건설투자 — 현장 연료전지 전원 수요.",
    "caveat": "업황 지표.",
+   "include_in_total": 0,
+   "sort": 95
+  },
+  {
+   "ticker": "BE",
+   "series_id": "us_plan_gas",
+   "role": "최종수요",
+   "confidence": "낮음",
+   "rationale": "미국 가스발전 건설 계획 — 매출 전년비와 0.53(B), 2분기 선행. 데이터센터 전력 부족을 가스로 메우는 흐름(현장 연료전지와 같은 수요).",
+   "caveat": "업황 지표, 회사 물량 아님.",
+   "include_in_total": 0,
+   "sort": 96
+  },
+  {
+   "ticker": "VRT",
+   "series_id": "us_elec_va_com",
+   "role": "최종수요",
+   "confidence": "낮음",
+   "rationale": "버지니아(데이터센터 밀집) 상업용 전력 판매 — 데이터센터 가동 전력. 매출과는 연동 약함(D) — 업황 참고.",
+   "caveat": "주 전체 상업 부문 합산.",
+   "include_in_total": 0,
+   "sort": 97
+  },
+  {
+   "ticker": "267260.KS",
+   "series_id": "us_plan_gas",
+   "role": "최종수요",
+   "confidence": "낮음",
+   "rationale": "미국 가스발전 건설 계획 — 발전소 연계 변압기·차단기 수요. 매출과는 연동 약함(D) — 업황 참고.",
+   "caveat": "업황 지표.",
+   "include_in_total": 0,
+   "sort": 95
+  },
+  {
+   "ticker": "298040.KS",
+   "series_id": "us_plan_gas",
+   "role": "최종수요",
+   "confidence": "낮음",
+   "rationale": "미국 가스발전 건설 계획 — 발전소 연계 변압기 수요. 매출과는 연동 약함(D) — 업황 참고.",
+   "caveat": "업황 지표.",
+   "include_in_total": 0,
+   "sort": 95
+  },
+  {
+   "ticker": "FLNC",
+   "series_id": "us_plan_battery",
+   "role": "최종수요",
+   "confidence": "낮음",
+   "rationale": "미국 계획 중 배터리 저장장치 용량 — ESS 수주 파이프라인. 매출과는 연동 약함(D) — 업황 참고.",
+   "caveat": "업계 전체, 회사 몫 아님.",
    "include_in_total": 0,
    "sort": 95
   }

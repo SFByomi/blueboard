@@ -28,6 +28,7 @@ CENSUS_API_KEY=
 ESTAT_APP_ID=
 DATA_GO_KR_KEY=
 DART_API_KEY=
+EIA_API_KEY=
 ```
 값은 사용자의 로컬 `.env`에 있다. 값을 대화에 출력하지 말 것.
 

@@ -29,7 +29,7 @@
   - `DATABASE_URL`이 있으면 관리 페이지·서버 액션 비활성(`ADMIN_ENABLED`). 큐레이션 수정은 로컬에서만 → curation.json push.
 
 ## 키
-`.env`: CENSUS_API_KEY, ESTAT_APP_ID, DATA_GO_KR_KEY, DART_API_KEY (+ 게시용 DATABASE_URL). 절대 커밋 금지. Actions에는 같은 이름의 저장소 Secrets.
+`.env`: CENSUS_API_KEY, ESTAT_APP_ID, DATA_GO_KR_KEY, DART_API_KEY, EIA_API_KEY (+ 게시용 DATABASE_URL). 절대 커밋 금지. Actions에는 같은 이름의 저장소 Secrets.
 
 ## 데이터 소스 함정 (중요)
 - Census: 키 필수. 수출(exports) API는 대량 조회가 매우 느림 → 품목 단위로. 큰 장(84)은 500 에러 → 자동 분할.

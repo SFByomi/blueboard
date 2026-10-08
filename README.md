@@ -50,6 +50,7 @@ npm --prefix web run dev   # http://localhost:3000
 | `ESTAT_APP_ID` | 일본 무역 | e-stat.go.jp 마이페이지 → API 기능 |
 | `DATA_GO_KR_KEY` | 한국 관세청 (품목·국가·시군구) | data.go.kr — API별 활용신청 필요 |
 | `DART_API_KEY` | 한국 상장사 분기 매출 | opendart.fss.or.kr |
+| `EIA_API_KEY` | 미국 주별 전력 판매(데이터센터 수요) | eia.gov/opendata/register.php |
 
 ## 공개 사이트 (배포)
 
@@ -68,7 +69,7 @@ GitHub Actions (매일 06:17 KST)                     Vercel (web/, 서울 리�
 ### 처음 한 번 설정
 1. **Supabase**: 새 프로젝트(리전 Seoul) → Connect → **Transaction pooler** 주소(포트 6543)를 복사, `[YOUR-PASSWORD]` 자리에 DB 비밀번호
 2. **GitHub** 저장소 → Settings → Secrets and variables → Actions → New repository secret:
-   `CENSUS_API_KEY`, `ESTAT_APP_ID`, `DATA_GO_KR_KEY`, `DART_API_KEY`, `DATABASE_URL`
+   `CENSUS_API_KEY`, `ESTAT_APP_ID`, `DATA_GO_KR_KEY`, `DART_API_KEY`, `EIA_API_KEY`, `DATABASE_URL`
 3. **GitHub Actions** 탭 → "데이터 갱신" → Run workflow (첫 실행 20~40분)
 4. **Vercel**: Add New Project → `blueboard` 가져오기 → Root Directory `web` → Environment Variables에 `DATABASE_URL` → Deploy
 

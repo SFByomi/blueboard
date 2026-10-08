@@ -1,7 +1,7 @@
 name: 데이터 갱신
 
 # 수집(etl.build, SQLite) → 공개 사이트 DB 게시(etl.publish, Supabase Postgres)
-# 필요한 저장소 Secrets: CENSUS_API_KEY, ESTAT_APP_ID, DATA_GO_KR_KEY, DART_API_KEY, DATABASE_URL
+# 필요한 저장소 Secrets: CENSUS_API_KEY, ESTAT_APP_ID, DATA_GO_KR_KEY, DART_API_KEY, EIA_API_KEY, DATABASE_URL
 on:
   schedule:
     - cron: "17 21 * * *" # 매일 06:17 KST
@@ -48,6 +48,7 @@ jobs:
           ESTAT_APP_ID: ${{ secrets.ESTAT_APP_ID }}
           DATA_GO_KR_KEY: ${{ secrets.DATA_GO_KR_KEY }}
           DART_API_KEY: ${{ secrets.DART_API_KEY }}
+          EIA_API_KEY: ${{ secrets.EIA_API_KEY }}
         run: |
           set -o pipefail
           python -m etl.build | tee etl.log

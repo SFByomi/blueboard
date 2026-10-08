@@ -18,8 +18,9 @@ export type QuarterRow = { end: string; revenue: number; revYoY: number | null; 
 
 const COLORS = ["#3b82f6", "#10b981", "#a78bfa", "#f59e0b", "#f472b6", "#22d3ee"];
 const M = (v: number | null) => (v == null ? null : +(v / 1e6).toFixed(2));
-/** 금액이 아닌 건수 시계열(예: 랜섬웨어 피해 건수, unit='건') — 차트·표에서 백만 달러로 나누지 않음 */
-const isCount = (x: { unit: string | null }) => x.unit === "건";
+/** 금액이 아닌 시계열(랜섬웨어 '건', 발전 용량 'MW', 전력 판매 'MWh') — 차트·표에서 백만 달러로 나누지 않고 단위 그대로 */
+const NON_USD = new Set(["건", "MW", "MWh"]);
+const isCount = (x: { unit: string | null }) => NON_USD.has(x.unit ?? "");
 const scaled = (x: FlowData) => (isCount(x) ? x.values : x.values.map(M));
 const yoyArr = (a: (number | null)[]) => a.map((v, i) => (i >= 12 && v != null && a[i - 12] ? v / a[i - 12]! - 1 : null));
 const P = (v: number | null) => (v == null ? null : +(v * 100).toFixed(1));
@@ -49,7 +50,7 @@ export function StockView({ flows, months, quarters, currency }: { flows: FlowDa
     ...baseOption(),
     xAxis: { type: "category", data: months, ...axis, splitLine: { show: false } },
     yAxis: [
-      { type: "value", ...axis, axisLabel: { ...axis.axisLabel, formatter: shown.every(isCount) ? "{value}건" : "{value}M" } },
+      { type: "value", ...axis, axisLabel: { ...axis.axisLabel, formatter: shown.every(isCount) ? `{value}${shown[0].unit}` : "{value}M" } },
       { type: "value", ...axis, splitLine: { show: false }, axisLabel: { ...axis.axisLabel, formatter: "{value}%" } },
     ],
     series: [
@@ -67,10 +68,10 @@ export function StockView({ flows, months, quarters, currency }: { flows: FlowDa
   const detail1: EChartsOption = {
     ...baseOption(),
     xAxis: { type: "category", data: months, ...axis, splitLine: { show: false } },
-    yAxis: [{ type: "value", ...axis, axisLabel: { ...axis.axisLabel, formatter: isCount(f) ? "{value}건" : "{value}M" } }, { type: "value", ...axis, splitLine: { show: false } }],
+    yAxis: [{ type: "value", ...axis, axisLabel: { ...axis.axisLabel, formatter: isCount(f) ? `{value}${f.unit}` : "{value}M" } }, { type: "value", ...axis, splitLine: { show: false } }],
     series: [
       {
-        name: isCount(f) ? "건수" : "금액 (USD M)", type: "bar", barMaxWidth: 8, itemStyle: { color: COLORS[sel % COLORS.length] }, data: scaled(f),
+        name: isCount(f) ? `값 (${f.unit})` : "금액 (USD M)", type: "bar", barMaxWidth: 8, itemStyle: { color: COLORS[sel % COLORS.length] }, data: scaled(f),
         markLine: f.alerts.length ? {
           symbol: "none", lineStyle: { color: "#f59e0b", type: "dashed" }, label: { color: "#f59e0b", formatter: "단절?" },
           data: f.alerts.map((a) => ({ xAxis: a.month })),
@@ -169,7 +170,7 @@ export function StockView({ flows, months, quarters, currency }: { flows: FlowDa
 
       <div className="card">
         <h2 className="font-bold"><T ko="추적 흐름 합산 vs 매출" en="Tracked flows vs revenue" /></h2>
-        <p className="text-xs text-muted">막대 = 흐름별 월 {shown.every(isCount) ? "건수" : "금액(USD M"}{shown.every(isCount) ? " (" : ", "}{inc.length ? "합산 대상" : "업황 프록시"}) · 선 = 합산 YoY, 분기 매출 YoY(분기 종료월)</p>
+        <p className="text-xs text-muted">막대 = 흐름별 월 {shown.every(isCount) ? `값(${shown[0].unit}` : "금액(USD M"}{", "}{inc.length ? "합산 대상" : "업황 프록시"}) · 선 = 합산 YoY, 분기 매출 YoY(분기 종료월)</p>
         <EChart option={main} height={380} />
       </div>
 
@@ -191,7 +192,7 @@ export function StockView({ flows, months, quarters, currency }: { flows: FlowDa
             {last12.map(({ m, i }) => (
               <tr key={m} className="border-b border-line/50">
                 <td className="py-2">{m}</td>
-                <td className="text-right">{isCount(f) ? (f.values[i] == null ? "-" : `${f.values[i]!.toLocaleString()}건`) : usd(f.values[i])}</td>
+                <td className="text-right">{isCount(f) ? (f.values[i] == null ? "-" : `${Math.round(f.values[i]!).toLocaleString()}${f.unit}`) : usd(f.values[i])}</td>
                 <td className="text-right">{f.qty[i]?.toLocaleString() ?? "-"}</td>
                 <td className="text-right">{d.price[i]?.toFixed(3) ?? "-"}</td>
                 <td className={`text-right ${tone(d.yoy[i])}`}>{pct(d.yoy[i])}</td>
