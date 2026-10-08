@@ -104,7 +104,7 @@ export const priceSnapshots = () =>
 
 export const allFinancials = () => query<Fin>("SELECT * FROM financials ORDER BY ticker, period_end");
 export const allMappingsLabeled = () =>
-  query<Mapping & { label: string }>("SELECT m.*, s.label FROM mappings m JOIN series s ON s.id = m.series_id ORDER BY m.ticker, m.sort, m.id");
+  query<Mapping & { label: string; unit: string | null }>("SELECT m.*, s.label, s.unit FROM mappings m JOIN series s ON s.id = m.series_id ORDER BY m.ticker, m.sort, m.id");
 
 export type Indicator = { id: string; label: string; grp: string; unit: string | null; source: string | null; note: string | null; sort: number };
 /** 가격지수 정의 — 첫 수집 전엔 테이블이 없을 수 있음 */

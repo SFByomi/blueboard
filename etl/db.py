@@ -80,6 +80,10 @@ CREATE TABLE IF NOT EXISTS kr_share (   -- 미국 수입 중 한국산 비중 (3
 CREATE TABLE IF NOT EXISTS earnings_calendar (  -- 다음 실적 발표 예정일 (etl/consensus.py, 야후 calendarEvents) — 사실 정보라 게시
   ticker TEXT PRIMARY KEY, next_date TEXT, updated TEXT, last_reported TEXT
 );
+CREATE TABLE IF NOT EXISTS earnings_reports ( -- 분기 실적 발표를 처음 확인한 날 (야후 earningsHistory) — 실적 검증의 '발표 전 고정' 기준, Supabase에 누적
+  ticker TEXT NOT NULL, q_end TEXT NOT NULL, seen TEXT NOT NULL,
+  PRIMARY KEY (ticker, q_end, seen)
+);
 CREATE TABLE IF NOT EXISTS revenue_estimates ( -- 무역 기반 진행 분기 매출 추정 일별 스냅샷 (etl/estimates.py) — Supabase에 누적
   date TEXT NOT NULL, ticker TEXT NOT NULL,
   q_start TEXT, q_end TEXT,                          -- 추정 대상 분기
