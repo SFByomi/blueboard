@@ -1498,6 +1498,50 @@
    "hs": "8486.20",
    "partner": "미국",
    "spec": "{\"reporter\": \"NL\", \"product\": \"848620\", \"partner\": \"US\", \"flow\": \"export\"}"
+  },
+  {
+   "id": "capex_memory3",
+   "label": "메모리 3사 설비투자 합계 (삼성전자·SK하이닉스·마이크론)",
+   "source": "capex",
+   "reporter": "🌐 메모리 3사",
+   "flow": "설비투자",
+   "region": "분기 현금흐름표 (월 환산 = 분기÷3)",
+   "hs": "-",
+   "partner": "-",
+   "spec": "{\"company\": \"memory3\"}"
+  },
+  {
+   "id": "capex_samsung",
+   "label": "삼성전자 설비투자 (회사 전체)",
+   "source": "capex",
+   "reporter": "🇰🇷 삼성전자",
+   "flow": "설비투자",
+   "region": "분기 현금흐름표 (월 환산 = 분기÷3)",
+   "hs": "-",
+   "partner": "-",
+   "spec": "{\"company\": \"005930\"}"
+  },
+  {
+   "id": "capex_skhynix",
+   "label": "SK하이닉스 설비투자",
+   "source": "capex",
+   "reporter": "🇰🇷 SK하이닉스",
+   "flow": "설비투자",
+   "region": "분기 현금흐름표 (월 환산 = 분기÷3)",
+   "hs": "-",
+   "partner": "-",
+   "spec": "{\"company\": \"000660\"}"
+  },
+  {
+   "id": "capex_mu",
+   "label": "마이크론 설비투자",
+   "source": "capex",
+   "reporter": "🇺🇸 마이크론",
+   "flow": "설비투자",
+   "region": "분기 현금흐름표 (월 환산 = 분기÷3)",
+   "hs": "-",
+   "partner": "-",
+   "spec": "{\"company\": \"MU\"}"
   }
  ],
  "mappings": [
@@ -2660,6 +2704,26 @@
    "caveat": "매출과 역상관(−0.37) — 통제 전 선행 구매 영향.",
    "include_in_total": 0,
    "sort": 50
+  },
+  {
+   "ticker": "ASML",
+   "series_id": "capex_memory3",
+   "role": "고객 투자",
+   "confidence": "낮음",
+   "rationale": "메모리 3사 현금 CAPEX(유형자산 취득) — ASML 고객 투자. 2Q26 $24.3B, 전년비 +58.6%. 실측 전년비 상관 0.33(1분기 선행)로 약함: ASML 매출엔 TSMC 등 파운드리·중국 비중이 커서 메모리만으론 설명 부족.",
+   "caveat": "삼성은 회사 전체 CAPEX(디스플레이 등 포함). 원화는 분기 평균 환율로 환산. 업황 참고용.",
+   "include_in_total": 0,
+   "sort": 40
+  },
+  {
+   "ticker": "059090.KQ",
+   "series_id": "capex_memory3",
+   "role": "고객 투자",
+   "confidence": "중간",
+   "rationale": "메모리 3사 CAPEX — 미코 반도체 부문(세라믹 히터·부품) 수요. 실측 전년비 상관 0.52(동행), 금액 상관 0.76.",
+   "caveat": "미코 매출의 약 1/3은 에너지(HRSG) — 이 흐름은 반도체 쪽만 설명. 최근 8분기 상관은 음(−0.56)이라 최근엔 어긋남.",
+   "include_in_total": 0,
+   "sort": 40
   }
  ],
  "hs_tags": [

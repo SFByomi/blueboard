@@ -142,7 +142,11 @@ const noTable = <T,>(e: { code?: string; message?: string }): T[] => {
 };
 /** 종목별 최신 진행 분기 매출 추정 (etl/estimates.py) */
 export const latestEstimates = () =>
-  query<RevEstimate>("SELECT * FROM revenue_estimates WHERE date = (SELECT max(date) FROM revenue_estimates) ORDER BY ticker").catch(noTable<RevEstimate>);
+  query<RevEstimate>("SELECT * FROM revenue_estimates WHERE date = (SELECT max(date) FROM revenue_estimates) AND est IS NOT NULL ORDER BY ticker").catch(noTable<RevEstimate>);
+export type EstSkip = { ticker: string; q_start: string | null; q_end: string | null; caution: string | null };
+/** 최신 날짜에 '추정불가'로 기록된 종목과 이유 (etl/estimates._skip) */
+export const unestimated = () =>
+  query<EstSkip>("SELECT ticker, q_start, q_end, caution FROM revenue_estimates WHERE date = (SELECT max(date) FROM revenue_estimates) AND est IS NULL ORDER BY ticker").catch(noTable<EstSkip>);
 /** 다음 실적 발표 예정일 (야후 calendarEvents) */
 export const earningsDates = () =>
   query<{ ticker: string; next_date: string | null }>("SELECT ticker, next_date FROM earnings_calendar").catch(noTable<{ ticker: string; next_date: string | null }>)
@@ -157,7 +161,7 @@ export const estimateDate = () =>
   query<{ d: string | null }>("SELECT max(date) AS d FROM revenue_estimates").then((r) => r[0]?.d ?? null).catch(() => null);
 /** 한 종목의 날짜별 추정 이력 (추정·컨센 괴리율 추이) */
 export const estimateHistory = (ticker: string) =>
-  query<RevEstimate>("SELECT * FROM revenue_estimates WHERE ticker=? ORDER BY date", [ticker]).catch(noTable<RevEstimate>);
+  query<RevEstimate>("SELECT * FROM revenue_estimates WHERE ticker=? AND est IS NOT NULL ORDER BY date", [ticker]).catch(noTable<RevEstimate>);
 
 export type Consensus = { date: string; ticker: string; period: string; end_date: string | null; avg: number; low: number | null; high: number | null; n: number | null };
 /** 컨센서스 원 금액 — 로컬 SQLite에만 있음(게시 안 함). 관리 화면 전용 */

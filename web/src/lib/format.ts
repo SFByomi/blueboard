@@ -80,7 +80,7 @@ export const estReliable = (e: { mape: number | null; mape_naive: number | null;
 /** 등급: 신뢰(신뢰도 70%↑·경고 없음) / 보통(50%↑) / 참고 — ETL estimates.tier */
 export const estTier = (e: { tier?: string | null; mape: number | null; mape_naive: number | null; flows: string; reliable?: number | null }) =>
   e.tier ?? (estReliable(e) ? "신뢰" : "참고");
-export const TIER_STYLE: Record<string, string> = { 신뢰: "bg-up/20 text-up", 보통: "bg-amber-950 text-amber-300", 참고: "bg-panel2 text-muted", 발표됨: "bg-panel2 text-muted" };
+export const TIER_STYLE: Record<string, string> = { 신뢰: "bg-up/20 text-up", 보통: "bg-amber-950 text-amber-300", 참고: "bg-panel2 text-muted", 발표됨: "bg-panel2 text-muted", 추세: "bg-sky-950 text-sky-300", 추정불가: "bg-panel2 text-muted" };
 /** 신뢰도 설명 (툴팁) */
 export const confNote = (e: { conf?: number | null; hits?: number | null; bt_n: number; mape: number | null }) =>
   e.conf == null ? "" : `최근 ${e.bt_n}분기 백테스트 중 ${e.hits}분기에서 실제 매출이 추정 ±5% 안 (표본 보정 ${(e.conf * 100).toFixed(0)}%) · 평균 오차 ${e.mape == null ? "-" : (e.mape * 100).toFixed(1)}%`;
@@ -108,6 +108,7 @@ export function dday(d: string | null | undefined, today = new Date()): number |
 
 /** 추정 모델 이름 (etl/estimates.py method: yoy | level | +bias | ens(a,b)) */
 export function methodLabel(m: string): string {
+  if (m === "trend") return "단순 추세 (직전 분기 전년비 유지)";
   const one = (x: string) => (x.startsWith("level") ? "금액 회귀" : "전년비 회귀") + (x.endsWith("+bias") ? "+편향 보정" : "");
   const ens = m.match(/^ens\((.+),(.+)\)$/);
   return ens ? `앙상블 (${one(ens[1])} · ${one(ens[2])})` : one(m);

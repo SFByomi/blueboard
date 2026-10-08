@@ -1,5 +1,6 @@
 """SEC EDGAR companyfacts에서 분기 매출 실측치 추출 (검증용)."""
 import json
+import re
 from pathlib import Path
 
 import pandas as pd
@@ -38,6 +39,8 @@ def quarterly_revenue(ticker: str, refresh=False) -> pd.DataFrame:
         for u in facts.get(tag, {}).get("units", {}).get("USD", []):
             if "start" in u:
                 rows.append({"start": u["start"], "end": u["end"], "val": u["val"], "filed": u["filed"]})
+    latest = max((r["filed"] for r in rows), default="")
+    rows += _unindexed(ticker, latest)  # companyfacts가 아직 반영 안 한 최근 10-Q·10-K (예: BE 2026-07 10-Q)
     df = pd.DataFrame(rows)
     df["start"], df["end"] = pd.to_datetime(df["start"]), pd.to_datetime(df["end"])
     df["days"] = (df["end"] - df["start"]).dt.days
@@ -53,3 +56,49 @@ def quarterly_revenue(ticker: str, refresh=False) -> pd.DataFrame:
                             "val": a["val"] - inside["val"].sum()})
     q = pd.concat([q, pd.DataFrame(derived)]).drop_duplicates("end").sort_values("end")
     return q.rename(columns={"val": "revenue"}).reset_index(drop=True)
+
+
+def _instance_revenue(cik_: int, acc: str) -> list[dict]:
+    """공시 XBRL 인스턴스(*_htm.xml)에서 차원(segment) 없는 매출 사실만 → [{start, end, val}]. 결과는 캐시(지난 공시는 안 바뀜)"""
+    path = CACHE / "filings" / f"{acc}.json"
+    if path.exists():
+        return json.loads(path.read_text())
+    base = f"https://www.sec.gov/Archives/edgar/data/{cik_}/{acc.replace('-', '')}"
+    items = requests.get(f"{base}/index.json", headers=UA, timeout=60).json()["directory"]["item"]
+    inst = next((i["name"] for i in items if i["name"].endswith("_htm.xml")), None)
+    out = []
+    if inst:
+        x = requests.get(f"{base}/{inst}", headers=UA, timeout=120).text
+        ctx = {}
+        for m in re.finditer(r"<(?:xbrli:)?context id=\"([^\"]+)\">(.*?)</(?:xbrli:)?context>", x, re.S):
+            if "segment" in m.group(2):
+                continue
+            sd, ed = re.search(r"startDate>([\d-]+)<", m.group(2)), re.search(r"endDate>([\d-]+)<", m.group(2))
+            if sd and ed:
+                ctx[m.group(1)] = (sd.group(1), ed.group(1))
+        for tag in REV_TAGS:
+            for m in re.finditer(rf"<us-gaap:{tag} [^>]*contextRef=\"([^\"]+)\"[^>]*>([\d.-]+)<", x):
+                if m.group(1) in ctx:
+                    out.append({"start": ctx[m.group(1)][0], "end": ctx[m.group(1)][1], "val": float(m.group(2)), "tag": tag})
+    path.parent.mkdir(parents=True, exist_ok=True)
+    path.write_text(json.dumps(out))
+    return out
+
+
+def _unindexed(ticker: str, after: str) -> list[dict]:
+    """companyfacts의 마지막 공시일 이후 제출된 10-Q·10-K(정정 포함)를 직접 읽음. 태그 우선순위는 REV_TAGS 순"""
+    c = cik(ticker)
+    try:
+        sub = requests.get(f"https://data.sec.gov/submissions/CIK{c}.json", headers=UA, timeout=60).json()["filings"]["recent"]
+    except Exception:
+        return []
+    rows = []
+    for form, filed, acc in zip(sub["form"], sub["filingDate"], sub["accessionNumber"]):
+        if form.split("/")[0] in ("10-Q", "10-K") and filed > after:
+            facts = _instance_revenue(int(c), acc)
+            for tag in REV_TAGS:  # companyfacts와 같게 첫 태그 우선
+                hit = [f for f in facts if f["tag"] == tag]
+                if hit:
+                    rows += [{"start": f["start"], "end": f["end"], "val": f["val"], "filed": filed} for f in hit]
+                    break
+    return rows

@@ -1,5 +1,6 @@
 import { T } from "@/components/Names";
 import { POWER_IDS, PowerSection } from "@/components/PowerSection";
+import { CAPEX_IDS, SemiSection } from "@/components/SemiSection";
 import { CountBars, PriceChart } from "@/components/ComputeCharts";
 import Link from "next/link";
 import { pct, tone } from "@/lib/format";
@@ -29,7 +30,7 @@ const series = (rows: PriceRow[], item: string, stat: string): [string, number][
 
 export default async function Prices() {
   const [rows, defs, rw, fs] = await Promise.all([priceSnapshots(), indicators(), observations(["sec_ransomware"]).catch(() => []), flowScores()]);
-  const power = await observations(POWER_IDS).catch(() => []);
+  const [power, capex] = await Promise.all([observations(POWER_IDS).catch(() => []), observations(CAPEX_IDS).catch(() => [])]);
   const sec = fs.filter((r) => r.series_id === "sec_ransomware").sort((a, b) => (b.best ?? -9) - (a.best ?? -9));
   const SEC_KO: Record<string, string> = { PANW: "팔로알토", CRWD: "크라우드스트라이크", RBRK: "루브릭", S: "센티넬원", ZS: "지스케일러", FTNT: "포티넷", OKTA: "옥타", NET: "클라우드플레어" };
   const idx = rows.filter((r) => r.kind === "index");
@@ -151,6 +152,8 @@ export default async function Prices() {
       </section>
 
       <PowerSection obs={power} />
+
+      <SemiSection obs={capex} />
 
       {rw.length > 0 && (
         <section className="space-y-3">
