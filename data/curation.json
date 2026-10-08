@@ -434,6 +434,21 @@
    "sort": 390,
    "thesis": "전선·케이블 + 변압기. 한국 전선·케이블 수출이 매출 전년비와 0.52(B), 최근 8분기 0.69로 연동. 홍성 변압기 공장 증설로 변압기 비중 확대 중.",
    "sites": "[{\"name\": \"안산 공장\", \"country\": \"한국 경기\", \"what\": \"전선·초고압 케이블\"}, {\"name\": \"홍성 공장\", \"country\": \"한국 충남\", \"what\": \"변압기\"}]"
+  },
+  {
+   "ticker": "059090.KQ",
+   "name": "MIKO",
+   "name_ko": "미코",
+   "market": "KOSDAQ",
+   "sector": "반도체 부품·발전설비(HRSG)",
+   "thesis": "반도체 부품(코미코 세정·코팅, 미코세라믹스 세라믹 히터) 약 66% + 에너지·인프라 약 34%(미코파워 SOFC, 현대중공업파워시스템·네덜란드 NEM의 HRSG). 가스 복합화력용 HRSG가 데이터센터 전력 투자의 후행 수혜 — 미국 계획 중 가스 복합화력 용량과 매출 전년비 0.90(A)이지만 HPS·NEM 인수로 매출이 불어난 시기와 겹쳐 과대평가 가능, 인수 없는 순수 HRSG 업체 비에이치아이도 0.72(A, 최근 8분기 0.77)라 연동 자체는 확인. 모니터링: NEM·HPS 수주잔고, 펄스 히터 국산화 매출, CB/BW 희석, HPS 평택 2공장 마진.",
+   "sec_ticker": null,
+   "fy_note": "FY 12월 · 2025년부터 HPS·NEM 연결로 매출 급증(전년비 왜곡)",
+   "sort": 400,
+   "dart_fs": "CFS",
+   "dart_segment": null,
+   "grp": "전력·냉각",
+   "sites": "[{\"name\": \"안성 사업장\", \"country\": \"한국 경기\", \"what\": \"반도체 부품 세정·코팅·세라믹 히터\"}, {\"name\": \"현대중공업파워시스템\", \"country\": \"한국 경기 평택\", \"what\": \"HRSG(배열회수보일러)\"}, {\"name\": \"NEM Energy\", \"country\": \"네덜란드\", \"what\": \"HRSG 설계·수주\"}, {\"name\": \"미코파워\", \"country\": \"한국\", \"what\": \"SOFC 연료전지\"}]"
   }
  ],
  "series": [
@@ -1305,6 +1320,39 @@
    "hs": "-",
    "partner": "미국",
    "spec": "{\"state\": \"US\", \"sector\": \"COM\"}"
+  },
+  {
+   "id": "us_plan_gas_cc",
+   "label": "미국 계획 중 가스 복합화력(HRSG 수요) 용량",
+   "source": "eia_planned",
+   "reporter": "🇺🇸 미국",
+   "flow": "발전 계획",
+   "region": "전국",
+   "hs": "-",
+   "partner": "미국",
+   "spec": "{\"metric\": \"gas_cc\"}"
+  },
+  {
+   "id": "kr_exp_semiparts",
+   "label": "한국 반도체 장비 부품 수출",
+   "source": "kcs",
+   "reporter": "🇰🇷 한국",
+   "flow": "수출",
+   "region": "전국",
+   "hs": "8486.90",
+   "partner": "전세계",
+   "spec": "{\"api\": \"item\", \"hs\": \"848690\", \"flow\": \"export\"}"
+  },
+  {
+   "id": "kr_sgg_anseong_semiparts",
+   "label": "경기 안성시 반도체 장비 부품 수출",
+   "source": "kcs",
+   "reporter": "🇰🇷 한국",
+   "flow": "수출",
+   "region": "경기 안성시",
+   "hs": "8486.90",
+   "partner": "전세계",
+   "spec": "{\"api\": \"sigungu\", \"hs\": \"848690\", \"flow\": \"export\", \"sido\": \"41\", \"sgg\": \"\\uacbd\\uae30\\ub3c4 \\uc548\\uc131\\uc2dc\"}"
   }
  ],
  "mappings": [
@@ -2327,6 +2375,46 @@
    "caveat": "업계 전체, 회사 몫 아님.",
    "include_in_total": 0,
    "sort": 95
+  },
+  {
+   "ticker": "059090.KQ",
+   "series_id": "us_plan_gas_cc",
+   "role": "최종수요",
+   "confidence": "중간",
+   "rationale": "미국 계획 중 가스 복합화력 용량 — 복합화력 1기마다 HRSG가 들어감. 매출 전년비 0.90(A)·최근 8분기 0.67, 비교군 비에이치아이 0.72(A)·최근 8분기 0.77.",
+   "caveat": "HPS·NEM 인수로 2025년 매출이 급증한 시기와 겹쳐 미코 쪽 상관은 과대평가 가능. 업계 수요 지표(회사 수주 아님).",
+   "include_in_total": 0,
+   "sort": 10
+  },
+  {
+   "ticker": "059090.KQ",
+   "series_id": "us_plan_gas",
+   "role": "최종수요",
+   "confidence": "낮음",
+   "rationale": "미국 가스발전 계획 전체(복합+단순) — 매출 전년비 0.91(A). 데이터센터 전력 부족을 가스로 메우는 흐름.",
+   "caveat": "단순 사이클(가스터빈만)은 HRSG가 필요 없어 복합화력 쪽이 더 직접적. 인수로 인한 매출 급증 시기와 겹쳐 과대평가 가능.",
+   "include_in_total": 0,
+   "sort": 20
+  },
+  {
+   "ticker": "059090.KQ",
+   "series_id": "kr_exp_semiparts",
+   "role": "생산출하",
+   "confidence": "낮음",
+   "rationale": "반도체 장비 부품 수출 — 매출 전년비 0.58(B, 1분기 선행).",
+   "caveat": "업계 합산, 최근 8분기 역상관(−0.22) — 반도체 부품 매출은 대부분 국내 팹 세정·코팅 서비스라 수출로는 일부만 잡힘.",
+   "include_in_total": 0,
+   "sort": 30
+  },
+  {
+   "ticker": "059090.KQ",
+   "series_id": "kr_sgg_anseong_semiparts",
+   "role": "생산출하",
+   "confidence": "낮음",
+   "rationale": "안성(본사·자회사 사업장) 반도체 장비 부품 수출 — 매출 전년비 0.51(B, 2분기 선행).",
+   "caveat": "안성 소재 다른 장비 부품사 혼재, 최근 8분기 역상관(−0.36).",
+   "include_in_total": 0,
+   "sort": 40
   }
  ],
  "hs_tags": [
@@ -2554,6 +2642,21 @@
    "hs_prefix": "854460",
    "ticker": "103590.KS",
    "note": "고압 케이블"
+  },
+  {
+   "hs_prefix": "840219",
+   "ticker": "059090.KQ",
+   "note": "HRSG(보일러)"
+  },
+  {
+   "hs_prefix": "840290",
+   "ticker": "059090.KQ",
+   "note": "보일러 부품"
+  },
+  {
+   "hs_prefix": "848690",
+   "ticker": "059090.KQ",
+   "note": "반도체 장비 부품"
   }
  ]
 }
