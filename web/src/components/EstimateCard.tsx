@@ -1,6 +1,6 @@
 import { T } from "@/components/Names";
 import { PriceChart } from "@/components/ComputeCharts";
-import { confNote, dday, estCaution, estExtrap, estRange, estReported, estTier, methodLabel, money, pct, TIER_STYLE, tone, watchFlag } from "@/lib/format";
+import { confNote, dday, estGuide, estCaution, estExtrap, estRange, estReported, estTier, methodLabel, money, pct, TIER_STYLE, tone, watchFlag } from "@/lib/format";
 import type { EstSkip, RevEstimate } from "@/lib/queries";
 
 type Bt = { q_end: string; actual: number; pred: number; naive: number | null };
@@ -17,6 +17,7 @@ export function EstimateCard({ hist, labels, nextEarn, lastReported, skip }: { h
     </div>
   ) : null;
   const trend = e.method === "trend";
+  const guide = estGuide(e), byGuide = e.method.includes("guide");
   const bt: Bt[] = JSON.parse(e.backtest);
   const flows: Flow[] = JSON.parse(e.flows);
   const rep = estReported(e, lastReported);
@@ -42,7 +43,7 @@ export function EstimateCard({ hist, labels, nextEarn, lastReported, skip }: { h
       {e.conf != null && !rep && <div className="text-xs text-muted">신뢰도 {(e.conf * 100).toFixed(0)}% — 최근 {e.bt_n}분기 백테스트 중 {e.hits}분기에서 실제 매출이 추정 ±5% 안에 들어옴 (표본이 적으면 보수적으로 깎음)</div>}
       {!rep && !ok && why.length > 0 && <div className="rounded bg-panel2 px-3 py-2 text-xs text-muted">{tr === "보통" ? "신뢰가 아닌" : tr === "추세" ? "단순 추세로 추정한" : "참고인"} 이유: {why.join(" · ")}</div>}
       <div className="grid gap-3 sm:grid-cols-3">
-        <div><div className="text-xs text-muted">{trend ? "단순 추세 추정 (무역 근거 없음)" : "무역 기반 추정"}</div><div className="text-2xl font-bold">{money(e.est, cur)}</div>
+        <div><div className="text-xs text-muted">{trend ? "단순 추세 추정 (무역 근거 없음)" : byGuide ? (e.method === "guide" ? "가이던스 기반 추정" : "가이던스·무역 결합 추정") : "무역 기반 추정"}</div><div className="text-2xl font-bold">{money(e.est, cur)}</div>
           <div className="text-xs text-muted">오차범위 ±{money(e.high - e.est, cur)}{range != null ? ` (±${(range * 100).toFixed(0)}%)` : ""} · 직전 분기 대비 <span className={tone(e.est / e.last_actual - 1)}>{pct(e.est / e.last_actual - 1)}</span></div></div>
         <div><div className="text-xs text-muted">컨센서스 대비</div>
           <div className={`text-2xl font-bold ${e.cons_gap == null ? "text-muted" : tone(e.cons_gap)}`}>{e.cons_gap == null ? "-" : pct(e.cons_gap)}</div>
@@ -54,6 +55,12 @@ export function EstimateCard({ hist, labels, nextEarn, lastReported, skip }: { h
           )}</div>
         <div><div className="text-xs text-muted">모델</div><div className="text-sm">{methodLabel(e.method)}</div>
           <div className="text-xs text-muted">단순 추세(직전 성장률 유지) 오차 {e.mape_naive == null ? "-" : pct(e.mape_naive, 1).replace("+", "")}</div>
+          {guide && (
+            <div className="mt-1 text-xs text-muted">
+              회사 {guide.prelim ? "잠정 실적" : "가이던스"} {money(guide.low, cur)}{guide.high !== guide.low ? ` ~ ${money(guide.high, cur)}` : ""} ({guide.filed} 발표)
+              {!guide.prelim && <> · 과거 실적은 가이던스 중간값보다 보통 <span className={tone(guide.beat)}>{pct(guide.beat)}</span>{byGuide ? " — 그만큼 반영" : " (이 종목은 무역 모델이 더 정확해 참고만)"}</>}
+            </div>
+          )}
           {estExtrap(e) && <div className="mt-1 text-xs text-down">입력 무역값이 과거 범위를 크게 벗어남 — 외삽이라 &lsquo;참고&rsquo;</div>}</div>
       </div>
 
@@ -87,7 +94,7 @@ export function EstimateCard({ hist, labels, nextEarn, lastReported, skip }: { h
         </div>
         <div className="min-w-0">
           <div className="mb-1 text-xs text-muted">사용한 흐름 (매출 연관도 A·B, 예측력이 확인된 C)</div>
-          {flows.length === 0 && <div className="text-sm text-muted">없음 — 매출 이력만으로 추정 (직전 분기 전년비 유지)</div>}
+          {flows.length === 0 && <div className="text-sm text-muted">{byGuide ? "없음 — 회사 가이던스와 과거 초과율로 추정 (무역 모델보다 백테스트가 정확)" : "없음 — 매출 이력만으로 추정 (직전 분기 전년비 유지)"}</div>}
           <ul className="space-y-1 text-sm">
             {flows.map((f) => (
               <li key={f.sid} className="flex justify-between gap-2">

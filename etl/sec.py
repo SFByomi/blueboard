@@ -38,16 +38,22 @@ def quarterly_revenue(ticker: str, refresh=False) -> pd.DataFrame:
     for tag in REV_TAGS:
         for u in facts.get(tag, {}).get("units", {}).get("USD", []):
             if "start" in u:
-                rows.append({"start": u["start"], "end": u["end"], "val": u["val"], "filed": u["filed"]})
+                rows.append({"start": u["start"], "end": u["end"], "val": u["val"], "filed": u["filed"], "tag": tag})
     latest = max((r["filed"] for r in rows), default="")
     rows += _unindexed(ticker, latest)  # companyfacts가 아직 반영 안 한 최근 10-Q·10-K (예: BE 2026-07 10-Q)
     df = pd.DataFrame(rows)
     df["start"], df["end"] = pd.to_datetime(df["start"]), pd.to_datetime(df["end"])
     df["days"] = (df["end"] - df["start"]).dt.days
-    df = df.sort_values("filed").drop_duplicates(["start", "end"], keep="last")  # 최신 정정치 우선
+    df["tag"] = df["tag"].fillna("direct")
+    df = df.sort_values("filed").drop_duplicates(["start", "end", "tag"], keep="last")  # 태그별 최신 정정치
+    # 회사가 여러 태그로 매출을 보고하면 값이 엇갈림(BE는 Revenues가 총매출, NetApp은 일부 분기에 제품 매출만 다른 시작일로)
+    # → 사실이 가장 많은 태그를 기본으로, 같은 분기 말이면 기본 태그 안에서 큰 값(총액), 없을 때만 다른 태그
+    primary = df[df.tag != "direct"].tag.value_counts().idxmax() if (df.tag != "direct").any() else "direct"
+    df["prio"] = (~df.tag.isin([primary, "direct"])).astype(int)
+    df = df.sort_values(["prio", "val"], ascending=[True, False])
 
-    q = df[df["days"].between(80, 100)][["start", "end", "val"]]
-    annual = df[df["days"].between(350, 380)]
+    q = df[df["days"].between(80, 100)].drop_duplicates("end")[["start", "end", "val"]]
+    annual = df[df["days"].between(350, 380)].drop_duplicates("end")
     derived = []
     for _, a in annual.iterrows():  # 연간에만 있는 4분기 복원
         inside = q[(q["start"] >= a["start"]) & (q["end"] <= a["end"])]
@@ -99,6 +105,6 @@ def _unindexed(ticker: str, after: str) -> list[dict]:
             for tag in REV_TAGS:  # companyfacts와 같게 첫 태그 우선
                 hit = [f for f in facts if f["tag"] == tag]
                 if hit:
-                    rows += [{"start": f["start"], "end": f["end"], "val": f["val"], "filed": filed} for f in hit]
+                    rows += [{"start": f["start"], "end": f["end"], "val": f["val"], "filed": filed, "tag": tag} for f in hit]
                     break
     return rows

@@ -110,7 +110,8 @@ MIGRATIONS = [
     ("earnings_calendar", "last_reported TEXT"),
     ("revenue_estimates", "conf REAL"),               # 신뢰도: 백테스트 적중(±5%) 비율, 표본 보정
     ("revenue_estimates", "hits INTEGER"),            # 백테스트 적중 분기 수
-    ("revenue_estimates", "tier TEXT"),               # 신뢰 / 보통 / 참고      # 실적 발표가 끝난 마지막 분기 말일 (야후 earningsHistory)
+    ("revenue_estimates", "tier TEXT"),
+    ("revenue_estimates", "guide TEXT"),              # 진행 분기 회사 가이던스 JSON {low, high, filed, beat, prelim} (etl/guidance.py)               # 신뢰 / 보통 / 참고      # 실적 발표가 끝난 마지막 분기 말일 (야후 earningsHistory)
 ]
 
 
