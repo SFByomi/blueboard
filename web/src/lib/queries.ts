@@ -135,6 +135,7 @@ export type RevEstimate = {
   cons_gap: number | null; cons_end: string | null; currency: string; method: string;
   reliable?: number | null; caution?: string | null; // ETL 판정 (구버전 행엔 없음)
   conf?: number | null; hits?: number | null; tier?: string | null; // 신뢰도(백테스트 ±5% 적중률, 표본 보정)·적중 분기·등급
+  guide?: string | null; // 진행 분기 회사 가이던스 JSON {low, high, filed, beat, prelim}
 };
 const noTable = <T,>(e: { code?: string; message?: string }): T[] => {
   if (e.code === "42P01" || e.message?.includes("no such table")) return [];

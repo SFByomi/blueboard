@@ -84,6 +84,8 @@ export const TIER_STYLE: Record<string, string> = { 신뢰: "bg-up/20 text-up", 
 /** 신뢰도 설명 (툴팁) */
 export const confNote = (e: { conf?: number | null; hits?: number | null; bt_n: number; mape: number | null }) =>
   e.conf == null ? "" : `최근 ${e.bt_n}분기 백테스트 중 ${e.hits}분기에서 실제 매출이 추정 ±5% 안 (표본 보정 ${(e.conf * 100).toFixed(0)}%) · 평균 오차 ${e.mape == null ? "-" : (e.mape * 100).toFixed(1)}%`;
+export type Guide = { low: number; high: number; filed: string; beat: number; prelim?: boolean };
+export const estGuide = (e: { guide?: string | null }): Guide | null => (e.guide ? JSON.parse(e.guide) : null);
 /** '참고'인 이유 (ETL estimates.reliability) */
 export const estCaution = (e: { caution?: string | null }): string[] => (e.caution ? JSON.parse(e.caution) : []);
 /** 추정 오차범위 (±, 추정 대비 비율) */
@@ -109,8 +111,14 @@ export function dday(d: string | null | undefined, today = new Date()): number |
 /** 추정 모델 이름 (etl/estimates.py method: yoy | level | +bias | ens(a,b)) */
 export function methodLabel(m: string): string {
   if (m === "trend") return "단순 추세 (직전 분기 전년비 유지)";
-  const one = (x: string) => (x.startsWith("level") ? "금액 회귀" : "전년비 회귀") + (x.endsWith("+bias") ? "+편향 보정" : "");
-  const ens = m.match(/^ens\((.+),(.+)\)$/);
+  if (m === "guide") return "회사 가이던스 × 과거 초과율";
+  const one = (x: string): string => {
+    if (x === "guide") return "가이던스";
+    const e = x.match(/^ens\((.+),(.+)\)$/);
+    if (e) return `${one(e[1])}·${one(e[2])} 평균`;
+    return (x.startsWith("level") ? "금액 회귀" : "전년비 회귀") + (x.endsWith("+bias") ? "+편향 보정" : "");
+  };
+  const ens = m.match(/^ens\(([^,()]+(?:\([^)]*\))?),(.+)\)$/);
   return ens ? `앙상블 (${one(ens[1])} · ${one(ens[2])})` : one(m);
 }
 

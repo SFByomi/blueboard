@@ -34,7 +34,8 @@ export default async function Track() {
   // 현재 추정 모델의 백테스트(그 분기 이전 데이터로만 예측) 합계 — 실시간 검증이 쌓이기 전의 기준
   type Bt = { actual: number; pred: number; naive: number | null };
   const groups = [
-    { name: "무역 모델 (신뢰·보통·참고)", rows: ests.filter((e) => e.method !== "trend") },
+    { name: "회사 가이던스 반영 (단독·무역 결합)", rows: ests.filter((e) => e.method.includes("guide")) },
+    { name: "무역 모델", rows: ests.filter((e) => e.method !== "trend" && !e.method.includes("guide")) },
     { name: "단순 추세 (추세)", rows: ests.filter((e) => e.method === "trend") },
   ].map((g) => {
     const bt = g.rows.flatMap((e) => JSON.parse(e.backtest) as Bt[]);

@@ -26,6 +26,7 @@ from datetime import date
 
 import pandas as pd
 
+from etl import guidance
 from etl.scores import fin_frame, monthly
 
 MIN_PAIRS = 8   # 회귀 최소 분기 수
@@ -44,6 +45,7 @@ TIER_OK, TIER_MID = 0.7, 0.5  # 신뢰도 기준 (신뢰 / 보통)
 SHORT_PAIRS, SHORT_BT = 6, 4  # 매출 이력이 짧은 종목용 완화 기준 (결과는 '참고'로만)
 TREND_SWITCH = 0.01  # 무역 모델 백테스트 오차가 단순 추세보다 1%p 넘게 크면 단순 추세를 대표 추정으로
 TREND_MAX = 0.30     # 단순 추세 오차가 30%를 넘으면(매출이 들쭉날쭉) 추정불가
+CONS_FAR = 0.25      # 가이던스 없는 추정이 컨센서스와 25% 넘게 다르면 '참고' + 경고
 
 
 def target_quarter(last_end: pd.Timestamp) -> tuple[pd.Timestamp, pd.Timestamp]:
@@ -288,11 +290,20 @@ def estimate_all(con, log=print) -> int:
     for t, sid, lag, grade in sel:  # A·B는 전부, C는 단독 예측이 단순 추세보다 나을 때만 후보 → 아래에서 예측 오차로 고름
         by.setdefault(t, []).append((sid, int(lag or 0), grade))
     n = 0
-    tickers = [r[0] for r in con.execute("SELECT ticker FROM companies ORDER BY ticker")]
-    for ticker in tickers:  # 모든 종목에 한 줄씩: 무역 모델 → 안 되면 단순 추세 → 그것도 안 되면 '추정불가'(이유)
+    store = json.loads(guidance.STORE.read_text()) if guidance.STORE.exists() else {}
+    tickers = con.execute("SELECT ticker, sec_ticker FROM companies ORDER BY ticker").fetchall()
+    for ticker, sec in tickers:  # 모든 종목에 한 줄씩: 가이던스·무역 모델 → 안 되면 단순 추세 → 그것도 안 되면 '추정불가'(이유)
         picks = by.get(ticker, [])
+        allfin = fin_frame(con, ticker, since="2000-01-01")
+        ends = [e.strftime("%Y-%m-%d") for e in allfin.end]
+        guides = guidance.resolve(store, sec, ends, {e: float(v) for e, v in zip(ends, allfin.revenue)}) if sec else []
         fin = fin_frame(con, ticker)
-        r = _estimate(con, ticker, picks, fin, today, log)
+        if sec and not fin.empty:  # 분기 가이던스가 없는 분기는 연간 가이던스에서 환산
+            have = {g["target_end"][:7] for g in guides}
+            t_end = target_quarter(fin.end.iloc[-1])[1]
+            guides += [g for g in guidance.implied(store, sec, ends, list(allfin.revenue), t_end)
+                       if not any(abs((pd.Timestamp(g["target_end"]) - pd.Timestamp(h + "-15")).days) < 25 for h in have)]
+        r = _estimate(con, ticker, picks, fin, today, log, guides)
         n += r is not None
     return n
 
@@ -341,6 +352,46 @@ def trend_model(fin: pd.DataFrame):
     return est, bt
 
 
+GUIDE_N = 8      # 초과율 중앙값에 쓰는 직전 가이던스 분기 수
+GUIDE_MIN = 2    # 초과율 계산에 필요한 최소 분기
+GUIDE_BT = 3     # 가이던스 모델 채택에 필요한 최소 백테스트 분기 (3~5분기면 '백테스트 N분기뿐'으로 신뢰 불가)
+GUIDE_DAYS = 20  # 가이던스 대상 분기 말과 실제 분기 말 허용 차이(회계 주 단위 차이)
+
+
+def _guide_at(guides: list[dict], end: pd.Timestamp, live: bool) -> dict | None:
+    """분기 말 end에 해당하는 가이던스. 백테스트(live=False)에선 잠정 실적 발표(실적과 사실상 같음)는 제외"""
+    for g in guides:
+        if abs((pd.Timestamp(g["target_end"]) - end).days) <= GUIDE_DAYS and (live or not g.get("prelim")):
+            return g
+    return None
+
+
+def guide_model(fin: pd.DataFrame, guides: list[dict], t_end: pd.Timestamp):
+    """회사 가이던스 × (1 + 과거 초과율 중앙값). 초과율 = 실적/가이던스 중간값 − 1, 그 분기 이전 것만 사용.
+    반환 (진행 분기 추정|None, 백테스트, 진행 분기 가이던스|None, 적용 초과율)"""
+    beats = []  # (k, 초과율)
+    for k in range(len(fin)):
+        g = _guide_at(guides, fin.end.iloc[k], live=False)
+        if g:
+            beats.append((k, fin.revenue.iloc[k] / ((g["low"] + g["high"]) / 2) - 1))
+    bt = []
+    for k in range(max(5, len(fin) - BACKTEST), len(fin)):
+        g = _guide_at(guides, fin.end.iloc[k], live=False)
+        prior = [b for j, b in beats if j < k][-GUIDE_N:]
+        if not g or len(prior) < GUIDE_MIN:
+            continue
+        rev = fin.revenue
+        bt.append({"q_end": fin.end.iloc[k].strftime("%Y-%m-%d"), "actual": float(rev.iloc[k]),
+                   "pred": float((g["low"] + g["high"]) / 2 * (1 + float(pd.Series(prior).median()))),
+                   "naive": float(rev.iloc[k - 4] * rev.iloc[k - 1] / rev.iloc[k - 5]) if rev.iloc[k - 5] > 0 else None})
+    g = _guide_at(guides, t_end, live=True)
+    prior = [b for _, b in beats][-GUIDE_N:]
+    if not g:
+        return None, bt, None, None
+    beat = 0.0 if g.get("prelim") else float(pd.Series(prior).median()) if len(prior) >= GUIDE_MIN else 0.0
+    return (g["low"] + g["high"]) / 2 * (1 + beat), bt, g, beat
+
+
 def _skip(con, ticker, today, t_start, t_end, cur, why, log):
     """추정불가 행 — 웹이 모든 종목을 같은 표에 '추정불가 (이유)'로 보여줌"""
     con.execute("INSERT INTO revenue_estimates (date, ticker, q_start, q_end, flows, bt_n, backtest, currency, method, reliable, caution, tier) "
@@ -349,7 +400,7 @@ def _skip(con, ticker, today, t_start, t_end, cur, why, log):
     log(f"  - {ticker}: 추정불가 — {' · '.join(why)}")
 
 
-def _estimate(con, ticker, picks, fin, today, log):
+def _estimate(con, ticker, picks, fin, today, log, guides=None):
     sec, cur = con.execute("SELECT sec_ticker, (SELECT currency FROM financials WHERE ticker=? ORDER BY period_end DESC LIMIT 1) FROM companies WHERE ticker=?",
                            (ticker, ticker)).fetchone()
     if fin.empty:
@@ -361,6 +412,20 @@ def _estimate(con, ticker, picks, fin, today, log):
     short = False
     if not best and picks and len(fin) < 4 + MIN_PAIRS + MIN_BT and len(fin) >= 4 + SHORT_PAIRS + SHORT_BT:
         best, short = _short_history(con, picks, fin, t_start, t_end), True
+    # 회사 가이던스: 단독 · 무역 모델과 평균 — 백테스트 오차가 가장 작은 쪽 (가이던스가 있는 종목만)
+    g_est, g_bt, g_live, g_beat = guide_model(fin, guides or [], t_end) if guides else (None, [], None, None)
+    guide_info = None
+    if g_est is not None and len(g_bt) >= GUIDE_BT:
+        guide_info = {"low": g_live["low"], "high": g_live["high"], "filed": g_live["filed"], "beat": round(g_beat, 4), "prelim": g_live.get("prelim", False),
+                      **({"annual": g_live["annual"]} if g_live.get("annual") else {})}
+        cands = [(mape(g_bt, "pred"), "guide", {"rev": g_est, "se": 0, "flows": []}, g_bt)]
+        if best and not short:
+            tq = {r["q_end"]: r["pred"] for r in best[3]}
+            ebt = [{**r, "pred": (r["pred"] + tq[r["q_end"]]) / 2} for r in g_bt if r["q_end"] in tq]
+            if len(ebt) >= GUIDE_BT:
+                cands.append((mape(ebt, "pred"), f"ens(guide,{best[1]})", {**best[2], "rev": (g_est + best[2]["rev"]) / 2}, ebt))
+            cands.append(best)
+        best, short = min(cands, key=lambda c: c[0]), False
     worse = best and best[0] is not None and (mape(best[3], "naive") or 9) + TREND_SWITCH < best[0]
     if not best or worse:  # 무역 모델 없음·단순 추세보다 확실히 부정확 → 단순 추세 기준선
         tm = trend_model(fin)
@@ -385,19 +450,30 @@ def _estimate(con, ticker, picks, fin, today, log):
     cons = match_consensus(con, sec, t_end)
     naive = mape(bt, "naive")
     conf, band, hits = confidence(bt)
-    caution = trend_why or reliability(con, conf, naive, err, len(bt), p["flows"])
+    if trend_why:
+        caution = trend_why
+    elif not p["flows"]:  # 가이던스 단독
+        caution = ([f"백테스트 {len(bt)}분기뿐"] if len(bt) < MIN_BT else []) + \
+                  ([f"신뢰도 {0 if conf is None else conf:.0%} (70% 미만)"] if conf is None or conf < TIER_OK else []) + \
+                  (["단순 추세보다 정확하지 않음"] if naive is not None and err >= naive else [])
+    else:
+        caution = reliability(con, conf, naive, err, len(bt), p["flows"])
     if short:
         caution = [f"매출 이력 {len(fin)}분기뿐 — 회귀 {SHORT_PAIRS}분기·백테스트 {SHORT_BT}분기로 완화", *caution]
     grade = "추세" if trend_why else "참고" if short else tier(conf, caution)
+    gap_c = (est / cons[1] - 1) if cons else None
+    if gap_c is not None and abs(gap_c) > CONS_FAR and "guide" not in method:  # 회사 가이던스 없이 컨센과 크게 다르면 외삽일 가능성
+        caution = [*caution, f"컨센서스와 {gap_c:+.0%} 차이 — 회사 가이던스 없이 모델만으로 낸 값이라 외삽 가능성"]
+        grade = "참고" if grade in ("신뢰", "보통") else grade
     band = band if band is not None else p["se"] / est
     cols = ("date, ticker, q_start, q_end, est, low, high, yoy, last_actual, months, flows, mape, mape_naive, bt_n, backtest, "
-            "cons_gap, cons_end, currency, method, reliable, caution, conf, hits, tier")
-    con.execute(f"INSERT INTO revenue_estimates ({cols}) VALUES ({','.join('?' * 24)})", (
+            "cons_gap, cons_end, currency, method, reliable, caution, conf, hits, tier, guide")
+    con.execute(f"INSERT INTO revenue_estimates ({cols}) VALUES ({','.join('?' * 25)})", (
         today, ticker, t_start.strftime("%Y-%m-%d"), t_end.strftime("%Y-%m-%d"), est, est * (1 - band), est * (1 + band),
         est / float(fin.revenue.iloc[-4]) - 1, last, min((f["months"] for f in p["flows"]), default=None),
         json.dumps([{k: (round(v, 4) if isinstance(v, float) and abs(v) < 1e6 else v) for k, v in f.items()} for f in p["flows"]]),
         err, naive, len(bt), json.dumps(bt), (est / cons[1] - 1) if cons else None, cons[0] if cons else None, cur or "USD", method,
-        int(grade == "신뢰"), json.dumps(caution, ensure_ascii=False), conf, hits, grade))
+        int(grade == "신뢰"), json.dumps(caution, ensure_ascii=False), conf, hits, grade, json.dumps(guide_info) if guide_info else None))
     gap = f" · 컨센 대비 {est / cons[1] - 1:+.1%}" if cons else ""
     log(f"  ✓ {ticker}: {t_end:%Y-%m} 분기 직전 대비 {est / last - 1:+.1%} [{method}] · 신뢰도 {conf or 0:.0%}({hits}/{len(bt)}분기 ±5%) [{grade}] · 오차 {err:.1%} (단순추세 {mape(bt, 'naive') or 0:.1%}){gap}")
     return ticker
