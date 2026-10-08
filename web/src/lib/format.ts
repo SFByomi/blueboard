@@ -74,8 +74,15 @@ export const ctyKo = (name: string | null) => (name ? CTY_KO[name] ?? name : nul
 
 export const estExtrap = (e: { flows: string }) => (JSON.parse(e.flows) as { extrap?: boolean }[]).some((f) => f.extrap);
 /** 백테스트상 쓸 만한 추정인지: 오차 12% 이하, '직전 성장률 유지'보다 정확, 과거 범위 밖 외삽이 아닐 때 */
-export const estReliable = (e: { mape: number | null; mape_naive: number | null; flows: string; reliable?: number | null }) =>
-  e.reliable != null ? !!e.reliable : e.mape != null && e.mape <= 0.12 && (e.mape_naive == null || e.mape < e.mape_naive) && !estExtrap(e);
+export const estReliable = (e: { mape: number | null; mape_naive: number | null; flows: string; reliable?: number | null; tier?: string | null }) =>
+  e.tier ? e.tier === "신뢰" : e.reliable != null ? !!e.reliable : e.mape != null && e.mape <= 0.12 && (e.mape_naive == null || e.mape < e.mape_naive) && !estExtrap(e);
+/** 등급: 신뢰(신뢰도 70%↑·경고 없음) / 보통(50%↑) / 참고 — ETL estimates.tier */
+export const estTier = (e: { tier?: string | null; mape: number | null; mape_naive: number | null; flows: string; reliable?: number | null }) =>
+  e.tier ?? (estReliable(e) ? "신뢰" : "참고");
+export const TIER_STYLE: Record<string, string> = { 신뢰: "bg-up/20 text-up", 보통: "bg-amber-950 text-amber-300", 참고: "bg-panel2 text-muted", 발표됨: "bg-panel2 text-muted" };
+/** 신뢰도 설명 (툴팁) */
+export const confNote = (e: { conf?: number | null; hits?: number | null; bt_n: number; mape: number | null }) =>
+  e.conf == null ? "" : `최근 ${e.bt_n}분기 백테스트 중 ${e.hits}분기에서 실제 매출이 추정 ±5% 안 (표본 보정 ${(e.conf * 100).toFixed(0)}%) · 평균 오차 ${e.mape == null ? "-" : (e.mape * 100).toFixed(1)}%`;
 /** '참고'인 이유 (ETL estimates.reliability) */
 export const estCaution = (e: { caution?: string | null }): string[] => (e.caution ? JSON.parse(e.caution) : []);
 /** 추정 오차범위 (±, 추정 대비 비율) */

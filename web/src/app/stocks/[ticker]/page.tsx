@@ -90,7 +90,7 @@ export default async function StockPage({ params }: PageProps<"/stocks/[ticker]"
         <Kpi label="매출 YoY" value={pct(revYoY.at(-1))} cls={tone(revYoY.at(-1))} />
         {est ? (
           <Kpi label={`${estReported(est, lastReported) ? "발표된 분기(공시 반영 전) 추정" : "진행 분기 매출 추정"} (${est.q_start.slice(0, 7)}~${est.q_end.slice(0, 7)})`} value={money(est.est, est.currency)}
-            sub={`직전 대비 ${pct(est.est / est.last_actual - 1)}${est.cons_gap != null ? ` · 컨센 대비 ${pct(est.cons_gap)}` : ""} · 백테스트 오차 ${pct(est.mape, 1).replace("+", "")}`} />
+            sub={`직전 대비 ${pct(est.est / est.last_actual - 1)}${est.cons_gap != null ? ` · 컨센 대비 ${pct(est.cons_gap)}` : ""} · ${est.tier ?? ""}${est.conf != null ? ` 신뢰도 ${(est.conf * 100).toFixed(0)}%` : ""}`} />
         ) : (
           <Kpi label="진행 중 분기 무역 반영" value={nextQ ? `${nextQ.months} / 3개월` : "-"} sub={nextQ ? `${nextQ.start} ~ ${nextQ.end} · 추정은 매출 연관도 A·B 흐름이 있을 때만` : "실적 데이터 없음"} />
         )}

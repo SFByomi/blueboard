@@ -9,9 +9,12 @@
     백테스트에서도 각 분기는 그 이전 4분기 오차로만 보정 → 미래 정보 없이 비교, 이겨야 채택
   - ens  : 전년비 계열 최선과 금액 계열 최선의 평균 (두 모델이 엇갈리는 급변 국면 대비)
 - 진행 분기 T 예측: lag ≥ 1이면 이미 끝난 분기의 무역으로, lag 0이면 T에 들어온 달(1~3개월, 금액은 3개월로 환산)로
-- 결합: 흐름별 예측을 R²로 가중평균, 범위는 회귀 잔차 ±1 표준편차
-- 백테스트: 최근 8개 분기를 하나씩 빼고 그 이전 분기로만 다시 적합해 예측 → 평균 절대 오차(MAPE)를
+- 결합: 흐름별 예측을 R²로 가중평균
+- 백테스트: 최근 12개 분기를 하나씩 빼고 그 이전 분기로만 다시 적합해 예측 → 평균 절대 오차(MAPE)를
   '직전 분기 성장률 유지'(단순 추세)와 비교. 흐름 선택 자체는 전체 표본 등급을 써서 약간 낙관적일 수 있음
+- 신뢰도(%) = 백테스트에서 실제 매출이 추정 ±5%(HIT_TOL) 안에 들어온 비율, 표본이 적으면 (적중+1)/(분기+2)로 깎음
+  오차범위 = 백테스트 실제 오차(절대값)의 80% 분위 → 추정 ± 그 비율 (회귀 잔차보다 현실적)
+  등급: 신뢰(신뢰도 70%↑·경고 없음) / 보통(50%↑) / 참고
 - 컨센서스(consensus, 로컬 전용)와 분기 말일이 25일 이내로 맞으면 괴리율 = 추정/컨센 − 1
 
 결과는 revenue_estimates (date, ticker) — Supabase에 누적(publish.ACCUMULATE) → 추정·괴리율의 날짜별 추이.
@@ -24,7 +27,7 @@ import pandas as pd
 from etl.scores import fin_frame, monthly
 
 MIN_PAIRS = 8   # 회귀 최소 분기 수
-BACKTEST = 8    # 백테스트 분기 수
+BACKTEST = 12   # 백테스트 분기 수
 MAX_FLOWS = 3
 LEVEL_WIN = 12  # 금액 모델 적합 창(분기)
 BIAS_N = 4       # 편향 보정에 쓰는 직전 분기 수
@@ -33,6 +36,9 @@ MIN_BT = 6       # 백테스트 분기가 이보다 적으면 오차를 믿을 �
 EXTRAP = 0.25    # 예측에 쓴 무역 값이 학습 범위를 25% 넘게 벗어나면 외삽 표시
 STALE_DAYS = 75  # 분기 말 + 75일이 지났는데 실적이 없으면 수집 누락으로 봄
 METHODS = ("yoy", "level")
+HIT_TOL = 0.05   # 신뢰도: 실제 매출이 추정 ±5% 안이면 적중
+BAND_Q = 0.8     # 오차범위: 백테스트 절대 오차의 80% 분위
+TIER_OK, TIER_MID = 0.7, 0.5  # 신뢰도 기준 (신뢰 / 보통)
 
 
 def target_quarter(last_end: pd.Timestamp) -> tuple[pd.Timestamp, pd.Timestamp]:
@@ -176,13 +182,32 @@ def mape(bt: list[dict], key: str) -> float | None:
     return round(sum(e) / len(e), 4) if e else None
 
 
-def reliability(con, err, naive, bt_n, flows) -> list[str]:
+def confidence(bt: list[dict]) -> tuple[float | None, float | None, int]:
+    """(신뢰도, 오차범위 비율, 적중 분기 수) — 신뢰도 = 실제가 추정 ±HIT_TOL 안에 든 비율(표본 보정), 오차범위 = |오차| 80% 분위"""
+    e = sorted(abs(r["actual"] / r["pred"] - 1) for r in bt if r.get("pred"))
+    if not e:
+        return None, None, 0
+    hits = sum(x <= HIT_TOL for x in e)
+    band = e[min(len(e) - 1, int(BAND_Q * len(e)))]
+    return (hits + 1) / (len(e) + 2), band, hits
+
+
+def tier(conf: float | None, why: list[str]) -> str:
+    if conf is None:
+        return "참고"
+    hard = [w for w in why if not w.startswith("신뢰도")]  # 외삽·단절·단순추세 미달 등은 신뢰도와 별개로 '신뢰'를 막음
+    if conf >= TIER_OK and not hard:
+        return "신뢰"
+    return "보통" if conf >= TIER_MID and not any("외삽" in w or "단절" in w for w in hard) else "참고"
+
+
+def reliability(con, conf, naive, err, bt_n, flows) -> list[str]:
     """'신뢰'가 아닌 이유 목록 (비면 신뢰). 웹은 이 결과를 그대로 표시"""
     why = []
     if bt_n < MIN_BT:
         why.append(f"백테스트 {bt_n}분기뿐")
-    if err is None or err > 0.12:
-        why.append("백테스트 오차 12% 초과")
+    if conf is None or conf < TIER_OK:
+        why.append(f"신뢰도 {0 if conf is None else conf:.0%} (70% 미만)")
     if naive is not None and err is not None and err >= naive:
         why.append("단순 추세보다 정확하지 않음")
     if max(f["r2"] for f in flows) < 0.4:
@@ -283,16 +308,19 @@ def estimate_all(con, log=print) -> int:
                                (ticker, ticker)).fetchone()
         cons = match_consensus(con, sec, t_end)
         naive = mape(bt, "naive")
-        caution = reliability(con, err, naive, len(bt), p["flows"])
+        conf, band, hits = confidence(bt)
+        caution = reliability(con, conf, naive, err, len(bt), p["flows"])
+        grade = tier(conf, caution)
+        band = band if band is not None else p["se"] / est
         cols = ("date, ticker, q_start, q_end, est, low, high, yoy, last_actual, months, flows, mape, mape_naive, bt_n, backtest, "
-                "cons_gap, cons_end, currency, method, reliable, caution")
-        con.execute(f"INSERT INTO revenue_estimates ({cols}) VALUES ({','.join('?' * 21)})", (
-            today, ticker, t_start.strftime("%Y-%m-%d"), t_end.strftime("%Y-%m-%d"), est, est - p["se"], est + p["se"],
+                "cons_gap, cons_end, currency, method, reliable, caution, conf, hits, tier")
+        con.execute(f"INSERT INTO revenue_estimates ({cols}) VALUES ({','.join('?' * 24)})", (
+            today, ticker, t_start.strftime("%Y-%m-%d"), t_end.strftime("%Y-%m-%d"), est, est * (1 - band), est * (1 + band),
             est / float(fin.revenue.iloc[-4]) - 1, last, min(f["months"] for f in p["flows"]),
             json.dumps([{k: (round(v, 4) if isinstance(v, float) and abs(v) < 1e6 else v) for k, v in f.items()} for f in p["flows"]]),
             err, naive, len(bt), json.dumps(bt), (est / cons[1] - 1) if cons else None, cons[0] if cons else None, cur or "USD", method,
-            int(not caution), json.dumps(caution, ensure_ascii=False)))
+            int(grade == "신뢰"), json.dumps(caution, ensure_ascii=False), conf, hits, grade))
         n += 1
         gap = f" · 컨센 대비 {est / cons[1] - 1:+.1%}" if cons else ""
-        log(f"  ✓ {ticker}: {t_end:%Y-%m} 분기 직전 대비 {est / last - 1:+.1%} [{method}] · 백테스트 오차 {err:.1%} (단순추세 {mape(bt, 'naive') or 0:.1%}){gap}")
+        log(f"  ✓ {ticker}: {t_end:%Y-%m} 분기 직전 대비 {est / last - 1:+.1%} [{method}] · 신뢰도 {conf or 0:.0%}({hits}/{len(bt)}분기 ±5%) [{grade}] · 오차 {err:.1%} (단순추세 {mape(bt, 'naive') or 0:.1%}){gap}")
     return n
