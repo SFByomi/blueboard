@@ -9,7 +9,7 @@ import { CtyName, HsName } from "@/components/Names";
 import { IndexSection } from "@/components/IndexSection";
 import { INDEX_FOR_GROUP, dday, estReported, money, parseSites, pct, tone, usd } from "@/lib/format";
 import { ADMIN_ENABLED } from "@/lib/db";
-import { alertsFor, company, earningsDates, estimateDate, estimateHistory, financials, flowScores, indicators, mappingsFor, observations, priceSnapshots, reportedQuarters, surgeForTicker } from "@/lib/queries";
+import { alertsFor, company, earningsDates, estimateDate, estimateHistory, financials, flowScores, indicators, mappingsFor, observations, priceSnapshots, reportedQuarters, surgeForTicker, unestimated } from "@/lib/queries";
 
 // 게시 직후 바로 보이도록 요청마다 렌더 (ISR 캐시가 게시 후에도 이전 데이터로 남던 문제). DB가 작아 부담 없음
 export const dynamic = "force-dynamic";
@@ -27,8 +27,8 @@ export default async function StockPage({ params }: PageProps<"/stocks/[ticker]"
 
   const maps = await mappingsFor(ticker);
   const ids = maps.map((m) => m.series_id);
-  const [obs, allFin, alerts, relatedAll, scores, estAll, estDate, earn, done] = await Promise.all([
-    observations(ids), financials(ticker), alertsFor(ids), surgeForTicker(ticker), flowScores(ticker), estimateHistory(ticker), estimateDate(), earningsDates(), reportedQuarters()]);
+  const [obs, allFin, alerts, relatedAll, scores, estAll, estDate, earn, done, skips] = await Promise.all([
+    observations(ids), financials(ticker), alertsFor(ids), surgeForTicker(ticker), flowScores(ticker), estimateHistory(ticker), estimateDate(), earningsDates(), reportedQuarters(), unestimated()]);
   // 최신 빌드에서 추정이 빠진 종목(예: 백테스트 분기 부족으로 탈락)은 옛 추정을 보여주지 않음
   const estHist = estAll.at(-1)?.date === estDate ? estAll : [];
   const nextEarn = earn[ticker] ?? null, lastReported = done[ticker] ?? null;
@@ -129,7 +129,7 @@ export default async function StockPage({ params }: PageProps<"/stocks/[ticker]"
         <div className="card text-sm text-muted">연결된 무역 흐름이 없습니다.{ADMIN_ENABLED && <> <Link className="text-accent" href={`/admin/stocks/${encodeURIComponent(c.ticker)}`}>관리 페이지</Link>에서 추가하세요.</>}</div>
       )}
 
-      <EstimateCard hist={estHist} nextEarn={nextEarn} lastReported={lastReported} labels={Object.fromEntries(maps.map((mp) => [mp.series_id, mp.label]))} />
+      <EstimateCard skip={skips.find((s) => s.ticker === ticker)} hist={estHist} nextEarn={nextEarn} lastReported={lastReported} labels={Object.fromEntries(maps.map((mp) => [mp.series_id, mp.label]))} />
 
       <FlowScores rows={scores.flatMap((sc) => {
         const mp = maps.find((x) => x.series_id === sc.series_id);

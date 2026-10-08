@@ -1,15 +1,22 @@
 import { T } from "@/components/Names";
 import { PriceChart } from "@/components/ComputeCharts";
 import { confNote, dday, estCaution, estExtrap, estRange, estReported, estTier, methodLabel, money, pct, TIER_STYLE, tone, watchFlag } from "@/lib/format";
-import type { RevEstimate } from "@/lib/queries";
+import type { EstSkip, RevEstimate } from "@/lib/queries";
 
 type Bt = { q_end: string; actual: number; pred: number; naive: number | null };
 type Flow = { sid: string; lag: number; r2: number; months: number; extrap?: boolean };
 
 /** 진행 분기 매출 추정 · 컨센서스 괴리 · 백테스트 (etl/estimates.py). 컨센 금액은 약관상 표시하지 않고 괴리율만 */
-export function EstimateCard({ hist, labels, nextEarn, lastReported }: { hist: RevEstimate[]; labels: Record<string, string>; nextEarn?: string | null; lastReported?: string | null }) {
+export function EstimateCard({ hist, labels, nextEarn, lastReported, skip }: { hist: RevEstimate[]; labels: Record<string, string>; nextEarn?: string | null; lastReported?: string | null; skip?: EstSkip }) {
   const e = hist.at(-1);
-  if (!e) return null;
+  if (!e) return skip ? (
+    <div className="card min-w-0 space-y-2">
+      <h2 className="font-bold">진행 분기 매출 추정 {skip.q_start && <span className="text-sm font-normal text-muted">{skip.q_start.slice(0, 7)} ~ {skip.q_end?.slice(0, 7)}</span>}
+        <span className={`ml-2 rounded px-2 py-0.5 text-xs font-normal ${TIER_STYLE["추정불가"]}`}>추정불가</span></h2>
+      <div className="rounded bg-panel2 px-3 py-2 text-xs text-muted">이유: {estCaution(skip).join(" · ")}</div>
+    </div>
+  ) : null;
+  const trend = e.method === "trend";
   const bt: Bt[] = JSON.parse(e.backtest);
   const flows: Flow[] = JSON.parse(e.flows);
   const rep = estReported(e, lastReported);
@@ -33,9 +40,9 @@ export function EstimateCard({ hist, labels, nextEarn, lastReported }: { hist: R
       </div>
       {rep && <div className="rounded bg-panel2 px-3 py-2 text-xs text-muted">이 분기 실적은 이미 발표됐습니다. SEC 공시(10-Q·10-K)가 들어오면 실적과 비교해 백테스트에 반영하고 다음 분기 추정으로 넘어갑니다 — 그 전까지는 참고용입니다.</div>}
       {e.conf != null && !rep && <div className="text-xs text-muted">신뢰도 {(e.conf * 100).toFixed(0)}% — 최근 {e.bt_n}분기 백테스트 중 {e.hits}분기에서 실제 매출이 추정 ±5% 안에 들어옴 (표본이 적으면 보수적으로 깎음)</div>}
-      {!rep && !ok && why.length > 0 && <div className="rounded bg-panel2 px-3 py-2 text-xs text-muted">{tr === "보통" ? "신뢰가 아닌" : "참고인"} 이유: {why.join(" · ")}</div>}
+      {!rep && !ok && why.length > 0 && <div className="rounded bg-panel2 px-3 py-2 text-xs text-muted">{tr === "보통" ? "신뢰가 아닌" : tr === "추세" ? "단순 추세로 추정한" : "참고인"} 이유: {why.join(" · ")}</div>}
       <div className="grid gap-3 sm:grid-cols-3">
-        <div><div className="text-xs text-muted">무역 기반 추정</div><div className="text-2xl font-bold">{money(e.est, cur)}</div>
+        <div><div className="text-xs text-muted">{trend ? "단순 추세 추정 (무역 근거 없음)" : "무역 기반 추정"}</div><div className="text-2xl font-bold">{money(e.est, cur)}</div>
           <div className="text-xs text-muted">오차범위 ±{money(e.high - e.est, cur)}{range != null ? ` (±${(range * 100).toFixed(0)}%)` : ""} · 직전 분기 대비 <span className={tone(e.est / e.last_actual - 1)}>{pct(e.est / e.last_actual - 1)}</span></div></div>
         <div><div className="text-xs text-muted">컨센서스 대비</div>
           <div className={`text-2xl font-bold ${e.cons_gap == null ? "text-muted" : tone(e.cons_gap)}`}>{e.cons_gap == null ? "-" : pct(e.cons_gap)}</div>
@@ -80,6 +87,7 @@ export function EstimateCard({ hist, labels, nextEarn, lastReported }: { hist: R
         </div>
         <div className="min-w-0">
           <div className="mb-1 text-xs text-muted">사용한 흐름 (매출 연관도 A·B, 예측력이 확인된 C)</div>
+          {flows.length === 0 && <div className="text-sm text-muted">없음 — 매출 이력만으로 추정 (직전 분기 전년비 유지)</div>}
           <ul className="space-y-1 text-sm">
             {flows.map((f) => (
               <li key={f.sid} className="flex justify-between gap-2">

@@ -39,8 +39,8 @@ export function CountBars({ months, values, name, height = 260 }: { months: stri
 
 export type Bar = { name: string; color: string; values: (number | null)[] };
 /** 월별 누적 막대(왼쪽 축) + 선(오른쪽 축) — 전력 인프라 대시보드 공용 */
-export function StackChart({ months, bars, lines = [], left, right, height = 300 }: {
-  months: string[]; bars: Bar[]; lines?: Bar[]; left: string; right?: string; height?: number;
+export function StackChart({ months, bars, lines = [], left, right, height = 300, dots = false }: {
+  months: string[]; bars: Bar[]; lines?: Bar[]; left: string; right?: string; height?: number; dots?: boolean;
 }) {
   const option: EChartsOption = {
     ...baseOption(),
@@ -52,7 +52,7 @@ export function StackChart({ months, bars, lines = [], left, right, height = 300
     ],
     series: [
       ...bars.map((b) => ({ name: b.name, type: "bar" as const, stack: "s", data: b.values, barMaxWidth: 10, itemStyle: { color: b.color } })),
-      ...lines.map((l) => ({ name: l.name, type: "line" as const, yAxisIndex: right ? 1 : 0, data: l.values, symbol: "none", connectNulls: true, lineStyle: { color: l.color, width: 2 }, itemStyle: { color: l.color } })),
+      ...lines.map((l) => ({ name: l.name, type: "line" as const, yAxisIndex: right ? 1 : 0, data: l.values, symbol: dots ? "circle" : "none", symbolSize: 7, connectNulls: true, lineStyle: { color: l.color, width: 2 }, itemStyle: { color: l.color } })),
     ],
   };
   return <EChart option={option} height={height} />;
