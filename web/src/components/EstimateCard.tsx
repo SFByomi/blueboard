@@ -79,7 +79,7 @@ export function EstimateCard({ hist, labels, nextEarn, lastReported }: { hist: R
           </div>
         </div>
         <div className="min-w-0">
-          <div className="mb-1 text-xs text-muted">사용한 흐름 (매출 연관도 A·B)</div>
+          <div className="mb-1 text-xs text-muted">사용한 흐름 (매출 연관도 A·B, 예측력이 확인된 C)</div>
           <ul className="space-y-1 text-sm">
             {flows.map((f) => (
               <li key={f.sid} className="flex justify-between gap-2">
@@ -91,7 +91,7 @@ export function EstimateCard({ hist, labels, nextEarn, lastReported }: { hist: R
         </div>
       </div>
       <p className="text-xs leading-relaxed text-muted">
-        흐름: 매출 연관도 A·B 중 단독 예측 오차가 작은 상위 1~3개. 모델: 전년비 회귀·금액 회귀, 각각의 편향 보정판(직전 4분기 실적/예측 배율 — 백테스트도 그 시점까지의 오차로만 보정), 두 계열 평균(앙상블) 중 백테스트(6분기 이상) 오차가 가장 작은 쪽. 신뢰도 = 백테스트에서 실제 매출이 추정 ±5% 안에 든 비율(표본 보정), 오차범위 = 백테스트 오차의 80% 범위. &lsquo;신뢰&rsquo; = 신뢰도 70% 이상 + 단순 추세보다 정확 · 근거 흐름 R² 0.4 이상 · 과거 범위 안 · 최근 2년 금액 단절 없음, &lsquo;보통&rsquo; = 신뢰도 50% 이상(단순 추세보다 정확·외삽·단절 없을 때), 그 밖은 &lsquo;참고&rsquo;.
+        흐름: 매출 연관도 A·B(와 단독 예측이 단순 추세보다 나은 C) 중 단독 예측 오차가 작은 상위 1~3개. 모델: 전년비 회귀·금액 회귀, 각각의 편향 보정판(직전 4분기 실적/예측 배율 — 백테스트도 그 시점까지의 오차로만 보정), 두 계열 평균(앙상블) 중 백테스트(6분기 이상) 오차가 가장 작은 쪽. 신뢰도 = 백테스트에서 실제 매출이 추정 ±5% 안에 든 비율(표본 보정), 오차범위 = 백테스트 오차의 80% 범위. &lsquo;신뢰&rsquo; = 신뢰도 70% 이상 + 단순 추세보다 정확 · 근거 흐름 R² 0.4 이상 · 과거 범위 안 · 최근 2년 금액 단절 없음, &lsquo;보통&rsquo; = 신뢰도 50% 이상(단순 추세보다 정확·외삽·단절 없을 때), 그 밖은 &lsquo;참고&rsquo;.
         추정은 금액 기준이라 수량 단위 변경(물량·단가 분해 불가)에는 영향받지 않습니다. 주목 = 신뢰 추정이면서 컨센 괴리 10% 이상, 실적 발표 30일 이내.
         컨센서스 금액은 데이터 제공처 약관상 표시하지 않고 괴리율만 보여줍니다. 투자 권유가 아닙니다.
       </p>

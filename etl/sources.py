@@ -10,7 +10,7 @@ from collections.abc import Callable
 
 import pandas as pd
 
-from etl import c30, census, eia, estat, kcs, ransomware
+from etl import c30, census, comext, eia, estat, kcs, ransomware
 
 FETCHERS: dict[str, Callable[[dict], pd.DataFrame]] = {
     "census": lambda s: census.fetch(s["dataset"], s["hs"], s["filters"]),
@@ -18,6 +18,7 @@ FETCHERS: dict[str, Callable[[dict], pd.DataFrame]] = {
     "c30": lambda s: c30.monthly(s["column"]),  # 미국 건설투자 세부 유형 (연율 달러)
     "eia_planned": lambda s: eia.planned(s["metric"]),  # 미국 계획 중 발전 용량(MW) — EIA 860M
     "eia_retail": lambda s: eia.retail(s["state"], s["sector"]),  # 주별 전력 판매(MWh) — EIA_API_KEY
+    "comext": lambda s: comext.monthly(s["reporter"], s["product"], s.get("partner", "WORLD"), s.get("flow", "export")),  # EU 회원국 무역(유로→달러)
     "ransomware": lambda s: ransomware.monthly(s.get("country")),  # 건수 시계열 (value_usd 칸에 건수, unit='건')
     "kcs": lambda s: kcs.fetch(s["api"], s["hs"], s.get("flow", "export"), s.get("cnty"), sido=s.get("sido"), sgg=s.get("sgg")),
 }
