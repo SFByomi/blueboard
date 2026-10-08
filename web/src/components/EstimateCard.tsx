@@ -1,6 +1,6 @@
 import { T } from "@/components/Names";
 import { PriceChart } from "@/components/ComputeCharts";
-import { dday, estCaution, estExtrap, estRange, estReliable, estReported, methodLabel, money, pct, tone, watchFlag } from "@/lib/format";
+import { confNote, dday, estCaution, estExtrap, estRange, estReported, estTier, methodLabel, money, pct, TIER_STYLE, tone, watchFlag } from "@/lib/format";
 import type { RevEstimate } from "@/lib/queries";
 
 type Bt = { q_end: string; actual: number; pred: number; naive: number | null };
@@ -13,7 +13,7 @@ export function EstimateCard({ hist, labels, nextEarn, lastReported }: { hist: R
   const bt: Bt[] = JSON.parse(e.backtest);
   const flows: Flow[] = JSON.parse(e.flows);
   const rep = estReported(e, lastReported);
-  const ok = estReliable(e) && !rep;
+  const tr = rep ? "발표됨" : estTier(e), ok = tr === "신뢰";
   const why = estCaution(e);
   const range = estRange(e);
   const d = dday(nextEarn);
@@ -28,11 +28,12 @@ export function EstimateCard({ hist, labels, nextEarn, lastReported }: { hist: R
         <h2 className="font-bold">{rep ? "발표된 분기 매출 추정" : "진행 분기 매출 추정"} <span className="text-sm font-normal text-muted">{e.q_start.slice(0, 7)} ~ {e.q_end.slice(0, 7)}</span></h2>
         <span className="flex flex-wrap gap-1">
           {watch && <span className="rounded bg-accent/20 px-2 py-0.5 text-xs text-accent" title="신뢰 추정 · 컨센 괴리 10% 이상 · 실적 발표 30일 이내">주목</span>}
-          <span className={`rounded px-2 py-0.5 text-xs ${ok ? "bg-up/20 text-up" : "bg-panel2 text-muted"}`}>{rep ? "발표됨" : ok ? "신뢰" : "참고"} · 백테스트 오차 {pct(e.mape, 1).replace("+", "")}</span>
+          <span className={`rounded px-2 py-0.5 text-xs ${TIER_STYLE[tr]}`} title={confNote(e)}>{tr}{e.conf != null ? ` · 신뢰도 ${(e.conf * 100).toFixed(0)}%` : ""} · 평균 오차 {pct(e.mape, 1).replace("+", "")}</span>
         </span>
       </div>
       {rep && <div className="rounded bg-panel2 px-3 py-2 text-xs text-muted">이 분기 실적은 이미 발표됐습니다. SEC 공시(10-Q·10-K)가 들어오면 실적과 비교해 백테스트에 반영하고 다음 분기 추정으로 넘어갑니다 — 그 전까지는 참고용입니다.</div>}
-      {!rep && !ok && why.length > 0 && <div className="rounded bg-panel2 px-3 py-2 text-xs text-muted">참고인 이유: {why.join(" · ")}</div>}
+      {e.conf != null && !rep && <div className="text-xs text-muted">신뢰도 {(e.conf * 100).toFixed(0)}% — 최근 {e.bt_n}분기 백테스트 중 {e.hits}분기에서 실제 매출이 추정 ±5% 안에 들어옴 (표본이 적으면 보수적으로 깎음)</div>}
+      {!rep && !ok && why.length > 0 && <div className="rounded bg-panel2 px-3 py-2 text-xs text-muted">{tr === "보통" ? "신뢰가 아닌" : "참고인"} 이유: {why.join(" · ")}</div>}
       <div className="grid gap-3 sm:grid-cols-3">
         <div><div className="text-xs text-muted">무역 기반 추정</div><div className="text-2xl font-bold">{money(e.est, cur)}</div>
           <div className="text-xs text-muted">오차범위 ±{money(e.high - e.est, cur)}{range != null ? ` (±${(range * 100).toFixed(0)}%)` : ""} · 직전 분기 대비 <span className={tone(e.est / e.last_actual - 1)}>{pct(e.est / e.last_actual - 1)}</span></div></div>
@@ -90,7 +91,7 @@ export function EstimateCard({ hist, labels, nextEarn, lastReported }: { hist: R
         </div>
       </div>
       <p className="text-xs leading-relaxed text-muted">
-        흐름: 매출 연관도 A·B 중 단독 예측 오차가 작은 상위 1~3개. 모델: 전년비 회귀·금액 회귀, 각각의 편향 보정판(직전 4분기 실적/예측 배율 — 백테스트도 그 시점까지의 오차로만 보정), 두 계열 평균(앙상블) 중 백테스트(6분기 이상) 오차가 가장 작은 쪽. &lsquo;신뢰&rsquo; 조건: 백테스트 6분기 이상 · 오차 12% 이하 · 단순 추세보다 정확 · 근거 흐름 R² 0.4 이상 · 과거 범위 안 · 최근 2년 금액 단절 없음 — 하나라도 어긋나면 &lsquo;참고&rsquo;.
+        흐름: 매출 연관도 A·B 중 단독 예측 오차가 작은 상위 1~3개. 모델: 전년비 회귀·금액 회귀, 각각의 편향 보정판(직전 4분기 실적/예측 배율 — 백테스트도 그 시점까지의 오차로만 보정), 두 계열 평균(앙상블) 중 백테스트(6분기 이상) 오차가 가장 작은 쪽. 신뢰도 = 백테스트에서 실제 매출이 추정 ±5% 안에 든 비율(표본 보정), 오차범위 = 백테스트 오차의 80% 범위. &lsquo;신뢰&rsquo; = 신뢰도 70% 이상 + 단순 추세보다 정확 · 근거 흐름 R² 0.4 이상 · 과거 범위 안 · 최근 2년 금액 단절 없음, &lsquo;보통&rsquo; = 신뢰도 50% 이상, 그 밖은 &lsquo;참고&rsquo;.
         추정은 금액 기준이라 수량 단위 변경(물량·단가 분해 불가)에는 영향받지 않습니다. 주목 = 신뢰 추정이면서 컨센 괴리 10% 이상, 실적 발표 30일 이내.
         컨센서스 금액은 데이터 제공처 약관상 표시하지 않고 괴리율만 보여줍니다. 투자 권유가 아닙니다.
       </p>

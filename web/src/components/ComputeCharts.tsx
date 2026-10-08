@@ -36,3 +36,24 @@ export function CountBars({ months, values, name, height = 260 }: { months: stri
   };
   return <EChart option={option} height={height} />;
 }
+
+export type Bar = { name: string; color: string; values: (number | null)[] };
+/** 월별 누적 막대(왼쪽 축) + 선(오른쪽 축) — 전력 인프라 대시보드 공용 */
+export function StackChart({ months, bars, lines = [], left, right, height = 300 }: {
+  months: string[]; bars: Bar[]; lines?: Bar[]; left: string; right?: string; height?: number;
+}) {
+  const option: EChartsOption = {
+    ...baseOption(),
+    grid: { left: 56, right: right ? 52 : 16, top: 28, bottom: 56 },
+    xAxis: { type: "category", data: months, ...axis, splitLine: { show: false } },
+    yAxis: [
+      { type: "value", name: left, nameTextStyle: { color: "#8a90ad", fontSize: 11 }, ...axis },
+      ...(right ? [{ type: "value" as const, name: right, nameTextStyle: { color: "#8a90ad", fontSize: 11 }, ...axis, splitLine: { show: false } }] : []),
+    ],
+    series: [
+      ...bars.map((b) => ({ name: b.name, type: "bar" as const, stack: "s", data: b.values, barMaxWidth: 10, itemStyle: { color: b.color } })),
+      ...lines.map((l) => ({ name: l.name, type: "line" as const, yAxisIndex: right ? 1 : 0, data: l.values, symbol: "none", connectNulls: true, lineStyle: { color: l.color, width: 2 }, itemStyle: { color: l.color } })),
+    ],
+  };
+  return <EChart option={option} height={height} />;
+}

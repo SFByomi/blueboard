@@ -1,4 +1,5 @@
 import { T } from "@/components/Names";
+import { POWER_IDS, PowerSection } from "@/components/PowerSection";
 import { CountBars, PriceChart } from "@/components/ComputeCharts";
 import Link from "next/link";
 import { pct, tone } from "@/lib/format";
@@ -28,6 +29,7 @@ const series = (rows: PriceRow[], item: string, stat: string): [string, number][
 
 export default async function Prices() {
   const [rows, defs, rw, fs] = await Promise.all([priceSnapshots(), indicators(), observations(["sec_ransomware"]).catch(() => []), flowScores()]);
+  const power = await observations(POWER_IDS).catch(() => []);
   const sec = fs.filter((r) => r.series_id === "sec_ransomware").sort((a, b) => (b.best ?? -9) - (a.best ?? -9));
   const SEC_KO: Record<string, string> = { PANW: "팔로알토", CRWD: "크라우드스트라이크", RBRK: "루브릭" };
   const idx = rows.filter((r) => r.kind === "index");
@@ -147,6 +149,8 @@ export default async function Prices() {
           정가는 신모델 출시·가격 인하 때만 계단식으로 바뀝니다. 같은 성능의 토큰이 싸지는 속도가 GPU 수요(추론 물량)와 GPU 클라우드 마진을 가르는 변수입니다.
         </p>
       </section>
+
+      <PowerSection obs={power} />
 
       {rw.length > 0 && (
         <section className="space-y-3">

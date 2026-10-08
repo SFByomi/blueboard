@@ -103,7 +103,10 @@ MIGRATIONS = [
     ("companies", "sites TEXT"),                      # 생산거점 JSON: [{"name","country","what"}] — 종목 페이지 공급망 요약
     ("revenue_estimates", "reliable INTEGER"),        # 1 = 신뢰 (etl/estimates.reliability)
     ("revenue_estimates", "caution TEXT"),            # 신뢰가 아닌 이유 JSON 목록
-    ("earnings_calendar", "last_reported TEXT"),      # 실적 발표가 끝난 마지막 분기 말일 (야후 earningsHistory)
+    ("earnings_calendar", "last_reported TEXT"),
+    ("revenue_estimates", "conf REAL"),               # 신뢰도: 백테스트 적중(±5%) 비율, 표본 보정
+    ("revenue_estimates", "hits INTEGER"),            # 백테스트 적중 분기 수
+    ("revenue_estimates", "tier TEXT"),               # 신뢰 / 보통 / 참고      # 실적 발표가 끝난 마지막 분기 말일 (야후 earningsHistory)
 ]
 
 

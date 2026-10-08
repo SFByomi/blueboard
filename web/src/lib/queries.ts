@@ -134,6 +134,7 @@ export type RevEstimate = {
   flows: string; mape: number | null; mape_naive: number | null; bt_n: number; backtest: string;
   cons_gap: number | null; cons_end: string | null; currency: string; method: string;
   reliable?: number | null; caution?: string | null; // ETL 판정 (구버전 행엔 없음)
+  conf?: number | null; hits?: number | null; tier?: string | null; // 신뢰도(백테스트 ±5% 적중률, 표본 보정)·적중 분기·등급
 };
 const noTable = <T,>(e: { code?: string; message?: string }): T[] => {
   if (e.code === "42P01" || e.message?.includes("no such table")) return [];
