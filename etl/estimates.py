@@ -198,7 +198,8 @@ def tier(conf: float | None, why: list[str]) -> str:
     hard = [w for w in why if not w.startswith("신뢰도")]  # 외삽·단절·단순추세 미달 등은 신뢰도와 별개로 '신뢰'를 막음
     if conf >= TIER_OK and not hard:
         return "신뢰"
-    return "보통" if conf >= TIER_MID and not any("외삽" in w or "단절" in w for w in hard) else "참고"
+    # 외삽·통계 단절·'직전 성장률 유지'보다 못함은 보통도 아님 — 구독형 소프트웨어처럼 추세만으로 더 잘 맞는 종목에서 모델이 더 나빠 보이는 걸 막음
+    return "보통" if conf >= TIER_MID and not any(k in w for w in hard for k in ("외삽", "단절", "단순 추세")) else "참고"
 
 
 def reliability(con, conf, naive, err, bt_n, flows) -> list[str]:

@@ -449,6 +449,81 @@
    "dart_segment": null,
    "grp": "전력·냉각",
    "sites": "[{\"name\": \"안성 사업장\", \"country\": \"한국 경기\", \"what\": \"반도체 부품 세정·코팅·세라믹 히터\"}, {\"name\": \"현대중공업파워시스템\", \"country\": \"한국 경기 평택\", \"what\": \"HRSG(배열회수보일러)\"}, {\"name\": \"NEM Energy\", \"country\": \"네덜란드\", \"what\": \"HRSG 설계·수주\"}, {\"name\": \"미코파워\", \"country\": \"한국\", \"what\": \"SOFC 연료전지\"}]"
+  },
+  {
+   "dart_fs": null,
+   "dart_segment": null,
+   "grp": "보안",
+   "sector": "사이버보안",
+   "sites": "[]",
+   "ticker": "S",
+   "name": "SentinelOne",
+   "name_ko": "센티넬원",
+   "market": "NYSE",
+   "thesis": "AI 기반 엔드포인트·클라우드 보안(Singularity). 무역 흐름이 없어 랜섬웨어 피해 공개 건수를 업황 프록시로 사용.",
+   "sec_ticker": "S",
+   "fy_note": "FY 1월말 종료",
+   "sort": 360
+  },
+  {
+   "dart_fs": null,
+   "dart_segment": null,
+   "grp": "보안",
+   "sector": "사이버보안",
+   "sites": "[]",
+   "ticker": "ZS",
+   "name": "Zscaler",
+   "name_ko": "지스케일러",
+   "market": "NASDAQ",
+   "thesis": "제로트러스트 클라우드 보안(SSE). 랜섬웨어 피해 건수를 업황 프록시로 사용.",
+   "sec_ticker": "ZS",
+   "fy_note": "FY 7월말 종료",
+   "sort": 370
+  },
+  {
+   "dart_fs": null,
+   "dart_segment": null,
+   "grp": "보안",
+   "sector": "사이버보안",
+   "sites": "[]",
+   "ticker": "FTNT",
+   "name": "Fortinet",
+   "name_ko": "포티넷",
+   "market": "NASDAQ",
+   "thesis": "방화벽(하드웨어)·SASE. 하드웨어 교체 주기 영향이 커서 공격 건수와의 연동은 약할 수 있음.",
+   "sec_ticker": "FTNT",
+   "fy_note": "FY 12월",
+   "sort": 380
+  },
+  {
+   "dart_fs": null,
+   "dart_segment": null,
+   "grp": "보안",
+   "sector": "사이버보안",
+   "sites": "[]",
+   "ticker": "OKTA",
+   "name": "Okta",
+   "name_ko": "옥타",
+   "market": "NASDAQ",
+   "thesis": "신원·접근 관리(IAM). 계정 탈취형 공격 증가가 수요 요인. 랜섬웨어 피해 건수를 업황 프록시로 사용.",
+   "sec_ticker": "OKTA",
+   "fy_note": "FY 1월말 종료",
+   "sort": 390
+  },
+  {
+   "dart_fs": null,
+   "dart_segment": null,
+   "grp": "보안",
+   "sector": "사이버보안",
+   "sites": "[]",
+   "ticker": "NET",
+   "name": "Cloudflare",
+   "name_ko": "클라우드플레어",
+   "market": "NYSE",
+   "thesis": "CDN·DDoS 방어·제로트러스트. 보안은 매출 일부라 공격 건수와의 연동은 약할 수 있음.",
+   "sec_ticker": "NET",
+   "fy_note": "FY 12월",
+   "sort": 400
   }
  ],
  "series": [
@@ -2415,6 +2490,56 @@
    "caveat": "안성 소재 다른 장비 부품사 혼재, 최근 8분기 역상관(−0.36).",
    "include_in_total": 0,
    "sort": 40
+  },
+  {
+   "ticker": "S",
+   "series_id": "sec_ransomware",
+   "role": "최종수요",
+   "confidence": "낮음",
+   "rationale": "랜섬웨어 피해 공개 건수 — 매출 전년비 0.66(B, 2분기 선행).",
+   "caveat": "최근 8분기 −0.36 — 2023년 급증 후 둘 다 성장률이 꺾인 공통 추세 영향 가능. 업황 참고.",
+   "include_in_total": 0,
+   "sort": 10
+  },
+  {
+   "ticker": "ZS",
+   "series_id": "sec_ransomware",
+   "role": "최종수요",
+   "confidence": "낮음",
+   "rationale": "랜섬웨어 피해 공개 건수 — 매출 전년비 0.58(B, 동행).",
+   "caveat": "최근 8분기 −0.47 — 공통 추세 영향 가능. 업황 참고.",
+   "include_in_total": 0,
+   "sort": 10
+  },
+  {
+   "ticker": "FTNT",
+   "series_id": "sec_ransomware",
+   "role": "최종수요",
+   "confidence": "낮음",
+   "rationale": "랜섬웨어 피해 공개 건수 — 매출 전년비 0.12(D): 방화벽 하드웨어 교체 주기가 더 큰 변수.",
+   "caveat": "구독 매출이라 분기 변동이 작고, 공격 건수는 그룹 단속·유출 사이트 폐쇄로 출렁임. 회사 물량 아님.",
+   "include_in_total": 0,
+   "sort": 10
+  },
+  {
+   "ticker": "OKTA",
+   "series_id": "sec_ransomware",
+   "role": "최종수요",
+   "confidence": "낮음",
+   "rationale": "랜섬웨어 피해 공개 건수 — 매출 전년비 0.70(B, 2분기 선행), 최근 8분기 −0.09.",
+   "caveat": "구독 매출이라 분기 변동이 작고, 공격 건수는 그룹 단속·유출 사이트 폐쇄로 출렁임. 회사 물량 아님.",
+   "include_in_total": 0,
+   "sort": 10
+  },
+  {
+   "ticker": "NET",
+   "series_id": "sec_ransomware",
+   "role": "최종수요",
+   "confidence": "낮음",
+   "rationale": "랜섬웨어 피해 공개 건수 — 매출 전년비 0.11(D): 보안은 매출 일부.",
+   "caveat": "구독 매출이라 분기 변동이 작고, 공격 건수는 그룹 단속·유출 사이트 폐쇄로 출렁임. 회사 물량 아님.",
+   "include_in_total": 0,
+   "sort": 10
   }
  ],
  "hs_tags": [
