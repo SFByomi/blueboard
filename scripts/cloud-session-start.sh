@@ -9,7 +9,7 @@ set -uo pipefail
 [ "${CLAUDE_CODE_REMOTE:-}" = "true" ] || [ "${1:-}" = "--force" ] || exit 0
 cd "$(dirname "$0")/.."
 
-KEYS=(CENSUS_API_KEY ESTAT_APP_ID DATA_GO_KR_KEY DART_API_KEY)
+KEYS=(CENSUS_API_KEY ESTAT_APP_ID DATA_GO_KR_KEY DART_API_KEY EIA_API_KEY)
 DOMAINS=(api.census.gov api.e-stat.go.jp apis.data.go.kr www.data.go.kr opendart.fss.or.kr data.sec.gov www.sec.gov fred.stlouisfed.org)
 notes=()
 
