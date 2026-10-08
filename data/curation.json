@@ -2283,7 +2283,7 @@
    "series_id": "us_plan_gas",
    "role": "최종수요",
    "confidence": "낮음",
-   "rationale": "미국 가스발전 건설 계획 — 데이터센터 전력 부족을 가스로 메우는 흐름(현장 연료전지와 경쟁·보완).",
+   "rationale": "미국 가스발전 건설 계획 — 매출 전년비와 0.53(B), 2분기 선행. 데이터센터 전력 부족을 가스로 메우는 흐름(현장 연료전지와 같은 수요).",
    "caveat": "업황 지표, 회사 물량 아님.",
    "include_in_total": 0,
    "sort": 96
@@ -2293,7 +2293,7 @@
    "series_id": "us_elec_va_com",
    "role": "최종수요",
    "confidence": "낮음",
-   "rationale": "버지니아(데이터센터 밀집) 상업용 전력 판매 — 데이터센터 가동 전력 수요.",
+   "rationale": "버지니아(데이터센터 밀집) 상업용 전력 판매 — 데이터센터 가동 전력. 매출과는 연동 약함(D) — 업황 참고.",
    "caveat": "주 전체 상업 부문 합산.",
    "include_in_total": 0,
    "sort": 97
@@ -2303,7 +2303,7 @@
    "series_id": "us_plan_gas",
    "role": "최종수요",
    "confidence": "낮음",
-   "rationale": "미국 가스발전 건설 계획 — 발전소 연계 변압기·차단기 수요.",
+   "rationale": "미국 가스발전 건설 계획 — 발전소 연계 변압기·차단기 수요. 매출과는 연동 약함(D) — 업황 참고.",
    "caveat": "업황 지표.",
    "include_in_total": 0,
    "sort": 95
@@ -2313,7 +2313,7 @@
    "series_id": "us_plan_gas",
    "role": "최종수요",
    "confidence": "낮음",
-   "rationale": "미국 가스발전 건설 계획 — 발전소 연계 변압기 수요.",
+   "rationale": "미국 가스발전 건설 계획 — 발전소 연계 변압기 수요. 매출과는 연동 약함(D) — 업황 참고.",
    "caveat": "업황 지표.",
    "include_in_total": 0,
    "sort": 95
@@ -2323,7 +2323,7 @@
    "series_id": "us_plan_battery",
    "role": "최종수요",
    "confidence": "낮음",
-   "rationale": "미국 계획 중 배터리 저장장치 용량 — ESS 수주 파이프라인.",
+   "rationale": "미국 계획 중 배터리 저장장치 용량 — ESS 수주 파이프라인. 매출과는 연동 약함(D) — 업황 참고.",
    "caveat": "업계 전체, 회사 몫 아님.",
    "include_in_total": 0,
    "sort": 95
