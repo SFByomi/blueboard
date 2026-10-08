@@ -8,7 +8,7 @@ import time
 from concurrent.futures import ThreadPoolExecutor, as_completed
 from datetime import datetime
 
-from etl import breaks, consensus, curation, dart, dart_segment, estimates, indicators, prices, scores, sec, seed, sources, surge
+from etl import breaks, consensus, curation, dart, dart_segment, estimates, indicators, prices, scores, sec, sec6k, seed, sources, surge
 from etl.db import connect
 
 
@@ -89,6 +89,8 @@ def fetch_financials(con):
             elif dart_fs:
                 q, cur = dart.quarterly_revenue(ticker.split(".")[0], dart_fs), "KRW"
                 basis = "별도" if dart_fs == "OFS" else "연결"
+            elif sec_ticker in sec6k.FILERS:  # 20-F 제출 외국 기업 — 분기 매출은 6-K 보도자료에서
+                q, cur = sec6k.quarterly_revenue(sec_ticker), sec6k.FILERS[sec_ticker]["currency"]
             else:
                 q, cur = sec.quarterly_revenue(sec_ticker), "USD"
         except Exception as e:  # noqa: BLE001

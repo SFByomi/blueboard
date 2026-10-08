@@ -215,6 +215,9 @@ def reliability(con, conf, naive, err, bt_n, flows) -> list[str]:
         why.append("근거 흐름 설명력(R²) 0.4 미만")
     if any(f.get("extrap") for f in flows):
         why.append("과거 범위 밖 외삽")
+    months = min(f.get("months", 3) for f in flows)
+    if months < 2 and all(f.get("lag", 0) == 0 for f in flows):  # 진행 분기 무역이 한 달뿐 — 장비처럼 월별 변동이 큰 품목은 크게 바뀔 수 있음
+        why.append(f"진행 분기 무역 {months}/3개월만 반영")
     cut = (pd.Timestamp.today() - pd.DateOffset(months=24)).strftime("%Y-%m")
     for f in flows:  # 금액이 끊기는 단절(재분류·수준 변화)이 최근 2년 안에 있으면 회귀 근거가 흔들림
         if con.execute("SELECT 1 FROM alerts WHERE series_id=? AND kind IN ('price_break','level_break') AND month>=?", (f["sid"], cut)).fetchone():
@@ -274,27 +277,30 @@ def match_consensus(con, sec_ticker: str | None, t_end: pd.Timestamp):
 def estimate_all(con, log=print) -> int:
     today = date.today().isoformat()
     con.execute("DELETE FROM revenue_estimates WHERE date=?", (today,))
-    sel = con.execute("""SELECT f.ticker, f.series_id, f.best_lag FROM flow_scores f
-                         WHERE f.grade IN ('A','B') ORDER BY f.ticker, f.best DESC""").fetchall()
+    sel = con.execute("""SELECT f.ticker, f.series_id, f.best_lag, f.grade FROM flow_scores f
+                         WHERE f.grade IN ('A','B','C') ORDER BY f.ticker, f.best DESC""").fetchall()
     by: dict[str, list] = {}
-    for t, sid, lag in sel:  # A·B 흐름 전부 후보 (상관으로 1차 거름) → 아래에서 예측 오차로 고름
-        by.setdefault(t, []).append((sid, int(lag or 0)))
+    for t, sid, lag, grade in sel:  # A·B는 전부, C는 단독 예측이 단순 추세보다 나을 때만 후보 → 아래에서 예측 오차로 고름
+        by.setdefault(t, []).append((sid, int(lag or 0), grade))
     n = 0
     for ticker, picks in by.items():
         fin = fin_frame(con, ticker)
         if len(fin) < 4 + MIN_PAIRS:
             continue
-        flows = []
-        for sid, lag in picks:
+        flows, grades = [], {}
+        for sid, lag, grade in picks:
             m = monthly(con, sid)
             flows.append((sid, lag, m.set_index("month")["value_usd"].sort_index()))
+            grades[sid] = grade
         t_start, t_end = target_quarter(fin.end.iloc[-1])
         if t_end + pd.Timedelta(days=STALE_DAYS) < pd.Timestamp(today):  # 이미 발표됐을 분기 — 매출 수집이 밀린 것
             log(f"  - {ticker}: {t_end:%Y-%m} 분기 실적이 아직 수집 안 됨 → 추정 건너뜀")
             continue
         # 흐름별 단독 예측 오차로 순위 → 상위 1·2·3개 묶음 중 백테스트 오차가 가장 작은 조합·모델 채택
-        # (같은 백테스트로 고르므로 약간 낙관적 — 후보를 A·B 등급으로 먼저 거른 이유)
-        solo = [(r[0], f) for f in flows if (r := best_model([f], fin))]
+        # (같은 백테스트로 고르므로 약간 낙관적 — 후보를 등급으로 먼저 거른 이유)
+        # C 등급(상관 0.3~0.5)은 단독 백테스트가 '직전 성장률 유지'보다 정확할 때만 — 상관은 약해도 금액 예측력이 있는 흐름(예: ASML 한국향 노광장비)
+        solo = [(r[0], f) for f in flows if (r := best_model([f], fin))
+                and (grades[f[0]] != "C" or (r[0] is not None and r[0] < (mape(r[3], "naive") or 9)))]
         ranked = [f for _, f in sorted(solo, key=lambda x: x[0])]
         best = None
         for k in range(1, min(MAX_FLOWS, len(ranked)) + 1):

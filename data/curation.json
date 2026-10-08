@@ -524,6 +524,21 @@
    "sec_ticker": "NET",
    "fy_note": "FY 12월",
    "sort": 400
+  },
+  {
+   "ticker": "ASML",
+   "name": "ASML Holding",
+   "name_ko": "ASML",
+   "market": "NASDAQ",
+   "sector": "반도체 장비(노광)",
+   "grp": "반도체",
+   "thesis": "EUV·DUV 노광장비 독점. 고객(삼성·SK하이닉스·마이크론·TSMC) 설비투자가 발주→출하로 이어지는 속도가 실적 변수. 네덜란드 노광장비(8486.20) 수출 = 벨트호번 출하지만, 매출의 약 1/4이 설치 장비 서비스(수출 없음)이고 EUV는 고객 검수 시점에 매출을 인식해 출하 월과 어긋남 — 네덜란드 전체 수출과 매출 전년비는 0.14로 약하고, 한국향은 최근 8분기 0.79, 미국향 0.75(1분기 선행). 2026년 중국향은 수출 통제로 급감.",
+   "sec_ticker": "ASML",
+   "fy_note": "FY 12월 · 유로 매출(6-K 분기 보도자료)",
+   "sort": 300,
+   "dart_fs": null,
+   "dart_segment": null,
+   "sites": "[{\"name\": \"벨트호번 본사·공장\", \"country\": \"네덜란드\", \"what\": \"EUV·DUV 노광장비 조립\"}, {\"name\": \"윌튼\", \"country\": \"미국 코네티컷\", \"what\": \"레티클 스테이지 등 모듈\"}, {\"name\": \"샌디에이고(Cymer)\", \"country\": \"미국 캘리포니아\", \"what\": \"광원\"}]"
   }
  ],
  "series": [
@@ -1428,6 +1443,61 @@
    "hs": "8486.90",
    "partner": "전세계",
    "spec": "{\"api\": \"sigungu\", \"hs\": \"848690\", \"flow\": \"export\", \"sido\": \"41\", \"sgg\": \"\\uacbd\\uae30\\ub3c4 \\uc548\\uc131\\uc2dc\"}"
+  },
+  {
+   "id": "nl_exp_litho",
+   "label": "네덜란드 반도체 노광장비 수출 (전체)",
+   "source": "comext",
+   "reporter": "🇳🇱 네덜란드",
+   "flow": "수출",
+   "region": "전국(벨트호번)",
+   "hs": "8486.20",
+   "partner": "전세계",
+   "spec": "{\"reporter\": \"NL\", \"product\": \"848620\", \"partner\": \"WORLD\", \"flow\": \"export\"}"
+  },
+  {
+   "id": "nl_exp_litho_kr",
+   "label": "네덜란드 → 한국 노광장비 수출",
+   "source": "comext",
+   "reporter": "🇳🇱 네덜란드",
+   "flow": "수출",
+   "region": "전국(벨트호번)",
+   "hs": "8486.20",
+   "partner": "한국",
+   "spec": "{\"reporter\": \"NL\", \"product\": \"848620\", \"partner\": \"KR\", \"flow\": \"export\"}"
+  },
+  {
+   "id": "nl_exp_litho_tw",
+   "label": "네덜란드 → 대만 노광장비 수출",
+   "source": "comext",
+   "reporter": "🇳🇱 네덜란드",
+   "flow": "수출",
+   "region": "전국(벨트호번)",
+   "hs": "8486.20",
+   "partner": "대만",
+   "spec": "{\"reporter\": \"NL\", \"product\": \"848620\", \"partner\": \"TW\", \"flow\": \"export\"}"
+  },
+  {
+   "id": "nl_exp_litho_cn",
+   "label": "네덜란드 → 중국 노광장비 수출",
+   "source": "comext",
+   "reporter": "🇳🇱 네덜란드",
+   "flow": "수출",
+   "region": "전국(벨트호번)",
+   "hs": "8486.20",
+   "partner": "중국",
+   "spec": "{\"reporter\": \"NL\", \"product\": \"848620\", \"partner\": \"CN\", \"flow\": \"export\"}"
+  },
+  {
+   "id": "nl_exp_litho_us",
+   "label": "네덜란드 → 미국 노광장비 수출",
+   "source": "comext",
+   "reporter": "🇳🇱 네덜란드",
+   "flow": "수출",
+   "region": "전국(벨트호번)",
+   "hs": "8486.20",
+   "partner": "미국",
+   "spec": "{\"reporter\": \"NL\", \"product\": \"848620\", \"partner\": \"US\", \"flow\": \"export\"}"
   }
  ],
  "mappings": [
@@ -2540,6 +2610,56 @@
    "caveat": "구독 매출이라 분기 변동이 작고, 공격 건수는 그룹 단속·유출 사이트 폐쇄로 출렁임. 회사 물량 아님.",
    "include_in_total": 0,
    "sort": 10
+  },
+  {
+   "ticker": "ASML",
+   "series_id": "nl_exp_litho",
+   "role": "생산출하",
+   "confidence": "중간",
+   "rationale": "네덜란드 노광장비 수출 전체 — 사실상 ASML 벨트호번 출하. 금액 상관 0.71이지만 전년비 0.14.",
+   "caveat": "서비스 매출(약 1/4)은 수출에 없음, EUV는 검수 시점 매출 인식이라 분기 어긋남. 유로→달러 환산.",
+   "include_in_total": 1,
+   "sort": 10
+  },
+  {
+   "ticker": "ASML",
+   "series_id": "nl_exp_litho_kr",
+   "role": "회사출하",
+   "confidence": "중간",
+   "rationale": "한국향(삼성·SK하이닉스) — 매출 전년비 0.30(C)이지만 최근 8분기 0.79, 단독 예측 오차 7.2%.",
+   "caveat": "고객 팹 일정에 따라 월별 변동 큼.",
+   "include_in_total": 0,
+   "sort": 20
+  },
+  {
+   "ticker": "ASML",
+   "series_id": "nl_exp_litho_tw",
+   "role": "회사출하",
+   "confidence": "낮음",
+   "rationale": "대만향(TSMC) — 매출 전년비 0.34(C).",
+   "caveat": "월별 변동 큼.",
+   "include_in_total": 0,
+   "sort": 30
+  },
+  {
+   "ticker": "ASML",
+   "series_id": "nl_exp_litho_us",
+   "role": "회사출하",
+   "confidence": "낮음",
+   "rationale": "미국향(인텔·마이크론·TSMC 애리조나) — 매출 전년비 0.75(A), 1분기 선행.",
+   "caveat": "금액 비중 작음(연 25억 달러 안팎).",
+   "include_in_total": 0,
+   "sort": 40
+  },
+  {
+   "ticker": "ASML",
+   "series_id": "nl_exp_litho_cn",
+   "role": "회사출하",
+   "confidence": "낮음",
+   "rationale": "중국향 — 2026년 수출 통제로 월 수천만 달러 수준까지 급감.",
+   "caveat": "매출과 역상관(−0.37) — 통제 전 선행 구매 영향.",
+   "include_in_total": 0,
+   "sort": 50
   }
  ],
  "hs_tags": [
@@ -2782,6 +2902,11 @@
    "hs_prefix": "848690",
    "ticker": "059090.KQ",
    "note": "반도체 장비 부품"
+  },
+  {
+   "hs_prefix": "848620",
+   "ticker": "ASML",
+   "note": "노광장비"
   }
  ]
 }
