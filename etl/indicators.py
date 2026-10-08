@@ -35,7 +35,8 @@ UNIT_PRICES = [
     ("UV_US_SSD", "미국 SSD 수입 단가 ($/개)", "메모리 단가", "us_imp_all_ssd", "Census 8523.51 전체 금액/개수"),
     ("UV_KR_SERVER", "한국 처리장치(서버 본체) 수출 단가 ($/kg)", "서버·스토리지", "kr_exp_server", "한국 관세청 8471.50"),
     ("UV_KR_PCB", "한국 PCB 수출 단가 ($/kg)", "부품 단가", "kr_exp_pcb", "한국 관세청 8534"),
-    ("UV_KR_MLCC", "한국 MLCC 수출 단가 ($/kg)", "부품 단가", "kr_exp_mlcc", "한국 관세청 8532.24"),
+    ("UV_JP_MLCC", "일본 MLCC 수출 단가 ($/천 개)", "부품 단가", "jp_exp_mlcc", "e-Stat 8532.24 금액/개수 — 개당 가격이라 MLCC 가격 사이클에 가장 가까움"),
+    ("UV_KR_MLCC", "한국 MLCC 수출 단가 ($/kg)", "부품 단가", "kr_exp_mlcc", "한국 관세청 8532.24 — 무게 기준이라 고용량·대형 제품 비중 변화에 둔감"),
     ("UV_KR_CCL", "한국 CCL 수출 단가 ($/kg)", "부품 단가", "kr_exp_ccl", "한국 관세청 7410.21"),
 ]
 SINCE = "2015-01-01"
