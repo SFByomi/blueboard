@@ -21,7 +21,7 @@ from etl.sec import UA, cik
 ROOT = Path(__file__).resolve().parents[1]
 STORE = ROOT / "data" / "guidance.json"
 TEXT = ROOT / "data" / "raw" / "guidance"  # 보도자료 본문 캐시(git 제외) — 파서를 고치면 다시 받지 않고 재해석
-VERSION = 6  # 파서 버전: 저장된 결과가 이보다 낮으면 본문으로 다시 해석
+VERSION = 7  # 파서 버전: 저장된 결과가 이보다 낮으면 본문으로 다시 해석
 SINCE = "2021-06-01"
 NUM = r"[$€]\s?([\d,]+(?:\.\d+)?)\s*(billion|million|B|M)?"  # ASML은 유로
 SEP = r"\s*(?:to|and|-|–|—)\s*[$€]?\s?([\d,]+(?:\.\d+)?)\s*(billion|million|B|M)?"
@@ -121,6 +121,20 @@ def parse_annual(text: str) -> list[dict]:
     return out[:3]
 
 
+def parse_actual(text: str) -> dict | None:
+    """보도자료 첫머리의 발표 분기 매출 실적 ("Revenue was $X", "revenue of $X") → {value, unit, ctx}.
+    연간·반기 합계나 부문 매출이 먼저 나오는 회사도 있어, 회사별 과거 일치율(actual_trust)로 쓸지 정한다."""
+    head = text[:4000]
+    for m in re.finditer(rf"(?i){REV}\b(?:\s+for\s+the\s+(?:fiscal\s+)?(?:first|second|third|fourth)\s+(?:fiscal\s+)?quarter(?:\s+of\s+(?:fiscal\s+)?(?:year\s+)?20\d\d)?)?"
+                         r"\s*(?:was|were|of|totaled|reached|grew\s+\d+%\s+to|increased\s+\d+%\s+to|:)\s*(?:a\s+record\s+)?[$€]\s?([\d,]+(?:\.\d+)?)\s*(billion|million|B|M)?", head):
+        pre = head[max(0, m.start() - 150): m.start()]
+        if re.search(r"(?i)expect|guidance|outlook|full[\s-]+year|fiscal\s+year\s+20\d\d\s+revenue|annual|six months|nine months|twelve months", pre[-80:] + m.group(0)):
+            continue
+        v, u = _num(m.group(1), m.group(2))
+        return {"value": v, "unit": u, "ctx": re.sub(r"\s+", " ", m.group(0))[:120]}
+    return None
+
+
 def scale(g: dict, ref: float) -> tuple[float, float]:
     """단위 확정: 명시 단위 우선, 없으면 직전 분기 매출(ref)과 로그 거리가 가장 가까운 단위"""
     def pick(v, u):
@@ -182,6 +196,7 @@ def collect(tickers: list[str], log=print) -> dict:
                 continue
             prelim = bool(txt and re.search(r"(?i)preliminary\s+(?:unaudited\s+)?(?:financial\s+)?(?:results|net sales|revenue)|announces\s+preliminary", txt[:2500]))
             store[acc] = {"ticker": t, "filed": filed, "cands": parse(txt) if txt else [], "annual": parse_annual(txt) if txt else [],
+                          "actual": parse_actual(txt) if txt else None,
                           "fye": fye, **({"prelim": True} if prelim else {}), "v": VERSION}
             new += 1
         if new:
@@ -281,3 +296,42 @@ def implied(store: dict, ticker: str, ends: list, revs: list, t_end) -> list[dic
         out.append({"filed": filed.strftime("%Y-%m-%d"), "target_end": q.strftime("%Y-%m-%d"), "low": lo, "high": hi, "prelim": False,
                     "annual": {"low": fy_lo, "high": fy_hi, "done": got, "left": len(rest)}})
     return out
+
+
+ACTUAL_TRUST, ACTUAL_MIN = 0.9, 6  # 보도자료 실적을 쓰려면 과거 SEC 수치와 ±0.5% 일치율 90% 이상(6건 이상)
+
+
+def actuals(store: dict, ticker: str, ends: list[str], revs: list[float]) -> tuple[float | None, list[dict]]:
+    """보도자료 실적 → (과거 일치율, SEC 공시 전 분기 실적 [{start, end, revenue, filed}]).
+    10-Q·10-K XBRL은 발표 몇 주 뒤에 나오므로 그 사이 실적을 보도자료로 먼저 반영 — 일치율이 낮은 회사는 쓰지 않음."""
+    import pandas as pd
+    if not ends:
+        return None, []
+    keys = [pd.Timestamp(e) for e in ends]
+    rev = dict(zip(keys, revs))
+    ok = n = 0
+    new = []
+    for acc, g in sorted(store.items(), key=lambda kv: kv[1].get("filed", "")):
+        if g.get("ticker") != ticker or not g.get("actual") or g.get("skip"):
+            continue
+        filed = pd.Timestamp(g["filed"])
+        rs = [e for e in keys if e < filed]
+        if not rs:
+            continue
+        a = g["actual"]
+        if (filed - rs[-1]).days <= 100:  # 이미 공시된 분기 → 일치율 집계
+            ref = rev[rs[-1]]
+            v = a["value"] * a["unit"] if a["unit"] else min((a["value"] * k for k in (1, 1e3, 1e6, 1e9)), key=lambda x: abs(x / ref - 1))
+            n += 1
+            ok += abs(v / ref - 1) < 0.005
+        else:  # 공시 전 분기: 직전 분기 + 3개월
+            end = rs[-1] + pd.DateOffset(months=3)
+            if (filed - end).days > 100 or (filed - end).days < 5:
+                continue
+            ref = rev[rs[-1]]
+            v = a["value"] * a["unit"] if a["unit"] else min((a["value"] * k for k in (1, 1e3, 1e6, 1e9)), key=lambda x: abs(x / ref - 1))
+            new.append({"start": rs[-1] + pd.Timedelta(days=1), "end": end, "revenue": v, "filed": g["filed"], "ref": ref})
+    trust = ok / n if n else None
+    if trust is None or n < ACTUAL_MIN or trust < ACTUAL_TRUST:
+        return trust, []
+    return trust, [x for x in new if x["end"] > keys[-1] and 0.6 < x["revenue"] / x["ref"] < 1.8][-1:]  # 최신 공시 이후 분기만, 터무니없으면 버림
