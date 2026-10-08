@@ -10,11 +10,12 @@ from collections.abc import Callable
 
 import pandas as pd
 
-from etl import census, estat, kcs, ransomware
+from etl import c30, census, estat, kcs, ransomware
 
 FETCHERS: dict[str, Callable[[dict], pd.DataFrame]] = {
     "census": lambda s: census.fetch(s["dataset"], s["hs"], s["filters"]),
     "estat": lambda s: estat.monthly_usd(s["flow"], s["hs9"], s["offices"], s.get("country")),
+    "c30": lambda s: c30.monthly(s["column"]),  # 미국 건설투자 세부 유형 (연율 달러)
     "ransomware": lambda s: ransomware.monthly(s.get("country")),  # 건수 시계열 (value_usd 칸에 건수, unit='건')
     "kcs": lambda s: kcs.fetch(s["api"], s["hs"], s.get("flow", "export"), s.get("cnty"), sido=s.get("sido"), sgg=s.get("sgg")),
 }

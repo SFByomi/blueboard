@@ -374,6 +374,66 @@
    "fy_note": "FY 1월말 종료",
    "sort": 350,
    "sites": "[]"
+  },
+  {
+   "market": "KOSPI",
+   "sec_ticker": null,
+   "fy_note": "FY 12월",
+   "dart_fs": "CFS",
+   "dart_segment": null,
+   "grp": "전력·냉각",
+   "sector": "전력기기",
+   "ticker": "267260.KS",
+   "name": "HD Hyundai Electric",
+   "name_ko": "HD현대일렉트릭",
+   "sort": 360,
+   "thesis": "초고압 변압기·차단기. 미국 송배전·데이터센터 수요 수혜. 한국 대용량 변압기 수출과 매출 전년비 상관은 0.43~0.47(C) — 미국 앨라배마 현지 생산·국내 매출 비중 때문에 수출만으론 설명력이 낮아 업황 참고.",
+   "sites": "[{\"name\": \"울산 공장\", \"country\": \"한국 울산\", \"what\": \"초고압 변압기·차단기\"}, {\"name\": \"앨라배마 공장\", \"country\": \"미국 몽고메리\", \"what\": \"전력 변압기\"}]"
+  },
+  {
+   "market": "KOSPI",
+   "sec_ticker": null,
+   "fy_note": "FY 12월",
+   "dart_fs": "CFS",
+   "dart_segment": null,
+   "grp": "전력·냉각",
+   "sector": "전력기기",
+   "ticker": "298040.KS",
+   "name": "Hyosung Heavy Industries",
+   "name_ko": "효성중공업",
+   "sort": 370,
+   "thesis": "변압기·차단기(중공업) + 건설. 한국 대용량 변압기(10MVA 초과) 수출이 매출 전년비와 0.51(B), 최근 8분기 0.74로 연동 — 말레이시아 변전소 공급 이력. 미국향 고압 케이블 수출도 0.50(B).",
+   "sites": "[{\"name\": \"창원 공장\", \"country\": \"한국 경남\", \"what\": \"초고압 변압기·차단기\"}, {\"name\": \"멤피스 공장(HICO)\", \"country\": \"미국 테네시\", \"what\": \"전력 변압기\"}]"
+  },
+  {
+   "market": "KOSPI",
+   "sec_ticker": null,
+   "fy_note": "FY 12월",
+   "dart_fs": "CFS",
+   "dart_segment": null,
+   "grp": "전력·냉각",
+   "sector": "전력기기",
+   "ticker": "010120.KS",
+   "name": "LS ELECTRIC",
+   "name_ko": "LS ELECTRIC",
+   "sort": 380,
+   "thesis": "배전반·차단기·자동화. 수출 통계와 매출 전년비 상관이 모두 0.3 미만(D) — 국내 매출·자회사 비중이 커서 무역 흐름으로는 설명 안 됨. 미국 배전반 수입·데이터센터 건설투자를 업황으로만 참고.",
+   "sites": "[{\"name\": \"청주·천안 사업장\", \"country\": \"한국 충북·충남\", \"what\": \"배전·자동화 기기\"}, {\"name\": \"부산 공장\", \"country\": \"한국 부산\", \"what\": \"초고압 변압기\"}, {\"name\": \"배스트럽 공장\", \"country\": \"미국 텍사스\", \"what\": \"배전반\"}]"
+  },
+  {
+   "market": "KOSPI",
+   "sec_ticker": null,
+   "fy_note": "FY 12월",
+   "dart_fs": "CFS",
+   "dart_segment": null,
+   "grp": "전력·냉각",
+   "sector": "전력기기",
+   "ticker": "103590.KS",
+   "name": "Iljin Electric",
+   "name_ko": "일진전기",
+   "sort": 390,
+   "thesis": "전선·케이블 + 변압기. 한국 전선·케이블 수출이 매출 전년비와 0.52(B), 최근 8분기 0.69로 연동. 홍성 변압기 공장 증설로 변압기 비중 확대 중.",
+   "sites": "[{\"name\": \"안산 공장\", \"country\": \"한국 경기\", \"what\": \"전선·초고압 케이블\"}, {\"name\": \"홍성 공장\", \"country\": \"한국 충남\", \"what\": \"변압기\"}]"
   }
  ],
  "series": [
@@ -1014,6 +1074,171 @@
    "hs": "-",
    "partner": "전세계",
    "spec": "{}"
+  },
+  {
+   "id": "us_const_datacenter",
+   "label": "미국 데이터센터 건설투자 (연율)",
+   "source": "c30",
+   "reporter": "🇺🇸 미국",
+   "flow": "건설투자",
+   "region": "민간 건설",
+   "hs": "-",
+   "partner": "미국",
+   "spec": "{\"column\": \"Data center\"}"
+  },
+  {
+   "id": "us_const_electric",
+   "label": "미국 전력(발전·송배전) 건설투자 (연율)",
+   "source": "c30",
+   "reporter": "🇺🇸 미국",
+   "flow": "건설투자",
+   "region": "민간 건설",
+   "hs": "-",
+   "partner": "미국",
+   "spec": "{\"column\": \"Electric\"}"
+  },
+  {
+   "id": "us_const_chipfab",
+   "label": "미국 반도체·전자 공장 건설투자 (연율)",
+   "source": "c30",
+   "reporter": "🇺🇸 미국",
+   "flow": "건설투자",
+   "region": "민간 건설",
+   "hs": "-",
+   "partner": "미국",
+   "spec": "{\"column\": \"Computer/electronic/electrical\"}"
+  },
+  {
+   "id": "kr_exp_tr10",
+   "label": "한국 대용량 변압기(10MVA 초과, 액체절연) 수출",
+   "source": "kcs",
+   "reporter": "🇰🇷 한국",
+   "flow": "수출",
+   "region": "전국",
+   "hs": "8504.23",
+   "partner": "전세계",
+   "spec": "{\"api\": \"item\", \"hs\": \"850423\", \"flow\": \"export\"}"
+  },
+  {
+   "id": "kr_exp_tr10_us",
+   "label": "한국 → 미국 대용량 변압기 수출",
+   "source": "kcs",
+   "reporter": "🇰🇷 한국",
+   "flow": "수출",
+   "region": "전국",
+   "hs": "8504.23",
+   "partner": "미국",
+   "spec": "{\"api\": \"item_cty\", \"hs\": \"850423\", \"flow\": \"export\", \"cnty\": \"US\"}"
+  },
+  {
+   "id": "kr_exp_tr10_my",
+   "label": "한국 → 말레이시아 대용량 변압기 수출",
+   "source": "kcs",
+   "reporter": "🇰🇷 한국",
+   "flow": "수출",
+   "region": "전국",
+   "hs": "8504.23",
+   "partner": "말레이시아",
+   "spec": "{\"api\": \"item_cty\", \"hs\": \"850423\", \"flow\": \"export\", \"cnty\": \"MY\"}"
+  },
+  {
+   "id": "us_imp_kr_tr10",
+   "label": "한국산 대용량 변압기 미국 수입",
+   "source": "census",
+   "reporter": "🇺🇸 미국",
+   "flow": "수입",
+   "region": "전국",
+   "hs": "8504.23",
+   "partner": "한국",
+   "spec": "{\"dataset\": \"imports/hs\", \"hs\": \"850423\", \"filters\": {\"CTY_CODE\": \"5800\"}}"
+  },
+  {
+   "id": "us_imp_all_panel_lv",
+   "label": "배전·제어반(1kV 이하) 미국 수입",
+   "source": "census",
+   "reporter": "🇺🇸 미국",
+   "flow": "수입",
+   "region": "전국",
+   "hs": "8537.10",
+   "partner": "전세계",
+   "spec": "{\"dataset\": \"imports/hs\", \"hs\": \"853710\", \"filters\": {\"CTY_CODE\": \"-\"}}"
+  },
+  {
+   "id": "us_imp_all_panel_hv",
+   "label": "배전·제어반(1kV 초과) 미국 수입",
+   "source": "census",
+   "reporter": "🇺🇸 미국",
+   "flow": "수입",
+   "region": "전국",
+   "hs": "8537.20",
+   "partner": "전세계",
+   "spec": "{\"dataset\": \"imports/hs\", \"hs\": \"853720\", \"filters\": {\"CTY_CODE\": \"-\"}}"
+  },
+  {
+   "id": "us_imp_cn_panel",
+   "label": "중국산 배전·제어반 미국 수입",
+   "source": "census",
+   "reporter": "🇺🇸 미국",
+   "flow": "수입",
+   "region": "전국",
+   "hs": "8537.10+20",
+   "partner": "중국",
+   "spec": "{\"dataset\": \"imports/hs\", \"hs\": [\"853710\", \"853720\"], \"filters\": {\"CTY_CODE\": \"5700\"}}"
+  },
+  {
+   "id": "kr_exp_tr_all",
+   "label": "한국 변압기·전력변환기 수출 (전체)",
+   "source": "kcs",
+   "reporter": "🇰🇷 한국",
+   "flow": "수출",
+   "region": "전국",
+   "hs": "8504",
+   "partner": "전세계",
+   "spec": "{\"api\": \"item\", \"hs\": \"8504\", \"flow\": \"export\"}"
+  },
+  {
+   "id": "kr_exp_cable",
+   "label": "한국 전선·케이블 수출",
+   "source": "kcs",
+   "reporter": "🇰🇷 한국",
+   "flow": "수출",
+   "region": "전국",
+   "hs": "8544",
+   "partner": "전세계",
+   "spec": "{\"api\": \"item\", \"hs\": \"8544\", \"flow\": \"export\"}"
+  },
+  {
+   "id": "kr_exp_panel_hv",
+   "label": "한국 배전·제어반(1kV 초과) 수출",
+   "source": "kcs",
+   "reporter": "🇰🇷 한국",
+   "flow": "수출",
+   "region": "전국",
+   "hs": "8537.20",
+   "partner": "전세계",
+   "spec": "{\"api\": \"item\", \"hs\": \"853720\", \"flow\": \"export\"}"
+  },
+  {
+   "id": "kr_exp_panel_us",
+   "label": "한국 → 미국 배전·제어반 수출",
+   "source": "kcs",
+   "reporter": "🇰🇷 한국",
+   "flow": "수출",
+   "region": "전국",
+   "hs": "8537",
+   "partner": "미국",
+   "spec": "{\"api\": \"item_cty\", \"hs\": \"8537\", \"flow\": \"export\", \"cnty\": \"US\"}"
+  },
+  {
+   "id": "kr_exp_hvcable_us",
+   "label": "한국 → 미국 고압 케이블 수출",
+   "source": "kcs",
+   "reporter": "🇰🇷 한국",
+   "flow": "수출",
+   "region": "전국",
+   "hs": "8544.60",
+   "partner": "미국",
+   "spec": "{\"api\": \"item_cty\", \"hs\": \"854460\", \"flow\": \"export\", \"cnty\": \"US\"}"
   }
  ],
  "mappings": [
@@ -1806,6 +2031,186 @@
    "caveat": "상장(2024) 이후 표본 9분기뿐이라 우연일 수 있음. 업황 참고용.",
    "include_in_total": 0,
    "sort": 10
+  },
+  {
+   "ticker": "298040.KS",
+   "series_id": "kr_exp_tr10",
+   "role": "생산출하",
+   "confidence": "중간",
+   "rationale": "대용량 변압기(10MVA 초과) 수출 — 매출 전년비 0.51(B)·최근 8분기 0.74, 단독 예측 오차 5.4%.",
+   "caveat": "HD현대일렉트릭·LS·일진 물량 혼재. 국내 업체 합산(회사별 구분 불가).",
+   "include_in_total": 1,
+   "sort": 10
+  },
+  {
+   "ticker": "298040.KS",
+   "series_id": "kr_exp_tr10_my",
+   "role": "생산출하",
+   "confidence": "낮음",
+   "rationale": "말레이시아 변전소 공급 이력(창원 제조) — 2026-08 말레이시아향 급증.",
+   "caveat": "업계 합산, 월별 변동 큼.",
+   "include_in_total": 0,
+   "sort": 20
+  },
+  {
+   "ticker": "298040.KS",
+   "series_id": "kr_exp_hvcable_us",
+   "role": "생산출하",
+   "confidence": "낮음",
+   "rationale": "미국향 고압 케이블 수출 — 매출 전년비 0.50(B).",
+   "caveat": "전선 업체 물량이 대부분일 수 있음(간접 지표).",
+   "include_in_total": 0,
+   "sort": 30
+  },
+  {
+   "ticker": "298040.KS",
+   "series_id": "us_const_datacenter",
+   "role": "최종수요",
+   "confidence": "낮음",
+   "rationale": "미국 데이터센터 건설투자(연율) — 송배전 설비 수요의 원천.",
+   "caveat": "업황 지표, 회사 물량 아님.",
+   "include_in_total": 0,
+   "sort": 90
+  },
+  {
+   "ticker": "267260.KS",
+   "series_id": "kr_exp_tr_all",
+   "role": "생산출하",
+   "confidence": "낮음",
+   "rationale": "변압기·전력변환기 전체 수출 — 매출 전년비 0.43(1분기 선행)·최근 8분기 0.63.",
+   "caveat": "업계 합산. 미국 앨라배마 현지 생산분은 안 잡힘.",
+   "include_in_total": 1,
+   "sort": 10
+  },
+  {
+   "ticker": "267260.KS",
+   "series_id": "kr_exp_tr10",
+   "role": "생산출하",
+   "confidence": "낮음",
+   "rationale": "대용량 변압기 수출 — 매출 전년비 0.47(C).",
+   "caveat": "최근 8분기 역상관(−0.49) — 현지 생산·국내 매출 영향.",
+   "include_in_total": 0,
+   "sort": 20
+  },
+  {
+   "ticker": "267260.KS",
+   "series_id": "kr_exp_tr10_us",
+   "role": "생산출하",
+   "confidence": "낮음",
+   "rationale": "미국향 대용량 변압기 수출.",
+   "caveat": "업계 합산.",
+   "include_in_total": 0,
+   "sort": 30
+  },
+  {
+   "ticker": "267260.KS",
+   "series_id": "us_const_datacenter",
+   "role": "최종수요",
+   "confidence": "낮음",
+   "rationale": "미국 데이터센터 건설투자 — 초고압 변압기 수요.",
+   "caveat": "업황 지표.",
+   "include_in_total": 0,
+   "sort": 90
+  },
+  {
+   "ticker": "010120.KS",
+   "series_id": "kr_exp_panel_hv",
+   "role": "생산출하",
+   "confidence": "낮음",
+   "rationale": "배전·제어반(1kV 초과) 수출 — 매출 전년비 0.31(C).",
+   "caveat": "국내·자회사 매출이 커서 직접 연동 약함.",
+   "include_in_total": 0,
+   "sort": 10
+  },
+  {
+   "ticker": "010120.KS",
+   "series_id": "kr_exp_panel_us",
+   "role": "생산출하",
+   "confidence": "낮음",
+   "rationale": "미국향 배전·제어반 수출.",
+   "caveat": "매출 전년비 0.25(D) — 미국은 텍사스 현지 생산 비중 확대.",
+   "include_in_total": 0,
+   "sort": 20
+  },
+  {
+   "ticker": "010120.KS",
+   "series_id": "us_imp_all_panel_hv",
+   "role": "최종수요",
+   "confidence": "낮음",
+   "rationale": "미국 배전·제어반(1kV 초과) 수입 — 미국 배전반 수요.",
+   "caveat": "업황 지표.",
+   "include_in_total": 0,
+   "sort": 80
+  },
+  {
+   "ticker": "010120.KS",
+   "series_id": "us_const_datacenter",
+   "role": "최종수요",
+   "confidence": "낮음",
+   "rationale": "미국 데이터센터 건설투자.",
+   "caveat": "업황 지표.",
+   "include_in_total": 0,
+   "sort": 90
+  },
+  {
+   "ticker": "103590.KS",
+   "series_id": "kr_exp_cable",
+   "role": "생산출하",
+   "confidence": "중간",
+   "rationale": "전선·케이블 수출 — 매출 전년비 0.52(B)·최근 8분기 0.69, 단독 예측 오차 6.2%.",
+   "caveat": "LS전선·대한전선 등 물량 혼재. 국내 업체 합산(회사별 구분 불가).",
+   "include_in_total": 1,
+   "sort": 10
+  },
+  {
+   "ticker": "103590.KS",
+   "series_id": "kr_exp_tr10",
+   "role": "생산출하",
+   "confidence": "낮음",
+   "rationale": "대용량 변압기 수출(홍성 변압기 증설).",
+   "caveat": "현재는 매출과 역상관 — 변압기 비중이 아직 작음.",
+   "include_in_total": 0,
+   "sort": 20
+  },
+  {
+   "ticker": "103590.KS",
+   "series_id": "us_const_electric",
+   "role": "최종수요",
+   "confidence": "낮음",
+   "rationale": "미국 전력(발전·송배전) 건설투자.",
+   "caveat": "업황 지표.",
+   "include_in_total": 0,
+   "sort": 90
+  },
+  {
+   "ticker": "VRT",
+   "series_id": "us_const_datacenter",
+   "role": "최종수요",
+   "confidence": "낮음",
+   "rationale": "미국 데이터센터 건설투자(연율) — 전력·냉각 설비 수요의 원천.",
+   "caveat": "업황 지표, 회사 물량 아님.",
+   "include_in_total": 0,
+   "sort": 95
+  },
+  {
+   "ticker": "AAON",
+   "series_id": "us_const_datacenter",
+   "role": "최종수요",
+   "confidence": "낮음",
+   "rationale": "미국 데이터센터 건설투자 — 데이터센터 냉각(BasX) 수요.",
+   "caveat": "업황 지표.",
+   "include_in_total": 0,
+   "sort": 95
+  },
+  {
+   "ticker": "BE",
+   "series_id": "us_const_datacenter",
+   "role": "최종수요",
+   "confidence": "낮음",
+   "rationale": "미국 데이터센터 건설투자 — 현장 연료전지 전원 수요.",
+   "caveat": "업황 지표.",
+   "include_in_total": 0,
+   "sort": 95
   }
  ],
  "hs_tags": [
@@ -2008,6 +2413,31 @@
    "hs_prefix": "902789",
    "ticker": "TXG",
    "note": "분석기기"
+  },
+  {
+   "hs_prefix": "850423",
+   "ticker": "298040.KS",
+   "note": "대용량 변압기"
+  },
+  {
+   "hs_prefix": "850423",
+   "ticker": "267260.KS",
+   "note": "대용량 변압기"
+  },
+  {
+   "hs_prefix": "853720",
+   "ticker": "010120.KS",
+   "note": "배전반 1kV 초과"
+  },
+  {
+   "hs_prefix": "853710",
+   "ticker": "010120.KS",
+   "note": "배전반"
+  },
+  {
+   "hs_prefix": "854460",
+   "ticker": "103590.KS",
+   "note": "고압 케이블"
   }
  ]
 }
