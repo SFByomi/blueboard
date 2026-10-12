@@ -13,6 +13,7 @@
 - 종목·시리즈·매핑·HS태그는 `data/curation.json`이 원본. DB는 캐시라 언제든 재생성.
 - 관리 페이지에서 수정 → 웹이 curation.json 자동 저장 → **작업 끝나면 commit·push** (다른 환경에서 pull 후 `etl.build`로 반영).
 - 코드로 큐레이션을 바꿀 때도 DB 수정 후 `etl.curation.export` 또는 json 직접 수정 → commit.
+- 공장 지도 = `data/plants.json` (회사·분야·좌표·상태·제품·연결 시리즈 id). 빌드마다 plants 테이블로 다시 읽음 → 웹 /plants. 좌표는 산업단지·도시 수준, 상태는 `asof` 월 기준으로 갱신.
 
 ## 구조
 - `etl/` Python 수집기 → `data/yomin.db`(SQLite, git 미포함 — `python -m etl.build`로 재생성)

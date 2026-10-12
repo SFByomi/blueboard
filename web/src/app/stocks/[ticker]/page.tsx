@@ -99,7 +99,7 @@ export default async function StockPage({ params }: PageProps<"/stocks/[ticker]"
 
       {sites.length > 0 && (
         <div className="card">
-          <b>생산거점</b>
+          <b>생산거점</b> <Link href={`/plants?q=${encodeURIComponent(ticker)}`} className="ml-1 text-xs font-normal text-accent">공장 지도에서 보기 →</Link>
           <div className="mt-2 grid gap-2 sm:grid-cols-2 lg:grid-cols-4">
             {sites.map((st) => (
               <div key={st.name} className="rounded-lg bg-panel2 px-3 py-2 text-sm">

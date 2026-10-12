@@ -173,3 +173,14 @@ export type Consensus = { date: string; ticker: string; period: string; end_date
 /** 컨센서스 원 금액 — 로컬 SQLite에만 있음(게시 안 함). 관리 화면 전용 */
 export const latestConsensus = () =>
   query<Consensus>("SELECT * FROM consensus WHERE date = (SELECT max(date) FROM consensus) ORDER BY ticker, period").catch(noTable<Consensus>);
+
+export type Plant = {
+  id: number; company: string; ticker: string | null; category: string; site: string; city: string | null; country: string | null;
+  lat: number; lon: number; status: string | null; product: string | null; note: string | null; asof: string | null; flows: string;
+};
+/** 공장 지도 (data/plants.json → etl.build.load_plants) — 첫 빌드 전엔 테이블이 없을 수 있음 */
+export const plants = () =>
+  query<Plant>("SELECT * FROM plants ORDER BY company, site").catch((e: { code?: string; message?: string }) => {
+    if (e.code === "42P01" || e.message?.includes("no such table")) return [] as Plant[];
+    throw e;
+  });

@@ -3,6 +3,7 @@
 실행 (프로젝트 루트): .venv/bin/python -m etl.build [--skip-surge]
 """
 import json
+from pathlib import Path
 import sys
 import time
 from concurrent.futures import ThreadPoolExecutor, as_completed
@@ -14,6 +15,20 @@ from etl.db import connect
 
 def log(msg):
     print(msg, flush=True)
+
+
+def load_plants(con) -> int:
+    """data/plants.json → plants 테이블 (공장 지도). flows는 그 공장 출하를 보는 시리즈 id 목록(JSON)"""
+    path = Path(__file__).resolve().parents[1] / "data" / "plants.json"
+    if not path.exists():
+        return 0
+    rows = json.loads(path.read_text(encoding="utf-8"))
+    con.execute("DELETE FROM plants")
+    con.executemany("INSERT INTO plants (id, company, ticker, category, site, city, country, lat, lon, status, product, note, asof, flows) "
+                    "VALUES (?,?,?,?,?,?,?,?,?,?,?,?,?,?)",
+                    [(r["id"], r["company"], r.get("ticker"), r["category"], r["site"], r.get("city"), r.get("country"), r["lat"], r["lon"],
+                      r.get("status"), r.get("product"), r.get("note"), r.get("asof"), json.dumps(r.get("flows") or [])) for r in rows])
+    return len(rows)
 
 
 def apply_seed(con):
@@ -118,6 +133,7 @@ def main():
         log("1) 큐레이션: data/curation.json 적용")
     else:
         log("1) 시드 → data/curation.json 생성"); apply_seed(con); curation.export(con)
+    log(f"  ✓ 공장 지도 {load_plants(con)}곳 (data/plants.json)"); con.commit()
     step("2) 시계열"); fetch_series(con)
     step("3) 회사 매출 가이던스·실적 보도자료")
     guidance.collect([t for (t,) in con.execute("SELECT sec_ticker FROM companies WHERE sec_ticker IS NOT NULL ORDER BY sec_ticker")], log)

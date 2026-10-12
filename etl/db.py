@@ -47,6 +47,10 @@ CREATE TABLE IF NOT EXISTS surge (
   PRIMARY KEY (scope, hs6, partner)
 );
 CREATE TABLE IF NOT EXISTS meta (key TEXT PRIMARY KEY, value TEXT);
+CREATE TABLE IF NOT EXISTS plants (  -- 공장 지도 (data/plants.json이 원본, 빌드마다 다시 읽음) — 공장별 상태·제품·연결된 무역 흐름
+  id INTEGER PRIMARY KEY, company TEXT NOT NULL, ticker TEXT, category TEXT NOT NULL, site TEXT NOT NULL, city TEXT, country TEXT,
+  lat REAL NOT NULL, lon REAL NOT NULL, status TEXT, product TEXT, note TEXT, asof TEXT, flows TEXT
+);
 CREATE TABLE IF NOT EXISTS alerts (
   series_id TEXT NOT NULL, month TEXT NOT NULL, kind TEXT NOT NULL, detail TEXT,
   PRIMARY KEY (series_id, month, kind)
