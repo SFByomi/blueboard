@@ -9,7 +9,7 @@ import { CtyName, HsName } from "@/components/Names";
 import { IndexSection } from "@/components/IndexSection";
 import { INDEX_FOR_GROUP, dday, estReported, money, parseSites, pct, tone, usd } from "@/lib/format";
 import { ADMIN_ENABLED } from "@/lib/db";
-import { alertsFor, company, earningsDates, estimateDate, estimateHistory, financials, flowScores, indicators, mappingsFor, observations, priceSnapshots, reportedQuarters, surgeForTicker, unestimated } from "@/lib/queries";
+import { alertsFor, company, earningsDates, estimateDate, estimateHistory, financials, flowScores, indicators, mappingsFor, observations, priceSnapshots, reportedQuarters, surgeForTicker, unestimated, earningsBasis } from "@/lib/queries";
 
 // 게시 직후 바로 보이도록 요청마다 렌더 (ISR 캐시가 게시 후에도 이전 데이터로 남던 문제). DB가 작아 부담 없음
 export const dynamic = "force-dynamic";
@@ -27,8 +27,8 @@ export default async function StockPage({ params }: PageProps<"/stocks/[ticker]"
 
   const maps = await mappingsFor(ticker);
   const ids = maps.map((m) => m.series_id);
-  const [obs, allFin, alerts, relatedAll, scores, estAll, estDate, earn, done, skips] = await Promise.all([
-    observations(ids), financials(ticker), alertsFor(ids), surgeForTicker(ticker), flowScores(ticker), estimateHistory(ticker), estimateDate(), earningsDates(), reportedQuarters(), unestimated()]);
+  const [obs, allFin, alerts, relatedAll, scores, estAll, estDate, earn, done, skips, basis] = await Promise.all([
+    observations(ids), financials(ticker), alertsFor(ids), surgeForTicker(ticker), flowScores(ticker), estimateHistory(ticker), estimateDate(), earningsDates(), reportedQuarters(), unestimated(), earningsBasis()]);
   // 최신 빌드에서 추정이 빠진 종목(예: 백테스트 분기 부족으로 탈락)은 옛 추정을 보여주지 않음
   const estHist = estAll.at(-1)?.date === estDate ? estAll : [];
   const nextEarn = earn[ticker] ?? null, lastReported = done[ticker] ?? null;
@@ -80,7 +80,7 @@ export default async function StockPage({ params }: PageProps<"/stocks/[ticker]"
         <div>
           <h1 className="text-3xl font-bold">{c.name_ko ?? c.name}</h1>
           <div className="mt-1 text-sm text-muted">{c.ticker} · {c.market} · {c.sector} · {c.fy_note}
-            {nextEarn && <> · <span className="text-fg">다음 실적 발표 {nextEarn} (D-{dday(nextEarn)})</span></>}</div>
+            {nextEarn && <> · <span className="text-fg">다음 실적 발표 {basis[ticker] ? "~" : ""}{nextEarn} (D-{dday(nextEarn)}){basis[ticker] ? <span className="text-muted"> · {basis[ticker]}</span> : null}</span></>}</div>
         </div>
         {ADMIN_ENABLED && <Link href={`/admin/stocks/${encodeURIComponent(c.ticker)}`} className="btn-ghost">매핑 편집</Link>}
       </div>

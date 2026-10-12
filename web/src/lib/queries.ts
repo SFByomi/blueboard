@@ -152,6 +152,11 @@ export const unestimated = () =>
 export const earningsDates = () =>
   query<{ ticker: string; next_date: string | null }>("SELECT ticker, next_date FROM earnings_calendar").catch(noTable<{ ticker: string; next_date: string | null }>)
     .then((r) => Object.fromEntries(r.filter((x) => x.next_date && x.next_date >= new Date().toISOString().slice(0, 10)).map((x) => [x.ticker, x.next_date!])) as Record<string, string>);
+/** 발표 예정일이 추정인 종목의 근거 (작년 같은 분기 공시일 기준 등) — 야후 확정 일정이면 없음 */
+export const earningsBasis = () =>
+  query<{ ticker: string; next_basis: string | null }>("SELECT ticker, next_basis FROM earnings_calendar WHERE next_basis IS NOT NULL")
+    .then((r) => Object.fromEntries(r.map((x) => [x.ticker, x.next_basis!])) as Record<string, string>)
+    .catch(() => ({}) as Record<string, string>);
 /** 실적 발표가 끝난 마지막 분기 말일 (야후 earningsHistory) — 컬럼 추가 전 DB면 빈 값 */
 export const reportedQuarters = () =>
   query<{ ticker: string; last_reported: string | null }>("SELECT ticker, last_reported FROM earnings_calendar")

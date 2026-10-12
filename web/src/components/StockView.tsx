@@ -113,9 +113,14 @@ export function StockView({ flows, months, quarters, currency }: { flows: FlowDa
         <h2 className="font-bold"><T ko="공급망 추적" en="Supply chain tracking" /></h2>
         <p className="mb-3 text-xs text-muted">부품 조달 → 생산거점 출하 → 고객향 반입 순 · 숫자는 최근 3개월 전년비(물량·단가 분해) · 카드를 누르면 아래 상세가 바뀝니다</p>
         <div className="space-y-4">
-          {STAGES.map((st) => {
+          {STAGES.map((st, si) => {
             const idx = flows.map((x, i) => (stageOf(x.role) === st.key ? i : -1)).filter((i) => i >= 0);
-            if (!idx.length) return null;
+            const used = STAGES.map((s2, k) => (flows.some((x) => stageOf(x.role) === s2.key) ? k : -1)).filter((k) => k >= 0);
+            if (!idx.length) // 앞뒤 단계 사이에 비는 단계는 번호가 건너뛰어 보이지 않게 '추적 흐름 없음'으로 표시
+              return used.length && si > Math.min(...used) && si < Math.max(...used) ? (
+                <div key={st.key} className="flex flex-wrap items-baseline gap-2 text-muted"><b className="text-sm">{st.title}</b>
+                  <span className="text-xs">{st.desc} — 공개 통계로 추적할 수 있는 흐름 없음 (생산거점 국가의 세관 데이터 미공개 등)</span></div>
+              ) : null;
             return (
               <div key={st.key}>
                 <div className="mb-2 flex flex-wrap items-baseline gap-2"><b className="text-sm">{st.title}</b><span className="text-xs text-muted">{st.desc}</span></div>
