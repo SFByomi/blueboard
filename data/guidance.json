@@ -11191,6 +11191,393 @@
 "fye": "0628",
 "v": 7
 },
+"0000950170-21-000423": {
+"ticker": "TSLA",
+"filed": "2021-07-02",
+"cands": [],
+"annual": [],
+"actual": null,
+"fye": "1231",
+"v": 7
+},
+"0001564590-21-037953": {
+"ticker": "TSLA",
+"filed": "2021-07-26",
+"cands": [],
+"annual": [],
+"actual": null,
+"fye": "1231",
+"v": 7
+},
+"0001564590-21-049874": {
+"ticker": "TSLA",
+"filed": "2021-10-04",
+"cands": [],
+"annual": [],
+"actual": null,
+"fye": "1231",
+"v": 7
+},
+"0001564590-21-051307": {
+"ticker": "TSLA",
+"filed": "2021-10-20",
+"cands": [],
+"annual": [],
+"actual": null,
+"fye": "1231",
+"v": 7
+},
+"0001564590-22-000009": {
+"ticker": "TSLA",
+"filed": "2022-01-03",
+"cands": [],
+"annual": [],
+"actual": null,
+"fye": "1231",
+"v": 7
+},
+"0001564590-22-002476": {
+"ticker": "TSLA",
+"filed": "2022-01-26",
+"cands": [],
+"annual": [],
+"actual": null,
+"fye": "1231",
+"v": 7
+},
+"0001564590-22-013264": {
+"ticker": "TSLA",
+"filed": "2022-04-04",
+"cands": [],
+"annual": [],
+"actual": null,
+"fye": "1231",
+"v": 7
+},
+"0001564590-22-014917": {
+"ticker": "TSLA",
+"filed": "2022-04-20",
+"cands": [],
+"annual": [],
+"actual": null,
+"fye": "1231",
+"v": 7
+},
+"0001564590-22-025153": {
+"ticker": "TSLA",
+"filed": "2022-07-05",
+"cands": [],
+"annual": [],
+"actual": null,
+"fye": "1231",
+"v": 7
+},
+"0001564590-22-026048": {
+"ticker": "TSLA",
+"filed": "2022-07-20",
+"cands": [],
+"annual": [],
+"actual": null,
+"fye": "1231",
+"v": 7
+},
+"0001564590-22-033053": {
+"ticker": "TSLA",
+"filed": "2022-10-03",
+"cands": [],
+"annual": [],
+"actual": null,
+"fye": "1231",
+"v": 7
+},
+"0001564590-22-034639": {
+"ticker": "TSLA",
+"filed": "2022-10-19",
+"cands": [],
+"annual": [],
+"actual": null,
+"fye": "1231",
+"v": 7
+},
+"0001564590-23-000002": {
+"ticker": "TSLA",
+"filed": "2023-01-03",
+"cands": [],
+"annual": [],
+"actual": null,
+"fye": "1231",
+"v": 7
+},
+"0001564590-23-000799": {
+"ticker": "TSLA",
+"filed": "2023-01-25",
+"cands": [],
+"annual": [],
+"actual": null,
+"fye": "1231",
+"v": 7
+},
+"0001564590-23-005126": {
+"ticker": "TSLA",
+"filed": "2023-04-03",
+"cands": [],
+"annual": [],
+"actual": null,
+"fye": "1231",
+"v": 7
+},
+"0001564590-23-005959": {
+"ticker": "TSLA",
+"filed": "2023-04-19",
+"cands": [],
+"annual": [],
+"actual": null,
+"fye": "1231",
+"v": 7
+},
+"0000950170-23-031241": {
+"ticker": "TSLA",
+"filed": "2023-07-03",
+"cands": [],
+"annual": [],
+"actual": null,
+"fye": "1231",
+"v": 7
+},
+"0000950170-23-033544": {
+"ticker": "TSLA",
+"filed": "2023-07-19",
+"cands": [],
+"annual": [],
+"actual": null,
+"fye": "1231",
+"v": 7
+},
+"0000950170-23-050938": {
+"ticker": "TSLA",
+"filed": "2023-10-02",
+"cands": [],
+"annual": [],
+"actual": null,
+"fye": "1231",
+"v": 7
+},
+"0001628280-23-034588": {
+"ticker": "TSLA",
+"filed": "2023-10-18",
+"cands": [],
+"annual": [],
+"actual": null,
+"fye": "1231",
+"v": 7
+},
+"0000950170-24-000282": {
+"ticker": "TSLA",
+"filed": "2024-01-02",
+"cands": [],
+"annual": [],
+"actual": null,
+"fye": "1231",
+"v": 7
+},
+"0000950170-24-007073": {
+"ticker": "TSLA",
+"filed": "2024-01-24",
+"cands": [],
+"annual": [],
+"actual": null,
+"fye": "1231",
+"v": 7
+},
+"0000950170-24-040274": {
+"ticker": "TSLA",
+"filed": "2024-04-02",
+"cands": [],
+"annual": [],
+"actual": null,
+"fye": "1231",
+"v": 7
+},
+"0000950170-24-046895": {
+"ticker": "TSLA",
+"filed": "2024-04-23",
+"cands": [],
+"annual": [],
+"actual": null,
+"fye": "1231",
+"v": 7
+},
+"0001628280-24-030714": {
+"ticker": "TSLA",
+"filed": "2024-07-02",
+"cands": [],
+"annual": [],
+"actual": null,
+"fye": "1231",
+"v": 7
+},
+"0001628280-24-032603": {
+"ticker": "TSLA",
+"filed": "2024-07-23",
+"cands": [],
+"annual": [],
+"actual": null,
+"fye": "1231",
+"v": 7
+},
+"0001628280-24-041816": {
+"ticker": "TSLA",
+"filed": "2024-10-02",
+"cands": [],
+"annual": [],
+"actual": null,
+"fye": "1231",
+"v": 7
+},
+"0001628280-24-043432": {
+"ticker": "TSLA",
+"filed": "2024-10-23",
+"cands": [],
+"annual": [],
+"actual": null,
+"fye": "1231",
+"v": 7
+},
+"0001628280-25-000007": {
+"ticker": "TSLA",
+"filed": "2025-01-02",
+"cands": [],
+"annual": [],
+"actual": null,
+"fye": "1231",
+"v": 7
+},
+"0001628280-25-002993": {
+"ticker": "TSLA",
+"filed": "2025-01-29",
+"cands": [],
+"annual": [],
+"actual": null,
+"fye": "1231",
+"v": 7
+},
+"0001628280-25-016070": {
+"ticker": "TSLA",
+"filed": "2025-04-02",
+"cands": [],
+"annual": [],
+"actual": null,
+"fye": "1231",
+"v": 7
+},
+"0001628280-25-018851": {
+"ticker": "TSLA",
+"filed": "2025-04-22",
+"cands": [],
+"annual": [],
+"actual": null,
+"fye": "1231",
+"v": 7
+},
+"0001628280-25-033842": {
+"ticker": "TSLA",
+"filed": "2025-07-02",
+"cands": [],
+"annual": [],
+"actual": null,
+"fye": "1231",
+"v": 7
+},
+"0001628280-25-035738": {
+"ticker": "TSLA",
+"filed": "2025-07-23",
+"cands": [],
+"annual": [],
+"actual": null,
+"fye": "1231",
+"v": 7
+},
+"0001628280-25-043530": {
+"ticker": "TSLA",
+"filed": "2025-10-02",
+"cands": [],
+"annual": [],
+"actual": null,
+"fye": "1231",
+"v": 7
+},
+"0001628280-25-045861": {
+"ticker": "TSLA",
+"filed": "2025-10-22",
+"cands": [],
+"annual": [],
+"actual": null,
+"fye": "1231",
+"v": 7
+},
+"0001628280-26-000016": {
+"ticker": "TSLA",
+"filed": "2026-01-02",
+"cands": [],
+"annual": [],
+"actual": null,
+"fye": "1231",
+"v": 7
+},
+"0001628280-26-003837": {
+"ticker": "TSLA",
+"filed": "2026-01-28",
+"cands": [],
+"annual": [],
+"actual": null,
+"fye": "1231",
+"v": 7
+},
+"0001628280-26-022956": {
+"ticker": "TSLA",
+"filed": "2026-04-02",
+"cands": [],
+"annual": [],
+"actual": null,
+"fye": "1231",
+"v": 7
+},
+"0001628280-26-026551": {
+"ticker": "TSLA",
+"filed": "2026-04-22",
+"cands": [],
+"annual": [],
+"actual": null,
+"fye": "1231",
+"v": 7
+},
+"0001628280-26-046717": {
+"ticker": "TSLA",
+"filed": "2026-07-02",
+"cands": [],
+"annual": [],
+"actual": null,
+"fye": "1231",
+"v": 7
+},
+"0001628280-26-049213": {
+"ticker": "TSLA",
+"filed": "2026-07-22",
+"cands": [],
+"annual": [],
+"actual": null,
+"fye": "1231",
+"v": 7
+},
+"0001628280-26-064366": {
+"ticker": "TSLA",
+"filed": "2026-10-02",
+"cands": [],
+"annual": [],
+"actual": null,
+"fye": "1231",
+"v": 7
+},
 "0001770787-21-000041": {
 "ticker": "TXG",
 "filed": "2021-08-04",
