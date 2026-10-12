@@ -356,6 +356,8 @@ GUIDE_N = 8      # 초과율 중앙값에 쓰는 직전 가이던스 분기 수
 GUIDE_MIN = 2    # 초과율 계산에 필요한 최소 분기
 GUIDE_BT = 3     # 가이던스 모델 채택에 필요한 최소 백테스트 분기 (3~5분기면 '백테스트 N분기뿐'으로 신뢰 불가)
 GUIDE_DAYS = 20  # 가이던스 대상 분기 말과 실제 분기 말 허용 차이(회계 주 단위 차이)
+GUIDE_EDGE = 0.01  # 가이던스가 있을 때 다른 모델이 이겨야 하는 백테스트 오차 차이
+GUIDE_FAR = 0.15   # 다른 모델 값이 가이던스 기반 추정에서 이만큼 넘게 벗어나면 채택 안 함
 
 
 def _guide_at(guides: list[dict], end: pd.Timestamp, live: bool) -> dict | None:
@@ -425,7 +427,11 @@ def _estimate(con, ticker, picks, fin, today, log, guides=None):
             if len(ebt) >= GUIDE_BT:
                 cands.append((mape(ebt, "pred"), f"ens(guide,{best[1]})", {**best[2], "rev": (g_est + best[2]["rev"]) / 2}, ebt))
             cands.append(best)
-        best, short = min(cands, key=lambda c: c[0]), False
+        # 회사 가이던스가 있으면 기준으로 삼는다: 무역·결합 모델은 백테스트에서 1%p 넘게 이기고(소수점 차이는 잡음),
+        # 진행 분기 값이 가이던스 기반 추정과 15% 안일 때만 채택 (예: DELL 무역 6.5% vs 가이던스 6.7% → +36% 외삽을 막음)
+        g0 = cands[0]
+        alt = [c for c in cands[1:] if c[0] is not None and c[0] < g0[0] - GUIDE_EDGE and abs(c[2]["rev"] / g_est - 1) <= GUIDE_FAR]
+        best, short = (min(alt, key=lambda c: c[0]) if alt else g0), False
     worse = best and best[0] is not None and (mape(best[3], "naive") or 9) + TREND_SWITCH < best[0]
     if not best or worse:  # 무역 모델 없음·단순 추세보다 확실히 부정확 → 단순 추세 기준선
         tm = trend_model(fin)
