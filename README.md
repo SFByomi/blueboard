@@ -57,7 +57,7 @@ npm --prefix web run dev   # http://localhost:3000
 **https://buywhenitgoesup.vercel.app** (Vercel 프로덕션 — `main` push 시 자동 배포)
 
 ```
-GitHub Actions (매일 06:17 KST)                     Vercel (web/, 서울 리전)
+GitHub Actions (매일 03:43 KST 예약)                     Vercel (web/, 서울 리전)
   etl.build  → data/yomin.db (SQLite, 캐시 유지)       DATABASE_URL 있으면 Postgres 읽기
   etl.publish → Supabase Postgres (전체 교체) ───────→  관리 페이지 404 · 요청마다 렌더
 ```

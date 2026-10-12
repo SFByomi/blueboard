@@ -1,8 +1,9 @@
 import Link from "next/link";
+import { LastUpdated } from "@/components/LastUpdated";
 import { HsName, T } from "@/components/Names";
 import { Spark } from "@/components/Spark";
 import { baseEffect, confNote, dday, estCaution, estRange, estReported, estTier, money, pct, TIER_STYLE, tone, usd, watchFlag } from "@/lib/format";
-import { earningsDates, latestEstimates, unestimated, reportedQuarters, TECH_CHAPTERS, meta, priceSnapshots, surge, tagIndex } from "@/lib/queries";
+import { earningsBasis, earningsDates, latestEstimates, unestimated, reportedQuarters, TECH_CHAPTERS, meta, priceSnapshots, surge, tagIndex } from "@/lib/queries";
 import { stockSignals, type Signal } from "@/lib/signals";
 
 // 게시 직후 바로 보이도록 요청마다 렌더 (ISR 캐시가 게시 후에도 이전 데이터로 남던 문제). DB가 작아 부담 없음
@@ -22,15 +23,15 @@ function Row({ s }: { s: Signal }) {
 }
 
 export default async function Home() {
-  const [sig, prices, top, related, builtAt, estRows, earn, done, skips] = await Promise.all([
-    stockSignals(), priceSnapshots(), surge("us_imp_world", "yoy3m", 6, TECH_CHAPTERS), tagIndex(), meta("built_at"), latestEstimates(), earningsDates(), reportedQuarters(), unestimated(),
+  const [sig, prices, top, related, builtAt, estRows, earn, done, skips, basis] = await Promise.all([
+    stockSignals(), priceSnapshots(), surge("us_imp_world", "yoy3m", 6, TECH_CHAPTERS), tagIndex(), meta("built_at"), latestEstimates(), earningsDates(), reportedQuarters(), unestimated(), earningsBasis(),
   ]);
   const ranked = sig.filter((s) => s.yoy3m != null).sort((a, b) => b.yoy3m! - a.yoy3m!);
   const half = Math.ceil(ranked.length / 2); // 상위 절반 / 하위 절반 (겹치지 않게) — 하위도 플러스일 수 있어 '둔화'가 아니라 상대 순위
   const up = ranked.slice(0, Math.min(half, 6)), down = ranked.slice(half).reverse().slice(0, 6);
   const names = Object.fromEntries(sig.map((s) => [s.c.ticker, s.c.name_ko ?? s.c.name]));
   // 신뢰 추정 먼저, 그 안에서 컨센 괴리 큰 순
-  const RANK: Record<string, number> = { 신뢰: 0, 보통: 1, 참고: 2, 추세: 2 }; // 추세(무역 근거 없음)는 참고와 같은 단에서 신뢰도 순
+  const RANK: Record<string, number> = { 신뢰: 0, 보통: 1, 참고: 2, 추세: 2, 보류: 3 }; // 추세(무역 근거 없음)는 참고와 같은 단에서 신뢰도 순, 보류는 맨 아래
   const live = (e: (typeof estRows)[number]) => !estReported(e, done[e.ticker]); // 이미 발표된 분기는 맨 아래
   const ests = [...estRows].sort((a, b) => Number(live(b)) - Number(live(a)) || RANK[estTier(a)] - RANK[estTier(b)] || (b.conf ?? 0) - (a.conf ?? 0) || Math.abs(b.cons_gap ?? 0) - Math.abs(a.cons_gap ?? 0));
   const gpu = ["H100 SXM", "H200", "B200"].map((g) => prices.filter((r) => r.kind === "gpu" && r.item === g && r.stat === "median").at(-1)).filter((r) => r != null);
@@ -39,7 +40,7 @@ export default async function Home() {
     <div className="space-y-6">
       <div>
         <h1 className="text-2xl font-bold"><T ko="공급망 신호" en="Supply chain signals" /></h1>
-        <p className="mt-1 text-sm text-muted">AI·반도체 공급망 출하 흐름 · 최근 3개월 전년비 · 마지막 갱신 {builtAt?.replace("T", " ") ?? "-"}</p>
+        <p className="mt-1 text-sm text-muted">AI·반도체 공급망 출하 흐름 · 최근 3개월 전년비 · <LastUpdated builtAt={builtAt} /></p>
       </div>
 
       <div className="grid gap-4 lg:grid-cols-2">
@@ -60,9 +61,9 @@ export default async function Home() {
             <span className="text-xs text-muted">신뢰도 = 과거 분기에 실제 매출이 추정 ±5% 안에 들어온 비율</span>
           </div>
           <div className="mt-2 overflow-x-auto">
-            <table className="w-full min-w-[760px] whitespace-nowrap text-sm">
+            <table className="w-full min-w-[600px] whitespace-nowrap text-sm sm:min-w-[760px]">
               <thead className="text-xs text-muted"><tr className="border-b border-line">
-                <th className="py-2 text-left"><T ko="종목" en="Stock" /></th><th className="text-left"><T ko="분기" en="Quarter" /></th><th className="text-right"><T ko="추정 매출" en="Estimate" /></th>
+                <th className="py-2 text-left"><T ko="종목" en="Stock" /></th><th className="hidden text-left sm:table-cell"><T ko="분기" en="Quarter" /></th><th className="text-right"><T ko="추정 매출" en="Estimate" /></th>
                 <th className="text-right"><T ko="직전 분기 대비" en="QoQ" /></th><th className="text-right"><T ko="컨센 대비" en="vs consensus" /></th><th className="text-right"><T ko="오차범위" en="Error range" /></th><th className="text-right"><T ko="신뢰도" en="Reliability" /></th><th className="text-right"><T ko="실적 발표" en="Earnings" /></th>
               </tr></thead>
               <tbody className="font-mono">
@@ -70,33 +71,41 @@ export default async function Home() {
                   const rep = estReported(e, done[e.ticker]);
                   const tr = rep ? "발표됨" : estTier(e), ok = tr === "신뢰", r = estRange(e), nx = earn[e.ticker], d = dday(nx);
                   const inRange = e.cons_gap != null && r != null && Math.abs(e.cons_gap) < r;
+                  if (tr === "보류") return ( // 외삽 가능성이 큰 추정 — 숫자 대신 이유만
+                    <tr key={e.ticker} className="border-b border-line/50 text-xs opacity-60">
+                      <td className="py-2 font-sans"><Link className="font-bold hover:text-accent" href={`/stocks/${encodeURIComponent(e.ticker)}`}>{names[e.ticker] ?? e.ticker}</Link></td>
+                      <td className="hidden text-xs text-muted sm:table-cell">{e.q_start.slice(0, 7)}~{e.q_end.slice(0, 7)}</td>
+                      <td colSpan={5} className="whitespace-normal text-right font-sans text-muted"><span className={`mr-1 rounded px-1.5 py-0.5 ${TIER_STYLE["보류"]}`}>보류</span>{estCaution(e)[0]}</td>
+                      <td className="text-right text-xs text-muted" title={basis[e.ticker]}>{nx ? `${basis[e.ticker] ? "~" : ""}${nx.slice(5)} D-${d}` : "-"}</td>
+                    </tr>
+                  );
                   return (
                     <tr key={e.ticker} className={`border-b border-line/50 ${tr === "참고" || rep || (tr === "추세" && (e.conf ?? 0) < 0.5) ? "text-xs opacity-60" : ""}`}>
                       <td className="py-2 font-sans"><Link className="font-bold hover:text-accent" href={`/stocks/${encodeURIComponent(e.ticker)}`}>{names[e.ticker] ?? e.ticker}</Link>
                         {rep && <span className="ml-1 rounded bg-panel2 px-1.5 text-xs text-muted" title="이 분기 실적은 이미 발표됨 — SEC 공시가 반영되면 다음 분기 추정으로 넘어감">발표됨</span>}
                         {watchFlag(e, nx, done[e.ticker]) && <span className="ml-1 rounded bg-accent/20 px-1.5 text-xs text-accent">주목</span>}</td>
-                      <td className="text-xs text-muted">{e.q_start.slice(0, 7)}~{e.q_end.slice(0, 7)}</td>
+                      <td className="hidden text-xs text-muted sm:table-cell">{e.q_start.slice(0, 7)}~{e.q_end.slice(0, 7)}</td>
                       <td className={`text-right ${ok ? "font-bold" : ""}`}>{money(e.est, e.currency)}</td>
                       <td className={`text-right ${tone(e.est / e.last_actual - 1)}`}>{pct(e.est / e.last_actual - 1)}</td>
                       <td className={`text-right ${ok ? "font-bold" : ""} ${e.cons_gap == null || inRange ? "text-muted" : tone(e.cons_gap)}`} title={inRange ? "괴리가 오차범위 안 — 의미 있는 차이로 보기 어려움" : undefined}>{e.cons_gap == null ? "-" : pct(e.cons_gap)}</td>
                       <td className="text-right text-xs text-muted">{r == null ? "-" : `±${(r * 100).toFixed(0)}%`}</td>
                       <td className="text-right text-xs" title={confNote(e)}><span className={`mr-1 rounded px-1.5 py-0.5 font-sans ${TIER_STYLE[tr]}`}>{tr}</span>{e.conf == null ? "-" : `${(e.conf * 100).toFixed(0)}%`}</td>
-                      <td className="text-right text-xs text-muted">{nx ? `${nx.slice(5)} D-${d}` : "-"}</td>
+                      <td className="text-right text-xs text-muted" title={basis[e.ticker]}>{nx ? `${basis[e.ticker] ? "~" : ""}${nx.slice(5)} D-${d}` : "-"}</td>
                     </tr>
                   );
                 })}
                 {skips.map((s) => (
                   <tr key={s.ticker} className="border-b border-line/50 text-xs opacity-60">
                     <td className="py-2 font-sans"><Link className="font-bold hover:text-accent" href={`/stocks/${encodeURIComponent(s.ticker)}`}>{names[s.ticker] ?? s.ticker}</Link></td>
-                    <td className="text-xs text-muted">{s.q_start ? `${s.q_start.slice(0, 7)}~${s.q_end?.slice(0, 7)}` : "-"}</td>
+                    <td className="hidden text-xs text-muted sm:table-cell">{s.q_start ? `${s.q_start.slice(0, 7)}~${s.q_end?.slice(0, 7)}` : "-"}</td>
                     <td colSpan={5} className="whitespace-normal text-right font-sans text-muted"><span className={`mr-1 rounded px-1.5 py-0.5 ${TIER_STYLE["추정불가"]}`}>추정불가</span>{estCaution(s).join(" · ")}</td>
-                    <td className="text-right text-xs text-muted">{earn[s.ticker] ? `${earn[s.ticker].slice(5)} D-${dday(earn[s.ticker])}` : "-"}</td>
+                    <td className="text-right text-xs text-muted" title={basis[s.ticker]}>{earn[s.ticker] ? `${basis[s.ticker] ? "~" : ""}${earn[s.ticker].slice(5)} D-${dday(earn[s.ticker])}` : "-"}</td>
                   </tr>
                 ))}
               </tbody>
             </table>
           </div>
-          <p className="mt-2 text-xs text-muted">컨센 대비 = 무역 기반 추정 ÷ 애널리스트 컨센서스 − 1 (컨센 금액은 제공처 약관상 비공개). 신뢰도 = 최근 8~12분기 백테스트(그 분기 이전 데이터로만 예측)에서 실제 매출이 추정 ±5% 안에 들어온 비율(표본이 적으면 깎음). 오차범위 = 같은 백테스트 오차의 80% 범위. 신뢰 = 신뢰도 70% 이상이면서 단순 추세보다 정확·근거 R² 0.4 이상·외삽·단절 없음, 보통 = 50% 이상(단순 추세보다 정확할 때), 참고 = 그 미만. 추세 = 무역 근거가 없거나 무역 모델이 단순 추세보다 1%p 넘게 부정확해 &lsquo;직전 분기 전년비 유지&rsquo;로 추정(신뢰도는 같은 규칙의 백테스트). 추정불가 = 매출 이력이 짧거나 매출 변동이 커서(단순 추세 오차 30% 초과) 추정하지 않음. 참고 행은 흐리게, 오차범위 안의 괴리는 회색. 발표됨 = 실적은 나왔지만 SEC 공시 반영 전이라 아직 다음 분기로 넘어가지 않은 추정(맨 아래). 주목 = 신뢰 추정이면서 괴리 10% 이상(오차범위 밖)·실적 발표 30일 이내. 한국 종목은 부문 매출이라 컨센 비교 없음.</p>
+          <p className="mt-2 text-xs text-muted">컨센 대비 = 무역 기반 추정 ÷ 애널리스트 컨센서스 − 1 (컨센 금액은 제공처 약관상 비공개). 신뢰도 = 최근 8~12분기 백테스트(그 분기 이전 데이터로만 예측)에서 실제 매출이 추정 ±5% 안에 들어온 비율(표본이 적으면 깎음). 오차범위 = 같은 백테스트 오차의 80% 범위. 신뢰 = 신뢰도 70% 이상이면서 단순 추세보다 정확·근거 R² 0.4 이상·외삽·단절 없음, 보통 = 50% 이상(단순 추세보다 정확할 때), 참고 = 그 미만. 추세 = 무역 근거가 없거나 무역 모델이 단순 추세보다 1%p 넘게 부정확해 &lsquo;직전 분기 전년비 유지&rsquo;로 추정(신뢰도는 같은 규칙의 백테스트). 추정불가 = 매출 이력이 짧거나 매출 변동이 커서(단순 추세 오차 30% 초과) 추정하지 않음. 참고 행은 흐리게, 오차범위 안의 괴리는 회색. 발표됨 = 실적은 나왔지만 SEC 공시 반영 전이라 아직 다음 분기로 넘어가지 않은 추정(맨 아래). 주목 = 신뢰 추정이면서 괴리 10% 이상(오차범위 밖)·실적 발표 30일 이내. 보류 = 회사 가이던스 없이 모델만으로 낸 추정이 컨센서스와 25% 넘게 달라 외삽 가능성이 큰 경우(숫자는 종목 화면에서 경고와 함께). 실적 발표 ~ = 회사가 아직 일정을 안 낸 종목으로, 작년 같은 분기 발표·공시일(한국은 DART 잠정실적·정기보고서) 기준 추정일. 한국 종목은 부문 매출이라 컨센 비교 없음.</p>
         </section>
       )}
 

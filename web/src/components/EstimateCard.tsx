@@ -39,9 +39,10 @@ export function EstimateCard({ hist, labels, nextEarn, lastReported, skip }: { h
           <span className={`rounded px-2 py-0.5 text-xs ${TIER_STYLE[tr]}`} title={confNote(e)}>{tr}{e.conf != null ? ` · 신뢰도 ${(e.conf * 100).toFixed(0)}%` : ""} · 평균 오차 {pct(e.mape, 1).replace("+", "")}</span>
         </span>
       </div>
+      {tr === "보류" && <div className="rounded border border-red-900 bg-red-950/40 px-3 py-2 text-xs text-red-200">추정 보류 — {why[0]}. 아래 숫자는 모델 원값으로, 투자 판단 근거로 쓰지 마세요.</div>}
       {rep && <div className="rounded bg-panel2 px-3 py-2 text-xs text-muted">이 분기 실적은 이미 발표됐습니다. SEC 공시(10-Q·10-K)가 들어오면 실적과 비교해 백테스트에 반영하고 다음 분기 추정으로 넘어갑니다 — 그 전까지는 참고용입니다.</div>}
       {e.conf != null && !rep && <div className="text-xs text-muted">신뢰도 {(e.conf * 100).toFixed(0)}% — 최근 {e.bt_n}분기 백테스트 중 {e.hits}분기에서 실제 매출이 추정 ±5% 안에 들어옴 (표본이 적으면 보수적으로 깎음)</div>}
-      {!rep && !ok && why.length > 0 && <div className="rounded bg-panel2 px-3 py-2 text-xs text-muted">{tr === "보통" ? "신뢰가 아닌" : tr === "추세" ? "단순 추세로 추정한" : "참고인"} 이유: {why.join(" · ")}</div>}
+      {!rep && !ok && why.length > 0 && <div className="rounded bg-panel2 px-3 py-2 text-xs text-muted">{tr === "보통" ? "신뢰가 아닌" : tr === "추세" ? "단순 추세로 추정한" : tr === "보류" ? "그 밖의" : "참고인"} 이유: {(tr === "보류" ? why.slice(1) : why).join(" · ")}</div>}
       <div className="grid gap-3 sm:grid-cols-3">
         <div><div className="text-xs text-muted">{trend ? "단순 추세 추정 (무역 근거 없음)" : byGuide ? (e.method === "guide" ? "가이던스 기반 추정" : "가이던스·무역 결합 추정") : "무역 기반 추정"}</div><div className="text-2xl font-bold">{money(e.est, cur)}</div>
           <div className="text-xs text-muted">오차범위 ±{money(e.high - e.est, cur)}{range != null ? ` (±${(range * 100).toFixed(0)}%)` : ""} · 직전 분기 대비 <span className={tone(e.est / e.last_actual - 1)}>{pct(e.est / e.last_actual - 1)}</span></div></div>
@@ -57,7 +58,7 @@ export function EstimateCard({ hist, labels, nextEarn, lastReported, skip }: { h
           <div className="text-xs text-muted">단순 추세(직전 성장률 유지) 오차 {e.mape_naive == null ? "-" : pct(e.mape_naive, 1).replace("+", "")}</div>
           {guide && (
             <div className="mt-1 text-xs text-muted">
-              회사 {guide.prelim ? "잠정 실적" : "가이던스"} {money(guide.low, cur)}{guide.high !== guide.low ? ` ~ ${money(guide.high, cur)}` : ""} ({guide.filed} 발표)
+              회사 {guide.prelim ? "잠정 실적" : guide.annual ? "연간 가이던스를 남은 분기로 환산" : "가이던스"} {money(guide.low, cur)}{guide.high !== guide.low ? ` ~ ${money(guide.high, cur)}` : ""} ({guide.filed} 발표)
               {!guide.prelim && <> · 과거 실적은 가이던스 중간값보다 보통 <span className={tone(guide.beat)}>{pct(guide.beat)}</span>{byGuide ? " — 그만큼 반영" : " (이 종목은 무역 모델이 더 정확해 참고만)"}</>}
             </div>
           )}

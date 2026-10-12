@@ -1,4 +1,5 @@
 import Link from "next/link";
+import { LastUpdated } from "@/components/LastUpdated";
 import { CtyName, HsName, T } from "@/components/Names";
 import { Spark } from "@/components/Spark";
 import { baseEffect, pct, tone, usd } from "@/lib/format";
@@ -39,7 +40,7 @@ export default async function Surge({ searchParams }: PageProps<"/surge">) {
         <div>
           <h1 className="text-2xl font-bold">🚀 <T ko="급등 탐색" en="Surge scanner" /></h1>
           <p className="mt-1 text-sm text-muted">
-            기준월 {(kr ? shares[0]?.month : rows[0]?.month) ?? "-"} · {kr ? "한국산 월평균 5백만 달러·미국 전체 2천만 달러 이상 품목" : "월 2천만 달러 이상(국가별 5백만 달러) 품목"} · 마지막 갱신 {builtAt?.replace("T", " ") ?? "-"}
+            기준월 {(kr ? shares[0]?.month : rows[0]?.month) ?? "-"} · {kr ? "한국산 월평균 5백만 달러·미국 전체 2천만 달러 이상 품목" : "월 2천만 달러 이상(국가별 5백만 달러) 품목"} · <LastUpdated builtAt={builtAt} />
           </p>
           {kr ? <p className="text-xs text-muted">비중 = 최근 3개월 미국 수입 중 한국산 금액 비율 · 변화 = 1년 전 같은 3개월 대비(%p) · 그래프는 24개월 3개월 이동 비중</p>
           : <p className="text-xs text-muted">* 200% 넘는 증가율은 전년 같은 기간 금액이 작아 생긴 기저효과일 수 있음 — 금액도 함께 보세요. 3M YoY는 전년 3개월 금액이 충분할 때만 계산.</p>}

@@ -4,7 +4,7 @@ name: 데이터 갱신
 # 필요한 저장소 Secrets: CENSUS_API_KEY, ESTAT_APP_ID, DATA_GO_KR_KEY, DART_API_KEY, EIA_API_KEY, DATABASE_URL
 on:
   schedule:
-    - cron: "17 21 * * *" # 매일 06:17 KST
+    - cron: "43 18 * * *" # 매일 03:43 KST 예약 — GitHub 예약 실행은 보통 1~4시간 늦게 시작해 아침에 게시됨
   workflow_dispatch:
   push:
     branches: [main]

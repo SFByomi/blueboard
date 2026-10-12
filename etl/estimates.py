@@ -463,8 +463,8 @@ def _estimate(con, ticker, picks, fin, today, log, guides=None):
     grade = "추세" if trend_why else "참고" if short else tier(conf, caution)
     gap_c = (est / cons[1] - 1) if cons else None
     if gap_c is not None and abs(gap_c) > CONS_FAR and "guide" not in method:  # 회사 가이던스 없이 컨센과 크게 다르면 외삽일 가능성
-        caution = [*caution, f"컨센서스와 {gap_c:+.0%} 차이 — 회사 가이던스 없이 모델만으로 낸 값이라 외삽 가능성"]
-        grade = "참고" if grade in ("신뢰", "보통") else grade
+        caution = [f"컨센서스와 {gap_c:+.0%} 차이 — 회사 가이던스 없이 모델만으로 낸 값이라 외삽 가능성이 커 보류", *caution]
+        grade = "보류"  # 홈 표에는 숫자 없이 이유만, 종목 화면에선 경고와 함께 모델 원값
     band = band if band is not None else p["se"] / est
     cols = ("date, ticker, q_start, q_end, est, low, high, yoy, last_actual, months, flows, mape, mape_naive, bt_n, backtest, "
             "cons_gap, cons_end, currency, method, reliable, caution, conf, hits, tier, guide")
