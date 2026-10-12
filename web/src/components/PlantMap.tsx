@@ -17,7 +17,7 @@ const CAT_COLOR: Record<string, string> = {
   "반도체 팹": "#f472b6", "첨단 패키징": "#c084fc", "조립·테스트": "#a78bfa", 반도체장비: "#818cf8",
   광통신: "#22d3ee", "서버·위탁생산": "#60a5fa", "변압기·배전": "#f59e0b", "전선·케이블": "#fbbf24",
   "발전·연료전지": "#f87171", "냉각·전력분배": "#38bdf8", "ESS·배터리": "#4ade80", "GPU 데이터센터": "#2dd4bf",
-  전자부품: "#a3e635", "바이오 장비": "#94a3b8",
+  전자부품: "#a3e635", "바이오 장비": "#94a3b8", 전기차: "#e879f9",
 };
 const STATUS = ["가동", "증설중", "계획", "중단"] as const;
 const STATUS_STYLE: Record<string, string> = {
@@ -27,7 +27,7 @@ const STATUS_STYLE: Record<string, string> = {
 const STATUS_SYMBOL: Record<string, string> = { 가동: "circle", 증설중: "emptyCircle", 계획: "emptyDiamond", 중단: "pin" };
 
 let registered = false;
-function registerWorld() {
+export function registerWorld() {
   if (registered) return;
   const topo = world as unknown as Topology<{ countries: GeometryCollection }>;
   echarts.registerMap("world", feature(topo, topo.objects.countries) as unknown as Parameters<typeof echarts.registerMap>[1]);

@@ -10,7 +10,7 @@ from collections.abc import Callable
 
 import pandas as pd
 
-from etl import c30, capex, census, comext, eia, estat, kcs, ransomware
+from etl import c30, capex, census, comext, eia, estat, kcs, ransomware, tsla_pd
 
 FETCHERS: dict[str, Callable[[dict], pd.DataFrame]] = {
     "census": lambda s: census.fetch(s["dataset"], s["hs"], s["filters"]),
@@ -20,6 +20,7 @@ FETCHERS: dict[str, Callable[[dict], pd.DataFrame]] = {
     "eia_retail": lambda s: eia.retail(s["state"], s["sector"]),  # 주별 전력 판매(MWh) — EIA_API_KEY
     "comext": lambda s: comext.monthly(s["reporter"], s["product"], s.get("partner", "WORLD"), s.get("flow", "export")),  # EU 회원국 무역(유로→달러)
     "capex": lambda s: capex.monthly(s["company"]),  # 메모리 3사 설비투자(분기, 분기 말 달에 기록)
+    "tsla_pd": lambda s: tsla_pd.monthly(s["metric"]),  # 테슬라 분기 인도 대수·에너지저장 배치(GWh), 분기 끝 2일 뒤 8-K
     "ransomware": lambda s: ransomware.monthly(s.get("country")),  # 건수 시계열 (value_usd 칸에 건수, unit='건')
     "kcs": lambda s: kcs.fetch(s["api"], s["hs"], s.get("flow", "export"), s.get("cnty"), sido=s.get("sido"), sgg=s.get("sgg")),
 }

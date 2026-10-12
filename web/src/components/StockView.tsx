@@ -4,7 +4,7 @@ import { T } from "@/components/Names";
 import type { EChartsOption } from "echarts";
 import { useMemo, useState } from "react";
 import { yoy3m } from "@/lib/estimate";
-import { baseEffect, pct, ROLE_STYLE, shiftMonth, STAGES, stageOf, tone, usd } from "@/lib/format";
+import { baseEffect, pct, ROLE_STYLE, shiftMonth, STAGES, stageOf, tone, usd, NON_USD } from "@/lib/format";
 import { axis, baseOption, EChart } from "./EChart";
 
 export type FlowData = {
@@ -19,7 +19,6 @@ export type QuarterRow = { end: string; revenue: number; revYoY: number | null; 
 const COLORS = ["#3b82f6", "#10b981", "#a78bfa", "#f59e0b", "#f472b6", "#22d3ee"];
 const M = (v: number | null) => (v == null ? null : +(v / 1e6).toFixed(2));
 /** 금액이 아닌 시계열(랜섬웨어 '건', 발전 용량 'MW', 전력 판매 'MWh') — 차트·표에서 백만 달러로 나누지 않고 단위 그대로 */
-const NON_USD = new Set(["건", "MW", "MWh"]);
 const isCount = (x: { unit: string | null }) => NON_USD.has(x.unit ?? "");
 const scaled = (x: FlowData) => (isCount(x) ? x.values : x.values.map(M));
 const yoyArr = (a: (number | null)[]) => a.map((v, i) => (i >= 12 && v != null && a[i - 12] ? v / a[i - 12]! - 1 : null));

@@ -1522,5 +1522,132 @@
    "us_exp_ca_reagent",
    "us_exp_ca_cn_reagent"
   ]
+ },
+ {
+  "id": 88,
+  "company": "테슬라",
+  "ticker": "TSLA",
+  "category": "전기차",
+  "site": "프리몬트 공장",
+  "city": "프리몬트",
+  "country": "미국",
+  "lat": 37.49,
+  "lon": -121.94,
+  "status": "가동",
+  "product": "모델 3·Y·S·X",
+  "note": "",
+  "asof": "2026-06",
+  "flows": [
+   "us_imp_ca_cn_liion",
+   "tsla_deliveries"
+  ]
+ },
+ {
+  "id": 89,
+  "company": "테슬라",
+  "ticker": "TSLA",
+  "category": "전기차",
+  "site": "기가 텍사스",
+  "city": "오스틴",
+  "country": "미국",
+  "lat": 30.22,
+  "lon": -97.62,
+  "status": "가동",
+  "product": "모델 Y·사이버트럭·4680 셀",
+  "note": "",
+  "asof": "2026-06",
+  "flows": [
+   "us_imp_tx_jp_liion",
+   "tsla_deliveries"
+  ]
+ },
+ {
+  "id": 90,
+  "company": "테슬라",
+  "ticker": "TSLA",
+  "category": "전기차",
+  "site": "기가 상하이",
+  "city": "상하이 린강",
+  "country": "중국",
+  "lat": 30.88,
+  "lon": 121.78,
+  "status": "가동",
+  "product": "모델 3·Y",
+  "note": "최대 생산·수출 거점",
+  "asof": "2026-06",
+  "flows": [
+   "tsla_deliveries"
+  ]
+ },
+ {
+  "id": 91,
+  "company": "테슬라",
+  "ticker": "TSLA",
+  "category": "전기차",
+  "site": "기가 베를린",
+  "city": "그륀하이데",
+  "country": "독일",
+  "lat": 52.39,
+  "lon": 13.79,
+  "status": "가동",
+  "product": "모델 Y",
+  "note": "",
+  "asof": "2026-06",
+  "flows": [
+   "tsla_deliveries"
+  ]
+ },
+ {
+  "id": 92,
+  "company": "테슬라",
+  "ticker": "TSLA",
+  "category": "ESS·배터리",
+  "site": "기가 네바다",
+  "city": "스파크스",
+  "country": "미국",
+  "lat": 39.54,
+  "lon": -119.44,
+  "status": "가동",
+  "product": "배터리·파워트레인·세미 트럭",
+  "note": "",
+  "asof": "2026-06",
+  "flows": []
+ },
+ {
+  "id": 93,
+  "company": "테슬라",
+  "ticker": "TSLA",
+  "category": "ESS·배터리",
+  "site": "래스럽 메가팩토리",
+  "city": "래스럽",
+  "country": "미국",
+  "lat": 37.82,
+  "lon": -121.28,
+  "status": "가동",
+  "product": "메가팩(ESS)",
+  "note": "",
+  "asof": "2026-06",
+  "flows": [
+   "tsla_storage_gwh",
+   "us_imp_ca_cn_liion"
+  ]
+ },
+ {
+  "id": 94,
+  "company": "테슬라",
+  "ticker": "TSLA",
+  "category": "ESS·배터리",
+  "site": "상하이 메가팩토리",
+  "city": "상하이 린강",
+  "country": "중국",
+  "lat": 30.9,
+  "lon": 121.82,
+  "status": "가동",
+  "product": "메가팩(ESS)",
+  "note": "",
+  "asof": "2026-06",
+  "flows": [
+   "tsla_storage_gwh"
+  ]
  }
 ]

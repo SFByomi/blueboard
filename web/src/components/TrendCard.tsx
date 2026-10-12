@@ -1,11 +1,10 @@
 import Link from "next/link";
 import { GradeBadge } from "@/components/FlowScores";
 import { Spark } from "@/components/Spark";
-import { baseEffect, pct, tone, usd } from "@/lib/format";
+import { baseEffect, pct, tone, usd, NON_USD } from "@/lib/format";
 import type { FlowScore } from "@/lib/queries";
 import type { Signal } from "@/lib/signals";
 
-const NON_USD = new Set(["건", "MW", "MWh"]); // 그 밖의 unit은 수량 단위(NO·KG 등)라 금액은 달러
 const amount = (v: number | null, unit: string | null) => (v == null ? "-" : NON_USD.has(unit ?? "") ? `${Math.round(v).toLocaleString()}${unit}` : usd(v));
 
 /** 매핑 트렌드 카드: 순위 · 최근 월 전년비 · 3개월·전월비 · 최근 3개월 방향 · 매출 전년비 · 흐름별 분해 */

@@ -1,8 +1,7 @@
 import type { Metadata } from "next";
 import { T } from "@/components/Names";
-import { PlantMap, type FlowStat } from "@/components/PlantMap";
-import { yoy3m } from "@/lib/estimate";
-import { allSeries, observations, plants } from "@/lib/queries";
+import { PlantMap } from "@/components/PlantMap";
+import { plantData } from "@/lib/plants";
 
 export const dynamic = "force-dynamic";
 export const metadata: Metadata = { title: "공장 지도", description: "AI·반도체 공급망 공장 위치·상태와, 각 공장 출하를 보여주는 세관 무역 흐름" };
@@ -10,20 +9,7 @@ export const metadata: Metadata = { title: "공장 지도", description: "AI·�
 export default async function Plants({ searchParams }: PageProps<"/plants">) {
   const sp = await searchParams;
   const initialQ = typeof sp.q === "string" ? sp.q : "";
-  const [list, series] = await Promise.all([plants(), allSeries()]);
-  const ids = [...new Set(list.flatMap((p) => JSON.parse(p.flows) as string[]))];
-  const obs = ids.length ? await observations(ids) : [];
-  const label = Object.fromEntries(series.map((s) => [s.id, s.label]));
-  const unit = Object.fromEntries(series.map((s) => [s.id, s.unit]));
-  // 흐름별 최근 3개월 전년비·최근 월·24개월 스파크라인 (서버에서 계산해 클라이언트로 작게 전달)
-  const stats: Record<string, FlowStat> = {};
-  for (const id of ids) {
-    const rows = obs.filter((o) => o.series_id === id);
-    const vals = rows.map((o) => o.value_usd);
-    const y = yoy3m(vals);
-    stats[id] = { label: label[id] ?? id, month: y.index >= 0 ? rows[y.index]?.month ?? null : null, yoy3m: y.value,
-      spark: vals.slice(-24).map((v) => v ?? 0), money: !["건", "MW", "MWh"].includes(unit[id] ?? "") };
-  }
+  const { list, stats } = await plantData();
   return (
     <div className="space-y-4">
       <div>

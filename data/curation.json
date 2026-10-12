@@ -539,6 +539,21 @@
    "dart_fs": null,
    "dart_segment": null,
    "sites": "[{\"name\": \"벨트호번 본사·공장\", \"country\": \"네덜란드\", \"what\": \"EUV·DUV 노광장비 조립\"}, {\"name\": \"윌튼\", \"country\": \"미국 코네티컷\", \"what\": \"레티클 스테이지 등 모듈\"}, {\"name\": \"샌디에이고(Cymer)\", \"country\": \"미국 캘리포니아\", \"what\": \"광원\"}]"
+  },
+  {
+   "ticker": "TSLA",
+   "name": "Tesla",
+   "name_ko": "테슬라",
+   "market": "NASDAQ",
+   "sector": "전기차·에너지저장",
+   "thesis": "전기차(상하이·프리몬트·텍사스·베를린)와 에너지저장(메가팩). 매출의 핵심 근거는 분기 끝 2일 뒤 8-K로 나오는 인도 대수 — 실적 발표 3주 전에 그 분기 매출을 좁힌다. 미국 전기차 수출은 상하이·베를린 생산분이 빠져 연동이 약함.",
+   "sec_ticker": "TSLA",
+   "fy_note": "FY 12월",
+   "sort": 45,
+   "dart_fs": null,
+   "dart_segment": null,
+   "grp": "전기차·에너지",
+   "sites": "[{\"name\": \"프리몬트\", \"country\": \"미국 캘리포니아\", \"what\": \"모델 3·Y·S·X 조립\"}, {\"name\": \"기가 텍사스\", \"country\": \"미국 오스틴\", \"what\": \"모델 Y·사이버트럭, 4680 셀\"}, {\"name\": \"기가 상하이\", \"country\": \"중국\", \"what\": \"모델 3·Y (최대 생산·수출 거점)\"}, {\"name\": \"기가 베를린\", \"country\": \"독일 그륀하이데\", \"what\": \"모델 Y\"}, {\"name\": \"기가 네바다\", \"country\": \"미국 스파크스\", \"what\": \"배터리·세미 트럭\"}, {\"name\": \"메가팩토리\", \"country\": \"미국 래스럽·중국 상하이\", \"what\": \"메가팩(ESS)\"}]"
   }
  ],
  "series": [
@@ -1542,6 +1557,50 @@
    "hs": "-",
    "partner": "-",
    "spec": "{\"company\": \"MU\"}"
+  },
+  {
+   "id": "tsla_deliveries",
+   "label": "테슬라 분기 차량 인도 대수 (월 환산 = 분기÷3)",
+   "source": "tsla_pd",
+   "reporter": "🌐 테슬라",
+   "flow": "인도",
+   "region": "전 세계 (생산·인도 보도자료)",
+   "hs": "-",
+   "partner": "-",
+   "spec": "{\"metric\": \"deliveries\"}"
+  },
+  {
+   "id": "tsla_storage_gwh",
+   "label": "테슬라 에너지저장 배치량 GWh (월 환산 = 분기÷3)",
+   "source": "tsla_pd",
+   "reporter": "🌐 테슬라",
+   "flow": "배치",
+   "region": "전 세계 (메가팩·파워월)",
+   "hs": "-",
+   "partner": "-",
+   "spec": "{\"metric\": \"storage_gwh\"}"
+  },
+  {
+   "id": "us_imp_ca_cn_liion",
+   "label": "캘리포니아로 들어오는 중국산 리튬이온 배터리 수입",
+   "source": "census",
+   "reporter": "🇺🇸 미국 수입",
+   "flow": "수입",
+   "region": "캘리포니아",
+   "hs": "850760",
+   "partner": "중국",
+   "spec": "{\"dataset\": \"imports/statehs\", \"hs\": \"850760\", \"filters\": {\"STATE\": \"CA\", \"CTY_CODE\": \"5700\"}}"
+  },
+  {
+   "id": "us_imp_tx_jp_liion",
+   "label": "텍사스로 들어오는 일본산 리튬이온 배터리 수입",
+   "source": "census",
+   "reporter": "🇺🇸 미국 수입",
+   "flow": "수입",
+   "region": "텍사스",
+   "hs": "850760",
+   "partner": "일본",
+   "spec": "{\"dataset\": \"imports/statehs\", \"hs\": \"850760\", \"filters\": {\"STATE\": \"TX\", \"CTY_CODE\": \"5880\"}}"
   }
  ],
  "mappings": [
@@ -2724,6 +2783,46 @@
    "caveat": "미코 매출의 약 1/3은 에너지(HRSG) — 이 흐름은 반도체 쪽만 설명. 최근 8분기 상관은 음(−0.56)이라 최근엔 어긋남.",
    "include_in_total": 0,
    "sort": 40
+  },
+  {
+   "ticker": "TSLA",
+   "series_id": "tsla_deliveries",
+   "role": "회사출하",
+   "confidence": "높음",
+   "rationale": "회사가 직접 공시하는 분기 차량 인도 대수(분기 종료 2일 뒤 8-K). 매출과 전년비 상관 0.88(최근 8분기 0.95), 금액 상관 0.97 — 단독 예측 오차 3.0%(단순 추세 10.8%).",
+   "caveat": "자동차 외(에너지·서비스·크레딧) 매출과 평균 판매가 변화는 반영 안 됨. 2024년 2분기 이전 값은 회사 보도자료(ir.tesla.com) 기준.",
+   "include_in_total": 1,
+   "sort": 10
+  },
+  {
+   "ticker": "TSLA",
+   "series_id": "tsla_storage_gwh",
+   "role": "회사출하",
+   "confidence": "낮음",
+   "rationale": "메가팩·파워월 배치량(GWh) — 에너지 부문(매출의 약 10%) 선행. 회사 전체 매출과 전년비 상관 0.14(D)라 업황 참고.",
+   "caveat": "배치와 매출 인식 시점이 다르고, 회사 전체 매출은 자동차가 좌우.",
+   "include_in_total": 0,
+   "sort": 20
+  },
+  {
+   "ticker": "TSLA",
+   "series_id": "us_imp_ca_cn_liion",
+   "role": "생산투입",
+   "confidence": "중간",
+   "rationale": "캘리포니아(래스럽 메가팩토리·프리몬트)로 들어오는 중국산 리튬이온 배터리 — 캘리포니아 배터리 수입의 83%. 매출과 전년비 상관 0.66(B), 금액 상관 0.71.",
+   "caveat": "다른 ESS·전자기기 업체 수입이 섞임. 최근 8분기 상관 -0.08 — 관세 이후 조달처 이동으로 관계가 약해지는 중.",
+   "include_in_total": 0,
+   "sort": 30
+  },
+  {
+   "ticker": "TSLA",
+   "series_id": "us_imp_tx_jp_liion",
+   "role": "생산투입",
+   "confidence": "낮음",
+   "rationale": "텍사스로 들어오는 일본산 리튬이온 배터리(파나소닉 셀 등) — 전년비 상관 0.53(B), 최근 8분기 0.90.",
+   "caveat": "텍사스 배터리 수입의 8%에 불과하고 업체 구분 불가.",
+   "include_in_total": 0,
+   "sort": 40
   }
  ],
  "hs_tags": [
@@ -2971,6 +3070,16 @@
    "hs_prefix": "848620",
    "ticker": "ASML",
    "note": "노광장비"
+  },
+  {
+   "hs_prefix": "870380",
+   "ticker": "TSLA",
+   "note": "전기차"
+  },
+  {
+   "hs_prefix": "850760",
+   "ticker": "TSLA",
+   "note": "리튬이온 배터리"
   }
  ]
 }

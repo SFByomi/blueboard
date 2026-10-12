@@ -1,9 +1,11 @@
 import Link from "next/link";
 import { LastUpdated } from "@/components/LastUpdated";
+import { PlantMini } from "@/components/PlantMini";
 import { HsName, T } from "@/components/Names";
 import { Spark } from "@/components/Spark";
 import { baseEffect, confNote, dday, estCaution, estRange, estReported, estTier, money, pct, TIER_STYLE, tone, usd, watchFlag } from "@/lib/format";
 import { earningsBasis, earningsDates, latestEstimates, unestimated, reportedQuarters, TECH_CHAPTERS, meta, priceSnapshots, surge, tagIndex } from "@/lib/queries";
+import { busyOf, plantData } from "@/lib/plants";
 import { stockSignals, type Signal } from "@/lib/signals";
 
 // 게시 직후 바로 보이도록 요청마다 렌더 (ISR 캐시가 게시 후에도 이전 데이터로 남던 문제). DB가 작아 부담 없음
@@ -23,8 +25,8 @@ function Row({ s }: { s: Signal }) {
 }
 
 export default async function Home() {
-  const [sig, prices, top, related, builtAt, estRows, earn, done, skips, basis] = await Promise.all([
-    stockSignals(), priceSnapshots(), surge("us_imp_world", "yoy3m", 6, TECH_CHAPTERS), tagIndex(), meta("built_at"), latestEstimates(), earningsDates(), reportedQuarters(), unestimated(), earningsBasis(),
+  const [sig, prices, top, related, builtAt, estRows, earn, done, skips, basis, pl] = await Promise.all([
+    stockSignals(), priceSnapshots(), surge("us_imp_world", "yoy3m", 6, TECH_CHAPTERS), tagIndex(), meta("built_at"), latestEstimates(), earningsDates(), reportedQuarters(), unestimated(), earningsBasis(), plantData(),
   ]);
   const ranked = sig.filter((s) => s.yoy3m != null).sort((a, b) => b.yoy3m! - a.yoy3m!);
   const half = Math.ceil(ranked.length / 2); // 상위 절반 / 하위 절반 (겹치지 않게) — 하위도 플러스일 수 있어 '둔화'가 아니라 상대 순위
@@ -34,6 +36,12 @@ export default async function Home() {
   const RANK: Record<string, number> = { 신뢰: 0, 보통: 1, 참고: 2, 추세: 2, 보류: 3 }; // 추세(무역 근거 없음)는 참고와 같은 단에서 신뢰도 순, 보류는 맨 아래
   const live = (e: (typeof estRows)[number]) => !estReported(e, done[e.ticker]); // 이미 발표된 분기는 맨 아래
   const ests = [...estRows].sort((a, b) => Number(live(b)) - Number(live(a)) || RANK[estTier(a)] - RANK[estTier(b)] || (b.conf ?? 0) - (a.conf ?? 0) || Math.abs(b.cons_gap ?? 0) - Math.abs(a.cons_gap ?? 0));
+  // 공장 — 연결된 흐름의 최근 3개월 전년비로 바쁜/한산한 곳 (같은 흐름을 공유하는 공장이 많아 회사별 한 곳만)
+  const plantRows = pl.list.map((p) => ({ p, y: busyOf(p, pl.stats) }));
+  const points = plantRows.map(({ p, y }) => ({ id: p.id, lon: p.lon, lat: p.lat, name: `${p.company} ${p.site}`, sub: `${p.product ?? p.category}${y == null ? "" : ` · 흐름 ${pct(y)}`}`, yoy: y, q: p.ticker ?? p.company }));
+  const byCo = (rows: typeof plantRows) => rows.filter((r, i) => rows.findIndex((x) => x.p.company === r.p.company) === i);
+  const flowed = plantRows.filter((r) => r.y != null).sort((a, b) => b.y! - a.y!);
+  const busy = byCo(flowed).slice(0, 4), quiet = byCo([...flowed].reverse()).slice(0, 4);
   const gpu = ["H100 SXM", "H200", "B200"].map((g) => prices.filter((r) => r.kind === "gpu" && r.item === g && r.stat === "median").at(-1)).filter((r) => r != null);
 
   return (
@@ -106,6 +114,31 @@ export default async function Home() {
             </table>
           </div>
           <p className="mt-2 text-xs text-muted">컨센 대비 = 무역 기반 추정 ÷ 애널리스트 컨센서스 − 1 (컨센 금액은 제공처 약관상 비공개). 신뢰도 = 최근 8~12분기 백테스트(그 분기 이전 데이터로만 예측)에서 실제 매출이 추정 ±5% 안에 들어온 비율(표본이 적으면 깎음). 오차범위 = 같은 백테스트 오차의 80% 범위. 신뢰 = 신뢰도 70% 이상이면서 단순 추세보다 정확·근거 R² 0.4 이상·외삽·단절 없음, 보통 = 50% 이상(단순 추세보다 정확할 때), 참고 = 그 미만. 추세 = 무역 근거가 없거나 무역 모델이 단순 추세보다 1%p 넘게 부정확해 &lsquo;직전 분기 전년비 유지&rsquo;로 추정(신뢰도는 같은 규칙의 백테스트). 추정불가 = 매출 이력이 짧거나 매출 변동이 커서(단순 추세 오차 30% 초과) 추정하지 않음. 참고 행은 흐리게, 오차범위 안의 괴리는 회색. 발표됨 = 실적은 나왔지만 SEC 공시 반영 전이라 아직 다음 분기로 넘어가지 않은 추정(맨 아래). 주목 = 신뢰 추정이면서 괴리 10% 이상(오차범위 밖)·실적 발표 30일 이내. 보류 = 회사 가이던스 없이 모델만으로 낸 추정이 컨센서스와 25% 넘게 달라 외삽 가능성이 큰 경우(숫자는 종목 화면에서 경고와 함께). 실적 발표 ~ = 회사가 아직 일정을 안 낸 종목으로, 작년 같은 분기 발표·공시일(한국은 DART 잠정실적·정기보고서) 기준 추정일. 한국 종목은 부문 매출이라 컨센 비교 없음.</p>
+        </section>
+      )}
+
+      {pl.list.length > 0 && (
+        <section className="card min-w-0">
+          <div className="flex flex-wrap items-baseline justify-between gap-2">
+            <h2 className="font-bold"><T ko="공장 가동 신호" en="Plant activity" /> <span className="text-xs font-normal text-muted">{pl.list.length}곳 · 점 색 = 그 공장 출하를 보는 무역 흐름의 최근 3개월 전년비</span></h2>
+            <Link href="/plants" className="text-xs text-muted hover:text-fg">공장 지도 전체 보기 →</Link>
+          </div>
+          <div className="mt-2 grid gap-4 lg:grid-cols-[3fr_2fr]">
+            <PlantMini points={points} />
+            <div className="grid grid-cols-2 gap-3 self-center text-sm lg:grid-cols-1">
+              {([["바쁜 곳", busy, "text-up"], ["한산한 곳", quiet, "text-down"]] as const).map(([t, rows, c]) => (
+                <div key={t} className="min-w-0">
+                  <div className={`mb-1 text-xs font-bold ${c}`}>{t}</div>
+                  {rows.map(({ p, y }) => (
+                    <Link key={p.id} href={`/plants?q=${encodeURIComponent(p.ticker ?? p.company)}`} className="flex items-center justify-between gap-2 rounded px-1 py-0.5 hover:bg-panel2">
+                      <span className="min-w-0 truncate">{p.company} <span className="text-xs text-muted">{p.site}</span></span>
+                      <span className={`shrink-0 font-mono text-xs ${tone(y)}`}>{pct(y)}</span>
+                    </Link>
+                  ))}
+                </div>
+              ))}
+            </div>
+          </div>
         </section>
       )}
 

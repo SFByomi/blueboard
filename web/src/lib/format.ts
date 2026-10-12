@@ -32,7 +32,10 @@ export const ROLES = Object.keys(ROLE_STYLE);
 export const CONFIDENCES = ["높음", "중간", "낮음"];
 
 /** 종목 목록 섹터 그룹 (표시 순서) — companies.grp */
-export const GROUPS = ["메모리", "광통신", "서버·네트워크", "반도체", "전력·냉각", "AI 클라우드", "보안", "부품·소재", "바이오", "기타"];
+/** 금액이 아닌 시계열 단위 (value_usd 열에 건수·MW·대 등이 들어감) — 그 밖의 unit은 수량 단위(NO·KG)라 금액은 달러 */
+export const NON_USD = new Set(["건", "MW", "MWh", "대", "GWh"]);
+
+export const GROUPS = ["메모리", "광통신", "서버·네트워크", "반도체", "전력·냉각", "AI 클라우드", "전기차·에너지", "보안", "부품·소재", "바이오", "기타"];
 
 /** 매핑 역할 → 공급망 단계 (종목 페이지에서 이 순서로 묶음) */
 export const STAGES = [
