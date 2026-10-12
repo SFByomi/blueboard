@@ -1,6 +1,6 @@
 import { T } from "@/components/Names";
 import { PriceChart } from "@/components/ComputeCharts";
-import { confNote, dday, estGuide, estCaution, estExtrap, estRange, estReported, estTier, methodLabel, money, pct, TIER_STYLE, tone, watchFlag } from "@/lib/format";
+import { type Guide, type GuideWhy, confNote, dday, estGuide, estCaution, estExtrap, estRange, estReported, estTier, methodLabel, money, pct, TIER_STYLE, tone, watchFlag } from "@/lib/format";
 import type { EstSkip, RevEstimate } from "@/lib/queries";
 
 type Bt = { q_end: string; actual: number; pred: number; naive: number | null };
@@ -50,16 +50,20 @@ export function EstimateCard({ hist, labels, nextEarn, lastReported, skip }: { h
           <div className={`text-2xl font-bold ${e.cons_gap == null ? "text-muted" : tone(e.cons_gap)}`}>{e.cons_gap == null ? "-" : pct(e.cons_gap)}</div>
           <div className="text-xs text-muted">{e.cons_gap == null ? "비교 가능한 컨센서스 없음" : `추정 ÷ 컨센 − 1 (${e.date} 기준)`}</div>
           {e.cons_gap != null && range != null && Math.abs(e.cons_gap) < range && <div className="mt-1 text-xs text-muted">괴리가 오차범위(±{(range * 100).toFixed(0)}%) 안 — 의미 있는 차이로 보기 어려움</div>}
+          {e.cons_gap != null && guide && !guide.prelim && byGuide && guide.beat !== 0 && Math.abs(e.est / (1 + e.cons_gap) / ((guide.low + guide.high) / 2) - 1) < 0.02 && (
+            <div className="mt-1 text-xs text-muted">컨센서스가 회사 가이던스 수준 — 이 괴리는 대부분 이 회사의 평소 초과분({pct(guide.beat)})이라 &lsquo;서프라이즈&rsquo;보다는 예상된 상회</div>
+          )}
           {nextEarn && !rep && <div className="mt-1 text-xs text-muted">실적 발표 {nextEarn} (D-{d}) — 발표 후 실적과 비교해 정확도 갱신</div>}
           {bias != null && Math.abs(bias) >= 0.05 && (
             <div className="mt-1 text-xs text-muted">최근 4분기 모델 편향 <span className={tone(bias)}>{pct(bias)}</span> — {bias < 0 ? "과소" : "과대"}추정 경향 감안</div>
           )}</div>
-        <div><div className="text-xs text-muted">모델</div><div className="text-sm">{methodLabel(e.method)}</div>
+        <div><div className="text-xs text-muted">모델</div><div className="text-sm">{e.method === "guide" && guide && guide.beat === 0 ? "회사 가이던스 (중간값 그대로)" : methodLabel(e.method)}</div>
           <div className="text-xs text-muted">단순 추세(직전 성장률 유지) 오차 {e.mape_naive == null ? "-" : pct(e.mape_naive, 1).replace("+", "")}</div>
           {guide && (
             <div className="mt-1 text-xs text-muted">
               회사 {guide.prelim ? "잠정 실적" : guide.annual ? "연간 가이던스를 남은 분기로 환산" : "가이던스"} {money(guide.low, cur)}{guide.high !== guide.low ? ` ~ ${money(guide.high, cur)}` : ""} ({guide.filed} 발표)
-              {!guide.prelim && <> · 과거 실적은 가이던스 중간값보다 보통 <span className={tone(guide.beat)}>{pct(guide.beat)}</span>{byGuide ? " — 그만큼 반영" : " (이 종목은 무역 모델이 더 정확해 참고만)"}</>}
+              {!guide.prelim && !guide.why && <> · 과거 실적은 가이던스 중간값보다 보통 <span className={tone(guide.beat)}>{pct(guide.beat)}</span>{byGuide ? " — 그만큼 반영" : " (이 종목은 무역 모델이 더 정확해 참고만)"}</>}
+              {!guide.prelim && guide.why && <GuideWhyNote g={guide} w={guide.why} byGuide={byGuide} />}
             </div>
           )}
           {estExtrap(e) && <div className="mt-1 text-xs text-down">입력 무역값이 과거 범위를 크게 벗어남 — 외삽이라 &lsquo;참고&rsquo;</div>}</div>
@@ -95,7 +99,7 @@ export function EstimateCard({ hist, labels, nextEarn, lastReported, skip }: { h
         </div>
         <div className="min-w-0">
           <div className="mb-1 text-xs text-muted">사용한 흐름 (매출 연관도 A·B, 예측력이 확인된 C)</div>
-          {flows.length === 0 && <div className="text-sm text-muted">{byGuide ? "없음 — 회사 가이던스와 과거 초과율로 추정 (무역 모델보다 백테스트가 정확)" : "없음 — 매출 이력만으로 추정 (직전 분기 전년비 유지)"}</div>}
+          {flows.length === 0 && <div className="text-sm text-muted">{byGuide ? `없음 — 회사 가이던스${guide && guide.beat === 0 ? "(중간값 그대로)" : "와 과거 초과율"}로 추정 (무역 모델보다 백테스트가 정확)` : "없음 — 매출 이력만으로 추정 (직전 분기 전년비 유지)"}</div>}
           <ul className="space-y-1 text-sm">
             {flows.map((f) => (
               <li key={f.sid} className="flex justify-between gap-2">
@@ -111,6 +115,25 @@ export function EstimateCard({ hist, labels, nextEarn, lastReported, skip }: { h
         추정은 금액 기준이라 수량 단위 변경(물량·단가 분해 불가)에는 영향받지 않습니다. 주목 = 신뢰 추정이면서 컨센 괴리 10% 이상, 실적 발표 30일 이내.
         컨센서스 금액은 데이터 제공처 약관상 표시하지 않고 괴리율만 보여줍니다. 투자 권유가 아닙니다.
       </p>
+    </div>
+  );
+}
+
+/** 가이던스 초과율 보정의 근거 — 과거 분기 범위와, 그 보정이 백테스트에서 실제로 더 정확했는지 */
+function GuideWhyNote({ g, w, byGuide }: { g: Guide; w: GuideWhy; byGuide: boolean }) {
+  const e = (v: number | null) => (v == null ? "-" : `${(v * 100).toFixed(1)}%`);
+  const same = w.min != null && w.max != null && (w.min > 0 || w.max < 0);
+  return (
+    <div className="mt-1 space-y-0.5">
+      {w.n > 0 && w.min != null && w.max != null && (
+        <div>과거 {w.n}분기 실적 ÷ 가이던스 중간값: <span className={tone(w.min)}>{pct(w.min)}</span> ~ <span className={tone(w.max)}>{pct(w.max)}</span>
+          {same ? ` (${w.n}분기 모두 ${w.min > 0 ? "상회" : "하회"})` : " (상회·하회 섞임)"}</div>
+      )}
+      {g.beat !== 0 ? (
+        <div>→ 중앙값 <span className={tone(g.beat)}>{pct(g.beat)}</span> 반영. 근거: 그때그때 이전 분기만으로 같은 보정을 한 백테스트 오차 {e(w.mape_beat)} vs 가이던스 그대로 {e(w.mape_mid)}{byGuide ? "" : " (단, 이 종목은 무역 모델이 더 정확해 참고만)"}</div>
+      ) : (
+        <div>→ 보정 안 함: 백테스트에서 가이던스 그대로({e(w.mape_mid)})가 보정판({e(w.mape_beat)})보다 정확하거나 표본 부족</div>
+      )}
     </div>
   );
 }

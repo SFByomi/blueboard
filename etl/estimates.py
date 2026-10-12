@@ -369,29 +369,39 @@ def _guide_at(guides: list[dict], end: pd.Timestamp, live: bool) -> dict | None:
 
 
 def guide_model(fin: pd.DataFrame, guides: list[dict], t_end: pd.Timestamp):
-    """회사 가이던스 × (1 + 과거 초과율 중앙값). 초과율 = 실적/가이던스 중간값 − 1, 그 분기 이전 것만 사용.
-    반환 (진행 분기 추정|None, 백테스트, 진행 분기 가이던스|None, 적용 초과율)"""
+    """회사 가이던스 중간값 × (1 + 과거 초과율 중앙값). 초과율 = 실적/가이던스 중간값 − 1, 그 분기 이전 것만 사용.
+    초과율 보정은 '전에도 그랬으니'가 아니라 숫자로 채택: 같은 백테스트를 가이던스 그대로(중간값)로도 돌려
+    보정판이 더 정확한 종목만 보정 (예: RBRK 보정 2.0% vs 그대로 8.1% → 보정, VRT·SMCI는 그대로가 더 정확 → 중간값).
+    반환 (진행 분기 추정|None, 백테스트, 진행 분기 가이던스|None, 적용 초과율, 근거 {n, min, max, mape_beat, mape_mid})"""
     beats = []  # (k, 초과율)
     for k in range(len(fin)):
         g = _guide_at(guides, fin.end.iloc[k], live=False)
         if g:
             beats.append((k, fin.revenue.iloc[k] / ((g["low"] + g["high"]) / 2) - 1))
-    bt = []
+    bt, bt_mid = [], []
     for k in range(max(5, len(fin) - BACKTEST), len(fin)):
         g = _guide_at(guides, fin.end.iloc[k], live=False)
         prior = [b for j, b in beats if j < k][-GUIDE_N:]
         if not g or len(prior) < GUIDE_MIN:
             continue
-        rev = fin.revenue
-        bt.append({"q_end": fin.end.iloc[k].strftime("%Y-%m-%d"), "actual": float(rev.iloc[k]),
-                   "pred": float((g["low"] + g["high"]) / 2 * (1 + float(pd.Series(prior).median()))),
-                   "naive": float(rev.iloc[k - 4] * rev.iloc[k - 1] / rev.iloc[k - 5]) if rev.iloc[k - 5] > 0 else None})
+        rev, mid = fin.revenue, (g["low"] + g["high"]) / 2
+        row = {"q_end": fin.end.iloc[k].strftime("%Y-%m-%d"), "actual": float(rev.iloc[k]), "pred": float(mid * (1 + float(pd.Series(prior).median()))),
+               "naive": float(rev.iloc[k - 4] * rev.iloc[k - 1] / rev.iloc[k - 5]) if rev.iloc[k - 5] > 0 else None}
+        bt.append(row)
+        bt_mid.append({**row, "pred": float(mid)})
     g = _guide_at(guides, t_end, live=True)
     prior = [b for _, b in beats][-GUIDE_N:]
+    m_beat, m_mid = mape(bt, "pred"), mape(bt_mid, "pred")
+    why = {"n": len(prior), "min": round(min(prior), 4) if prior else None, "max": round(max(prior), 4) if prior else None,
+           "mape_beat": m_beat, "mape_mid": m_mid}
+    if m_beat is not None and m_mid is not None and m_mid <= m_beat:  # 보정이 오히려 부정확 → 가이던스 그대로
+        bt, use = bt_mid, False
+    else:
+        use = len(prior) >= GUIDE_MIN
     if not g:
-        return None, bt, None, None
-    beat = 0.0 if g.get("prelim") else float(pd.Series(prior).median()) if len(prior) >= GUIDE_MIN else 0.0
-    return (g["low"] + g["high"]) / 2 * (1 + beat), bt, g, beat
+        return None, bt, None, None, why
+    beat = float(pd.Series(prior).median()) if use and not g.get("prelim") else 0.0
+    return (g["low"] + g["high"]) / 2 * (1 + beat), bt, g, beat, why
 
 
 def _skip(con, ticker, today, t_start, t_end, cur, why, log):
@@ -415,10 +425,10 @@ def _estimate(con, ticker, picks, fin, today, log, guides=None):
     if not best and picks and len(fin) < 4 + MIN_PAIRS + MIN_BT and len(fin) >= 4 + SHORT_PAIRS + SHORT_BT:
         best, short = _short_history(con, picks, fin, t_start, t_end), True
     # 회사 가이던스: 단독 · 무역 모델과 평균 — 백테스트 오차가 가장 작은 쪽 (가이던스가 있는 종목만)
-    g_est, g_bt, g_live, g_beat = guide_model(fin, guides or [], t_end) if guides else (None, [], None, None)
+    g_est, g_bt, g_live, g_beat, g_why = guide_model(fin, guides or [], t_end) if guides else (None, [], None, None, {})
     guide_info = None
     if g_est is not None and len(g_bt) >= GUIDE_BT:
-        guide_info = {"low": g_live["low"], "high": g_live["high"], "filed": g_live["filed"], "beat": round(g_beat, 4), "prelim": g_live.get("prelim", False),
+        guide_info = {"low": g_live["low"], "high": g_live["high"], "filed": g_live["filed"], "beat": round(g_beat, 4), "prelim": g_live.get("prelim", False), "why": g_why,
                       **({"annual": g_live["annual"]} if g_live.get("annual") else {})}
         cands = [(mape(g_bt, "pred"), "guide", {"rev": g_est, "se": 0, "flows": []}, g_bt)]
         if best and not short:

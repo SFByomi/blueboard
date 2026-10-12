@@ -87,7 +87,9 @@ export const TIER_STYLE: Record<string, string> = { 신뢰: "bg-up/20 text-up", 
 /** 신뢰도 설명 (툴팁) */
 export const confNote = (e: { conf?: number | null; hits?: number | null; bt_n: number; mape: number | null }) =>
   e.conf == null ? "" : `최근 ${e.bt_n}분기 백테스트 중 ${e.hits}분기에서 실제 매출이 추정 ±5% 안 (표본 보정 ${(e.conf * 100).toFixed(0)}%) · 평균 오차 ${e.mape == null ? "-" : (e.mape * 100).toFixed(1)}%`;
-export type Guide = { low: number; high: number; filed: string; beat: number; prelim?: boolean; annual?: { low: number; high: number; done: number; left: number } };
+/** why = 초과율 보정 근거: 과거 n분기 실적/가이던스 중간값 − 1 의 범위, 같은 백테스트의 보정판·가이던스 그대로 오차 */
+export type GuideWhy = { n: number; min: number | null; max: number | null; mape_beat: number | null; mape_mid: number | null };
+export type Guide = { low: number; high: number; filed: string; beat: number; prelim?: boolean; why?: GuideWhy; annual?: { low: number; high: number; done: number; left: number } };
 export const estGuide = (e: { guide?: string | null }): Guide | null => (e.guide ? JSON.parse(e.guide) : null);
 /** '참고'인 이유 (ETL estimates.reliability) */
 export const estCaution = (e: { caution?: string | null }): string[] => (e.caution ? JSON.parse(e.caution) : []);
