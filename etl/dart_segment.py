@@ -1,4 +1,4 @@
-"""DART XBRL에서 사업부문(Operating Segment) 매출 추출 → 분기 매출.
+"""DART XBRL에서 사업부문(Operating Segment) 매출·영업이익 추출 → 분기 값.
 
 정기공시(분기·반기·사업보고서) XBRL의 ifrs-full:Revenue 중 영업부문 차원(member)이 붙은 값을 모은다.
 공시 값은 대부분 누적(1월~)이라 분기 = 누적 차이. 3개월 값이 있으면 그대로 사용.
@@ -44,7 +44,7 @@ def _filings(corp: str, start_year: int) -> dict:
 
 
 def _facts(rcept: str, reprt: str):
-    path = CACHE / "xbrl" / f"{rcept}.json"
+    path = CACHE / "xbrl" / f"{rcept}.v2.json"  # v2: 부문 영업이익(dart:OperatingIncomeLoss) 포함, 사실마다 tag
     if path.exists():
         return json.loads(path.read_text(encoding="utf-8"))
     r = requests.get(f"{BASE}/fnlttXbrl.xml", params={"crtfc_key": os.environ["DART_API_KEY"], "rcept_no": rcept, "reprt_code": reprt}, timeout=120)
@@ -62,10 +62,11 @@ def _facts(rcept: str, reprt: str):
             ctx[c.get("id")] = (p.findtext("xbrli:startDate", None, NS), p.findtext("xbrli:endDate", None, NS),
                                 [m.text for m in c.iter(DIM)])
         for el in root:
-            if el.tag.endswith("}Revenue") and el.text and el.get("contextRef") in ctx:
+            tag = next((t for t in ("Revenue", "OperatingIncomeLoss") if el.tag.endswith("}" + t)), None)
+            if tag and el.text and el.get("contextRef") in ctx:
                 s, e, members = ctx[el.get("contextRef")]
                 if s and any("Segment" in m for m in members):
-                    facts.append({"start": s, "end": e, "members": members, "value": float(el.text)})
+                    facts.append({"start": s, "end": e, "members": members, "value": float(el.text), "tag": tag})
     path.parent.mkdir(parents=True, exist_ok=True)
     path.write_text(json.dumps(facts, ensure_ascii=False), encoding="utf-8")
     return facts
@@ -84,10 +85,21 @@ def members(stock_code: str, year: int | None = None) -> set[str]:
 
 def quarterly_segment_revenue(stock_code: str, keyword: str, scope: str = "Consolidated", start_year=2020) -> pd.DataFrame:
     """keyword가 들어간 부문 member, scope = Consolidated | Separate. 반환 [start, end, revenue]."""
+    return _segment(stock_code, keyword, scope, start_year, "Revenue")
+
+
+def quarterly_segment_oi(stock_code: str, keyword: str, scope: str = "Consolidated", start_year=2020) -> pd.DataFrame:
+    """부문 영업이익 [end, oi] — 매출과 같은 부문·범위"""
+    return _segment(stock_code, keyword, scope, start_year, "OperatingIncomeLoss").rename(columns={"revenue": "oi"})[["end", "oi"]]
+
+
+def _segment(stock_code: str, keyword: str, scope: str, start_year: int, tag: str) -> pd.DataFrame:
     corp = corp_code(stock_code)
     vals = {}  # (start, end) -> value
     for (y, mm), rc in sorted(_filings(corp, start_year).items()):
         for f in _facts(rc, REPRT[mm]) or []:
+            if f.get("tag", "Revenue") != tag:
+                continue
             ms = f["members"]
             if any(x in m for m in ms for x in ("Elimination", "Adjustment", "Reconcil", "Intersegment")):
                 continue  # 내부거래 제거·조정 항목

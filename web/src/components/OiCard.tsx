@@ -16,10 +16,11 @@ export function OiCard({ o }: { o: OiEstimate | null }) {
   const g: OiGuide | null = o.guide ? JSON.parse(o.guide) : null;
   const bt: Bt[] = JSON.parse(o.backtest || "[]");
   const key = o.method as keyof Bt;
+  const kr = o.currency === "KRW";
   return (
     <div className="card min-w-0 space-y-3">
       <div className="flex flex-wrap items-baseline justify-between gap-2">
-        <h2 className="font-bold">진행 분기 영업이익 추정 <span className="text-sm font-normal text-muted">GAAP{o.q_end ? ` · ${o.q_end.slice(0, 7)} 분기` : ""}</span></h2>
+        <h2 className="font-bold">진행 분기 영업이익 추정 <span className="text-sm font-normal text-muted">{kr ? "K-IFRS" : "GAAP"}{o.q_end ? ` · ${o.q_end.slice(0, 7)} 분기` : ""}</span></h2>
         <span className={`rounded px-2 py-0.5 text-xs ${TIER_STYLE[o.tier] ?? TIER_STYLE["참고"]}`}>{o.tier}{o.mape != null ? ` · 백테스트 오차 ${e(o.mape)}` : ""}</span>
       </div>
       {o.est == null ? (
@@ -69,7 +70,7 @@ export function OiCard({ o }: { o: OiEstimate | null }) {
           <p className="mt-1 text-muted">오차는 영업이익률 기준(예측 영업이익 − 실제) ÷ 실제 매출. 매출 추정 오차도 포함됩니다.</p>
         </details>
       )}
-      <p className="text-xs text-muted">GAAP 영업이익(SEC 재무제표) 기준. 회사 가이던스·애널리스트 추정은 대개 주식보상·인수 상각을 뺀 non-GAAP이라 금액이 다릅니다. 영업이익은 매출보다 훨씬 출렁여(영업 레버리지·일회성 비용) 백테스트 오차 7% 이하 신뢰, 15% 이하 보통, 30% 이하 참고, 그 이상은 추정불가로 이유만 표시합니다. 영업이익률이 0 근처인 종목은 금액 % 대신 영업이익률 오차(%p)로 판단합니다.</p>
+      <p className="text-xs text-muted">{kr ? "DART 손익계산서 영업이익 기준(사업부문 매출을 쓰는 종목은 같은 부문의 영업이익). 한국 회사는 분기 수익성 가이던스를 내지 않아 직전 마진 유지·추세 모델만 씁니다." : "GAAP 영업이익(SEC 재무제표) 기준. 회사 가이던스·애널리스트 추정은 대개 주식보상·인수 상각을 뺀 non-GAAP이라 금액이 다릅니다."} 영업이익은 매출보다 훨씬 출렁여(영업 레버리지·일회성 비용) 백테스트 오차 7% 이하 신뢰, 15% 이하 보통, 30% 이하 참고, 그 이상은 추정불가로 이유만 표시합니다. 영업이익률이 0 근처인 종목은 금액 % 대신 영업이익률 오차(%p)로 판단합니다.</p>
     </div>
   );
 }

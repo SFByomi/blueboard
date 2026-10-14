@@ -22,6 +22,8 @@ BASE = "https://opendart.fss.or.kr/api"
 REPORTS = [("11013", 1), ("11012", 2), ("11014", 3), ("11011", 4)]  # 1Q, 반기, 3Q, 사업
 REV_IDS = ("ifrs-full_Revenue", "ifrs_Revenue")
 REV_NAMES = ("매출액", "수익(매출액)", "영업수익", "매출")
+OI_IDS = ("dart_OperatingIncomeLoss",)
+OI_NAMES = ("영업이익", "영업이익(손실)", "영업손실", "영업손익")
 
 
 def corp_code(stock_code: str) -> str:
@@ -40,7 +42,9 @@ def corp_code(stock_code: str) -> str:
 def _report(corp, year, reprt, fs_div):
     path = CACHE / f"{corp}_{year}_{reprt}_{fs_div}.json"
     if path.exists():
-        return json.loads(path.read_text(encoding="utf-8"))
+        got = json.loads(path.read_text(encoding="utf-8"))
+        if "oi" in got:  # 영업이익 추가 전 캐시는 다시 받음
+            return got
     d = requests.get(f"{BASE}/fnlttSinglAcntAll.json", params={"crtfc_key": os.environ["DART_API_KEY"], "corp_code": corp,
                      "bsns_year": year, "reprt_code": reprt, "fs_div": fs_div}, timeout=60).json()
     if d["status"] == "013":  # 데이터 없음 (아직 미공시)
@@ -51,23 +55,35 @@ def _report(corp, year, reprt, fs_div):
     rev = (next((x for x in is_rows if x["account_id"] in REV_IDS), None)
            # 표준계정코드 미사용 공시는 계정명으로
            or next((x for x in is_rows if x["account_nm"].replace(" ", "") in REV_NAMES), None))
-    out = {"amount": float(rev["thstrm_amount"].replace(",", "")) if rev and rev["thstrm_amount"] else None}
+    oi = (next((x for x in is_rows if x["account_id"] in OI_IDS), None)
+          or next((x for x in is_rows if x["account_nm"].replace(" ", "") in OI_NAMES), None))
+    num = lambda x: float(x["thstrm_amount"].replace(",", "")) if x and x["thstrm_amount"] and x["thstrm_amount"] != "-" else None  # noqa: E731
+    out = {"amount": num(rev), "oi": num(oi)}
     path.parent.mkdir(parents=True, exist_ok=True)
     path.write_text(json.dumps(out))  # 공시된 보고서만 캐시 (정정공시는 refresh로 재수집)
     return out
 
 
-def quarterly_revenue(stock_code: str, fs_div="CFS", start_year=2020) -> pd.DataFrame:
+def _quarterly(stock_code: str, fs_div: str, key: str, start_year: int) -> pd.DataFrame:
     corp = corp_code(stock_code)
     rows = []
     for y in range(start_year, date.today().year + 1):
         got = {q: _report(corp, y, r, fs_div) for r, q in REPORTS}
         for q in (1, 2, 3):
-            if got[q] and got[q]["amount"] is not None:
-                rows.append((y, q, got[q]["amount"]))
-        if got[4] and got[4]["amount"] is not None and all(got[q] and got[q]["amount"] is not None for q in (1, 2, 3)):
-            rows.append((y, 4, got[4]["amount"] - sum(got[q]["amount"] for q in (1, 2, 3))))
-    df = pd.DataFrame(rows, columns=["year", "q", "revenue"])
+            if got[q] and got[q].get(key) is not None:
+                rows.append((y, q, got[q][key]))
+        if got[4] and got[4].get(key) is not None and all(got[q] and got[q].get(key) is not None for q in (1, 2, 3)):
+            rows.append((y, 4, got[4][key] - sum(got[q][key] for q in (1, 2, 3))))
+    df = pd.DataFrame(rows, columns=["year", "q", "v"])
     df["start"] = pd.to_datetime([f"{y}-{3 * q - 2:02d}-01" for y, q in zip(df.year, df.q)])
     df["end"] = df["start"] + pd.offsets.QuarterEnd(0)
-    return df[["start", "end", "revenue"]]
+    return df[["start", "end", "v"]]
+
+
+def quarterly_revenue(stock_code: str, fs_div="CFS", start_year=2020) -> pd.DataFrame:
+    return _quarterly(stock_code, fs_div, "amount", start_year).rename(columns={"v": "revenue"})
+
+
+def quarterly_operating_income(stock_code: str, fs_div="CFS", start_year=2020) -> pd.DataFrame:
+    """[end, oi] — 손익계산서 영업이익(분기 3개월 값, 4분기 = 연간 − 1~3분기)"""
+    return _quarterly(stock_code, fs_div, "oi", start_year).rename(columns={"v": "oi"})[["end", "oi"]]
