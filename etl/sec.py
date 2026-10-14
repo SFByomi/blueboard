@@ -64,9 +64,12 @@ def quarterly_revenue(ticker: str, refresh=False) -> pd.DataFrame:
     return q.rename(columns={"val": "revenue"}).reset_index(drop=True)
 
 
+INSTANCE_TAGS = REV_TAGS + ["OperatingIncomeLoss"]
+
+
 def _instance_revenue(cik_: int, acc: str) -> list[dict]:
-    """공시 XBRL 인스턴스(*_htm.xml)에서 차원(segment) 없는 매출 사실만 → [{start, end, val}]. 결과는 캐시(지난 공시는 안 바뀜)"""
-    path = CACHE / "filings" / f"{acc}.json"
+    """공시 XBRL 인스턴스(*_htm.xml)에서 차원(segment) 없는 매출·영업이익 사실만 → [{start, end, val, tag}]. 결과는 캐시(지난 공시는 안 바뀜)"""
+    path = CACHE / "filings" / f"{acc}.v2.json"  # v2: 영업이익 포함
     if path.exists():
         return json.loads(path.read_text())
     base = f"https://www.sec.gov/Archives/edgar/data/{cik_}/{acc.replace('-', '')}"
@@ -82,7 +85,7 @@ def _instance_revenue(cik_: int, acc: str) -> list[dict]:
             sd, ed = re.search(r"startDate>([\d-]+)<", m.group(2)), re.search(r"endDate>([\d-]+)<", m.group(2))
             if sd and ed:
                 ctx[m.group(1)] = (sd.group(1), ed.group(1))
-        for tag in REV_TAGS:
+        for tag in INSTANCE_TAGS:
             for m in re.finditer(rf"<us-gaap:{tag} [^>]*contextRef=\"([^\"]+)\"[^>]*>([\d.-]+)<", x):
                 if m.group(1) in ctx:
                     out.append({"start": ctx[m.group(1)][0], "end": ctx[m.group(1)][1], "val": float(m.group(2)), "tag": tag})
@@ -91,8 +94,8 @@ def _instance_revenue(cik_: int, acc: str) -> list[dict]:
     return out
 
 
-def _unindexed(ticker: str, after: str) -> list[dict]:
-    """companyfacts의 마지막 공시일 이후 제출된 10-Q·10-K(정정 포함)를 직접 읽음. 태그 우선순위는 REV_TAGS 순"""
+def _unindexed(ticker: str, after: str, tags: list[str] = REV_TAGS) -> list[dict]:
+    """companyfacts의 마지막 공시일 이후 제출된 10-Q·10-K(정정 포함)를 직접 읽음. 태그 우선순위는 tags 순"""
     c = cik(ticker)
     try:
         sub = requests.get(f"https://data.sec.gov/submissions/CIK{c}.json", headers=UA, timeout=60).json()["filings"]["recent"]
@@ -102,9 +105,33 @@ def _unindexed(ticker: str, after: str) -> list[dict]:
     for form, filed, acc in zip(sub["form"], sub["filingDate"], sub["accessionNumber"]):
         if form.split("/")[0] in ("10-Q", "10-K") and filed > after:
             facts = _instance_revenue(int(c), acc)
-            for tag in REV_TAGS:  # companyfacts와 같게 첫 태그 우선
+            for tag in tags:  # companyfacts와 같게 첫 태그 우선
                 hit = [f for f in facts if f["tag"] == tag]
                 if hit:
                     rows += [{"start": f["start"], "end": f["end"], "val": f["val"], "filed": filed, "tag": tag} for f in hit]
                     break
     return rows
+
+
+def quarterly_operating_income(ticker: str, refresh=False) -> pd.DataFrame:
+    """[end, oi] — GAAP 영업이익(OperatingIncomeLoss) 분기값. 4분기는 연간 − 1~3분기. 태그가 없으면 빈 표"""
+    facts = _get(f"https://data.sec.gov/api/xbrl/companyfacts/CIK{cik(ticker)}.json",
+                 CACHE / f"{ticker}.json", refresh)["facts"]["us-gaap"]
+    rows = [{"start": u["start"], "end": u["end"], "val": u["val"], "filed": u["filed"]}
+            for u in facts.get("OperatingIncomeLoss", {}).get("units", {}).get("USD", []) if "start" in u]
+    if rows:  # companyfacts가 아직 반영 안 한 최근 10-Q·10-K (예: MU 8월 분기 10-K)
+        rows += [{k: r[k] for k in ("start", "end", "val", "filed")} for r in _unindexed(ticker, max(r["filed"] for r in rows), ["OperatingIncomeLoss"])]
+    if not rows:
+        return pd.DataFrame(columns=["end", "oi"])
+    df = pd.DataFrame(rows)
+    df["start"], df["end"] = pd.to_datetime(df["start"]), pd.to_datetime(df["end"])
+    df["days"] = (df["end"] - df["start"]).dt.days
+    df = df.sort_values("filed").drop_duplicates(["start", "end"], keep="last")
+    q = df[df["days"].between(80, 100)].drop_duplicates("end", keep="last")[["start", "end", "val"]]
+    derived = []
+    for _, a in df[df["days"].between(350, 380)].drop_duplicates("end", keep="last").iterrows():
+        inside = q[(q["start"] >= a["start"]) & (q["end"] <= a["end"])]
+        if len(inside) == 3 and not (q["end"] == a["end"]).any():
+            derived.append({"start": inside["end"].max() + pd.Timedelta(days=1), "end": a["end"], "val": a["val"] - inside["val"].sum()})
+    q = pd.concat([q, pd.DataFrame(derived)]).drop_duplicates("end").sort_values("end")
+    return q.rename(columns={"val": "oi"})[["end", "oi"]].reset_index(drop=True)
