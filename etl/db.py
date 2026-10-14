@@ -99,6 +99,14 @@ CREATE TABLE IF NOT EXISTS revenue_estimates ( -- 무역 기반 진행 분기 �
   currency TEXT, method TEXT,                        -- method: yoy(전년비 회귀) | level(금액 회귀) — 백테스트로 선택
   PRIMARY KEY (date, ticker)
 );
+CREATE TABLE IF NOT EXISTS oi_estimates ( -- 진행 분기 GAAP 영업이익 추정 일별 스냅샷 (etl/oi_estimates.py) — Supabase에 누적
+  date TEXT NOT NULL, ticker TEXT NOT NULL, q_end TEXT,
+  est REAL, margin REAL, rev_est REAL, last_q TEXT, last_oi REAL, last_margin REAL,  -- 추정 영업이익·영업이익률, 기준 매출 추정, 직전 확인 분기 말·실적
+  method TEXT,                                       -- guide(회사 마진 가이던스 − 과거 차이) | naive(직전 분기 영업이익률 유지) | none
+  mape REAL, mape_naive REAL, err_pts REAL, bt_n INTEGER, backtest TEXT,  -- 영업이익 백테스트 오차(%)·단순 유지 오차·영업이익률 기준 오차(%p)
+  tier TEXT, caution TEXT, guide TEXT, currency TEXT,
+  PRIMARY KEY (date, ticker)
+);
 """
 
 

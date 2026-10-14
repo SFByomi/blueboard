@@ -21,7 +21,7 @@ from etl.sec import UA, cik
 ROOT = Path(__file__).resolve().parents[1]
 STORE = ROOT / "data" / "guidance.json"
 TEXT = ROOT / "data" / "raw" / "guidance"  # 보도자료 본문 캐시(git 제외) — 파서를 고치면 다시 받지 않고 재해석
-VERSION = 7  # 파서 버전: 저장된 결과가 이보다 낮으면 본문으로 다시 해석
+VERSION = 9  # 파서 버전: 저장된 결과가 이보다 낮으면 본문으로 다시 해석
 SINCE = "2021-06-01"
 NUM = r"[$€]\s?([\d,]+(?:\.\d+)?)\s*(billion|million|B|M)?"  # ASML은 유로
 SEP = r"\s*(?:to|and|-|–|—)\s*[$€]?\s?([\d,]+(?:\.\d+)?)\s*(billion|million|B|M)?"
@@ -91,6 +91,67 @@ def parse(text: str) -> list[dict]:
             out.append({"low": lo_v, "high": hi_v, "unit_low": ul, "unit_high": uh, "ctx": re.sub(r"\s+", " ", m.group(0))[:220]})
         if out:
             break  # 첫 번째 가이던스 블록만
+    return out
+
+
+# 영업이익률·매출총이익률: "48 - 49%", "between 39.5% and 41.5%", "Approximately 85.95%", "85% ± 1%" (숫자 뒤 %가 있어야 — 'fiscal 2027' 배제)
+RANGE_PCT = (r"(-?\d+(?:\.\d+)?)\s*%?\s*(?:to|-|–|—|and)\s*(-?\d+(?:\.\d+)?)\s*%"
+             r"|(-?\d+(?:\.\d+)?)\s*%(?:\s*(?:±|\+/-|plus or minus)\s*(\d+(?:\.\d+)?)\s*(?:%|percentage points?|points?))?")
+MONEY = r"[$€]\s?([\d,]+(?:\.\d+)?)\s*(billion|million|B|M)?"
+RANGE_MONEY = rf"{MONEY}(?:\s*(?:to|-|–|—|and)\s*[$€]?\s?([\d,]+(?:\.\d+)?)\s*(billion|million|B|M)?|\s*(?:±|\+/-|plus or minus)\s*[$€]?\s?([\d,]+(?:\.\d+)?)\s*(billion|million|B|M)?)?"
+RESULTS = r"(?i)today\s+(?:reported|announced)|financial\s+highlights|\(\$\s*in\s+millions|reconciliation\s+of"  # 가이던스 뒤에 이어지는 실적 표·본문
+
+
+def _pct(m, k: int) -> tuple[float, float]:
+    """k = RANGE_PCT가 시작하는 그룹 번호"""
+    if m.group(k):
+        return float(m.group(k)) / 100, float(m.group(k + 1)) / 100
+    v, d = float(m.group(k + 2)), float(m.group(k + 3) or 0)
+    return (v - d) / 100, (v + d) / 100
+
+
+def _money(m, k: int = 1) -> dict:
+    g = lambda i: m.group(k + i - 1)  # noqa: E731
+    lo, ul = _num(g(1), g(2))
+    if g(3):
+        hi, uh = _num(g(3), g(4))
+    elif g(5):  # "$1.19 billion ± $15 million" — ± 폭을 본값 단위로
+        d, ud = _num(g(5), g(6))
+        d = d * (ud or ul or 1) / (ul or ud or 1)
+        hi, uh = lo + d, ul
+        lo -= d
+    else:
+        hi, uh = lo, ul
+    return {"low": lo, "high": hi, "unit_low": ul or uh, "unit_high": uh or ul}
+
+
+def parse_margin(text: str, cands: list[dict]) -> dict | None:
+    """분기 매출 가이던스 근처의 수익성 가이던스 → 영업이익률 추정 재료.
+    {om: [lo, hi]} 영업이익률 · {oi: {low, high, unit_*}} 영업이익 금액 · {gm: [lo, hi], opex: {...}} 매출총이익률+영업비용.
+    연간 구간(YEARLY 단어 뒤)은 버림. 'non-GAAP' 표기 여부는 basis로 — 모델은 과거 '가이던스 마진 − 실제 GAAP 마진' 차이로 보정하므로 기준이 섞여도 회사별로 일관되면 됨"""
+    if not cands:
+        return None
+    pos = text.find(cands[0]["ctx"][:60])
+    if pos < 0:
+        return None
+    win = text[pos: pos + 1500]  # 매출 가이던스부터 (앞쪽은 실적 요약이라 제외)
+    cut = [m.start() for m in re.finditer(rf"(?i){YEARLY}", win) if m.start() > 40] + [m.start() for m in re.finditer(RESULTS, win) if m.start() > 40]
+    if cut:
+        win = win[: min(cut)]  # 연간 가이던스·실적 본문 시작 전까지
+    out = {}
+    actual = r"(?i)\b(was|were|grew|increased|decreased|improved|expanded|reached|compared|up|down)\b"
+    for key, pat in (("om", rf"operating\s+margins?\b[^%$]{{0,90}}?(?:{RANGE_PCT})"), ("gm", rf"gross\s+margins?\b[^%$]{{0,90}}?(?:{RANGE_PCT})")):
+        m = re.search(rf"(?i){pat}", win)
+        if m and not re.search(actual, m.group(0)):
+            out[key] = list(_pct(m, 1))
+    for key, pat in (("oi", rf"(?:operating\s+income|income\s+from\s+operations)\b[^$€%]{{0,90}}?{RANGE_MONEY}"),
+                     ("opex", rf"operating\s+expenses\b[^$€%]{{0,100}}?{RANGE_MONEY}")):
+        m = re.search(rf"(?i){pat}", win)
+        if m and not re.search(actual, m.group(0)) and not re.search(r"(?i)stock-based|excludes", m.group(0)):
+            out[key] = _money(m, 1)
+    if not out:
+        return None
+    out["basis"] = "non-GAAP" if re.search(r"(?i)non-?gaap|adjusted", win) else "GAAP"
     return out
 
 
@@ -195,8 +256,10 @@ def collect(tickers: list[str], log=print) -> dict:
                 store[acc] = {"ticker": t, "filed": filed, "cands": [], "skip": True, "v": VERSION}
                 continue
             prelim = bool(txt and re.search(r"(?i)preliminary\s+(?:unaudited\s+)?(?:financial\s+)?(?:results|net sales|revenue)|announces\s+preliminary", txt[:2500]))
-            store[acc] = {"ticker": t, "filed": filed, "cands": parse(txt) if txt else [], "annual": parse_annual(txt) if txt else [],
+            cands = parse(txt) if txt else []
+            store[acc] = {"ticker": t, "filed": filed, "cands": cands, "annual": parse_annual(txt) if txt else [],
                           "actual": parse_actual(txt) if txt else None,
+                          **({"margin": mg} if txt and (mg := parse_margin(txt, cands)) else {}),
                           "fye": fye, **({"prelim": True} if prelim else {}), "v": VERSION}
             new += 1
         if new:

@@ -23,6 +23,7 @@ load_dotenv(ROOT / ".env")
 # 소스에 과거 이력이 없어 매일 쌓는 테이블: 테이블 → 기본키. Actions 캐시(SQLite)는 언제든 사라질 수 있으므로
 # 이 테이블들은 통째 교체하지 않고 Postgres에 누적한다.
 ACCUMULATE = {"price_snapshots": ("date", "kind", "item", "stat"), "revenue_estimates": ("date", "ticker"),
+              "oi_estimates": ("date", "ticker"),
               "earnings_reports": ("ticker", "q_end", "seen")}  # 캐시가 날아가 늦은 날짜가 와도 웹은 분기별 최소 seen을 씀
 # 재게시가 금지된 원천 데이터 → 로컬 SQLite에만 (야후 컨센서스). 공개 쪽에는 괴리율만 나감
 PRIVATE = {"consensus"}

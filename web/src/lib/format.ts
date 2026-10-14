@@ -3,11 +3,11 @@ export const pct = (v: number | null | undefined, digits = 1) =>
 
 export function usd(v: number | null | undefined) {
   if (v == null) return "-";
-  const a = Math.abs(v);
-  if (a >= 1e9) return `$${(v / 1e9).toFixed(2)}B`;
-  if (a >= 1e6) return `$${(v / 1e6).toFixed(1)}M`;
-  if (a >= 1e3) return `$${(v / 1e3).toFixed(0)}K`;
-  return `$${v.toFixed(0)}`;
+  const a = Math.abs(v), s = v < 0 ? "-" : ""; // 적자 영업이익: -$24.0M
+  if (a >= 1e9) return `${s}$${(a / 1e9).toFixed(2)}B`;
+  if (a >= 1e6) return `${s}$${(a / 1e6).toFixed(1)}M`;
+  if (a >= 1e3) return `${s}$${(a / 1e3).toFixed(0)}K`;
+  return `${s}$${a.toFixed(0)}`;
 }
 
 /** 매출 등 통화 금액: USD는 $1.2B, KRW는 3.46조 / 6,020억 */

@@ -169,6 +169,14 @@ export const estimateDate = () =>
 export const estimateHistory = (ticker: string) =>
   query<RevEstimate>("SELECT * FROM revenue_estimates WHERE ticker=? AND est IS NOT NULL ORDER BY date", [ticker]).catch(noTable<RevEstimate>);
 
+export type OiEstimate = {
+  date: string; ticker: string; q_end: string | null; est: number | null; margin: number | null; rev_est: number | null; last_q: string | null; last_oi: number | null; last_margin: number | null;
+  method: string; mape: number | null; mape_naive: number | null; err_pts: number | null; bt_n: number; backtest: string; tier: string; caution: string | null; guide: string | null; currency: string;
+};
+/** 진행 분기 GAAP 영업이익 추정 (etl/oi_estimates.py) — 그 종목의 최신 행 */
+export const oiEstimate = (ticker: string) =>
+  query<OiEstimate>("SELECT * FROM oi_estimates WHERE ticker=? ORDER BY date DESC LIMIT 1", [ticker]).then((r) => r[0] ?? null).catch(() => null);
+
 export type Consensus = { date: string; ticker: string; period: string; end_date: string | null; avg: number; low: number | null; high: number | null; n: number | null };
 /** 컨센서스 원 금액 — 로컬 SQLite에만 있음(게시 안 함). 관리 화면 전용 */
 export const latestConsensus = () =>
