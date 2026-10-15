@@ -14,9 +14,10 @@ const TABS: { href: string; label: string; en: string }[] = [
 ];
 
 /** 상단 탭 — 현재 페이지 탭을 강조 (종목 상세 /stocks/MU 도 '종목' 탭) */
-export function NavTabs({ admin }: { admin: boolean }) {
+export function NavTabs({ admin, owner = false }: { admin: boolean; owner?: boolean }) {
   const path = usePathname();
-  const tabs = admin ? [...TABS, { href: "/admin", label: "관리", en: "Admin" }] : TABS;
+  const mine = owner ? [...TABS.slice(0, -1), { href: "/credit", label: "신용 🔒", en: "Credit 🔒" }, TABS.at(-1)!] : TABS; // 본인만 보이는 탭
+  const tabs = admin ? [...mine, { href: "/admin", label: "관리", en: "Admin" }] : mine;
   const active = (href: string) => (href === "/" ? path === "/" : path === href || path.startsWith(`${href}/`));
   return (
     <>

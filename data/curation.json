@@ -554,6 +554,51 @@
    "dart_segment": null,
    "grp": "전기차·에너지",
    "sites": "[{\"name\": \"프리몬트\", \"country\": \"미국 캘리포니아\", \"what\": \"모델 3·Y·S·X 조립\"}, {\"name\": \"기가 텍사스\", \"country\": \"미국 오스틴\", \"what\": \"모델 Y·사이버트럭, 4680 셀\"}, {\"name\": \"기가 상하이\", \"country\": \"중국\", \"what\": \"모델 3·Y (최대 생산·수출 거점)\"}, {\"name\": \"기가 베를린\", \"country\": \"독일 그륀하이데\", \"what\": \"모델 Y\"}, {\"name\": \"기가 네바다\", \"country\": \"미국 스파크스\", \"what\": \"배터리·세미 트럭\"}, {\"name\": \"메가팩토리\", \"country\": \"미국 래스럽·중국 상하이\", \"what\": \"메가팩(ESS)\"}]"
+  },
+  {
+   "ticker": "ORCL",
+   "name": "Oracle",
+   "name_ko": "오라클",
+   "market": "NYSE",
+   "sector": "AI 클라우드(OCI)·소프트웨어",
+   "thesis": "OCI GPU 클라우드 대규모 수주(잔여수행의무 급증)를 회사채·리스로 조달해 데이터센터를 짓는 중 — 매출은 데이터센터 가동 속도, 신용은 차입 증가 속도가 관건. AI 서버 수입은 업황 참고.",
+   "sec_ticker": "ORCL",
+   "fy_note": "FY 5월",
+   "sort": 61,
+   "dart_fs": null,
+   "dart_segment": null,
+   "grp": "AI 클라우드",
+   "sites": "[{\"name\": \"애빌린(스타게이트)\", \"country\": \"미국 텍사스\", \"what\": \"AI 데이터센터(OpenAI용)\"}, {\"name\": \"OCI 리전\", \"country\": \"미국·전 세계\", \"what\": \"클라우드 데이터센터\"}]"
+  },
+  {
+   "ticker": "CRWV",
+   "name": "CoreWeave",
+   "name_ko": "코어위브",
+   "market": "NASDAQ",
+   "sector": "AI 클라우드(GPU 임대)",
+   "thesis": "엔비디아 GPU 임대 전문 클라우드 — 마이크로소프트·OpenAI·메타 장기 계약을 담보로 대규모 차입(GPU 담보 대출·하이일드 회사채). 매출은 가동 GPU 수, 신용은 이자 부담과 차환이 관건.",
+   "sec_ticker": "CRWV",
+   "fy_note": "FY 12월",
+   "sort": 62,
+   "dart_fs": null,
+   "dart_segment": null,
+   "grp": "AI 클라우드",
+   "sites": "[{\"name\": \"뉴저지·텍사스·펜실베이니아 등\", \"country\": \"미국\", \"what\": \"GPU 데이터센터(임차·자체)\"}, {\"name\": \"영국·노르웨이·스페인\", \"country\": \"유럽\", \"what\": \"GPU 데이터센터\"}]"
+  },
+  {
+   "ticker": "META",
+   "name": "Meta Platforms",
+   "name_ko": "메타",
+   "market": "NASDAQ",
+   "sector": "하이퍼스케일러(광고)",
+   "thesis": "광고 매출로 AI 데이터센터 투자(하이페리온·프로메테우스) — 일부는 사모신용 SPV(블루아울 합작)로 부외 조달. 매출보다 설비투자·조달 구조가 AI 인프라 수요의 선행 지표.",
+   "sec_ticker": "META",
+   "fy_note": "FY 12월",
+   "sort": 63,
+   "dart_fs": null,
+   "dart_segment": null,
+   "grp": "AI 클라우드",
+   "sites": "[{\"name\": \"하이페리온\", \"country\": \"미국 루이지애나\", \"what\": \"AI 데이터센터(SPV 조달)\"}, {\"name\": \"프로메테우스\", \"country\": \"미국 오하이오\", \"what\": \"AI 데이터센터\"}]"
   }
  ],
  "series": [
@@ -2823,6 +2868,96 @@
    "caveat": "텍사스 배터리 수입의 8%에 불과하고 업체 구분 불가.",
    "include_in_total": 0,
    "sort": 40
+  },
+  {
+   "ticker": "ORCL",
+   "series_id": "us_imp_tw_server",
+   "role": "최종수요",
+   "confidence": "낮음",
+   "rationale": "AI 서버 공급(대만 ODM) 업황.",
+   "caveat": "OCI 매출 중 서버 투자분만 연결 — 소프트웨어 매출 비중 큼.",
+   "include_in_total": 0,
+   "sort": 10
+  },
+  {
+   "ticker": "ORCL",
+   "series_id": "us_imp_mx_server",
+   "role": "최종수요",
+   "confidence": "낮음",
+   "rationale": "멕시코 조립 AI 서버 업황.",
+   "caveat": "OCI 매출 중 서버 투자분만 연결 — 소프트웨어 매출 비중 큼.",
+   "include_in_total": 0,
+   "sort": 11
+  },
+  {
+   "ticker": "ORCL",
+   "series_id": "us_imp_all_gpuboard",
+   "role": "최종수요",
+   "confidence": "낮음",
+   "rationale": "GPU 보드 등 부품 수입 업황.",
+   "caveat": "OCI 매출 중 서버 투자분만 연결 — 소프트웨어 매출 비중 큼.",
+   "include_in_total": 0,
+   "sort": 12
+  },
+  {
+   "ticker": "CRWV",
+   "series_id": "us_imp_tw_server",
+   "role": "최종수요",
+   "confidence": "낮음",
+   "rationale": "AI 서버 공급(대만 ODM) 업황.",
+   "caveat": "GPU 임대 매출은 서버 도입 1~2분기 뒤.",
+   "include_in_total": 0,
+   "sort": 10
+  },
+  {
+   "ticker": "CRWV",
+   "series_id": "us_imp_mx_server",
+   "role": "최종수요",
+   "confidence": "낮음",
+   "rationale": "멕시코 조립 AI 서버 업황.",
+   "caveat": "GPU 임대 매출은 서버 도입 1~2분기 뒤.",
+   "include_in_total": 0,
+   "sort": 11
+  },
+  {
+   "ticker": "CRWV",
+   "series_id": "us_imp_all_gpuboard",
+   "role": "최종수요",
+   "confidence": "낮음",
+   "rationale": "GPU 보드 등 부품 수입 업황.",
+   "caveat": "GPU 임대 매출은 서버 도입 1~2분기 뒤.",
+   "include_in_total": 0,
+   "sort": 12
+  },
+  {
+   "ticker": "META",
+   "series_id": "us_imp_tw_server",
+   "role": "최종수요",
+   "confidence": "낮음",
+   "rationale": "AI 서버 공급(대만 ODM) 업황.",
+   "caveat": "메타 매출(광고)과는 무관 — 설비투자 업황 참고.",
+   "include_in_total": 0,
+   "sort": 10
+  },
+  {
+   "ticker": "META",
+   "series_id": "us_imp_mx_server",
+   "role": "최종수요",
+   "confidence": "낮음",
+   "rationale": "멕시코 조립 AI 서버 업황.",
+   "caveat": "메타 매출(광고)과는 무관 — 설비투자 업황 참고.",
+   "include_in_total": 0,
+   "sort": 11
+  },
+  {
+   "ticker": "META",
+   "series_id": "us_imp_all_gpuboard",
+   "role": "최종수요",
+   "confidence": "낮음",
+   "rationale": "GPU 보드 등 부품 수입 업황.",
+   "caveat": "메타 매출(광고)과는 무관 — 설비투자 업황 참고.",
+   "include_in_total": 0,
+   "sort": 12
   }
  ],
  "hs_tags": [

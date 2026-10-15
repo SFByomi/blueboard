@@ -3287,6 +3287,42 @@
 "fye": "0131",
 "v": 9
 },
+"0001769628-25-000059": {
+"ticker": "CRWV",
+"filed": "2025-11-10",
+"cands": [],
+"annual": [],
+"actual": null,
+"fye": "1231",
+"v": 9
+},
+"0001769628-26-000094": {
+"ticker": "CRWV",
+"filed": "2026-02-26",
+"cands": [],
+"annual": [],
+"actual": null,
+"fye": "1231",
+"v": 9
+},
+"0001769628-26-000220": {
+"ticker": "CRWV",
+"filed": "2026-05-07",
+"cands": [],
+"annual": [],
+"actual": null,
+"fye": "1231",
+"v": 9
+},
+"0001769628-26-000362": {
+"ticker": "CRWV",
+"filed": "2026-08-11",
+"cands": [],
+"annual": [],
+"actual": null,
+"fye": "1231",
+"v": 9
+},
 "0001571996-24-000050": {
 "ticker": "DELL",
 "filed": "2024-05-30",
@@ -6550,6 +6586,187 @@
 "basis": "non-GAAP"
 },
 "fye": "0627",
+"v": 9
+},
+"0001326801-24-000065": {
+"ticker": "META",
+"filed": "2024-07-31",
+"cands": [
+{
+"low": 38.5,
+"high": 41.0,
+"unit_low": 1000000000.0,
+"unit_high": 1000000000.0,
+"ctx": "total revenue to be in the range of $38.5-41 billion"
+}
+],
+"annual": [],
+"actual": {
+"value": 39.07,
+"unit": 1000000000.0,
+"ctx": "Total revenue was $39.07 billion"
+},
+"fye": "1231",
+"v": 9
+},
+"0001326801-24-000077": {
+"ticker": "META",
+"filed": "2024-10-30",
+"cands": [
+{
+"low": 45.0,
+"high": 48.0,
+"unit_low": 1000000000.0,
+"unit_high": 1000000000.0,
+"ctx": "total revenue to be in the range of $45-48 billion"
+}
+],
+"annual": [],
+"actual": {
+"value": 40.59,
+"unit": 1000000000.0,
+"ctx": "Total revenue was $40.59 billion"
+},
+"fye": "1231",
+"v": 9
+},
+"0001326801-25-000014": {
+"ticker": "META",
+"filed": "2025-01-29",
+"cands": [
+{
+"low": 39.5,
+"high": 41.8,
+"unit_low": 1000000000.0,
+"unit_high": 1000000000.0,
+"ctx": "total revenue to be in the range of $39.5-41.8 billion"
+}
+],
+"annual": [],
+"actual": null,
+"fye": "1231",
+"v": 9
+},
+"0001326801-25-000050": {
+"ticker": "META",
+"filed": "2025-04-30",
+"cands": [
+{
+"low": 42.5,
+"high": 45.5,
+"unit_low": 1000000000.0,
+"unit_high": 1000000000.0,
+"ctx": "total revenue to be in the range of $42.5-45.5 billion"
+}
+],
+"annual": [],
+"actual": {
+"value": 42.31,
+"unit": 1000000000.0,
+"ctx": "Revenue was $42.31 billion"
+},
+"fye": "1231",
+"v": 9
+},
+"0001628280-25-036719": {
+"ticker": "META",
+"filed": "2025-07-30",
+"cands": [
+{
+"low": 47.5,
+"high": 50.5,
+"unit_low": 1000000000.0,
+"unit_high": 1000000000.0,
+"ctx": "total revenue to be in the range of $47.5-50.5 billion"
+}
+],
+"annual": [],
+"actual": {
+"value": 47.52,
+"unit": 1000000000.0,
+"ctx": "Revenue was $47.52 billion"
+},
+"fye": "1231",
+"v": 9
+},
+"0001628280-25-047114": {
+"ticker": "META",
+"filed": "2025-10-29",
+"cands": [
+{
+"low": 56.0,
+"high": 59.0,
+"unit_low": 1000000000.0,
+"unit_high": 1000000000.0,
+"ctx": "total revenue to be in the range of $56-59 billion"
+}
+],
+"annual": [],
+"actual": {
+"value": 51.24,
+"unit": 1000000000.0,
+"ctx": "Revenue was $51.24 billion"
+},
+"fye": "1231",
+"v": 9
+},
+"0001628280-26-003832": {
+"ticker": "META",
+"filed": "2026-01-28",
+"cands": [
+{
+"low": 53.5,
+"high": 56.5,
+"unit_low": 1000000000.0,
+"unit_high": 1000000000.0,
+"ctx": "total revenue to be in the range of $53.5-56.5 billion"
+}
+],
+"annual": [],
+"actual": null,
+"fye": "1231",
+"v": 9
+},
+"0001628280-26-028364": {
+"ticker": "META",
+"filed": "2026-04-29",
+"cands": [
+{
+"low": 58.0,
+"high": 61.0,
+"unit_low": 1000000000.0,
+"unit_high": 1000000000.0,
+"ctx": "total revenue to be in the range of $58-61 billion"
+}
+],
+"annual": [],
+"actual": {
+"value": 56.31,
+"unit": 1000000000.0,
+"ctx": "Revenue was $56.31 billion"
+},
+"fye": "1231",
+"v": 9
+},
+"0001628280-26-050596": {
+"ticker": "META",
+"filed": "2026-07-29",
+"cands": [
+{
+"low": 61.0,
+"high": 64.0,
+"unit_low": 1000000000.0,
+"unit_high": 1000000000.0,
+"ctx": "total revenue to be in the range of $61-64 billion"
+}
+],
+"annual": [],
+"actual": {
+"value": 60.8,
+"unit": 1000000000.0,
+"ctx": "Revenue was $60.80 billion"
+},
+"fye": "1231",
 "v": 9
 },
 "0001835632-21-000005": {
@@ -10897,6 +11114,301 @@
 "basis": "non-GAAP"
 },
 "fye": "0131",
+"v": 9
+},
+"0001564590-21-032994": {
+"ticker": "ORCL",
+"filed": "2021-06-15",
+"cands": [],
+"annual": [],
+"actual": null,
+"fye": "0531",
+"v": 9
+},
+"0001564590-21-047736": {
+"ticker": "ORCL",
+"filed": "2021-09-13",
+"cands": [],
+"annual": [],
+"actual": {
+"value": 2.5,
+"unit": 1000000000.0,
+"ctx": "revenue totaled $2.5 billion"
+},
+"fye": "0531",
+"v": 9
+},
+"0001564590-21-059893": {
+"ticker": "ORCL",
+"filed": "2021-12-09",
+"cands": [],
+"annual": [],
+"actual": {
+"value": 7.9,
+"unit": 1000000000.0,
+"ctx": "revenues were $7.9 billion"
+},
+"fye": "0531",
+"v": 9
+},
+"0001564590-22-009640": {
+"ticker": "ORCL",
+"filed": "2022-03-10",
+"cands": [],
+"annual": [],
+"actual": {
+"value": 7.9,
+"unit": 1000000000.0,
+"ctx": "revenues were $7.9 billion"
+},
+"fye": "0531",
+"v": 9
+},
+"0001564590-22-023099": {
+"ticker": "ORCL",
+"filed": "2022-06-13",
+"cands": [],
+"annual": [],
+"actual": {
+"value": 8.4,
+"unit": 1000000000.0,
+"ctx": "revenues were $8.4 billion"
+},
+"fye": "0531",
+"v": 9
+},
+"0001193125-22-191296": {
+"ticker": "ORCL",
+"filed": "2022-07-11",
+"cands": [],
+"annual": [],
+"actual": {
+"value": 792.0,
+"unit": 1000000.0,
+"ctx": "revenues were $792 million"
+},
+"fye": "0531",
+"v": 9
+},
+"0001564590-22-031466": {
+"ticker": "ORCL",
+"filed": "2022-09-12",
+"cands": [],
+"annual": [],
+"actual": {
+"value": 10.5,
+"unit": 1000000000.0,
+"ctx": "revenues were $10.5 billion"
+},
+"fye": "0531",
+"v": 9
+},
+"0001564590-22-039236": {
+"ticker": "ORCL",
+"filed": "2022-12-12",
+"cands": [],
+"annual": [],
+"actual": {
+"value": 8.7,
+"unit": 1000000000.0,
+"ctx": "revenues were $8.7 billion"
+},
+"fye": "0531",
+"v": 9
+},
+"0001564590-23-003362": {
+"ticker": "ORCL",
+"filed": "2023-03-09",
+"cands": [],
+"annual": [],
+"actual": {
+"value": 8.6,
+"unit": 1000000000.0,
+"ctx": "revenues were $8.6 billion"
+},
+"fye": "0531",
+"v": 9
+},
+"0000950170-23-027490": {
+"ticker": "ORCL",
+"filed": "2023-06-12",
+"cands": [],
+"annual": [],
+"actual": {
+"value": 9.0,
+"unit": 1000000000.0,
+"ctx": "revenues were $9.0 billion"
+},
+"fye": "0531",
+"v": 9
+},
+"0000950170-23-047471": {
+"ticker": "ORCL",
+"filed": "2023-09-11",
+"cands": [],
+"annual": [],
+"actual": {
+"value": 11.1,
+"unit": 1000000000.0,
+"ctx": "revenues were $11.1 billion"
+},
+"fye": "0531",
+"v": 9
+},
+"0000950170-23-069410": {
+"ticker": "ORCL",
+"filed": "2023-12-11",
+"cands": [],
+"annual": [],
+"actual": {
+"value": 8.9,
+"unit": 1000000000.0,
+"ctx": "revenues were $8.9 billion"
+},
+"fye": "0531",
+"v": 9
+},
+"0000950170-24-029250": {
+"ticker": "ORCL",
+"filed": "2024-03-11",
+"cands": [],
+"annual": [],
+"actual": {
+"value": 8.9,
+"unit": 1000000000.0,
+"ctx": "revenues were $8.9 billion"
+},
+"fye": "0531",
+"v": 9
+},
+"0000950170-24-071916": {
+"ticker": "ORCL",
+"filed": "2024-06-11",
+"cands": [],
+"annual": [],
+"actual": {
+"value": 9.3,
+"unit": 1000000000.0,
+"ctx": "revenues were $9.3 billion"
+},
+"fye": "0531",
+"v": 9
+},
+"0000950170-24-104753": {
+"ticker": "ORCL",
+"filed": "2024-09-09",
+"cands": [],
+"annual": [],
+"actual": {
+"value": 11.5,
+"unit": 1000000000.0,
+"ctx": "revenues were $11.5 billion"
+},
+"fye": "0531",
+"v": 9
+},
+"0000950170-24-134537": {
+"ticker": "ORCL",
+"filed": "2024-12-09",
+"cands": [],
+"annual": [],
+"actual": {
+"value": 9.4,
+"unit": 1000000000.0,
+"ctx": "revenues were $9.4 billion"
+},
+"fye": "0531",
+"v": 9
+},
+"0000950170-25-036295": {
+"ticker": "ORCL",
+"filed": "2025-03-10",
+"cands": [],
+"annual": [],
+"actual": {
+"value": 9.0,
+"unit": 1000000000.0,
+"ctx": "revenues were $9.0 billion"
+},
+"fye": "0531",
+"v": 9
+},
+"0000950170-25-084831": {
+"ticker": "ORCL",
+"filed": "2025-06-11",
+"cands": [],
+"annual": [],
+"actual": {
+"value": 9.4,
+"unit": 1000000000.0,
+"ctx": "revenues were $9.4 billion"
+},
+"fye": "0531",
+"v": 9
+},
+"0001193125-25-199175": {
+"ticker": "ORCL",
+"filed": "2025-09-09",
+"cands": [],
+"annual": [],
+"actual": {
+"value": 12.1,
+"unit": 1000000000.0,
+"ctx": "revenues were $12.1 billion"
+},
+"fye": "0531",
+"v": 9
+},
+"0001193125-25-314207": {
+"ticker": "ORCL",
+"filed": "2025-12-10",
+"cands": [],
+"annual": [],
+"actual": {
+"value": 9.9,
+"unit": 1000000000.0,
+"ctx": "revenues were $9.9 billion"
+},
+"fye": "0531",
+"v": 9
+},
+"0001193125-26-100148": {
+"ticker": "ORCL",
+"filed": "2026-03-10",
+"cands": [],
+"annual": [],
+"actual": {
+"value": 9.9,
+"unit": 1000000000.0,
+"ctx": "revenues were $9.9 billion"
+},
+"fye": "0531",
+"v": 9
+},
+"0001193125-26-265848": {
+"ticker": "ORCL",
+"filed": "2026-06-10",
+"cands": [],
+"annual": [],
+"actual": {
+"value": 19.2,
+"unit": 1000000000.0,
+"ctx": "revenues increased 21% to $19.2 billion"
+},
+"fye": "0531",
+"v": 9
+},
+"0001193125-26-387905": {
+"ticker": "ORCL",
+"filed": "2026-09-10",
+"cands": [],
+"annual": [],
+"actual": {
+"value": 19.3,
+"unit": 1000000000.0,
+"ctx": "revenues increased 30% to $19.3 billion"
+},
+"fye": "0531",
 "v": 9
 },
 "0001327567-21-000020": {
