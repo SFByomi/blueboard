@@ -9,7 +9,7 @@ import time
 from concurrent.futures import ThreadPoolExecutor, as_completed
 from datetime import datetime, timezone
 
-from etl import breaks, consensus, curation, dart, dart_segment, estimates, guidance, indicators, oi_estimates, prices, scores, sec, sec6k, seed, sources, surge
+from etl import breaks, consensus, curation, dart, dart_segment, econ_calendar, estimates, guidance, indicators, inflation, oi_estimates, prices, scores, sec, sec6k, seed, sources, surge
 from etl.db import connect
 
 
@@ -152,6 +152,8 @@ def main():
     apply_hs_names_ko(con); con.commit()
     step("5) GPU 렌탈가·토큰 가격"); prices.collect(con, log)
     step("6) 가격지수 (PPI·수출입 가격)"); indicators.collect(con, log)
+    step("6-1) 미국 물가 기여도 (CPI·PCE)"); inflation.collect(con, log)
+    step("6-2) 주요 일정"); econ_calendar.collect(con, log)
     # 시간대를 붙여 저장(UTC) — 웹은 한국 시간으로 표시. 예전 값(시간대 없음)은 Actions 러너 기준 UTC로 해석
     con.execute("INSERT OR REPLACE INTO meta (key, value) VALUES ('built_at', ?)", (datetime.now(timezone.utc).isoformat(timespec="seconds"),))
     con.commit()

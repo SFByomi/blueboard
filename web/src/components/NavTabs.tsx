@@ -9,6 +9,7 @@ const TABS: { href: string; label: string; en: string }[] = [
   { href: "/stocks", label: "종목", en: "Stocks" },
   { href: "/prices", label: "가격·지수", en: "Prices" },
   { href: "/surge", label: "급등 탐색", en: "Surge" },
+  { href: "/calendar", label: "일정", en: "Calendar" },
   { href: "/about", label: "소개", en: "About" },
 ];
 

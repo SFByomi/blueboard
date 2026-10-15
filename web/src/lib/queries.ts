@@ -177,6 +177,16 @@ export type OiEstimate = {
 export const oiEstimate = (ticker: string) =>
   query<OiEstimate>("SELECT * FROM oi_estimates WHERE ticker=? ORDER BY date DESC LIMIT 1", [ticker]).then((r) => r[0] ?? null).catch(() => null);
 
+export type InflationRow = { measure: string; basis: string; kind: string; month: string; total: number; services: number | null; goods: number | null; food: number | null; energy: number | null };
+/** 미국 물가 구성요소 기여도 (etl/inflation.py) */
+export const inflationContrib = () =>
+  query<InflationRow>("SELECT measure, basis, kind, month, total, services, goods, food, energy FROM inflation_contrib ORDER BY month").catch(noTable<InflationRow>);
+
+export type EconEvent = { date: string; time_kst: string | null; title: string; cat: string | null; country: string | null; source: string | null; ticker: string | null; approx: number; note: string | null };
+/** 주요 일정 (etl/econ_calendar.py) — 한국 시간 */
+export const econEvents = () =>
+  query<EconEvent>("SELECT * FROM econ_events ORDER BY date, time_kst").catch(noTable<EconEvent>);
+
 export type Consensus = { date: string; ticker: string; period: string; end_date: string | null; avg: number; low: number | null; high: number | null; n: number | null };
 /** 컨센서스 원 금액 — 로컬 SQLite에만 있음(게시 안 함). 관리 화면 전용 */
 export const latestConsensus = () =>

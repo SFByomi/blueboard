@@ -5,7 +5,8 @@ import { CountBars, PriceChart } from "@/components/ComputeCharts";
 import Link from "next/link";
 import { pct, tone } from "@/lib/format";
 import { IndexSection } from "@/components/IndexSection";
-import { flowScores, indicators, observations, priceSnapshots, type PriceRow } from "@/lib/queries";
+import { InflationSection } from "@/components/InflationSection";
+import { flowScores, indicators, inflationContrib, observations, priceSnapshots, type PriceRow } from "@/lib/queries";
 
 // 게시 직후 바로 보이도록 요청마다 렌더 (ISR 캐시가 게시 후에도 이전 데이터로 남던 문제). DB가 작아 부담 없음
 export const dynamic = "force-dynamic";
@@ -29,7 +30,7 @@ const series = (rows: PriceRow[], item: string, stat: string): [string, number][
   rows.filter((r) => r.item === item && r.stat === stat).map((r) => [r.date, r.value]);
 
 export default async function Prices() {
-  const [rows, defs, rw, fs] = await Promise.all([priceSnapshots(), indicators(), observations(["sec_ransomware"]).catch(() => []), flowScores()]);
+  const [rows, defs, rw, fs, infl] = await Promise.all([priceSnapshots(), indicators(), observations(["sec_ransomware"]).catch(() => []), flowScores(), inflationContrib()]);
   const [power, capex] = await Promise.all([observations(POWER_IDS).catch(() => []), observations(CAPEX_IDS).catch(() => [])]);
   const sec = fs.filter((r) => r.series_id === "sec_ransomware").sort((a, b) => (b.best ?? -9) - (a.best ?? -9));
   const SEC_KO: Record<string, string> = { PANW: "팔로알토", CRWD: "크라우드스트라이크", RBRK: "루브릭", S: "센티넬원", ZS: "지스케일러", FTNT: "포티넷", OKTA: "옥타", NET: "클라우드플레어" };
@@ -172,6 +173,16 @@ export default async function Prices() {
             ))}
             {" "}— 구독 매출이라 직접 연동은 약하니 방향 참고용으로 보세요.
           </p>
+        </section>
+      )}
+
+      {infl.length > 0 && (
+        <section className="space-y-3">
+          <div className="flex flex-wrap items-baseline justify-between gap-2">
+            <h2 className="text-lg font-bold"><T ko="미국 물가 기여도" en="US inflation contributions" /> <span className="text-sm font-normal text-muted">CPI·PCE 서비스·공산품·식품·에너지</span></h2>
+            <Link href="/calendar" className="text-xs text-muted hover:text-fg">발표 일정 →</Link>
+          </div>
+          <InflationSection rows={infl} />
         </section>
       )}
 
