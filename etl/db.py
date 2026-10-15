@@ -108,6 +108,10 @@ CREATE TABLE IF NOT EXISTS credit_metrics ( -- 기업별 재무 신용 지표 (e
   ebit_ttm REAL, ebitda_ttm REAL, interest_ttm REAL, interest_basis TEXT, ocf_ttm REAL, capex_ttm REAL, fcf_ttm REAL,
   PRIMARY KEY (ticker, q_end)
 );
+CREATE TABLE IF NOT EXISTS market_credit ( -- 주가 내재 신용위험 (etl/market_credit.py, Merton): 가격·시가총액은 저장 안 함(야후 재게시 금지)
+  ticker TEXT NOT NULL, date TEXT NOT NULL, vol REAL, dd REAL, pd1 REAL, pd5 REAL, lev_mkt REAL,  -- 주가 변동성(연율)·부도거리(1년)·1년·5년(누적) 부도확률·부채/(시총+부채)
+  PRIMARY KEY (ticker, date)
+);
 CREATE TABLE IF NOT EXISTS finra_market ( -- FINRA 회사채 시장 집계 (etl/finra.py): 숫자 필드를 이름 그대로
   dataset TEXT NOT NULL, date TEXT NOT NULL, category TEXT NOT NULL, field TEXT NOT NULL, value REAL,
   PRIMARY KEY (dataset, date, category, field)
