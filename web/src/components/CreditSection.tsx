@@ -167,31 +167,32 @@ function MarketPanel({ ust, finra }: { ust: MacroObs[]; finra: FinraRow[] }) {
       { name: "10년−2년", type: "line", yAxisIndex: 1, showSymbol: false, data: slope, lineStyle: { color: "#f59e0b" }, itemStyle: { color: "#f59e0b" }, areaStyle: { color: "#f59e0b22" } }] };
 
   const breadth = finra.filter((r) => r.dataset === "corporateMarketBreadth");
-  const cats = [...new Set(breadth.map((r) => r.category))];
-  const net = (cat: string) => {
+  const CAT: Record<string, string> = { "investment grade": "투자등급", "high yield": "하이일드" };
+  const cats = Object.keys(CAT).filter((c) => breadth.some((r) => r.category === c));
+  const net = (cat: string) => {  // (상승 − 하락) ÷ 거래된 종목 수, 10일 평균 → 분류별 종목 수 차이와 무관하게 비교
     const by: Record<string, Record<string, number>> = {};
     for (const r of breadth) if (r.category === cat) (by[r.date] ??= {})[r.field] = r.value;
     const days = Object.keys(by).sort();
-    const raw = days.map((d) => (by[d].advances ?? 0) - (by[d].declines ?? 0));
+    const raw = days.map((d) => { const { advances: a = 0, declines: b = 0, unchanged: u = 0 } = by[d]; return a + b + u ? (100 * (a - b)) / (a + b + u) : 0; });
     return days.map((d, i) => [d, +(raw.slice(Math.max(0, i - 9), i + 1).reduce((a, b) => a + b, 0) / Math.min(10, i + 1)).toFixed(1)] as [string, number]);
   };
   const colors = ["#3b82f6", "#ef4444", "#22c55e", "#f59e0b", "#a78bfa"];
   const br: echarts.EChartsOption = { ...baseOption(), grid: { left: 52, right: 16, top: 24, bottom: 52 },
-    xAxis: { type: "time", ...axis, axisLabel: { ...axis.axisLabel, hideOverlap: true } }, yAxis: { type: "value", name: "종목 수", ...axis },
-    series: cats.map((c, i) => ({ name: c, type: "line", showSymbol: false, data: net(c), lineStyle: { color: colors[i % 5], width: 1.5 }, itemStyle: { color: colors[i % 5] } })) };
+    xAxis: { type: "time", ...axis, axisLabel: { ...axis.axisLabel, hideOverlap: true } }, yAxis: { type: "value", name: "%", ...axis },
+    series: cats.map((c, i) => ({ name: CAT[c], type: "line", showSymbol: false, data: net(c), lineStyle: { color: colors[i % 5], width: 1.5 }, itemStyle: { color: colors[i % 5] } })) };
 
   return (
     <section className="space-y-3">
-      <h2 className="text-lg font-bold">회사채 시장 <span className="text-sm font-normal text-muted">미 국채 곡선 · FINRA 회사채 상승/하락 종목 수</span></h2>
+      <h2 className="text-lg font-bold">회사채 시장 <span className="text-sm font-normal text-muted">미 국채 곡선 · FINRA 회사채 상승−하락 비율</span></h2>
       <div className="grid gap-4 xl:grid-cols-3">
         <div className="card min-w-0"><h3 className="font-bold">미 국채 수익률 곡선 <span className="text-xs font-normal text-muted">{last}</span></h3><EChart option={curve} height={260} /></div>
         <div className="card min-w-0"><h3 className="font-bold">10년물 · 장단기 금리차</h3><EChart option={sl} height={260} /></div>
         <div className="card min-w-0">
-          <h3 className="font-bold">회사채 상승 − 하락 종목 수 <span className="text-xs font-normal text-muted">10일 평균, 분류별</span></h3>
+          <h3 className="font-bold">회사채 상승 − 하락 비율 <span className="text-xs font-normal text-muted">10일 평균, 투자등급·하이일드</span></h3>
           {cats.length ? <EChart option={br} height={260} /> : <p className="mt-6 text-sm text-muted">FINRA 데이터 수집 대기 — 다음 데이터 갱신(GitHub Actions)부터 채워집니다.</p>}
         </div>
       </div>
-      <p className="text-xs text-muted">국채: 미 재무부(FRED DGS). 회사채 상승/하락: FINRA TRACE 시장 집계(Source: FINRA) — 가격이 오른 회사채(=수익률 하락)가 많으면 신용 시장이 편안, 내린 채권이 계속 많으면 스프레드 확대 신호. 종목별 회사채 스프레드는 무료 공개 API가 없어 넣지 못했습니다.</p>
+      <p className="text-xs text-muted">국채: 미 재무부(FRED DGS). 회사채 상승−하락: FINRA TRACE 시장 집계(Source: FINRA) — 그날 거래된 회사채 중 (가격 오른 수 − 내린 수) ÷ 전체, 10일 평균. 0 위면 신용 시장이 편안, 하이일드가 계속 0 아래면 스프레드 확대 신호(금리 상승기엔 투자등급도 같이 내림). 종목별 회사채 스프레드는 무료 공개 API가 없고 FINRA 사이트 수집은 약관상 금지라, 아래 표의 “주가 내재 부도확률”로 대신합니다.</p>
     </section>
   );
 }

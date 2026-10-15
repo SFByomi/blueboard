@@ -197,8 +197,10 @@ export type MarketCredit = { ticker: string; date: string; vol: number; dd: numb
 export const marketCredit = () =>
   query<MarketCredit>("SELECT * FROM market_credit WHERE date >= ? ORDER BY ticker, date", [new Date(Date.now() - 3 * 365 * 864e5).toISOString().slice(0, 10)]).catch(noTable<MarketCredit>);
 export type FinraRow = { dataset: string; date: string; category: string; field: string; value: number };
-/** FINRA 회사채 시장 집계 (etl/finra.py) */
-export const finraMarket = () => query<FinraRow>("SELECT * FROM finra_market ORDER BY date").catch(noTable<FinraRow>);
+/** FINRA 회사채 시장 집계 (etl/finra.py) — 화면에 쓰는 투자등급·하이일드 상승/하락 종목 수만 */
+export const finraMarket = () => query<FinraRow>(
+  "SELECT * FROM finra_market WHERE dataset = 'corporateMarketBreadth' AND category IN ('investment grade', 'high yield') AND field IN ('advances', 'declines', 'unchanged') ORDER BY date",
+).catch(noTable<FinraRow>);
 
 export type EconEvent = { date: string; time_kst: string | null; title: string; cat: string | null; country: string | null; source: string | null; ticker: string | null; approx: number; note: string | null };
 /** 주요 일정 (etl/econ_calendar.py) — 한국 시간 */
