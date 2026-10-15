@@ -7,7 +7,7 @@
 - 순부채/EBITDA, 이자보상배율 = 영업이익(TTM) ÷ 이자비용(TTM, 없으면 이자 지급액), FCF = 영업현금흐름 − 설비투자
 - 1년 내 만기: '12개월 안 상환 원금' 공시 → 없으면 유동성 부채(유동 차입금+CP)
 - 현금흐름표는 연초 누적(YTD)이라 분기값 = 누적 차이
-한국(DART): 부채총계·자본총계·현금·차입금(IFRS 표준 계정 ID — 없으면 계정명), 영업이익, 감가상각·이자지급(현금흐름표 누적). 원본 행을 캐시(_credit2)
+한국(DART): 부채총계·자본총계·현금·차입금(IFRS 표준 계정 ID — 없으면 계정명), 영업이익, 이자지급(요약 현금흐름표 누적), 감가상각(XBRL 현금흐름표 조정 — 요약 API엔 없음). 원본 캐시
 """
 import json
 from datetime import date
@@ -18,10 +18,12 @@ import requests
 from etl import dart, sec
 
 DEBT_DEFS = [["DebtLongtermAndShorttermCombinedAmount"], ["LongTermDebt", "+ShortTermBorrowings", "+CommercialPaper"],
-             ["LongTermDebtNoncurrent", "LongTermDebtCurrent|DebtCurrent", "+ShortTermBorrowings", "+CommercialPaper"],
+             ["LongTermDebtNoncurrent", "+LongTermDebtCurrent|DebtCurrent", "+ShortTermBorrowings", "+CommercialPaper"],
+             ["LongTermNotesAndLoans", "+NotesPayableCurrent|DebtCurrent", "+ShortTermBorrowings", "+CommercialPaper"],  # 오라클 2026-08
+             ["LongTermNotesPayable", "+NotesPayableCurrent|DebtCurrent", "+ShortTermBorrowings", "+CommercialPaper"],
              ["LongTermDebtAndCapitalLeaseObligations", "+LongTermDebtAndCapitalLeaseObligationsCurrent|DebtCurrent", "+ShortTermBorrowings", "+CommercialPaper"],
              ["DebtInstrumentCarryingAmount"], ["ConvertibleLongTermNotesPayable", "+ConvertibleNotesPayableCurrent", "+ShortTermBorrowings"],
-             ["ConvertibleDebtNoncurrent", "+ConvertibleDebtCurrent", "+ShortTermBorrowings"]]  # 전환사채만 있는 회사(플루언스 등)
+             ["ConvertibleDebtNoncurrent", "+ConvertibleDebtCurrent", "+ShortTermBorrowings"], ["ConvertibleDebtCurrent", "+ShortTermBorrowings"]]  # 비유동이 사라진 상환 직전(옥타)  # 전환사채만 있는 회사(플루언스 등)
 LEASE = ["FinanceLeaseLiabilityNoncurrent", "FinanceLeaseLiabilityCurrent"]
 CASH = ["CashAndCashEquivalentsAtCarryingValue", "+ShortTermInvestments", "+MarketableSecuritiesCurrent", "+AvailableForSaleSecuritiesDebtSecuritiesCurrent"]
 DUE = ["LongTermDebtMaturitiesRepaymentsOfPrincipalInNextTwelveMonths"]
@@ -104,11 +106,14 @@ def us(ticker: str, sec_t: str) -> list[dict]:
         flows[k] = merged
     eq = {**_instant(facts, "StockholdersEquityIncludingPortionAttributableToNoncontrollingInterest"), **_instant(facts, "StockholdersEquity")}
     ends = sorted({e for e in eq if e >= "2021-01-01"})
+    found = {end: next((v for d in DEBT_DEFS if (v := _combo(facts, d, end)) is not None), None) for end in ends}
     out = []
-    for end in ends:
-        debt = next((v for d in DEBT_DEFS if (v := _combo(facts, d, end)) is not None), None)
-        if debt is None:  # 차입 태그가 하나도 없는 분기 = 무차입(아리스타·파브리넷 등)
-            debt = 0.0
+    for i, end in enumerate(ends):
+        debt = found[end]
+        if debt is None:
+            if any(found[e] for e in ends[max(0, i - 8): i]):
+                continue  # 최근 2년에 차입이 있었는데 이 분기만 태그가 없음 — 0으로 보면 오판(오라클 2026-08 사례) → 건너뜀
+            debt = 0.0  # 2년 내 차입 태그가 한 번도 없음 = 무차입(아리스타·파브리넷 등)
         if not any("CapitalLease" in t for d in DEBT_DEFS for t in d if _combo(facts, d, end) is not None):
             debt += sum(_instant(facts, t).get(end) or 0 for t in LEASE)
         cash = _combo(facts, CASH, end) or 0.0
@@ -169,8 +174,65 @@ def _kr_report(corp: str, year: int, reprt: str, fs: str) -> dict | None:
             "capex_ytd": abs(sum(r[3] for r in cf if r[1] == "ifrs-full_PurchaseOfPropertyPlantAndEquipmentClassifiedAsInvestingActivities" or r[2] in ("유형자산의취득", "유형자산취득")))}
 
 
+DEP_TAGS = ("AdjustmentsForDepreciationExpense", "AdjustmentsForAmortisationExpense", "AdjustmentsForDepreciationAndAmortisationExpense")
+
+
+def _xbrl_dep(rcept: str, reprt: str) -> list | None:
+    """정기보고서 XBRL에서 현금흐름표 감가상각·상각 조정(누적) 사실 → [{start, end, members, tag, value}] (요약 API에는 없음). 캐시"""
+    import io
+    import os
+    import xml.etree.ElementTree as ET
+    import zipfile
+    path = dart.CACHE / "xbrl_dep" / f"{rcept}.json"
+    if path.exists():
+        return json.loads(path.read_text(encoding="utf-8"))
+    r = requests.get(f"{dart.BASE}/fnlttXbrl.xml", params={"crtfc_key": os.environ["DART_API_KEY"], "rcept_no": rcept, "reprt_code": reprt}, timeout=180)
+    try:
+        z = zipfile.ZipFile(io.BytesIO(r.content))
+    except zipfile.BadZipFile:
+        facts = None
+    else:
+        ns = {"xbrli": "http://www.xbrl.org/2003/instance"}
+        root = ET.fromstring(z.read(next(n for n in z.namelist() if n.endswith(".xbrl"))))
+        ctx = {}
+        for c in root.findall("xbrli:context", ns):
+            p = c.find("xbrli:period", ns)
+            ctx[c.get("id")] = (p.findtext("xbrli:startDate", None, ns), p.findtext("xbrli:endDate", None, ns),
+                                [m.text for m in c.iter("{http://xbrl.org/2006/xbrldi}explicitMember")])
+        facts = []
+        for el in root:
+            tag = next((t for t in DEP_TAGS if el.tag.endswith("}" + t)), None)
+            if tag and el.text and el.get("contextRef") in ctx:
+                st, en, mem = ctx[el.get("contextRef")]
+                if st and not any("Segment" in m for m in mem):
+                    facts.append({"start": st, "end": en, "members": mem, "tag": tag, "value": float(el.text)})
+    path.parent.mkdir(parents=True, exist_ok=True)
+    path.write_text(json.dumps(facts), encoding="utf-8")
+    return facts
+
+
+def _dep_ytd(corp: str, fs: str) -> dict[str, float]:
+    """분기 말 → 그해 1월부터 누적 감가상각+상각 (XBRL). 연결(CFS)은 별도 member 없는 문맥, 별도(OFS)는 SeparateMember 문맥"""
+    from etl import dart_segment
+    out = {}
+    for (y, mm), rc in dart_segment._filings(corp, 2021).items():
+        for f in _xbrl_dep(rc, dart_segment.REPRT[mm]) or []:
+            sep = any("Separate" in m for m in f["members"])
+            if (fs == "OFS") != sep or not f["start"].endswith("-01-01"):
+                continue
+            key = f["end"]
+            out.setdefault(key, {})
+            out[key][f["tag"]] = f["value"]
+    return {e: (v.get("AdjustmentsForDepreciationExpense", 0) + v.get("AdjustmentsForAmortisationExpense", 0)) or v.get("AdjustmentsForDepreciationAndAmortisationExpense", 0)
+            for e, v in out.items()}
+
+
 def kr(ticker: str, fs: str) -> list[dict]:
     corp = dart.corp_code(ticker.split(".")[0])
+    try:
+        xdep = _dep_ytd(corp, fs)
+    except Exception:  # noqa: BLE001 — XBRL 실패 시 요약 현금흐름표 값(대개 없음)
+        xdep = {}
     oi = dart.quarterly_operating_income(ticker.split(".")[0], fs).set_index("end")["oi"]
     q = {}
     for y in range(2021, date.today().year + 1):
@@ -180,6 +242,11 @@ def kr(ticker: str, fs: str) -> list[dict]:
             if not g:
                 continue
             end = (pd.Timestamp(f"{y}-{3 * k - 2:02d}-01") + pd.offsets.QuarterEnd(0)).strftime("%Y-%m-%d")
+            if xdep.get(end):
+                g = {**g, "dep_ytd": xdep[end]}
+            if prev_end := (pd.Timestamp(end) - pd.offsets.QuarterEnd(1)).strftime("%Y-%m-%d") if k > 1 else None:
+                if got.get(k - 1) and xdep.get(prev_end):
+                    got[k - 1] = {**got[k - 1], "dep_ytd": xdep[prev_end]}
             prev = got.get(k - 1) if k > 1 else None
             if k > 1 and not prev:
                 continue
@@ -201,8 +268,31 @@ def kr(ticker: str, fs: str) -> list[dict]:
 COLS = ["ticker", "q_end", "currency", "debt", "cash", "net_debt", "equity", "liabilities", "due_1y", "ebit_ttm", "ebitda_ttm", "interest_ttm", "interest_basis", "ocf_ttm", "capex_ttm", "fcf_ttm"]
 
 
+def _prefetch_kr(con, log) -> None:
+    """한국 종목 DART 원본(요약 재무제표·XBRL 감가상각)을 4개씩 동시에 미리 받아 캐시 — 첫 실행이 순차면 1시간 넘게 걸림"""
+    from concurrent.futures import ThreadPoolExecutor
+
+    from etl import dart_segment
+    jobs = []
+    for t, fs in con.execute("SELECT ticker, dart_fs FROM companies WHERE dart_fs IS NOT NULL").fetchall():
+        corp = dart.corp_code(t.split(".")[0])
+        jobs += [(_kr_raw, (corp, y, r, fs)) for y in range(2021, date.today().year + 1) for r, _ in dart.REPORTS]
+        jobs += [(_xbrl_dep, (rc, dart_segment.REPRT[mm])) for (y, mm), rc in dart_segment._filings(corp, 2021).items()]
+
+    def go(j):
+        try:
+            j[0](*j[1])
+        except Exception as e:  # noqa: BLE001
+            return str(e)[:60]
+    with ThreadPoolExecutor(4) as ex:
+        errs = [e for e in ex.map(go, jobs) if e]
+    if errs:
+        log(f"  · 한국 신용 원본 받기 실패 {len(errs)}건 (예: {errs[0]})")
+
+
 def collect(con, log=print) -> int:
     from etl import sec6k
+    _prefetch_kr(con, log)
     rows = []
     for ticker, sec_t, dart_fs in con.execute("SELECT ticker, sec_ticker, dart_fs FROM companies ORDER BY sort").fetchall():
         try:
