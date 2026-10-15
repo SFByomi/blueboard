@@ -102,6 +102,10 @@ CREATE TABLE IF NOT EXISTS revenue_estimates ( -- 무역 기반 진행 분기 �
 CREATE TABLE IF NOT EXISTS econ_events ( -- 주요 일정 (etl/econ_calendar.py) — 날짜·시각은 한국 시간, approx=1은 규칙·작년 기준 추정일
   date TEXT NOT NULL, time_kst TEXT, title TEXT NOT NULL, cat TEXT, country TEXT, source TEXT, ticker TEXT, approx INTEGER DEFAULT 0, note TEXT
 );
+CREATE TABLE IF NOT EXISTS macro_obs ( -- 거시 유동성 (etl/macro.py): 금액은 십억 달러, DEBT_* 는 배
+  series TEXT NOT NULL, date TEXT NOT NULL, value REAL,
+  PRIMARY KEY (series, date)
+);
 CREATE TABLE IF NOT EXISTS inflation_contrib ( -- 미국 물가 구성요소 기여도 (etl/inflation.py): 막대 합 = total
   measure TEXT NOT NULL, basis TEXT NOT NULL, kind TEXT NOT NULL, month TEXT NOT NULL,  -- CPI|PCE · headline|core · yoy|mom
   total REAL, services REAL, goods REAL, food REAL, energy REAL, resid REAL,           -- 변화율·기여도(비율), resid = 비례 조정 전 차이

@@ -182,6 +182,10 @@ export type InflationRow = { measure: string; basis: string; kind: string; month
 export const inflationContrib = () =>
   query<InflationRow>("SELECT measure, basis, kind, month, total, services, goods, food, energy FROM inflation_contrib ORDER BY month").catch(noTable<InflationRow>);
 
+export type MacroObs = { series: string; date: string; value: number };
+/** 거시 유동성 (etl/macro.py) — 금액 십억 달러, DEBT_* 배 */
+export const macroObs = () => query<MacroObs>("SELECT series, date, value FROM macro_obs ORDER BY date").catch(noTable<MacroObs>);
+
 export type EconEvent = { date: string; time_kst: string | null; title: string; cat: string | null; country: string | null; source: string | null; ticker: string | null; approx: number; note: string | null };
 /** 주요 일정 (etl/econ_calendar.py) — 한국 시간 */
 export const econEvents = () =>
