@@ -4,7 +4,7 @@ import type * as echarts from "echarts";
 import { useMemo, useState } from "react";
 import { axis, baseOption, EChart } from "@/components/EChart";
 import { money } from "@/lib/format";
-import type { CreditRow, FinraRow, MacroObs } from "@/lib/queries";
+import type { CreditRow, FinraRow, MacroObs, MarketCredit } from "@/lib/queries";
 
 export type CreditCo = { ticker: string; name: string; grp: string | null };
 
@@ -36,7 +36,15 @@ function risk(r?: CreditRow): ["주의" | "관찰" | "양호", string[]] {
 const RISK_STYLE = { 주의: "bg-red-950 text-red-300", 관찰: "bg-amber-950 text-amber-300", 양호: "bg-up/20 text-up" };
 const x = (v: number | null, d = 1) => (v == null ? "-" : `${v.toFixed(d)}배`);
 
-export function CreditSection({ rows, cos, ust, finra }: { rows: CreditRow[]; cos: CreditCo[]; ust: MacroObs[]; finra: FinraRow[] }) {
+const pdFmt = (p?: number | null) => (p == null ? "-" : p < 0.0005 ? "<0.1%" : `${(p * 100).toFixed(p < 0.1 ? 1 : 0)}%`);
+const pdTone = (p?: number | null) => (p == null ? "" : p >= 0.2 ? "text-down font-bold" : p >= 0.05 ? "text-amber-300" : "");
+
+export function CreditSection({ rows, cos, ust, finra, mkt }: { rows: CreditRow[]; cos: CreditCo[]; ust: MacroObs[]; finra: FinraRow[]; mkt: MarketCredit[] }) {
+  const pdBy = useMemo(() => {
+    const m: Record<string, MarketCredit[]> = {};
+    for (const r of mkt) (m[r.ticker] ??= []).push(r);
+    return m;
+  }, [mkt]);
   const by = useMemo(() => {
     const m: Record<string, CreditRow[]> = {};
     for (const r of rows) (m[r.ticker] ??= []).push(r);
@@ -58,21 +66,24 @@ export function CreditSection({ rows, cos, ust, finra }: { rows: CreditRow[]; co
           <span className="text-xs"><span className={`rounded px-1.5 ${RISK_STYLE.주의}`}>주의 {counts.주의}</span> <span className={`rounded px-1.5 ${RISK_STYLE.관찰}`}>관찰 {counts.관찰}</span> <span className={`rounded px-1.5 ${RISK_STYLE.양호}`}>양호 {counts.양호}</span></span>
         </div>
         <div className="card min-w-0 overflow-x-auto">
-          <table className="w-full min-w-[860px] whitespace-nowrap text-sm">
+          <table className="w-full min-w-[1000px] whitespace-nowrap text-sm">
             <thead className="text-xs text-muted"><tr className="border-b border-line">
-              <th className="py-2 text-left">회사</th><th className="text-left">판정</th><th className="text-right">순부채/EBITDA</th><th className="text-right">1년 전</th>
+              <th className="py-2 text-left">회사</th><th className="text-left">판정</th><th className="text-right" title="주가·변동성·부채로 계산한 5년 누적 부도확률(Merton)">주가 내재 5년 부도</th><th className="text-right">3개월 전</th><th className="text-right">순부채/EBITDA</th><th className="text-right">1년 전</th>
               <th className="text-right">이자보상</th><th className="text-right">총차입</th><th className="text-right">현금</th><th className="text-right">1년 내 만기÷현금</th>
               <th className="text-right">FCF(4분기)</th><th className="text-right">부채/자본</th><th className="text-right">기준</th>
             </tr></thead>
             {groups.map((g) => (
               <tbody key={g}>
-                <tr><td colSpan={11} className="pt-3 pb-1 text-xs font-bold text-muted">{g}</td></tr>
+                <tr><td colSpan={13} className="pt-3 pb-1 text-xs font-bold text-muted">{g}</td></tr>
                 {cos.filter((c) => (c.grp ?? "기타") === g && by[c.ticker]).sort((a, b) => order[risk(by[a.ticker].at(-1))[0]] - order[risk(by[b.ticker].at(-1))[0]] || (lev(by[b.ticker].at(-1)) ?? -9) - (lev(by[a.ticker].at(-1)) ?? -9)).map((c) => {
                   const h = by[c.ticker], r = h.at(-1)!, y = h.at(-5), [lvl, why] = risk(r), l = lev(r), ly = lev(y);
+                  const pm = pdBy[c.ticker], pNow = pm?.at(-1)?.pd5, p3 = pm?.at(-14)?.pd5;
                   return (
                     <tr key={c.ticker} onClick={() => setSel(c.ticker)} className={`cursor-pointer border-b border-line/50 font-mono hover:bg-panel2 ${sel === c.ticker ? "bg-panel2" : ""}`}>
                       <td className="py-1.5 font-sans"><b>{c.name}</b> <span className="text-xs text-muted">{c.ticker}</span></td>
                       <td className="font-sans" title={why.join(" · ")}><span className={`rounded px-1.5 text-xs ${RISK_STYLE[lvl]}`}>{lvl}</span></td>
+                      <td className={`text-right ${pdTone(pNow)}`}>{pm ? pdFmt(pNow) : "-"}</td>
+                      <td className="text-right text-xs text-muted">{pm ? pdFmt(p3) : "-"}</td>
                       <td className={`text-right ${l != null && l > 4 ? "text-down" : ""}`} title={r.ebitda_ttm == null && r.ebit_ttm != null ? "EBITDA 대신 영업이익 기준" : undefined}>
                         {(ebitda(r) ?? 1) <= 0 && (r.net_debt ?? 0) > 0 ? "적자" : (r.net_debt ?? 0) < 0 ? "순현금" : x(l)}{r.ebitda_ttm == null && r.ebit_ttm != null ? "*" : ""}</td>
                       <td className="text-right text-xs text-muted">{y ? ((y.net_debt ?? 0) < 0 ? "순현금" : x(ly)) : "-"}</td>
@@ -89,9 +100,11 @@ export function CreditSection({ rows, cos, ust, finra }: { rows: CreditRow[]; co
             ))}
           </table>
         </div>
-        {sel && by[sel] && <Detail co={cos.find((c) => c.ticker === sel)!} h={by[sel]} />}
+        {sel && by[sel] && <Detail co={cos.find((c) => c.ticker === sel)!} h={by[sel]} pd={pdBy[sel] ?? []} />}
         <p className="text-xs leading-relaxed text-muted">
-          장부 기준(SEC XBRL·DART) — 시장 가격(회사채 스프레드)이 아니라 &lsquo;빚을 감당할 체력&rsquo;. 총차입 = 단·장기 차입금·사채 + 금융리스(운용리스 제외), 현금 = 현금성자산 + 단기 투자,
+          주가 내재 부도확률 = Merton 모형(KMV·Bharath-Shumway 단순판): 시가총액·1년 주가 변동성·부도 기준 부채(1년 내 만기 + 나머지 차입의 절반)로 1년 부도거리를 구하고 5년 누적으로 환산.
+          회사채 스프레드와 같은 &lsquo;시장 신호&rsquo;지만 주가 변동이 큰 성장주는 과대, 투자등급 대형주는 과소로 나오는 경향 — 순위·추세 위주로 보세요(주가 원 데이터는 출처 약관상 표시하지 않음).
+          나머지는 장부 기준(SEC XBRL·DART) — &lsquo;빚을 감당할 체력&rsquo;. 총차입 = 단·장기 차입금·사채 + 금융리스(운용리스 제외), 현금 = 현금성자산 + 단기 투자,
           이자보상 = 영업이익 ÷ 이자비용(최근 4분기, 이자비용 공시가 없으면 이자 지급액), 1년 내 만기 = 12개월 안 상환 원금(공시 시) 또는 유동성 차입금. 한국 종목은 회사 전체(두산은 별도) 기준이고 부채/자본은 부채총계 ÷ 자본, 감가상각이 요약 현금흐름표에 없어 * 표시는 EBITDA 대신 영업이익 기준(레버리지가 다소 높게 나옴).
           판정: 순부채 회사 — 주의 = 순부채/EBITDA 4배 초과·이자보상 2배 미만·EBITDA 적자·FCF 적자이면서 1년 내 만기가 현금보다 많음, 관찰 = 2.5배 초과·5배 미만·FCF 적자. 순현금 회사 — FCF 적자면 현금으로 버틸 햇수 1.5년 미만 주의, 그 외 관찰. 판정 칸에 마우스를 올리면 이유. 신용등급이 아닌 단순 규칙입니다.
         </p>
@@ -100,7 +113,7 @@ export function CreditSection({ rows, cos, ust, finra }: { rows: CreditRow[]; co
   );
 }
 
-function Detail({ co, h }: { co: CreditCo; h: CreditRow[] }) {
+function Detail({ co, h, pd }: { co: CreditCo; h: CreditRow[]; pd: MarketCredit[] }) {
   const cur = h.at(-1)!.currency, unit = cur === "KRW" ? 1e12 : 1e9, u = cur === "KRW" ? "조원" : "$B";
   const q = h.map((r) => r.q_end.slice(2, 7).replace("-", "."));
   const v = (f: (r: CreditRow) => number | null | undefined) => h.map((r) => { const z = f(r); return z == null ? null : +(z / unit).toFixed(2); });
@@ -114,8 +127,14 @@ function Detail({ co, h }: { co: CreditCo; h: CreditRow[] }) {
     series: [{ name: "영업현금흐름(4분기)", type: "bar", data: v((r) => r.ocf_ttm), itemStyle: { color: "#3b82f6aa" } }, { name: "설비투자(4분기)", type: "bar", data: v((r) => (r.capex_ttm == null ? null : -r.capex_ttm)), itemStyle: { color: "#a78bfaaa" } },
       { name: "FCF", type: "line", data: v((r) => r.fcf_ttm), lineStyle: { color: "#e6e8f2", width: 2 }, itemStyle: { color: "#e6e8f2" } },
       { name: "이자보상(배)", type: "line", yAxisIndex: 1, data: r2(cov), lineStyle: { color: "#f472b6", type: "dashed" }, itemStyle: { color: "#f472b6" } }] };
+  const o3: echarts.EChartsOption = { ...baseOption(), grid: { left: 52, right: 48, top: 28, bottom: 52 },
+    xAxis: { type: "time", ...axis, axisLabel: { ...axis.axisLabel, hideOverlap: true } },
+    yAxis: [{ type: "value", name: "%", ...axis }, { type: "value", name: "변동성 %", ...axis, splitLine: { show: false } }],
+    series: [{ name: "5년 부도확률(주가 내재)", type: "line", showSymbol: false, data: pd.map((r) => [r.date, +(r.pd5 * 100).toFixed(2)]), lineStyle: { color: "#ef4444", width: 2 }, itemStyle: { color: "#ef4444" }, areaStyle: { color: "#ef444422" } },
+      { name: "주가 변동성(1년)", type: "line", yAxisIndex: 1, showSymbol: false, data: pd.map((r) => [r.date, +(r.vol * 100).toFixed(1)]), lineStyle: { color: "#8a90ad", type: "dashed" }, itemStyle: { color: "#8a90ad" } }] };
   return (
-    <div className="grid gap-4 xl:grid-cols-2">
+    <div className="grid gap-4 xl:grid-cols-3">
+      <div className="card min-w-0"><h3 className="font-bold">{co.name} · 주가 내재 부도확률</h3>{pd.length ? <EChart option={o3} height={280} /> : <p className="mt-6 text-sm text-muted">부채가 시가총액의 1% 미만이거나 주가 이력이 짧아 계산하지 않음</p>}</div>
       <div className="card min-w-0"><h3 className="font-bold">{co.name} · 차입금 vs 현금</h3><EChart option={o1} height={280} /></div>
       <div className="card min-w-0"><h3 className="font-bold">{co.name} · 현금흐름과 이자 감당</h3><EChart option={o2} height={280} /></div>
     </div>

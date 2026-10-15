@@ -21,7 +21,7 @@ from etl.sec import UA, cik
 ROOT = Path(__file__).resolve().parents[1]
 STORE = ROOT / "data" / "guidance.json"
 TEXT = ROOT / "data" / "raw" / "guidance"  # 보도자료 본문 캐시(git 제외) — 파서를 고치면 다시 받지 않고 재해석
-VERSION = 9  # 파서 버전: 저장된 결과가 이보다 낮으면 본문으로 다시 해석
+VERSION = 10  # 파서 버전: 저장된 결과가 이보다 낮으면 본문으로 다시 해석
 SINCE = "2021-06-01"
 NUM = r"[$€]\s?([\d,]+(?:\.\d+)?)\s*(billion|million|B|M)?"  # ASML은 유로
 SEP = r"\s*(?:to|and|-|–|—)\s*[$€]?\s?([\d,]+(?:\.\d+)?)\s*(billion|million|B|M)?"
@@ -155,6 +155,24 @@ def parse_margin(text: str, cands: list[dict]) -> dict | None:
     return out
 
 
+def parse_growth(text: str) -> list[float] | None:
+    """성장률로만 내는 분기 매출 가이던스 → [하단, 상단] (오라클: "Total revenues are expected to grow between 30% and 34% in constant currency and USD").
+    고정환율·달러가 따로 있으면 달러(USD) 쪽. 연간 문맥이면 버림. 금액으로 바꾸는 건 resolve(작년 같은 분기 매출 × (1+g))"""
+    for m in re.finditer(r"(?i)total\s+revenues?\s+(?:are|is)\s+expected\s+to\s+grow([^•\n]{0,260})", text):
+        pre = text[max(0, m.start() - 300): m.start()]
+        q = [x.end() for x in re.finditer(rf"(?i){QWORD}", pre)]
+        y = [x.end() for x in re.finditer(rf"(?i){YEARLY}", pre)]
+        if not q or (y and max(y) > max(q)):
+            continue
+        pairs = [(float(a), float(b), seg) for a, b, seg in re.findall(r"(-?\d+(?:\.\d+)?)%\s*(?:to|and|-)\s*(-?\d+(?:\.\d+)?)%([^%]{0,40})", m.group(1))]
+        if not pairs:
+            continue
+        usd = [p for p in pairs if re.search(r"USD|U\.S\. dollars?", p[2])]
+        lo, hi, _ = usd[0] if usd else pairs[0]
+        return [lo / 100, hi / 100]
+    return None
+
+
 def parse_annual(text: str) -> list[dict]:
     """연간 매출 가이던스 → [{low, high, unit_low, unit_high, ctx}] 또는 성장률 [{g_low, g_high, ctx}] (AAON: "Sales Growth 55%-60%")"""
     out = []
@@ -257,7 +275,7 @@ def collect(tickers: list[str], log=print) -> dict:
                 continue
             prelim = bool(txt and re.search(r"(?i)preliminary\s+(?:unaudited\s+)?(?:financial\s+)?(?:results|net sales|revenue)|announces\s+preliminary", txt[:2500]))
             cands = parse(txt) if txt else []
-            store[acc] = {"ticker": t, "filed": filed, "cands": cands, "annual": parse_annual(txt) if txt else [],
+            store[acc] = {"ticker": t, "filed": filed, "cands": cands, **({"growth": gr} if txt and not cands and (gr := parse_growth(txt)) else {}), "annual": parse_annual(txt) if txt else [],
                           "actual": parse_actual(txt) if txt else None,
                           **({"margin": mg} if txt and (mg := parse_margin(txt, cands)) else {}),
                           "fye": fye, **({"prelim": True} if prelim else {}), "v": VERSION}
@@ -285,7 +303,7 @@ def resolve(store: dict, ticker: str, fin_ends: list[str], ref_rev: dict[str, fl
     out = {}
     ends = [pd.Timestamp(e) for e in fin_ends]
     for acc, g in store.items():
-        if g["ticker"] != ticker or not g.get("cands") or not ends:
+        if g["ticker"] != ticker or not (g.get("cands") or g.get("growth")) or not ends:
             continue
         filed = pd.Timestamp(g["filed"])
         rs = [e for e in ends if e < filed]
@@ -299,7 +317,11 @@ def resolve(store: dict, ticker: str, fin_ends: list[str], ref_rev: dict[str, fl
         ref = ref_rev.get(rs[-1].strftime("%Y-%m-%d"))
         if not ref:
             continue
-        ok = [v for v in (scale(c, ref) for c in g["cands"]) if 0.5 < (v[0] + v[1]) / 2 / ref < 2.5]  # 단위·연간·문장 오인 제외
+        ok = [v for v in (scale(c, ref) for c in g.get("cands") or []) if 0.5 < (v[0] + v[1]) / 2 / ref < 2.5]  # 단위·연간·문장 오인 제외
+        if not ok and g.get("growth"):  # 성장률 가이던스 → 작년 같은 분기 매출 × (1 + g)
+            ly = next((v for e, v in ref_rev.items() if abs((pd.Timestamp(e) - (target - pd.DateOffset(years=1))).days) <= 20), None)
+            if ly:
+                ok = [(ly * (1 + g["growth"][0]), ly * (1 + g["growth"][1]))]
         if not ok:
             continue
         lo, hi = ok[0]
