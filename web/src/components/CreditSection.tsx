@@ -113,30 +113,104 @@ export function CreditSection({ rows, cos, ust, finra, mkt }: { rows: CreditRow[
   );
 }
 
-function Detail({ co, h, pd }: { co: CreditCo; h: CreditRow[]; pd: MarketCredit[] }) {
-  const cur = h.at(-1)!.currency, unit = cur === "KRW" ? 1e12 : 1e9, u = cur === "KRW" ? "조원" : "$B";
-  const q = h.map((r) => r.q_end.slice(2, 7).replace("-", "."));
-  const v = (f: (r: CreditRow) => number | null | undefined) => h.map((r) => { const z = f(r); return z == null ? null : +(z / unit).toFixed(2); });
-  const r2 = (f: (r: CreditRow) => number | null) => h.map((r) => { const z = f(r); return z == null ? null : +z.toFixed(2); });
-  const o1: echarts.EChartsOption = { ...baseOption(), grid: { left: 52, right: 48, top: 28, bottom: 52 },
-    xAxis: { type: "category", data: q, ...axis }, yAxis: [{ type: "value", name: u, ...axis }, { type: "value", name: "배", ...axis, splitLine: { show: false } }],
-    series: [{ name: "총차입", type: "bar", data: v((r) => r.debt), itemStyle: { color: "#ef4444aa" } }, { name: "현금", type: "bar", data: v((r) => r.cash), itemStyle: { color: "#22c55eaa" } },
-      { name: "순부채/EBITDA", type: "line", yAxisIndex: 1, data: r2(lev), lineStyle: { color: "#f59e0b", width: 2 }, itemStyle: { color: "#f59e0b" } }] };
-  const o2: echarts.EChartsOption = { ...baseOption(), grid: { left: 52, right: 48, top: 28, bottom: 52 },
-    xAxis: { type: "category", data: q, ...axis }, yAxis: [{ type: "value", name: u, ...axis }, { type: "value", name: "배", ...axis, splitLine: { show: false } }],
-    series: [{ name: "영업현금흐름(4분기)", type: "bar", data: v((r) => r.ocf_ttm), itemStyle: { color: "#3b82f6aa" } }, { name: "설비투자(4분기)", type: "bar", data: v((r) => (r.capex_ttm == null ? null : -r.capex_ttm)), itemStyle: { color: "#a78bfaaa" } },
-      { name: "FCF", type: "line", data: v((r) => r.fcf_ttm), lineStyle: { color: "#e6e8f2", width: 2 }, itemStyle: { color: "#e6e8f2" } },
-      { name: "이자보상(배)", type: "line", yAxisIndex: 1, data: r2(cov), lineStyle: { color: "#f472b6", type: "dashed" }, itemStyle: { color: "#f472b6" } }] };
-  const o3: echarts.EChartsOption = { ...baseOption(), grid: { left: 52, right: 48, top: 28, bottom: 52 },
-    xAxis: { type: "time", ...axis, axisLabel: { ...axis.axisLabel, hideOverlap: true } },
-    yAxis: [{ type: "value", name: "%", ...axis }, { type: "value", name: "변동성 %", ...axis, splitLine: { show: false } }],
-    series: [{ name: "5년 부도확률(주가 내재)", type: "line", showSymbol: false, data: pd.map((r) => [r.date, +(r.pd5 * 100).toFixed(2)]), lineStyle: { color: "#ef4444", width: 2 }, itemStyle: { color: "#ef4444" }, areaStyle: { color: "#ef444422" } },
-      { name: "주가 변동성(1년)", type: "line", yAxisIndex: 1, showSymbol: false, data: pd.map((r) => [r.date, +(r.vol * 100).toFixed(1)]), lineStyle: { color: "#8a90ad", type: "dashed" }, itemStyle: { color: "#8a90ad" } }] };
+const C = { debt: "#ef4444", cash: "#22c55e", warn: "#f59e0b", bad: "#ef4444", ok: "#3b82f6", ref: "#8a90ad" };
+/** 기준선(점선 + 이름) — 차트 안에서 '여기 넘으면 위험'을 바로 읽게 */
+const refLine = (y: number, label: string, color: string) =>
+  ({ yAxis: y, label: { formatter: label, position: "insideEndTop" as const, color, fontSize: 10, backgroundColor: "#151a33cc", padding: [1, 3] }, lineStyle: { color, type: "dashed" as const, width: 1 } });
+const mini = (o: echarts.EChartsOption, legend = false): echarts.EChartsOption =>
+  ({ ...baseOption(), ...o, grid: { left: 44, right: 12, top: 18, bottom: legend ? 44 : 24 }, ...(legend ? {} : { legend: { show: false } }) });
+
+/** 지표 하나 = 카드 하나: 질문형 제목 · 지금 값 · 읽는 법 한 줄 · 축 하나짜리 차트 */
+function Mini({ title, value, tone = "", sub, note, option, empty }: { title: string; value: string; tone?: string; sub?: string; note: string; option?: echarts.EChartsOption; empty?: string }) {
   return (
-    <div className="grid gap-4 xl:grid-cols-3">
-      <div className="card min-w-0"><h3 className="font-bold">{co.name} · 주가 내재 부도확률</h3>{pd.length ? <EChart option={o3} height={280} /> : <p className="mt-6 text-sm text-muted">부채가 시가총액의 1% 미만이거나 주가 이력이 짧아 계산하지 않음</p>}</div>
-      <div className="card min-w-0"><h3 className="font-bold">{co.name} · 차입금 vs 현금</h3><EChart option={o1} height={280} /></div>
-      <div className="card min-w-0"><h3 className="font-bold">{co.name} · 현금흐름과 이자 감당</h3><EChart option={o2} height={280} /></div>
+    <div className="card min-w-0">
+      <h4 className="text-sm text-muted">{title}</h4>
+      <p className="mt-1 font-mono text-2xl font-bold"><span className={tone}>{value}</span>{sub && <span className="ml-2 text-xs font-normal text-muted">{sub}</span>}</p>
+      <p className="mt-1 text-xs leading-relaxed text-muted">{note}</p>
+      {option ? <EChart option={option} height={190} /> : <p className="mt-4 text-sm text-muted">{empty}</p>}
+    </div>
+  );
+}
+
+function Detail({ co, h: all, pd }: { co: CreditCo; h: CreditRow[]; pd: MarketCredit[] }) {
+  const h = all.slice(-12), r = h.at(-1)!;  // 최근 3년 — 막대가 너무 가늘어지지 않게
+  const cur = r.currency, unit = cur === "KRW" ? 1e12 : 1e9, u = cur === "KRW" ? "조원" : cur === "EUR" ? "€B" : "$B";
+  const q = h.map((z) => z.q_end.slice(2, 7).replace("-", "."));
+  const xAx = { type: "category" as const, data: q, ...axis, axisLabel: { ...axis.axisLabel, hideOverlap: true } };
+  const yAx = (name: string, extra: object = {}) => ({ type: "value" as const, name, nameTextStyle: { color: "#8a90ad", fontSize: 10 }, ...axis, ...extra });
+  const amt = (v: number | null | undefined) => (v == null ? null : +(v / unit).toFixed(2));
+  const fmt = (v: unknown) => (v == null ? "-" : money(Number(v) * unit, cur));
+  const [lvl, why] = risk(r);
+
+  // ① 시장이 보는 부도 위험
+  const pNow = pd.at(-1)?.pd5, p3 = pd.at(-14)?.pd5;
+  const oPd = pd.length ? mini({
+    tooltip: { ...baseOption().tooltip, valueFormatter: (v) => `${Number(v).toFixed(1)}%` },
+    xAxis: { type: "time", ...axis, axisLabel: { ...axis.axisLabel, hideOverlap: true } }, yAxis: yAx("%", { min: 0, max: (e: { max: number }) => Math.max(10, Math.ceil((e.max * 1.1) / 10) * 10) }),
+    series: [{ name: "5년 부도확률", type: "line", showSymbol: false, data: pd.map((z) => [z.date, +(z.pd5 * 100).toFixed(2)]), lineStyle: { color: C.bad, width: 2 }, itemStyle: { color: C.bad }, areaStyle: { color: "#ef444422" },
+      markLine: { silent: true, symbol: "none", data: [refLine(5, "5% 주의", C.warn), refLine(20, "20% 위험", C.bad)] } }],
+  }) : undefined;
+
+  // ② 빚 vs 현금 (같은 단위 두 막대 → 축 하나)
+  const nd = r.net_debt ?? 0;
+  const oDebt = mini({
+    tooltip: { ...baseOption().tooltip, valueFormatter: fmt },
+    xAxis: xAx, yAxis: yAx(u),
+    series: [{ name: "총차입", type: "bar", data: h.map((z) => amt(z.debt)), itemStyle: { color: C.debt, borderRadius: [3, 3, 0, 0] }, barGap: "10%" },
+      { name: "현금", type: "bar", data: h.map((z) => amt(z.cash)), itemStyle: { color: C.cash, borderRadius: [3, 3, 0, 0] } }],
+  }, true);
+
+  // ③ 순부채/EBITDA — 순현금·EBITDA 적자 분기는 비움
+  const levs = h.map((z) => { const l = (z.net_debt ?? 0) > 0 ? lev(z) : null; return l == null ? null : +l.toFixed(2); });
+  const l = lev(r), eb = ebitda(r);
+  const levTxt = nd <= 0 ? "순현금" : eb != null && eb <= 0 ? "EBITDA 적자" : x(l);
+  const oLev = levs.some((v) => v != null) ? mini({
+    tooltip: { ...baseOption().tooltip, valueFormatter: (v) => (v == null ? "순현금·적자" : `${Number(v).toFixed(1)}배`) },
+    xAxis: xAx, yAxis: yAx("배", { min: 0, max: (e: { max: number }) => Math.max(5, Math.ceil(e.max * 1.15)) }),
+    series: [{ name: "순부채/EBITDA", type: "line", data: levs, symbolSize: 7, connectNulls: false, lineStyle: { color: C.warn, width: 2 }, itemStyle: { color: C.warn },
+      markLine: { silent: true, symbol: "none", data: [refLine(2.5, "2.5배 관찰", C.ref), refLine(4, "4배 주의", C.bad)] } }],
+  }) : undefined;
+
+  // ④ 이자보상배율 — 너무 큰 값은 ±30에서 자르고 툴팁엔 실제 값
+  const CAP = 30, covs = h.map((z) => cov(z));
+  const oCov = covs.some((v) => v != null) ? mini({
+    tooltip: { ...baseOption().tooltip, formatter: (ps) => { const p = (Array.isArray(ps) ? ps : [ps])[0] as { name: string; data: { real: number | null } | null };
+      return `${p.name}<br/>이자보상 <b>${p.data?.real == null ? "-" : `${p.data.real.toFixed(1)}배`}</b>`; } },
+    xAxis: xAx, yAxis: yAx("배"),
+    series: [{ name: "이자보상", type: "bar", data: covs.map((v) => v == null ? null : { value: Math.max(-CAP, Math.min(CAP, +v.toFixed(2))), real: v,
+      itemStyle: { color: v < 2 ? C.bad : v < 5 ? C.warn : C.ok, borderRadius: v >= 0 ? [3, 3, 0, 0] : [0, 0, 3, 3] } }),
+      markLine: { silent: true, symbol: "none", z: 10, data: [refLine(2, "2배 미만 위험", C.bad)] } }],
+  }) : undefined;
+  const c = cov(r);
+
+  // ⑤ 잉여현금흐름 — 부호로 색
+  const oFcf = mini({
+    tooltip: { ...baseOption().tooltip, formatter: (ps) => { const p = (Array.isArray(ps) ? ps : [ps])[0] as { name: string; dataIndex: number }; const z = h[p.dataIndex];
+      return `${p.name} (최근 4분기 합)<br/>영업현금흐름 ${fmt(amt(z.ocf_ttm))}<br/>설비투자 ${fmt(amt(z.capex_ttm == null ? null : -z.capex_ttm))}<br/>FCF <b>${fmt(amt(z.fcf_ttm))}</b>`; } },
+    xAxis: xAx, yAxis: yAx(u),
+    series: [{ name: "FCF", type: "bar", data: h.map((z) => { const v = amt(z.fcf_ttm); return v == null ? null : { value: v, itemStyle: { color: v >= 0 ? C.cash : C.bad, borderRadius: v >= 0 ? [3, 3, 0, 0] : [0, 0, 3, 3] } }; }) }],
+  });
+
+  return (
+    <div className="space-y-3">
+      <div className="flex flex-wrap items-center gap-2">
+        <h3 className="text-base font-bold">{co.name} <span className="text-xs font-normal text-muted">{co.ticker} · {r.q_end.slice(0, 7)} 분기 기준</span></h3>
+        <span className={`rounded px-1.5 text-xs ${RISK_STYLE[lvl]}`}>{lvl}</span>
+        <span className="text-xs text-muted">{why.length ? why.join(" · ") : "빚 부담·이자 감당·현금흐름 모두 기준 안"}</span>
+      </div>
+      <div className="grid gap-3 md:grid-cols-2 xl:grid-cols-3">
+        <Mini title="① 시장이 보는 5년 내 부도 가능성" value={pd.length ? pdFmt(pNow) : "-"} tone={pdTone(pNow)} sub={pd.length ? `3개월 전 ${pdFmt(p3)}` : undefined}
+          note="주가 흔들림과 빚 규모로 계산(머튼 모형). 5% 넘으면 주의, 20% 넘으면 시장이 부도를 꽤 걱정하는 수준." option={oPd} empty="빚이 시가총액의 1% 미만이거나 주가 이력이 짧아 계산하지 않음" />
+        <Mini title="② 빚과 현금" value={nd > 0 ? `순부채 ${money(nd, cur)}` : `순현금 ${money(-nd, cur)}`} tone={nd > 0 ? "text-down" : "text-up"}
+          note="빨간 막대(빚)가 초록 막대(현금)보다 높을수록 갚아야 할 돈이 많은 상태." option={oDebt} />
+        <Mini title="③ 번 돈으로 빚 갚는 데 몇 년? (순부채/EBITDA)" value={levTxt} tone={nd > 0 && ((l ?? 9) > 4 || (eb ?? 1) <= 0) ? "text-down" : nd > 0 && (l ?? 0) > 2.5 ? "text-amber-300" : "text-up"}
+          note="한 해 버는 현금성 이익(EBITDA)으로 순부채를 다 갚는 데 걸리는 햇수. 2.5배 넘으면 관찰, 4배 넘으면 부담." option={oLev}
+          empty="계속 순현금(빚보다 현금이 많음)이라 해당 없음" />
+        <Mini title="④ 이자를 벌어서 낼 수 있나? (이자보상배율)" value={x(c)} tone={c == null ? "" : c < 2 ? "text-down" : c < 5 ? "text-amber-300" : "text-up"}
+          note="영업이익이 이자의 몇 배인지. 2배 미만이면 빠듯, 0 아래면 영업 적자로 이자를 못 벎. 30배 넘는 값은 30으로 잘라 표시." option={oCov} empty="이자비용 공시 없음(빚이 거의 없음)" />
+        <Mini title="⑤ 현금을 벌고 있나? (잉여현금흐름, 최근 4분기)" value={money(r.fcf_ttm, cur)} tone={(r.fcf_ttm ?? 0) < 0 ? "text-down" : "text-up"}
+          note="영업으로 번 현금 − 설비투자. 빨간 막대면 쓰는 돈이 더 많아 빚·증자로 메우는 중(막대에 올리면 내역)." option={oFcf} />
+      </div>
     </div>
   );
 }
