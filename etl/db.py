@@ -102,7 +102,17 @@ CREATE TABLE IF NOT EXISTS revenue_estimates ( -- 무역 기반 진행 분기 �
 CREATE TABLE IF NOT EXISTS econ_events ( -- 주요 일정 (etl/econ_calendar.py) — 날짜·시각은 한국 시간, approx=1은 규칙·작년 기준 추정일
   date TEXT NOT NULL, time_kst TEXT, title TEXT NOT NULL, cat TEXT, country TEXT, source TEXT, ticker TEXT, approx INTEGER DEFAULT 0, note TEXT
 );
-CREATE TABLE IF NOT EXISTS macro_obs ( -- 거시 유동성 (etl/macro.py): 금액은 십억 달러, DEBT_* 는 배
+CREATE TABLE IF NOT EXISTS credit_metrics ( -- 기업별 재무 신용 지표 (etl/credit.py): 분기 말 잔액 + 최근 4분기 합(_ttm). 원 통화
+  ticker TEXT NOT NULL, q_end TEXT NOT NULL, currency TEXT,
+  debt REAL, cash REAL, net_debt REAL, equity REAL, liabilities REAL, due_1y REAL,
+  ebit_ttm REAL, ebitda_ttm REAL, interest_ttm REAL, interest_basis TEXT, ocf_ttm REAL, capex_ttm REAL, fcf_ttm REAL,
+  PRIMARY KEY (ticker, q_end)
+);
+CREATE TABLE IF NOT EXISTS finra_market ( -- FINRA 회사채 시장 집계 (etl/finra.py): 숫자 필드를 이름 그대로
+  dataset TEXT NOT NULL, date TEXT NOT NULL, category TEXT NOT NULL, field TEXT NOT NULL, value REAL,
+  PRIMARY KEY (dataset, date, category, field)
+);
+CREATE TABLE IF NOT EXISTS macro_obs ( -- 거시 유동성 (etl/macro.py): 금액은 십억 달러, DEBT_* 는 배 · DGS*(국채 금리 %, etl/finra.py)
   series TEXT NOT NULL, date TEXT NOT NULL, value REAL,
   PRIMARY KEY (series, date)
 );

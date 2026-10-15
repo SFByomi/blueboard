@@ -184,7 +184,17 @@ export const inflationContrib = () =>
 
 export type MacroObs = { series: string; date: string; value: number };
 /** 거시 유동성 (etl/macro.py) — 금액 십억 달러, DEBT_* 배 */
-export const macroObs = () => query<MacroObs>("SELECT series, date, value FROM macro_obs ORDER BY date").catch(noTable<MacroObs>);
+export const macroObs = () => query<MacroObs>("SELECT series, date, value FROM macro_obs WHERE series NOT LIKE 'DGS%' ORDER BY date").catch(noTable<MacroObs>);
+/** 미 국채 금리 (DGS*, %) — 신용 탭 */
+export const ustCurve = () => query<MacroObs>("SELECT series, date, value FROM macro_obs WHERE series LIKE 'DGS%' ORDER BY date").catch(noTable<MacroObs>);
+
+export type CreditRow = { ticker: string; q_end: string; currency: string; debt: number | null; cash: number | null; net_debt: number | null; equity: number | null; liabilities: number | null;
+  due_1y: number | null; ebit_ttm: number | null; ebitda_ttm: number | null; interest_ttm: number | null; interest_basis: string | null; ocf_ttm: number | null; capex_ttm: number | null; fcf_ttm: number | null };
+/** 기업별 재무 신용 지표 (etl/credit.py) — 본인 전용 신용 탭 */
+export const creditMetrics = () => query<CreditRow>("SELECT * FROM credit_metrics ORDER BY ticker, q_end").catch(noTable<CreditRow>);
+export type FinraRow = { dataset: string; date: string; category: string; field: string; value: number };
+/** FINRA 회사채 시장 집계 (etl/finra.py) */
+export const finraMarket = () => query<FinraRow>("SELECT * FROM finra_market ORDER BY date").catch(noTable<FinraRow>);
 
 export type EconEvent = { date: string; time_kst: string | null; title: string; cat: string | null; country: string | null; source: string | null; ticker: string | null; approx: number; note: string | null };
 /** 주요 일정 (etl/econ_calendar.py) — 한국 시간 */

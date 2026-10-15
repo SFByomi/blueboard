@@ -4,6 +4,7 @@ import Link from "next/link";
 import { NameToggle, NAME_INIT } from "@/components/NameToggle";
 import { NavTabs } from "@/components/NavTabs";
 import { ADMIN_ENABLED } from "@/lib/db";
+import { isOwner } from "@/lib/owner";
 import "./globals.css";
 
 const noto = Noto_Sans_KR({ variable: "--font-noto", subsets: ["latin"], weight: ["400", "500", "700"] });
@@ -19,7 +20,8 @@ export const metadata: Metadata = {
   twitter: { card: "summary_large_image", title: "Investing Idea — Supply Chain Intelligence", description: DESC },
 };
 
-export default function RootLayout({ children }: LayoutProps<"/">) {
+export default async function RootLayout({ children }: LayoutProps<"/">) {
+  const owner = await isOwner();
   return (
     <html lang="ko" className={`${noto.variable} ${mono.variable} antialiased`} suppressHydrationWarning>
       <head>
@@ -30,7 +32,7 @@ export default function RootLayout({ children }: LayoutProps<"/">) {
           <div className="mx-auto flex max-w-7xl items-center gap-2 px-4">
             <nav className="flex min-w-0 flex-1 items-center gap-1 overflow-x-auto whitespace-nowrap py-2.5 text-sm">
               <Link href="/" className="mr-3 shrink-0 text-base font-bold">Investing Idea</Link>
-              <NavTabs admin={ADMIN_ENABLED} />
+              <NavTabs admin={ADMIN_ENABLED} owner={owner} />
             </nav>
             <NameToggle />
           </div>

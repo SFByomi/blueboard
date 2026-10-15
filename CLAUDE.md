@@ -23,6 +23,7 @@
   - **상관 모델(핵심 원칙: 어떤 품목이 매출과 직접 연결되는지 숫자로)**: scores.py가 빌드마다 모든 매핑을 분기 매출과 비교 → `flow_scores`(전년비 상관 0~2분기 선행·최근 8분기·등급 A~D). check.py로 개별 검증, discover.py로 HS×국가/주 후보 자동 탐색
   - **진행 분기 매출 추정**: estimates.py가 A·B 흐름으로 전년비·금액 회귀(+직전 4분기 편향 보정판) 중 백테스트 오차가 작은 모델을 골라 추정 → `revenue_estimates`(Supabase 누적: 추정·괴리율 추이). consensus.py가 야후 매출 컨센서스 수집 → `consensus`는 **재게시 금지라 로컬 전용**(publish.PRIVATE), 공개엔 괴리율만. 원 금액은 /admin/consensus
   - inflation.py 미국 CPI·PCE 구성요소 기여도(서비스·공산품·식품·에너지, FRED) → `inflation_contrib` · econ_calendar.py 주요 일정(BLS·BEA·FOMC·Census·한국 수출입·실적, 한국 시간) → `econ_events`. bls.gov는 자동 수집을 403으로 막아 `data/bls_schedule.json` 사본을 씀(연 1회 갱신) · macro.py 연준 총자산·TGA·역레포·지준·순유동성·M2·연방부채/M2·/GDP(FRED, 십억 달러) → `macro_obs`
+  - **신용(본인 전용 탭 /credit)**: credit.py 기업별 재무 신용 지표(SEC XBRL·DART: 총차입·현금·순부채/EBITDA·이자보상·1년 내 만기·FCF, 분기 + 최근 4분기 합) → `credit_metrics` · finra.py FINRA API 회사채 시장 집계(개인 Public 키로는 종목별 TRACE 불가 — 상승/하락 종목 수 등만, 필드 그대로 `finra_market`) + 미 국채 곡선(FRED DGS → `macro_obs`). 웹은 `OWNER_KEY`(Vercel 환경변수) 쿠키가 있는 기기에서만 탭·페이지 노출(`/owner?key=...`로 등록), 없으면 404
   - prices.py GPU 렌탈가(Vast.ai 온디맨드 매물 중앙값)·토큰 가격(OpenRouter ~latest 플래그십) 일별 스냅샷 → `price_snapshots`. 과거 이력은 소스에 없어 Supabase에 누적(publish의 ACCUMULATE). Ornn·Silicon Data 지수는 재게시 금지 약관이라 링크만.
 - `web/` Next.js 16 (App Router, Turbopack). **Next 16은 학습 데이터와 다름 → `web/node_modules/next/dist/docs/` 확인 후 작성.** params는 Promise.
 - `verify/` 상관 검증 스크립트 (0단계)
@@ -31,7 +32,7 @@
   - `DATABASE_URL`이 있으면 관리 페이지·서버 액션 비활성(`ADMIN_ENABLED`). 큐레이션 수정은 로컬에서만 → curation.json push.
 
 ## 키
-`.env`: CENSUS_API_KEY, ESTAT_APP_ID, DATA_GO_KR_KEY, DART_API_KEY, EIA_API_KEY (+ 게시용 DATABASE_URL). 절대 커밋 금지. Actions에는 같은 이름의 저장소 Secrets.
+`.env`: CENSUS_API_KEY, ESTAT_APP_ID, DATA_GO_KR_KEY, DART_API_KEY, EIA_API_KEY, FINRA_API_CLIENT_ID/SECRET(시크릿 120일마다 만료) (+ 게시용 DATABASE_URL). Vercel: DATABASE_URL, OWNER_KEY(신용 탭 본인 확인). 절대 커밋 금지. Actions에는 같은 이름의 저장소 Secrets.
 
 ## 데이터 소스 함정 (중요)
 - Census: 키 필수. 수출(exports) API는 대량 조회가 매우 느림 → 품목 단위로. 큰 장(84)은 500 에러 → 자동 분할.
