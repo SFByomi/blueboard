@@ -1,10 +1,11 @@
 import Link from "next/link";
+import { EventRow } from "@/components/EconCalendar";
 import { LastUpdated } from "@/components/LastUpdated";
 import { PlantMini } from "@/components/PlantMini";
 import { HsName, T } from "@/components/Names";
 import { Spark } from "@/components/Spark";
 import { baseEffect, confNote, dday, estCaution, estRange, estReported, estTier, money, pct, TIER_STYLE, tone, usd, watchFlag } from "@/lib/format";
-import { earningsBasis, earningsDates, latestEstimates, unestimated, reportedQuarters, TECH_CHAPTERS, meta, priceSnapshots, surge, tagIndex } from "@/lib/queries";
+import { econEvents, earningsBasis, earningsDates, latestEstimates, unestimated, reportedQuarters, TECH_CHAPTERS, meta, priceSnapshots, surge, tagIndex } from "@/lib/queries";
 import { busyOf, plantData } from "@/lib/plants";
 import { stockSignals, type Signal } from "@/lib/signals";
 
@@ -25,8 +26,8 @@ function Row({ s }: { s: Signal }) {
 }
 
 export default async function Home() {
-  const [sig, prices, top, related, builtAt, estRows, earn, done, skips, basis, pl] = await Promise.all([
-    stockSignals(), priceSnapshots(), surge("us_imp_world", "yoy3m", 6, TECH_CHAPTERS), tagIndex(), meta("built_at"), latestEstimates(), earningsDates(), reportedQuarters(), unestimated(), earningsBasis(), plantData(),
+  const [sig, prices, top, related, builtAt, estRows, earn, done, skips, basis, pl, events] = await Promise.all([
+    stockSignals(), priceSnapshots(), surge("us_imp_world", "yoy3m", 6, TECH_CHAPTERS), tagIndex(), meta("built_at"), latestEstimates(), earningsDates(), reportedQuarters(), unestimated(), earningsBasis(), plantData(), econEvents(),
   ]);
   const ranked = sig.filter((s) => s.yoy3m != null).sort((a, b) => b.yoy3m! - a.yoy3m!);
   const half = Math.ceil(ranked.length / 2); // 상위 절반 / 하위 절반 (겹치지 않게) — 하위도 플러스일 수 있어 '둔화'가 아니라 상대 순위
@@ -42,6 +43,10 @@ export default async function Home() {
   const byCo = (rows: typeof plantRows) => rows.filter((r, i) => rows.findIndex((x) => x.p.company === r.p.company) === i);
   const flowed = plantRows.filter((r) => r.y != null).sort((a, b) => b.y! - a.y!);
   const busy = byCo(flowed).slice(0, 4), quiet = byCo([...flowed].reverse()).slice(0, 4);
+  // 이번 주 일정: 오늘(한국)부터 7일
+  const today = new Intl.DateTimeFormat("en-CA", { timeZone: "Asia/Seoul" }).format(new Date());
+  const weekEnd = new Date(Date.parse(today) + 6 * 864e5).toISOString().slice(0, 10);
+  const week = events.filter((e) => e.date >= today && e.date <= weekEnd);
   const gpu = ["H100 SXM", "H200", "B200"].map((g) => prices.filter((r) => r.kind === "gpu" && r.item === g && r.stat === "median").at(-1)).filter((r) => r != null);
 
   return (
@@ -61,6 +66,19 @@ export default async function Home() {
           {down.map((s) => <Row key={s.c.ticker} s={s} />)}
         </section>
       </div>
+
+      {week.length > 0 && (
+        <section className="card min-w-0">
+          <div className="mb-1 flex flex-wrap items-baseline justify-between gap-2">
+            <h2 className="font-bold"><T ko="이번 주 주요 일정" en="This week" /> <span className="text-xs font-normal text-muted">한국 시간</span></h2>
+            <Link href="/calendar" className="text-xs text-muted hover:text-fg">달력 보기 →</Link>
+          </div>
+          <div className="grid gap-x-6 sm:grid-cols-2">
+            {week.slice(0, 12).map((e, i) => <EventRow key={i} e={e} showDate />)}
+          </div>
+          {week.length > 12 && <Link href="/calendar" className="mt-1 block text-xs text-muted hover:text-fg">+{week.length - 12}건 더 보기</Link>}
+        </section>
+      )}
 
       {ests.length + skips.length > 0 && (
         <section className="card min-w-0">
