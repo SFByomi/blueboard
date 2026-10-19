@@ -148,23 +148,33 @@ export default async function StockPage({ params }: PageProps<"/stocks/[ticker]"
         <div className="card">
           <h2 className="font-bold">관련 품목 급등 현황</h2>
           <p className="mb-3 text-xs text-muted">이 종목에 연결된 HS 코드의 미국 무역 흐름 (3개월 YoY 순)</p>
-          <div className="grid grid-cols-1 gap-2 md:grid-cols-2">
-            {related.map((r) => (
-              <div key={`${r.scope}${r.hs6}${r.partner}`} className="flex min-w-0 items-center justify-between gap-3 rounded-lg bg-panel2 px-3 py-2 text-sm">
-                <div className="min-w-0 flex-1">
-                  <div className="truncate"><HsName ko={r.name_ko} en={r.name_en} hs={r.hs6} /> · {r.scope === "us_exp_world" ? "수출" : "수입"} · {r.partner !== "-" ? <CtyName name={r.partner_name} /> : "전체"}</div>
-                  <div className="font-mono text-xs text-muted">{r.hs6} · {usd(r.value_usd)} · {r.month}</div>
+          {[...new Set(related.map(surgeKey))].map((g) => {  // 같은 품목·방향끼리 묶어 품목명은 한 번만, 전체 국가가 맨 앞
+            const rows = related.filter((r) => surgeKey(r) === g).sort((a, b) => Number(b.partner === "-") - Number(a.partner === "-")), r0 = rows[0];
+            return (
+              <div key={g} className="mt-3 first:mt-0">
+                <h3 className="mb-1.5 text-sm font-bold"><HsName ko={r0.name_ko} en={r0.name_en} hs={r0.hs6} /> <span className="font-mono text-xs font-normal text-muted">HS {r0.hs6} · 미국 {r0.scope === "us_exp_world" ? "수출" : "수입"}</span></h3>
+                <div className="grid grid-cols-1 gap-2 md:grid-cols-2">
+                  {rows.map((r) => (
+                    <div key={`${r.scope}${r.hs6}${r.partner}`} className="flex min-w-0 items-center justify-between gap-3 rounded-lg bg-panel2 px-3 py-2 text-sm">
+                      <div className="min-w-0 flex-1">
+                        <div className="truncate">{r.partner !== "-" ? <CtyName name={r.partner_name} /> : "전체 국가"}</div>
+                        <div className="font-mono text-xs text-muted">{usd(r.value_usd)} · {r.month}</div>
+                      </div>
+                      <span className="hidden shrink-0 sm:block"><Spark values={JSON.parse(r.spark)} w={80} /></span>
+                      <span className={`shrink-0 font-mono ${tone(r.yoy3m)}`}>{pct(r.yoy3m)}</span>
+                    </div>
+                  ))}
                 </div>
-                <span className="hidden shrink-0 sm:block"><Spark values={JSON.parse(r.spark)} w={80} /></span>
-                <span className={`shrink-0 font-mono ${tone(r.yoy3m)}`}>{pct(r.yoy3m)}</span>
               </div>
-            ))}
-          </div>
+            );
+          })}
         </div>
       )}
     </div>
   );
 }
+
+const surgeKey = (r: { scope: string; hs6: string }) => `${r.scope === "us_exp_world" ? "exp" : "imp"}|${r.hs6}`;
 
 function Kpi({ label, value, sub, cls = "" }: { label: string; value: string; sub?: string; cls?: string }) {
   return (
