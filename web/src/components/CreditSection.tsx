@@ -3,6 +3,7 @@
 import type * as echarts from "echarts";
 import { useMemo, useState } from "react";
 import { axis, baseOption, EChart } from "@/components/EChart";
+import { mini, Mini, refLine } from "@/components/MiniCard";
 import { money } from "@/lib/format";
 import type { CreditRow, FinraRow, MacroObs, MarketCredit } from "@/lib/queries";
 
@@ -114,24 +115,6 @@ export function CreditSection({ rows, cos, ust, finra, mkt }: { rows: CreditRow[
 }
 
 const C = { debt: "#ef4444", cash: "#22c55e", warn: "#f59e0b", bad: "#ef4444", ok: "#3b82f6", ref: "#8a90ad" };
-/** 기준선(점선 + 이름) — 차트 안에서 '여기 넘으면 위험'을 바로 읽게 */
-const refLine = (y: number, label: string, color: string) =>
-  ({ yAxis: y, label: { formatter: label, position: "insideEndTop" as const, color, fontSize: 10, backgroundColor: "#151a33cc", padding: [1, 3] }, lineStyle: { color, type: "dashed" as const, width: 1 } });
-const mini = (o: echarts.EChartsOption, legend = false): echarts.EChartsOption =>
-  ({ ...baseOption(), ...o, grid: { left: 44, right: 12, top: 18, bottom: legend ? 44 : 24 }, ...(legend ? {} : { legend: { show: false } }) });
-
-/** 지표 하나 = 카드 하나: 질문형 제목 · 지금 값 · 읽는 법 한 줄 · 축 하나짜리 차트 */
-function Mini({ title, value, tone = "", sub, note, option, empty }: { title: string; value: string; tone?: string; sub?: string; note: string; option?: echarts.EChartsOption; empty?: string }) {
-  return (
-    <div className="card min-w-0">
-      <h4 className="text-sm text-muted">{title}</h4>
-      <p className="mt-1 font-mono text-2xl font-bold"><span className={tone}>{value}</span>{sub && <span className="ml-2 text-xs font-normal text-muted">{sub}</span>}</p>
-      <p className="mt-1 text-xs leading-relaxed text-muted">{note}</p>
-      {option ? <EChart option={option} height={190} /> : <p className="mt-4 text-sm text-muted">{empty}</p>}
-    </div>
-  );
-}
-
 function Detail({ co, h: all, pd }: { co: CreditCo; h: CreditRow[]; pd: MarketCredit[] }) {
   const h = all.slice(-12), r = h.at(-1)!;  // 최근 3년 — 막대가 너무 가늘어지지 않게
   const cur = r.currency, unit = cur === "KRW" ? 1e12 : 1e9, u = cur === "KRW" ? "조원" : cur === "EUR" ? "€B" : "$B";

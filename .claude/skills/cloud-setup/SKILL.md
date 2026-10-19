@@ -42,6 +42,7 @@ opendart.fss.or.kr
 data.sec.gov
 www.sec.gov
 fred.stlouisfed.org
+api.finmindtrade.com
 ```
 의존성 설치용 pypi.org / registry.npmjs.org 는 기본 허용 목록에 보통 포함.
 

@@ -222,3 +222,10 @@ export const plants = () =>
     if (e.code === "42P01" || e.message?.includes("no such table")) return [] as Plant[];
     throw e;
   });
+
+export type PeerRevenue = { ticker: string; month: string; revenue: number };
+/** 대만 CCL 경쟁사 월매출 (etl/peers.py, MOPS 공시 · FinMind) */
+export const peerRevenue = () => query<PeerRevenue>("SELECT * FROM peer_revenue ORDER BY ticker, month").catch(noTable<PeerRevenue>);
+export type Valuation = { ticker: string; date: string; metric: string; value: number };
+/** 피어 EV/EBITDA · 두산 지분가치 할인율 등 배수·비율 (etl/peers.py) */
+export const valuations = () => query<Valuation>("SELECT * FROM valuation ORDER BY date").catch(noTable<Valuation>);
