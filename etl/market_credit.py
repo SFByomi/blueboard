@@ -20,8 +20,8 @@ def _ncdf(x: float) -> float:
     return 0.5 * (1 + math.erf(x / math.sqrt(2)))
 
 
-def _yahoo(s, crumb, sym: str) -> tuple[pd.Series, float | None]:
-    r = s.get(f"{consensus.BASE}/v8/finance/chart/{sym}", params={"range": "4y", "interval": "1d", "crumb": crumb}, timeout=30)
+def _yahoo(s, crumb, sym: str, rng: str = "4y") -> tuple[pd.Series, float | None]:
+    r = s.get(f"{consensus.BASE}/v8/finance/chart/{sym}", params={"range": rng, "interval": "1d", "crumb": crumb}, timeout=30)
     r.raise_for_status()
     j = r.json()["chart"]["result"][0]
     px = pd.Series(j["indicators"]["quote"][0]["close"], index=pd.to_datetime(j["timestamp"], unit="s").normalize()).dropna()
