@@ -8,6 +8,10 @@ export const POWER_IDS = ["us_const_datacenter", "us_const_electric", "us_const_
 const r1 = (v: number | null) => (v == null ? null : +v.toFixed(1));
 const yoy = (a: (number | null)[], i = a.length - 1) => (a[i] != null && a[i - 12] ? a[i]! / a[i - 12]! - 1 : null);
 const fmtPct = (v: number | null) => (v == null ? "-" : `${v >= 0 ? "+" : ""}${(v * 100).toFixed(1)}%`);
+/** 마지막으로 값이 있는 칸 — 시리즈마다 발표 월이 달라(예: 주별 EIA가 전국보다 한 달 늦음) 맨 끝이 비어도 '-' 대신 직전 값 */
+const lastIdx = (a: (number | null)[]) => { for (let i = a.length - 1; i >= 0; i--) if (a[i] != null) return i; return -1; };
+const lastOf = (a: (number | null)[]) => { const i = lastIdx(a); return i < 0 ? null : a[i]; };
+const asOf = (a: (number | null)[], months: string[]) => { const i = lastIdx(a); return i >= 0 && i < months.length - 1 ? ` (${months[i]})` : ""; };
 
 /** 전력 인프라: 미국 건설투자 · 미국 배전반 수입(중국 비중) · 한국 대용량 변압기 수출(국가별) */
 export function PowerSection({ obs }: { obs: Obs[] }) {
@@ -55,7 +59,9 @@ export function PowerSection({ obs }: { obs: Obs[] }) {
     const prev = [12, 13, 14].reduce((a, j) => a + (m.get(em[i - j])?.value_usd ?? NaN), 0);
     return Number.isFinite(cur / prev) ? +((cur / prev - 1) * 100).toFixed(1) : null;
   });
-  const vay = yoy3(va), usy = yoy3(usc);
+  const vay0 = yoy3(va), usy0 = yoy3(usc);
+  const e0 = Math.max(0, Math.min(...[vay0, usy0].map((a) => a.findIndex((v) => v != null)).filter((i) => i >= 0)));  // 전년비가 생기기 전 빈 14개월은 자름
+  const emv = em.slice(e0), vay = vay0.slice(e0), usy = usy0.slice(e0);
 
   return (
     <section className="space-y-3">
@@ -67,9 +73,9 @@ export function PowerSection({ obs }: { obs: Obs[] }) {
         <div className="card min-w-0">
           <h3 className="font-bold">미국 건설투자 <span className="text-xs font-normal text-muted">계절조정 연율 · 최근 {cm.at(-1)}</span></h3>
           <div className="mt-1 flex flex-wrap gap-x-4 text-sm">
-            <span>데이터센터 <b>${dcv.at(-1)}B</b> <span className="text-xs text-muted">전년비 {fmtPct(yoy(dcv))}</span></span>
-            <span>반도체·전자 공장 <b>${fabv.at(-1)}B</b> <span className="text-xs text-muted">전년비 {fmtPct(yoy(fabv))}</span></span>
-            <span>전력 <b>${elv.at(-1)}B</b> <span className="text-xs text-muted">전년비 {fmtPct(yoy(elv))}</span></span>
+            <span>데이터센터 <b>${lastOf(dcv)}B</b> <span className="text-xs text-muted">전년비 {fmtPct(yoy(dcv, lastIdx(dcv)))}{asOf(dcv, cm)}</span></span>
+            <span>반도체·전자 공장 <b>${lastOf(fabv)}B</b> <span className="text-xs text-muted">전년비 {fmtPct(yoy(fabv, lastIdx(fabv)))}{asOf(fabv, cm)}</span></span>
+            <span>전력 <b>${lastOf(elv)}B</b> <span className="text-xs text-muted">전년비 {fmtPct(yoy(elv, lastIdx(elv)))}{asOf(elv, cm)}</span></span>
           </div>
           <StackChart months={cm} left="$B" bars={[]} lines={[
             { name: "데이터센터", color: "#22d3ee", values: dcv }, { name: "반도체·전자 공장", color: "#a78bfa", values: fabv }, { name: "전력(발전·송배전)", color: "#f59e0b", values: elv },
@@ -93,9 +99,9 @@ export function PowerSection({ obs }: { obs: Obs[] }) {
             <div className="card min-w-0">
               <h3 className="font-bold">미국 발전소 건설 계획 <span className="text-xs font-normal text-muted">EIA 860M 계획 목록 합계 · 최근 {gm.at(-1)}</span></h3>
               <div className="mt-1 flex flex-wrap gap-x-4 text-sm">
-                <span>가스발전 <b>{gasv.at(-1)}GW</b> <span className="text-xs text-muted">1년 전 {gasv.at(-13) ?? "-"}GW</span></span>
-                <span>그중 착공 <b>{gucv.at(-1)}GW</b></span>
-                <span>배터리 <b>{batv.at(-1)}GW</b></span>
+                <span>가스발전 <b>{lastOf(gasv)}GW</b> <span className="text-xs text-muted">1년 전 {gasv.at(-13) ?? "-"}GW</span></span>
+                <span>그중 착공 <b>{lastOf(gucv)}GW</b></span>
+                <span>배터리 <b>{lastOf(batv)}GW</b></span>
               </div>
               <StackChart months={gm} left="GW" bars={[]} lines={[
                 { name: "가스발전 계획", color: "#f59e0b", values: gasv }, { name: "가스 착공·완공 대기", color: "#f87171", values: gucv }, { name: "배터리 계획", color: "#22d3ee", values: batv },
@@ -107,10 +113,10 @@ export function PowerSection({ obs }: { obs: Obs[] }) {
             <div className="card min-w-0">
               <h3 className="font-bold">상업용 전력 판매 전년비 <span className="text-xs font-normal text-muted">3개월 합 · EIA · 최근 {em.at(-1)}</span></h3>
               <div className="mt-1 flex flex-wrap gap-x-4 text-sm">
-                <span>버지니아 <b>{fmtPct(vay.at(-1) == null ? null : vay.at(-1)! / 100)}</b></span>
-                <span>미국 전체 <b>{fmtPct(usy.at(-1) == null ? null : usy.at(-1)! / 100)}</b></span>
+                <span>버지니아 <b>{fmtPct(lastOf(vay) == null ? null : lastOf(vay)! / 100)}</b>{asOf(vay, emv)}</span>
+                <span>미국 전체 <b>{fmtPct(lastOf(usy) == null ? null : lastOf(usy)! / 100)}</b>{asOf(usy, emv)}</span>
               </div>
-              <StackChart months={em} left="%" bars={[]} lines={[
+              <StackChart months={emv} left="%" bars={[]} lines={[
                 { name: "버지니아(데이터센터 밀집)", color: "#22d3ee", values: vay }, { name: "미국 전체", color: "#8a90ad", values: usy },
               ]} />
               <p className="mt-1 text-xs text-muted">버지니아 북부는 세계 최대 데이터센터 밀집지 — 상업용 판매가 미국 평균보다 빠르게 늘면 데이터센터 가동 전력이 늘고 있다는 뜻.</p>
