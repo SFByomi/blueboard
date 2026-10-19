@@ -10,7 +10,7 @@ set -uo pipefail
 cd "$(dirname "$0")/.."
 
 KEYS=(CENSUS_API_KEY ESTAT_APP_ID DATA_GO_KR_KEY DART_API_KEY EIA_API_KEY)
-DOMAINS=(api.census.gov api.e-stat.go.jp apis.data.go.kr www.data.go.kr opendart.fss.or.kr data.sec.gov www.sec.gov fred.stlouisfed.org)
+DOMAINS=(api.census.gov api.e-stat.go.jp apis.data.go.kr www.data.go.kr opendart.fss.or.kr data.sec.gov www.sec.gov fred.stlouisfed.org api.finmindtrade.com)
 notes=()
 
 # 1) 의존성

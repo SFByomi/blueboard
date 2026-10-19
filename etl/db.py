@@ -112,6 +112,14 @@ CREATE TABLE IF NOT EXISTS market_credit ( -- 주가 내재 신용위험 (etl/ma
   ticker TEXT NOT NULL, date TEXT NOT NULL, vol REAL, dd REAL, pd1 REAL, pd5 REAL, lev_mkt REAL,  -- 주가 변동성(연율)·부도거리(1년)·1년·5년(누적) 부도확률·부채/(시총+부채)
   PRIMARY KEY (ticker, date)
 );
+CREATE TABLE IF NOT EXISTS peer_revenue ( -- 대만 CCL 경쟁사 월매출 (etl/peers.py, MOPS 공시 · FinMind), 대만달러
+  ticker TEXT NOT NULL, month TEXT NOT NULL, revenue REAL,
+  PRIMARY KEY (ticker, month)
+);
+CREATE TABLE IF NOT EXISTS valuation ( -- 배수·비율만 (etl/peers.py): 피어 ev_ebitda, 두산 stake_discount(지분가치 할인율)·listed_share·own_ev_ebitda. 주가·시총 원값은 저장 안 함
+  ticker TEXT NOT NULL, date TEXT NOT NULL, metric TEXT NOT NULL, value REAL,
+  PRIMARY KEY (ticker, date, metric)
+);
 CREATE TABLE IF NOT EXISTS finra_market ( -- FINRA 회사채 시장 집계 (etl/finra.py): 숫자 필드를 이름 그대로
   dataset TEXT NOT NULL, date TEXT NOT NULL, category TEXT NOT NULL, field TEXT NOT NULL, value REAL,
   PRIMARY KEY (dataset, date, category, field)
