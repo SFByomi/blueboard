@@ -358,6 +358,27 @@ GUIDE_BT = 3     # 가이던스 모델 채택에 필요한 최소 백테스트 �
 GUIDE_DAYS = 20  # 가이던스 대상 분기 말과 실제 분기 말 허용 차이(회계 주 단위 차이)
 GUIDE_EDGE = 0.01  # 가이던스가 있을 때 다른 모델이 이겨야 하는 백테스트 오차 차이
 GUIDE_FAR = 0.15   # 다른 모델 값이 가이던스 기반 추정에서 이만큼 넘게 벗어나면 채택 안 함
+XCHECK_CORR = 0.7  # 가이던스 교차 확인에 쓰는 흐름: 같은 분기 매출 전년비 상관이 이 이상 (등급과 무관 — 매출 이력이 짧아 C로 묶인 흐름 포함)
+
+
+def xcheck(con, ticker: str, t_start, t_end) -> list[dict]:
+    """가이던스 종목의 무역 교차 확인: 같은 분기에 움직이는 흐름의 진행 분기(공표된 달만) 전분기·전년비.
+    모델에 넣지는 않고(표본이 짧아 등급 C) 가이던스 상회·하회 판단의 참고로만 보여준다."""
+    rows = con.execute("""SELECT f.series_id, s.label, f.yoy0 FROM flow_scores f JOIN series s ON s.id = f.series_id
+                          WHERE f.ticker=? AND f.yoy0 >= ? ORDER BY f.yoy0 DESC LIMIT 2""", (ticker, XCHECK_CORR)).fetchall()
+    p_end = t_start - pd.Timedelta(days=1)
+    p_start = p_end - pd.DateOffset(months=3) + pd.Timedelta(days=1)
+    out = []
+    for sid, label, corr in rows:
+        ms = monthly(con, sid).set_index("month")["value_usd"].sort_index()
+        cur, n = trade_sum(ms, t_start, t_end, full=False)
+        prev, _ = trade_sum(ms, p_start, p_end, full=True)
+        yoy, _ = trade_yoy(ms, t_start, t_end, full=False)
+        if cur is None or not prev:
+            continue
+        out.append({"id": sid, "label": label, "corr": round(corr, 2), "months": n, "qoq": round(cur / prev - 1, 4),
+                    "yoy": None if yoy is None else round(yoy, 4)})
+    return out
 
 
 def _guide_at(guides: list[dict], end: pd.Timestamp, live: bool) -> dict | None:
@@ -429,7 +450,8 @@ def _estimate(con, ticker, picks, fin, today, log, guides=None):
     guide_info = None
     if g_est is not None and len(g_bt) >= GUIDE_BT:
         guide_info = {"low": g_live["low"], "high": g_live["high"], "filed": g_live["filed"], "beat": round(g_beat, 4), "prelim": g_live.get("prelim", False), "why": g_why,
-                      **({"annual": g_live["annual"]} if g_live.get("annual") else {})}
+                      **({"annual": g_live["annual"]} if g_live.get("annual") else {}),
+                      **({"xcheck": xc} if (xc := xcheck(con, ticker, t_start, t_end)) else {})}
         cands = [(mape(g_bt, "pred"), "guide", {"rev": g_est, "se": 0, "flows": []}, g_bt)]
         if best and not short:
             tq = {r["q_end"]: r["pred"] for r in best[3]}

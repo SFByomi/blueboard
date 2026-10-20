@@ -21,7 +21,7 @@
   - 소스: census.py(미국) · estat.py(일본, 엔→달러) · kcs.py(한국 관세청, 시군구) · sec.py/dart.py/dart_segment.py(매출)
   - surge.py 급등 탐지 · breaks.py 통계 단절 경고
   - **상관 모델(핵심 원칙: 어떤 품목이 매출과 직접 연결되는지 숫자로)**: scores.py가 빌드마다 모든 매핑을 분기 매출과 비교 → `flow_scores`(전년비 상관 0~2분기 선행·최근 8분기·등급 A~D). check.py로 개별 검증, discover.py로 HS×국가/주 후보 자동 탐색
-  - **진행 분기 매출 추정**: estimates.py가 A·B 흐름으로 전년비·금액 회귀(+직전 4분기 편향 보정판) 중 백테스트 오차가 작은 모델을 골라 추정 → `revenue_estimates`(Supabase 누적: 추정·괴리율 추이). consensus.py가 야후 매출 컨센서스 수집 → `consensus`는 **재게시 금지라 로컬 전용**(publish.PRIVATE), 공개엔 괴리율만. 원 금액은 /admin/consensus
+  - **진행 분기 매출 추정**: estimates.py가 (가이던스 종목은 같은 분기 상관 0.7 이상 흐름의 진행 분기 전분기·전년비를 `guide.xcheck`로 교차 확인 — 모델엔 안 넣음) A·B 흐름으로 전년비·금액 회귀(+직전 4분기 편향 보정판) 중 백테스트 오차가 작은 모델을 골라 추정 → `revenue_estimates`(Supabase 누적: 추정·괴리율 추이). consensus.py가 야후 매출 컨센서스 수집 → `consensus`는 **재게시 금지라 로컬 전용**(publish.PRIVATE), 공개엔 괴리율만. 원 금액은 /admin/consensus
   - inflation.py 미국 CPI·PCE 구성요소 기여도(서비스·공산품·식품·에너지, FRED) → `inflation_contrib` · econ_calendar.py 주요 일정(BLS·BEA·FOMC·Census·한국 수출입·실적, 한국 시간) → `econ_events`. bls.gov는 자동 수집을 403으로 막아 `data/bls_schedule.json` 사본을 씀(연 1회 갱신) · macro.py 연준 총자산·TGA·역레포·지준·순유동성·M2·연방부채/M2·/GDP(FRED, 십억 달러) → `macro_obs`
   - **신용(공개 탭 /credit)**: credit.py 기업별 재무 신용 지표(SEC XBRL·DART: 총차입·현금·순부채/EBITDA·이자보상·1년 내 만기·FCF, 분기 + 최근 4분기 합; 한국 감가상각은 요약 API에 없어 정기보고서 XBRL 현금흐름표에서) → `credit_metrics` · market_credit.py 주가 내재 부도확률(머튼/KMV 간편식: 야후 주가 변동성 + 장부 부채 → 1년 거리·5년 누적 부도확률, 주가·시총은 저장 안 하고 파생값만) → `market_credit` · finra.py FINRA API 회사채 시장 집계(개인 Public 키로는 종목별 TRACE 불가, finra.org 화면 수집은 약관 금지 — 상승/하락 종목 수 등만, 필드 그대로 `finra_market`, 표시 시 "Source: FINRA") + 미 국채 곡선(FRED DGS → `macro_obs`). ICE BofA 스프레드(FRED)는 재게시 금지라 안 씀
   - **피어·지주사 할인(두산 종목 페이지)**: peers.py 대만 CCL 경쟁사 EMC(台光電)·TUC(台燿)·ITEQ(聯茂) 월매출·분기 재무·주가(FinMind 공개 API = 대만 MOPS 공시) → `peer_revenue`, 주간 EV/EBITDA(최근 4분기, 공시 기한 45/90일 뒤 반영) → `valuation` · 두산 지분가치 할인율 = 1 − 시총 ÷ (상장 자회사 지분 시가 + 비상장 장부가 − 별도 순차입금), 지분 수는 DART 타법인출자현황(반기·사업보고서만, 에너빌리티 옛 이름 두산중공업). 야후 주가로 계산하되 배수·비율만 저장
@@ -38,7 +38,7 @@
 ## 데이터 소스 함정 (중요)
 - Census: 키 필수. 수출(exports) API는 대량 조회가 매우 느림 → 품목 단위로. 큰 장(84)은 500 에러 → 자동 분할.
 - HS 세번 분할/재분류가 실제로 자주 발생 (예: 3818000095→0091/0095, 2026-07; 미국 MLCC 2026-01 단가 단절) → 리스트 합산 + breaks.py 경고.
-- e-Stat: 미공개 월을 0으로 반환. 일본 메모리칩은 요카이치가 아니라 関西空港·成田로 나감. 수량은 단위2(개수)일 수 있음.
+- e-Stat: 미공개 월을 0으로 반환. 일본 메모리칩은 요카이치가 아니라 関西空港·成田로 나감. 수량은 단위2(개수)일 수 있음. 전국 합계는 세관별 표 대신 品別国別表(spec offices `["全国"]`, 연도별 표를 목록에서 자동 탐색 — 세관 조건 없이 세관별 표를 부르면 시간 초과).
 - 한국 관세청: 조회기간 1년 이내. 시군구 API는 `HsSgn`(대문자, HS6)+`sidoCd` 필수, 금액 천달러. 삼성전기 MLCC는 수원시(본사)로 신고.
 - DART 부문매출(XBRL)은 2023년~, 누적값 → 분기 차이 계산, 내부거래 제거 member 제외.
 
