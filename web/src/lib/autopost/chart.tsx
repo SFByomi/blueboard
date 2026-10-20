@@ -27,7 +27,7 @@ export async function renderChart(c: Candidate, labels: Record<string, string>):
         <div style={{ display: "flex", gap: 24, marginTop: 30, flex: 1 }}>{body}</div>
         <div style={{ display: "flex", flexDirection: "column", gap: 4, marginTop: 18, fontSize: 17, color: C.muted }}>
           <div>{`Source: ${c.sources.join(" · ")}`}</div>
-          <div>{`${c.flags.length ? "* Check before reading: see post · " : ""}Not investment advice · buywhenitgoesup.vercel.app`}</div>
+          <div>{`${c.flags.length ? "* Check before reading: see post · " : ""}Not investment advice`}</div>
         </div>
       </div>
     ),

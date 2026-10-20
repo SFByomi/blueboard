@@ -6,7 +6,6 @@ import type { Candidate } from "./types";
 // 자동 게시 초안: 후보(types.Candidate)의 facts → Claude가 X(영어)·텔레그램 채널(한국어) 글을 쓴다.
 // 넘겨준 숫자만 쓰게 하고, 결과를 코드로 다시 검사(모르는 숫자·필수 문구)해 경고를 붙인다.
 
-export const SITE = "buywhenitgoesup.vercel.app";
 export const DISCLAIMER_EN = "Not investment advice.";
 export const DISCLAIMER_KO = "투자 권유 아님.";
 const X_LIMIT = 280;
