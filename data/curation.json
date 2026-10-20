@@ -13,7 +13,8 @@
    "dart_fs": null,
    "dart_segment": null,
    "grp": "메모리",
-   "sites": "[{\"name\": \"히로시마 팹\", \"country\": \"일본\", \"what\": \"DRAM·HBM 전공정\"}, {\"name\": \"타이중·타오위안 팹\", \"country\": \"대만\", \"what\": \"DRAM 전공정·HBM 패키징\"}, {\"name\": \"페낭·사나이\", \"country\": \"말레이시아\", \"what\": \"조립·테스트\"}, {\"name\": \"보이시·매너서스\", \"country\": \"미국\", \"what\": \"R&D·DRAM\"}]"
+   "sites": "[{\"name\": \"히로시마 팹\", \"country\": \"일본\", \"what\": \"DRAM·HBM 전공정\"}, {\"name\": \"타이중·타오위안 팹\", \"country\": \"대만\", \"what\": \"DRAM 전공정·HBM 패키징\"}, {\"name\": \"페낭·사나이\", \"country\": \"말레이시아\", \"what\": \"조립·테스트\"}, {\"name\": \"보이시·매너서스\", \"country\": \"미국\", \"what\": \"R&D·DRAM\"}]",
+   "thesis_en": "DRAM, HBM and NAND made in Hiroshima and Taiwan, assembled in Malaysia. US imports of Taiwanese memory track revenue most directly (grade A)."
   },
   {
    "ticker": "SNDK",
@@ -28,7 +29,8 @@
    "dart_fs": null,
    "dart_segment": null,
    "grp": "메모리",
-   "sites": "[{\"name\": \"요카이치·기타카미 (Kioxia JV)\", \"country\": \"일본\", \"what\": \"NAND 웨이퍼\"}, {\"name\": \"페낭\", \"country\": \"말레이시아\", \"what\": \"조립·테스트·SSD\"}, {\"name\": \"상하이\", \"country\": \"중국\", \"what\": \"조립·테스트\"}]"
+   "sites": "[{\"name\": \"요카이치·기타카미 (Kioxia JV)\", \"country\": \"일본\", \"what\": \"NAND 웨이퍼\"}, {\"name\": \"페낭\", \"country\": \"말레이시아\", \"what\": \"조립·테스트·SSD\"}, {\"name\": \"상하이\", \"country\": \"중국\", \"what\": \"조립·테스트\"}]",
+   "thesis_en": "NAND from the Kioxia JV fabs in Japan, assembled in Malaysia and China. Japan's nationwide memory exports match revenue growth best. Multi-year contracts from 2026 can delay how fast spot prices reach reported revenue."
   },
   {
    "ticker": "005930.KS",
@@ -43,7 +45,8 @@
    "dart_fs": "CFS",
    "dart_segment": "DsDivision:Separate",
    "grp": "메모리",
-   "sites": "[{\"name\": \"평택 캠퍼스\", \"country\": \"한국 경기 평택\", \"what\": \"DRAM·HBM·NAND·파운드리\"}, {\"name\": \"화성 캠퍼스\", \"country\": \"한국 경기 화성\", \"what\": \"DRAM·파운드리\"}, {\"name\": \"기흥 캠퍼스\", \"country\": \"한국 경기 용인\", \"what\": \"메모리·R&D\"}, {\"name\": \"시안\", \"country\": \"중국\", \"what\": \"NAND\"}, {\"name\": \"천안·온양\", \"country\": \"한국 충남\", \"what\": \"HBM 패키징·테스트\"}]"
+   "sites": "[{\"name\": \"평택 캠퍼스\", \"country\": \"한국 경기 평택\", \"what\": \"DRAM·HBM·NAND·파운드리\"}, {\"name\": \"화성 캠퍼스\", \"country\": \"한국 경기 화성\", \"what\": \"DRAM·파운드리\"}, {\"name\": \"기흥 캠퍼스\", \"country\": \"한국 경기 용인\", \"what\": \"메모리·R&D\"}, {\"name\": \"시안\", \"country\": \"중국\", \"what\": \"NAND\"}, {\"name\": \"천안·온양\", \"country\": \"한국 충남\", \"what\": \"HBM 패키징·테스트\"}]",
+   "thesis_en": "World's largest memory maker. We track the semiconductor (DS) division only. Memory made at Pyeongtaek, Hwaseong and Giheung is over half of Korea's memory exports."
   },
   {
    "ticker": "000660.KS",
@@ -58,7 +61,8 @@
    "dart_fs": "CFS",
    "dart_segment": null,
    "grp": "메모리",
-   "sites": "[{\"name\": \"이천 캠퍼스\", \"country\": \"한국 경기 이천\", \"what\": \"DRAM·HBM\"}, {\"name\": \"청주 캠퍼스\", \"country\": \"한국 충북 청주\", \"what\": \"NAND·HBM 패키징(M15X)\"}, {\"name\": \"우시\", \"country\": \"중국\", \"what\": \"DRAM\"}, {\"name\": \"다롄\", \"country\": \"중국\", \"what\": \"NAND (솔리다임)\"}]"
+   "sites": "[{\"name\": \"이천 캠퍼스\", \"country\": \"한국 경기 이천\", \"what\": \"DRAM·HBM\"}, {\"name\": \"청주 캠퍼스\", \"country\": \"한국 충북 청주\", \"what\": \"NAND·HBM 패키징(M15X)\"}, {\"name\": \"우시\", \"country\": \"중국\", \"what\": \"DRAM\"}, {\"name\": \"다롄\", \"country\": \"중국\", \"what\": \"NAND (솔리다임)\"}]",
+   "thesis_en": "No. 1 in HBM, No. 2 in DRAM. Company-wide revenue. Icheon (DRAM, HBM) and Cheongju (NAND, HBM packaging) exports make up most of the rest of Korea's memory exports; China fabs are not in Korean data."
   },
   {
    "ticker": "LITE",
@@ -73,7 +77,8 @@
    "dart_fs": null,
    "dart_segment": null,
    "grp": "광통신",
-   "sites": "[{\"name\": \"산호세\", \"country\": \"미국\", \"what\": \"InP 레이저 칩\"}, {\"name\": \"사가미하라\", \"country\": \"일본\", \"what\": \"레이저·광소자\"}, {\"name\": \"Fabrinet 촌부리 (위탁)\", \"country\": \"태국\", \"what\": \"광트랜시버 조립\"}]"
+   "sites": "[{\"name\": \"산호세\", \"country\": \"미국\", \"what\": \"InP 레이저 칩\"}, {\"name\": \"사가미하라\", \"country\": \"일본\", \"what\": \"레이저·광소자\"}, {\"name\": \"Fabrinet 촌부리 (위탁)\", \"country\": \"태국\", \"what\": \"광트랜시버 조립\"}]",
+   "thesis_en": "InP lasers (San Jose, Japan) plus transceivers built by Fabrinet in Thailand."
   },
   {
    "ticker": "BE",
@@ -88,7 +93,8 @@
    "dart_fs": null,
    "dart_segment": null,
    "grp": "전력·냉각",
-   "sites": "[{\"name\": \"뉴어크\", \"country\": \"미국 델라웨어\", \"what\": \"연료전지 파워모듈\"}, {\"name\": \"프리몬트\", \"country\": \"미국 캘리포니아\", \"what\": \"시스템 조립\"}, {\"name\": \"블룸SK퓨얼셀 구미\", \"country\": \"한국\", \"what\": \"한국향 조립\"}]"
+   "sites": "[{\"name\": \"뉴어크\", \"country\": \"미국 델라웨어\", \"what\": \"연료전지 파워모듈\"}, {\"name\": \"프리몬트\", \"country\": \"미국 캘리포니아\", \"what\": \"시스템 조립\"}, {\"name\": \"블룸SK퓨얼셀 구미\", \"country\": \"한국\", \"what\": \"한국향 조립\"}]",
+   "thesis_en": "Solid-oxide fuel cells for on-site data center power, built in Delaware and California. Power-module exports from Delaware go mostly to its Korean partner; US sales are not in trade data."
   },
   {
    "ticker": "IREN",
@@ -103,7 +109,8 @@
    "dart_fs": null,
    "dart_segment": null,
    "grp": "네오클라우드",
-   "sites": "[{\"name\": \"차일드레스\", \"country\": \"미국 텍사스\", \"what\": \"GPU 데이터센터\"}, {\"name\": \"브리티시컬럼비아\", \"country\": \"캐나다\", \"what\": \"GPU·채굴 데이터센터\"}]"
+   "sites": "[{\"name\": \"차일드레스\", \"country\": \"미국 텍사스\", \"what\": \"GPU 데이터센터\"}, {\"name\": \"브리티시컬럼비아\", \"country\": \"캐나다\", \"what\": \"GPU·채굴 데이터센터\"}]",
+   "thesis_en": "Bitcoin miner turning into a GPU cloud (Microsoft, NVIDIA and other contracts). No company-specific trade flow — tracked through AI server imports as an industry proxy."
   },
   {
    "ticker": "NBIS",
@@ -118,7 +125,8 @@
    "dart_fs": null,
    "dart_segment": null,
    "grp": "네오클라우드",
-   "sites": "[{\"name\": \"멘살라 I·II\", \"country\": \"핀란드\", \"what\": \"자체 데이터센터 145MW\"}, {\"name\": \"라펜란타\", \"country\": \"핀란드\", \"what\": \"310MW (개발)\"}, {\"name\": \"바인랜드\", \"country\": \"미국 뉴저지\", \"what\": \"빌드투수트 300MW — Microsoft향\"}, {\"name\": \"캔자스시티\", \"country\": \"미국 미주리\", \"what\": \"코로케이션 40MW\"}, {\"name\": \"인디펜던스\", \"country\": \"미국 미주리\", \"what\": \"그린필드 1.2GW\"}, {\"name\": \"펜실베이니아\", \"country\": \"미국\", \"what\": \"그린필드 1.2GW\"}, {\"name\": \"버밍엄\", \"country\": \"미국\", \"what\": \"300MW\"}, {\"name\": \"베튄\", \"country\": \"프랑스\", \"what\": \"240MW\"}, {\"name\": \"영국(할로·롱크로스·웨일스)\", \"country\": \"영국\", \"what\": \"코로케이션 약 65MW\"}, {\"name\": \"케플라비크·게타페·모디인\", \"country\": \"아이슬란드·스페인·이스라엘\", \"what\": \"코로케이션 10~24MW\"}]"
+   "sites": "[{\"name\": \"멘살라 I·II\", \"country\": \"핀란드\", \"what\": \"자체 데이터센터 145MW\"}, {\"name\": \"라펜란타\", \"country\": \"핀란드\", \"what\": \"310MW (개발)\"}, {\"name\": \"바인랜드\", \"country\": \"미국 뉴저지\", \"what\": \"빌드투수트 300MW — Microsoft향\"}, {\"name\": \"캔자스시티\", \"country\": \"미국 미주리\", \"what\": \"코로케이션 40MW\"}, {\"name\": \"인디펜던스\", \"country\": \"미국 미주리\", \"what\": \"그린필드 1.2GW\"}, {\"name\": \"펜실베이니아\", \"country\": \"미국\", \"what\": \"그린필드 1.2GW\"}, {\"name\": \"버밍엄\", \"country\": \"미국\", \"what\": \"300MW\"}, {\"name\": \"베튄\", \"country\": \"프랑스\", \"what\": \"240MW\"}, {\"name\": \"영국(할로·롱크로스·웨일스)\", \"country\": \"영국\", \"what\": \"코로케이션 약 65MW\"}, {\"name\": \"케플라비크·게타페·모디인\", \"country\": \"아이슬란드·스페인·이스라엘\", \"what\": \"코로케이션 10~24MW\"}]",
+   "thesis_en": "Full-stack GPU cloud with long-term hyperscaler contracts (Microsoft, Meta) and shorter AI-lab deals at higher prices per MW. Publishes its own spot GPU prices."
   },
   {
    "ticker": "RXRX",
@@ -133,7 +141,8 @@
    "dart_fs": null,
    "dart_segment": null,
    "grp": "바이오",
-   "sites": null
+   "sites": null,
+   "thesis_en": "AI drug discovery. No meaningful trade proxy — driven by clinical and partnership news."
   },
   {
    "ticker": "INSM",
@@ -148,7 +157,8 @@
    "dart_fs": null,
    "dart_segment": null,
    "grp": "바이오",
-   "sites": null
+   "sites": null,
+   "thesis_en": "ARIKAYCE and brensocatib. Drug HS codes are too broad for a useful trade proxy."
   },
   {
    "ticker": "000150.KS",
@@ -163,7 +173,8 @@
    "dart_fs": "OFS",
    "dart_segment": "ElectroMaterialsBg",
    "grp": "부품·소재",
-   "sites": "[{\"name\": \"증평 공장\", \"country\": \"한국 충북\", \"what\": \"CCL(동박적층판)\"}, {\"name\": \"김천 공장\", \"country\": \"한국 경북\", \"what\": \"CCL\"}]"
+   "sites": "[{\"name\": \"증평 공장\", \"country\": \"한국 충북\", \"what\": \"CCL(동박적층판)\"}, {\"name\": \"김천 공장\", \"country\": \"한국 경북\", \"what\": \"CCL\"}]",
+   "thesis_en": "Copper-clad laminate (CCL) for AI accelerator boards. CCL exports from Jeungpyeong county track the electronics division's quarterly revenue (correlation 0.97)."
   },
   {
    "ticker": "009150.KS",
@@ -178,7 +189,8 @@
    "dart_fs": "CFS",
    "dart_segment": "Component",
    "grp": "부품·소재",
-   "sites": "[{\"name\": \"수원 본사 (수출 신고지)\", \"country\": \"한국 경기\", \"what\": \"MLCC\"}, {\"name\": \"부산 강서구\", \"country\": \"한국 부산\", \"what\": \"MLCC 생산\"}, {\"name\": \"톈진·필리핀\", \"country\": \"중국·필리핀\", \"what\": \"MLCC\"}]"
+   "sites": "[{\"name\": \"수원 본사 (수출 신고지)\", \"country\": \"한국 경기\", \"what\": \"MLCC\"}, {\"name\": \"부산 강서구\", \"country\": \"한국 부산\", \"what\": \"MLCC 생산\"}, {\"name\": \"톈진·필리핀\", \"country\": \"중국·필리핀\", \"what\": \"MLCC\"}]",
+   "thesis_en": "MLCCs. MLCC exports are filed under Suwon (HQ), not the Busan plant. Japan's MLCC exports track the cycle better."
   },
   {
    "ticker": "DELL",
@@ -193,7 +205,8 @@
    "dart_fs": null,
    "dart_segment": null,
    "grp": "서버·네트워크",
-   "sites": "[{\"name\": \"멕시코 ODM (치와와 등)\", \"country\": \"멕시코\", \"what\": \"서버·스토리지 조립\"}, {\"name\": \"페낭\", \"country\": \"말레이시아\", \"what\": \"서버·PC\"}, {\"name\": \"샤먼\", \"country\": \"중국\", \"what\": \"PC·서버\"}, {\"name\": \"첸나이\", \"country\": \"인도\", \"what\": \"PC\"}]"
+   "sites": "[{\"name\": \"멕시코 ODM (치와와 등)\", \"country\": \"멕시코\", \"what\": \"서버·스토리지 조립\"}, {\"name\": \"페낭\", \"country\": \"말레이시아\", \"what\": \"서버·PC\"}, {\"name\": \"샤먼\", \"country\": \"중국\", \"what\": \"PC·서버\"}, {\"name\": \"첸나이\", \"country\": \"인도\", \"what\": \"PC\"}]",
+   "thesis_en": "AI servers drive growth. Built in Mexico, Malaysia and China and shipped into the US; parts inventory leads shipments."
   },
   {
    "ticker": "FN",
@@ -208,7 +221,8 @@
    "dart_fs": null,
    "dart_segment": null,
    "grp": "광통신",
-   "sites": "[{\"name\": \"촌부리·파인허스트\", \"country\": \"태국\", \"what\": \"광모듈 위탁생산\"}, {\"name\": \"뉴저지·캘리포니아\", \"country\": \"미국\", \"what\": \"소량\"}]"
+   "sites": "[{\"name\": \"촌부리·파인허스트\", \"country\": \"태국\", \"what\": \"광모듈 위탁생산\"}, {\"name\": \"뉴저지·캘리포니아\", \"country\": \"미국\", \"what\": \"소량\"}]",
+   "thesis_en": "Optical module contract manufacturer in Thailand — the core of the Thai transceiver flow (peer comparison)."
   },
   {
    "ticker": "HPE",
@@ -223,7 +237,8 @@
    "dart_fs": null,
    "dart_segment": null,
    "grp": "서버·네트워크",
-   "sites": "[{\"name\": \"과달라하라 위탁생산\", \"country\": \"멕시코\", \"what\": \"서버·네트워킹\"}, {\"name\": \"말레이시아 위탁생산\", \"country\": \"말레이시아\", \"what\": \"네트워킹\"}, {\"name\": \"쿠트나호라\", \"country\": \"체코\", \"what\": \"유럽향 서버\"}]"
+   "sites": "[{\"name\": \"과달라하라 위탁생산\", \"country\": \"멕시코\", \"what\": \"서버·네트워킹\"}, {\"name\": \"말레이시아 위탁생산\", \"country\": \"말레이시아\", \"what\": \"네트워킹\"}, {\"name\": \"쿠트나호라\", \"country\": \"체코\", \"what\": \"유럽향 서버\"}]",
+   "thesis_en": "Servers, networking (Juniper) and storage. Network gear shipped from Mexico and Malaysia is the key flow."
   },
   {
    "ticker": "NTAP",
@@ -238,7 +253,8 @@
    "dart_fs": null,
    "dart_segment": null,
    "grp": "서버·네트워크",
-   "sites": "[{\"name\": \"과달라하라 (Jabil 등)\", \"country\": \"멕시코\", \"what\": \"스토리지 시스템\"}, {\"name\": \"네덜란드·싱가포르\", \"country\": \"유럽·아시아\", \"what\": \"지역 조립\"}]"
+   "sites": "[{\"name\": \"과달라하라 (Jabil 등)\", \"country\": \"멕시코\", \"what\": \"스토리지 시스템\"}, {\"name\": \"네덜란드·싱가포르\", \"country\": \"유럽·아시아\", \"what\": \"지역 조립\"}]",
+   "thesis_en": "All-flash storage, contract-built in Guadalajara and shipped via Laredo. Watch units and unit prices separately."
   },
   {
    "ticker": "SMCI",
@@ -253,7 +269,8 @@
    "dart_fs": null,
    "dart_segment": null,
    "grp": "서버·네트워크",
-   "sites": "[{\"name\": \"산호세\", \"country\": \"미국 캘리포니아\", \"what\": \"랙 조립·테스트\"}, {\"name\": \"바더\", \"country\": \"대만\", \"what\": \"서버 생산\"}, {\"name\": \"조호르\", \"country\": \"말레이시아\", \"what\": \"신규 생산\"}]"
+   "sites": "[{\"name\": \"산호세\", \"country\": \"미국 캘리포니아\", \"what\": \"랙 조립·테스트\"}, {\"name\": \"바더\", \"country\": \"대만\", \"what\": \"서버 생산\"}, {\"name\": \"조호르\", \"country\": \"말레이시아\", \"what\": \"신규 생산\"}]",
+   "thesis_en": "AI server racks assembled mainly in San Jose, so trade data sees the parts going in. Risk of revenue slipping on rack integration delays."
   },
   {
    "ticker": "ANET",
@@ -268,7 +285,8 @@
    "dart_fs": null,
    "dart_segment": null,
    "grp": "서버·네트워크",
-   "sites": "[{\"name\": \"Celestica 태국\", \"country\": \"태국\", \"what\": \"스위치 위탁생산\"}, {\"name\": \"Jabil 멕시코\", \"country\": \"멕시코\", \"what\": \"스위치 위탁생산\"}, {\"name\": \"말레이시아 위탁생산\", \"country\": \"말레이시아\", \"what\": \"스위치\"}]"
+   "sites": "[{\"name\": \"Celestica 태국\", \"country\": \"태국\", \"what\": \"스위치 위탁생산\"}, {\"name\": \"Jabil 멕시코\", \"country\": \"멕시코\", \"what\": \"스위치 위탁생산\"}, {\"name\": \"말레이시아 위탁생산\", \"country\": \"말레이시아\", \"what\": \"스위치\"}]",
+   "thesis_en": "AI back-end Ethernet switches, contract-built in Thailand, Mexico and Malaysia and shipped into the US."
   },
   {
    "ticker": "COHR",
@@ -283,7 +301,8 @@
    "dart_fs": null,
    "dart_segment": null,
    "grp": "광통신",
-   "sites": "[{\"name\": \"이포\", \"country\": \"말레이시아\", \"what\": \"광트랜시버\"}, {\"name\": \"우시\", \"country\": \"중국\", \"what\": \"광모듈·소재\"}, {\"name\": \"베트남\", \"country\": \"베트남\", \"what\": \"광트랜시버\"}, {\"name\": \"셔먼\", \"country\": \"미국 텍사스\", \"what\": \"InP 웨이퍼\"}]"
+   "sites": "[{\"name\": \"이포\", \"country\": \"말레이시아\", \"what\": \"광트랜시버\"}, {\"name\": \"우시\", \"country\": \"중국\", \"what\": \"광모듈·소재\"}, {\"name\": \"베트남\", \"country\": \"베트남\", \"what\": \"광트랜시버\"}, {\"name\": \"셔먼\", \"country\": \"미국 텍사스\", \"what\": \"InP 웨이퍼\"}]",
+   "thesis_en": "Optical transceivers, lasers and materials made in Malaysia, China and Vietnam."
   },
   {
    "ticker": "VRT",
@@ -298,7 +317,8 @@
    "dart_fs": null,
    "dart_segment": null,
    "grp": "전력·냉각",
-   "sites": "[{\"name\": \"몬테레이·레이노사\", \"country\": \"멕시코\", \"what\": \"전력분배·UPS\"}, {\"name\": \"중국 공장\", \"country\": \"중국\", \"what\": \"전력·냉각\"}, {\"name\": \"인도 공장\", \"country\": \"인도\", \"what\": \"전력·냉각\"}, {\"name\": \"오하이오 등\", \"country\": \"미국\", \"what\": \"냉각·조립\"}]"
+   "sites": "[{\"name\": \"몬테레이·레이노사\", \"country\": \"멕시코\", \"what\": \"전력분배·UPS\"}, {\"name\": \"중국 공장\", \"country\": \"중국\", \"what\": \"전력·냉각\"}, {\"name\": \"인도 공장\", \"country\": \"인도\", \"what\": \"전력·냉각\"}, {\"name\": \"오하이오 등\", \"country\": \"미국\", \"what\": \"냉각·조립\"}]",
+   "thesis_en": "UPS, power distribution and liquid cooling built in Mexico, China and India and shipped into the US. Lead times and capacity drive results."
   },
   {
    "ticker": "AAON",
@@ -313,7 +333,8 @@
    "dart_fs": null,
    "dart_segment": null,
    "grp": "전력·냉각",
-   "sites": "[{\"name\": \"털사\", \"country\": \"미국 오클라호마\", \"what\": \"공조기\"}, {\"name\": \"롱뷰\", \"country\": \"미국 텍사스\", \"what\": \"코일·냉각\"}, {\"name\": \"레드먼드 (BasX)\", \"country\": \"미국 오리건\", \"what\": \"데이터센터 냉각\"}, {\"name\": \"멤피스\", \"country\": \"미국 테네시\", \"what\": \"신규 공장\"}]"
+   "sites": "[{\"name\": \"털사\", \"country\": \"미국 오클라호마\", \"what\": \"공조기\"}, {\"name\": \"롱뷰\", \"country\": \"미국 텍사스\", \"what\": \"코일·냉각\"}, {\"name\": \"레드먼드 (BasX)\", \"country\": \"미국 오리건\", \"what\": \"데이터센터 냉각\"}, {\"name\": \"멤피스\", \"country\": \"미국 테네시\", \"what\": \"신규 공장\"}]",
+   "thesis_en": "HVAC and data center cooling (BasX), mostly made in the US, so trade data only catches some exports."
   },
   {
    "ticker": "FLNC",
@@ -328,7 +349,8 @@
    "dart_fs": null,
    "dart_segment": null,
    "grp": "전력·냉각",
-   "sites": "[{\"name\": \"베트남 위탁생산\", \"country\": \"베트남\", \"what\": \"배터리 큐브 조립\"}, {\"name\": \"중국 셀 공급\", \"country\": \"중국\", \"what\": \"배터리 셀\"}, {\"name\": \"미국 (유타·애리조나)\", \"country\": \"미국\", \"what\": \"현지 조립\"}]"
+   "sites": "[{\"name\": \"베트남 위탁생산\", \"country\": \"베트남\", \"what\": \"배터리 큐브 조립\"}, {\"name\": \"중국 셀 공급\", \"country\": \"중국\", \"what\": \"배터리 셀\"}, {\"name\": \"미국 (유타·애리조나)\", \"country\": \"미국\", \"what\": \"현지 조립\"}]",
+   "thesis_en": "Battery storage systems, contract-built in Vietnam with Chinese cells. Revenue is lumpy around project deliveries."
   },
   {
    "ticker": "MRVL",
@@ -343,7 +365,8 @@
    "dart_fs": null,
    "dart_segment": null,
    "grp": "반도체",
-   "sites": "[{\"name\": \"TSMC\", \"country\": \"대만\", \"what\": \"웨이퍼\"}, {\"name\": \"대만·동남아 OSAT\", \"country\": \"대만·말레이시아\", \"what\": \"패키징·테스트\"}]"
+   "sites": "[{\"name\": \"TSMC\", \"country\": \"대만\", \"what\": \"웨이퍼\"}, {\"name\": \"대만·동남아 OSAT\", \"country\": \"대만·말레이시아\", \"what\": \"패키징·테스트\"}]",
+   "thesis_en": "Custom AI ASICs and optical DSPs made at TSMC and packaged in Asia — not directly visible in US imports."
   },
   {
    "ticker": "TXG",
@@ -358,7 +381,8 @@
    "dart_fs": null,
    "dart_segment": null,
    "grp": "바이오",
-   "sites": "[{\"name\": \"플레전턴\", \"country\": \"미국 캘리포니아\", \"what\": \"장비·소모품 생산\"}, {\"name\": \"싱가포르\", \"country\": \"싱가포르\", \"what\": \"소모품 생산\"}]"
+   "sites": "[{\"name\": \"플레전턴\", \"country\": \"미국 캘리포니아\", \"what\": \"장비·소모품 생산\"}, {\"name\": \"싱가포르\", \"country\": \"싱가포르\", \"what\": \"소모품 생산\"}]",
+   "thesis_en": "Single-cell and spatial genomics instruments made in California; trade data only catches exports (mainly to China)."
   },
   {
    "market": "NASDAQ",
@@ -373,7 +397,8 @@
    "sec_ticker": "PANW",
    "fy_note": "FY 7월말 종료",
    "sort": 330,
-   "sites": "[]"
+   "sites": "[]",
+   "thesis_en": "Platform security. Software has no trade flow, so we use disclosed ransomware victims as an industry proxy (weak link, grade C)."
   },
   {
    "market": "NASDAQ",
@@ -388,7 +413,8 @@
    "sec_ticker": "CRWD",
    "fy_note": "FY 1월말 종료",
    "sort": 340,
-   "sites": "[]"
+   "sites": "[]",
+   "thesis_en": "Endpoint and cloud security (Falcon). Ransomware counts have led revenue growth by about two quarters, but not in the last two years."
   },
   {
    "market": "NYSE",
@@ -403,7 +429,8 @@
    "sec_ticker": "RBRK",
    "fy_note": "FY 1월말 종료",
    "sort": 350,
-   "sites": "[]"
+   "sites": "[]",
+   "thesis_en": "Backup-based data security. Listed in 2024, so the history is short."
   },
   {
    "market": "KOSPI",
@@ -418,7 +445,8 @@
    "name_ko": "HD현대일렉트릭",
    "sort": 360,
    "thesis": "초고압 변압기·차단기. 미국 송배전·데이터센터 수요 수혜. 한국 대용량 변압기 수출과 매출 전년비 상관은 0.43~0.47(C) — 미국 앨라배마 현지 생산·국내 매출 비중 때문에 수출만으론 설명력이 낮아 업황 참고.",
-   "sites": "[{\"name\": \"울산 공장\", \"country\": \"한국 울산\", \"what\": \"초고압 변압기·차단기\"}, {\"name\": \"앨라배마 공장\", \"country\": \"미국 몽고메리\", \"what\": \"전력 변압기\"}]"
+   "sites": "[{\"name\": \"울산 공장\", \"country\": \"한국 울산\", \"what\": \"초고압 변압기·차단기\"}, {\"name\": \"앨라배마 공장\", \"country\": \"미국 몽고메리\", \"what\": \"전력 변압기\"}]",
+   "thesis_en": "Ultra-high-voltage transformers for US grid and data center demand. Korean transformer exports explain revenue only partly (US plant, domestic sales)."
   },
   {
    "market": "KOSPI",
@@ -433,7 +461,8 @@
    "name_ko": "효성중공업",
    "sort": 370,
    "thesis": "변압기·차단기(중공업) + 건설. 한국 대용량 변압기(10MVA 초과) 수출이 매출 전년비와 0.51(B), 최근 8분기 0.74로 연동 — 말레이시아 변전소 공급 이력. 미국향 고압 케이블 수출도 0.50(B).",
-   "sites": "[{\"name\": \"창원 공장\", \"country\": \"한국 경남\", \"what\": \"초고압 변압기·차단기\"}, {\"name\": \"멤피스 공장(HICO)\", \"country\": \"미국 테네시\", \"what\": \"전력 변압기\"}]"
+   "sites": "[{\"name\": \"창원 공장\", \"country\": \"한국 경남\", \"what\": \"초고압 변압기·차단기\"}, {\"name\": \"멤피스 공장(HICO)\", \"country\": \"미국 테네시\", \"what\": \"전력 변압기\"}]",
+   "thesis_en": "Transformers and breakers plus construction. Korean large transformer exports move with revenue (grade B)."
   },
   {
    "market": "KOSPI",
@@ -448,7 +477,8 @@
    "name_ko": "LS ELECTRIC",
    "sort": 380,
    "thesis": "배전반·차단기·자동화. 수출 통계와 매출 전년비 상관이 모두 0.3 미만(D) — 국내 매출·자회사 비중이 커서 무역 흐름으로는 설명 안 됨. 미국 배전반 수입·데이터센터 건설투자를 업황으로만 참고.",
-   "sites": "[{\"name\": \"청주·천안 사업장\", \"country\": \"한국 충북·충남\", \"what\": \"배전·자동화 기기\"}, {\"name\": \"부산 공장\", \"country\": \"한국 부산\", \"what\": \"초고압 변압기\"}, {\"name\": \"배스트럽 공장\", \"country\": \"미국 텍사스\", \"what\": \"배전반\"}]"
+   "sites": "[{\"name\": \"청주·천안 사업장\", \"country\": \"한국 충북·충남\", \"what\": \"배전·자동화 기기\"}, {\"name\": \"부산 공장\", \"country\": \"한국 부산\", \"what\": \"초고압 변압기\"}, {\"name\": \"배스트럽 공장\", \"country\": \"미국 텍사스\", \"what\": \"배전반\"}]",
+   "thesis_en": "Switchboards, breakers and automation. Export data does not explain revenue well (domestic sales, subsidiaries)."
   },
   {
    "market": "KOSPI",
@@ -463,7 +493,8 @@
    "name_ko": "일진전기",
    "sort": 390,
    "thesis": "전선·케이블 + 변압기. 한국 전선·케이블 수출이 매출 전년비와 0.52(B), 최근 8분기 0.69로 연동. 홍성 변압기 공장 증설로 변압기 비중 확대 중.",
-   "sites": "[{\"name\": \"안산 공장\", \"country\": \"한국 경기\", \"what\": \"전선·초고압 케이블\"}, {\"name\": \"홍성 공장\", \"country\": \"한국 충남\", \"what\": \"변압기\"}]"
+   "sites": "[{\"name\": \"안산 공장\", \"country\": \"한국 경기\", \"what\": \"전선·초고압 케이블\"}, {\"name\": \"홍성 공장\", \"country\": \"한국 충남\", \"what\": \"변압기\"}]",
+   "thesis_en": "Wire, cable and transformers. Korean cable exports move with revenue (grade B)."
   },
   {
    "ticker": "059090.KQ",
@@ -478,7 +509,8 @@
    "dart_fs": "CFS",
    "dart_segment": null,
    "grp": "전력·냉각",
-   "sites": "[{\"name\": \"안성 사업장\", \"country\": \"한국 경기\", \"what\": \"반도체 부품 세정·코팅·세라믹 히터\"}, {\"name\": \"현대중공업파워시스템\", \"country\": \"한국 경기 평택\", \"what\": \"HRSG(배열회수보일러)\"}, {\"name\": \"NEM Energy\", \"country\": \"네덜란드\", \"what\": \"HRSG 설계·수주\"}, {\"name\": \"미코파워\", \"country\": \"한국\", \"what\": \"SOFC 연료전지\"}]"
+   "sites": "[{\"name\": \"안성 사업장\", \"country\": \"한국 경기\", \"what\": \"반도체 부품 세정·코팅·세라믹 히터\"}, {\"name\": \"현대중공업파워시스템\", \"country\": \"한국 경기 평택\", \"what\": \"HRSG(배열회수보일러)\"}, {\"name\": \"NEM Energy\", \"country\": \"네덜란드\", \"what\": \"HRSG 설계·수주\"}, {\"name\": \"미코파워\", \"country\": \"한국\", \"what\": \"SOFC 연료전지\"}]",
+   "thesis_en": "Chip parts (cleaning, coating, ceramic heaters) plus heat recovery steam generators for gas power — a lagging play on data center power build-outs."
   },
   {
    "dart_fs": null,
@@ -493,7 +525,8 @@
    "thesis": "AI 기반 엔드포인트·클라우드 보안(Singularity). 무역 흐름이 없어 랜섬웨어 피해 공개 건수를 업황 프록시로 사용.",
    "sec_ticker": "S",
    "fy_note": "FY 1월말 종료",
-   "sort": 360
+   "sort": 360,
+   "thesis_en": "AI-based endpoint and cloud security. Ransomware counts used as an industry proxy."
   },
   {
    "dart_fs": null,
@@ -508,7 +541,8 @@
    "thesis": "제로트러스트 클라우드 보안(SSE). 랜섬웨어 피해 건수를 업황 프록시로 사용.",
    "sec_ticker": "ZS",
    "fy_note": "FY 7월말 종료",
-   "sort": 370
+   "sort": 370,
+   "thesis_en": "Zero-trust cloud security. Ransomware counts used as an industry proxy."
   },
   {
    "dart_fs": null,
@@ -523,7 +557,8 @@
    "thesis": "방화벽(하드웨어)·SASE. 하드웨어 교체 주기 영향이 커서 공격 건수와의 연동은 약할 수 있음.",
    "sec_ticker": "FTNT",
    "fy_note": "FY 12월",
-   "sort": 380
+   "sort": 380,
+   "thesis_en": "Firewalls and SASE. Hardware refresh cycles matter more than attack counts."
   },
   {
    "dart_fs": null,
@@ -538,7 +573,8 @@
    "thesis": "신원·접근 관리(IAM). 계정 탈취형 공격 증가가 수요 요인. 랜섬웨어 피해 건수를 업황 프록시로 사용.",
    "sec_ticker": "OKTA",
    "fy_note": "FY 1월말 종료",
-   "sort": 390
+   "sort": 390,
+   "thesis_en": "Identity and access management. Ransomware counts used as an industry proxy."
   },
   {
    "dart_fs": null,
@@ -553,7 +589,8 @@
    "thesis": "CDN·DDoS 방어·제로트러스트. 보안은 매출 일부라 공격 건수와의 연동은 약할 수 있음.",
    "sec_ticker": "NET",
    "fy_note": "FY 12월",
-   "sort": 400
+   "sort": 400,
+   "thesis_en": "CDN, DDoS protection and zero trust. Security is only part of revenue."
   },
   {
    "ticker": "ASML",
@@ -568,7 +605,8 @@
    "sort": 300,
    "dart_fs": null,
    "dart_segment": null,
-   "sites": "[{\"name\": \"벨트호번 본사·공장\", \"country\": \"네덜란드\", \"what\": \"EUV·DUV 노광장비 조립\"}, {\"name\": \"윌튼\", \"country\": \"미국 코네티컷\", \"what\": \"레티클 스테이지 등 모듈\"}, {\"name\": \"샌디에이고(Cymer)\", \"country\": \"미국 캘리포니아\", \"what\": \"광원\"}]"
+   "sites": "[{\"name\": \"벨트호번 본사·공장\", \"country\": \"네덜란드\", \"what\": \"EUV·DUV 노광장비 조립\"}, {\"name\": \"윌튼\", \"country\": \"미국 코네티컷\", \"what\": \"레티클 스테이지 등 모듈\"}, {\"name\": \"샌디에이고(Cymer)\", \"country\": \"미국 캘리포니아\", \"what\": \"광원\"}]",
+   "thesis_en": "Monopoly in EUV lithography. Dutch litho exports show shipments, but service revenue and EUV acceptance timing blur the link; exports to Korea and the US track revenue best."
   },
   {
    "ticker": "TSLA",
@@ -583,7 +621,8 @@
    "dart_fs": null,
    "dart_segment": null,
    "grp": "전기차·에너지",
-   "sites": "[{\"name\": \"프리몬트\", \"country\": \"미국 캘리포니아\", \"what\": \"모델 3·Y·S·X 조립\"}, {\"name\": \"기가 텍사스\", \"country\": \"미국 오스틴\", \"what\": \"모델 Y·사이버트럭, 4680 셀\"}, {\"name\": \"기가 상하이\", \"country\": \"중국\", \"what\": \"모델 3·Y (최대 생산·수출 거점)\"}, {\"name\": \"기가 베를린\", \"country\": \"독일 그륀하이데\", \"what\": \"모델 Y\"}, {\"name\": \"기가 네바다\", \"country\": \"미국 스파크스\", \"what\": \"배터리·세미 트럭\"}, {\"name\": \"메가팩토리\", \"country\": \"미국 래스럽·중국 상하이\", \"what\": \"메가팩(ESS)\"}]"
+   "sites": "[{\"name\": \"프리몬트\", \"country\": \"미국 캘리포니아\", \"what\": \"모델 3·Y·S·X 조립\"}, {\"name\": \"기가 텍사스\", \"country\": \"미국 오스틴\", \"what\": \"모델 Y·사이버트럭, 4680 셀\"}, {\"name\": \"기가 상하이\", \"country\": \"중국\", \"what\": \"모델 3·Y (최대 생산·수출 거점)\"}, {\"name\": \"기가 베를린\", \"country\": \"독일 그륀하이데\", \"what\": \"모델 Y\"}, {\"name\": \"기가 네바다\", \"country\": \"미국 스파크스\", \"what\": \"배터리·세미 트럭\"}, {\"name\": \"메가팩토리\", \"country\": \"미국 래스럽·중국 상하이\", \"what\": \"메가팩(ESS)\"}]",
+   "thesis_en": "EVs and energy storage. Quarterly delivery numbers, out two days after quarter end, narrow revenue three weeks before earnings."
   },
   {
    "ticker": "ORCL",
@@ -598,7 +637,8 @@
    "dart_fs": null,
    "dart_segment": null,
    "grp": "AI 클라우드",
-   "sites": "[{\"name\": \"애빌린(스타게이트)\", \"country\": \"미국 텍사스\", \"what\": \"AI 데이터센터(OpenAI용)\"}, {\"name\": \"OCI 리전\", \"country\": \"미국·전 세계\", \"what\": \"클라우드 데이터센터\"}]"
+   "sites": "[{\"name\": \"애빌린(스타게이트)\", \"country\": \"미국 텍사스\", \"what\": \"AI 데이터센터(OpenAI용)\"}, {\"name\": \"OCI 리전\", \"country\": \"미국·전 세계\", \"what\": \"클라우드 데이터센터\"}]",
+   "thesis_en": "Building OCI GPU data centers on a huge backlog, funded with bonds and leases — revenue depends on build speed, credit on borrowing pace."
   },
   {
    "ticker": "CRWV",
@@ -613,7 +653,8 @@
    "dart_fs": null,
    "dart_segment": null,
    "grp": "네오클라우드",
-   "sites": "[{\"name\": \"뉴저지·텍사스·펜실베이니아 등\", \"country\": \"미국\", \"what\": \"GPU 데이터센터(임차·자체)\"}, {\"name\": \"영국·노르웨이·스페인\", \"country\": \"유럽\", \"what\": \"GPU 데이터센터\"}]"
+   "sites": "[{\"name\": \"뉴저지·텍사스·펜실베이니아 등\", \"country\": \"미국\", \"what\": \"GPU 데이터센터(임차·자체)\"}, {\"name\": \"영국·노르웨이·스페인\", \"country\": \"유럽\", \"what\": \"GPU 데이터센터\"}]",
+   "thesis_en": "GPU cloud with direct OpenAI, Anthropic and Meta contracts; Microsoft was about two-thirds of 2025 revenue. Heavy secured borrowing."
   },
   {
    "ticker": "META",
@@ -628,7 +669,8 @@
    "dart_fs": null,
    "dart_segment": null,
    "grp": "AI 클라우드",
-   "sites": "[{\"name\": \"하이페리온\", \"country\": \"미국 루이지애나\", \"what\": \"AI 데이터센터(SPV 조달)\"}, {\"name\": \"프로메테우스\", \"country\": \"미국 오하이오\", \"what\": \"AI 데이터센터\"}]"
+   "sites": "[{\"name\": \"하이페리온\", \"country\": \"미국 루이지애나\", \"what\": \"AI 데이터센터(SPV 조달)\"}, {\"name\": \"프로메테우스\", \"country\": \"미국 오하이오\", \"what\": \"AI 데이터센터\"}]",
+   "thesis_en": "Ad revenue funds AI data centers, partly through off-balance-sheet financing. Capex is a leading signal for AI infrastructure demand."
   }
  ],
  "series": [
@@ -641,7 +683,8 @@
    "region": "오사카·간사이공항",
    "hs": "7410.21",
    "partner": "전세계",
-   "spec": "{\"flow\": \"export\", \"hs9\": [\"741021000\"], \"offices\": [\"大阪\", \"関西空港\"]}"
+   "spec": "{\"flow\": \"export\", \"hs9\": [\"741021000\"], \"offices\": [\"大阪\", \"関西空港\"]}",
+   "label_en": "Japan CCL exports (Osaka · Kansai)"
   },
   {
    "id": "jp_exp_kure_mem",
@@ -652,7 +695,8 @@
    "region": "구레 세관",
    "hs": "8542.32-100",
    "partner": "전세계",
-   "spec": "{\"flow\": \"export\", \"hs9\": [\"854232100\"], \"offices\": [\"呉\"]}"
+   "spec": "{\"flow\": \"export\", \"hs9\": [\"854232100\"], \"offices\": [\"呉\"]}",
+   "label_en": "Memory IC exports from Kure (Hiroshima)"
   },
   {
    "id": "jp_exp_mem_all",
@@ -663,7 +707,8 @@
    "region": "간사이공항·나리타",
    "hs": "8542.32-100",
    "partner": "전세계",
-   "spec": "{\"flow\": \"export\", \"hs9\": [\"854232100\"], \"offices\": [\"関西空港\", \"成田\"]}"
+   "spec": "{\"flow\": \"export\", \"hs9\": [\"854232100\"], \"offices\": [\"関西空港\", \"成田\"]}",
+   "label_en": "Memory IC exports via Kansai Airport · Narita"
   },
   {
    "id": "jp_exp_mem_nat",
@@ -674,7 +719,8 @@
    "region": "전국",
    "hs": "8542.32",
    "partner": "전세계",
-   "spec": "{\"flow\": \"export\", \"hs9\": [\"854232100\", \"854232911\", \"854232919\", \"854232921\", \"854232929\", \"854232990\"], \"offices\": [\"全国\"]}"
+   "spec": "{\"flow\": \"export\", \"hs9\": [\"854232100\", \"854232911\", \"854232919\", \"854232921\", \"854232929\", \"854232990\"], \"offices\": [\"全国\"]}",
+   "label_en": "Japan memory IC exports (nationwide)"
   },
   {
    "id": "jp_exp_mem_to_my",
@@ -685,7 +731,8 @@
    "region": "간사이공항·나리타",
    "hs": "8542.32-100",
    "partner": "말레이시아",
-   "spec": "{\"flow\": \"export\", \"hs9\": [\"854232100\"], \"offices\": [\"関西空港\", \"成田\"], \"country\": \"50113\"}"
+   "spec": "{\"flow\": \"export\", \"hs9\": [\"854232100\"], \"offices\": [\"関西空港\", \"成田\"], \"country\": \"50113\"}",
+   "label_en": "Memory IC exports via Kansai · Narita → Malaysia"
   },
   {
    "id": "jp_exp_mlcc",
@@ -696,7 +743,8 @@
    "region": "간사이·나리타·중부·후쿠오카공항",
    "hs": "8532.24",
    "partner": "전세계",
-   "spec": "{\"flow\": \"export\", \"hs9\": [\"853224000\"], \"offices\": [\"関西空港\", \"成田\", \"中部空港\", \"福岡空港\"]}"
+   "spec": "{\"flow\": \"export\", \"hs9\": [\"853224000\"], \"offices\": [\"関西空港\", \"成田\", \"中部空港\", \"福岡空港\"]}",
+   "label_en": "Japan MLCC exports (major airports)"
   },
   {
    "id": "kr_exp_ccl",
@@ -707,7 +755,8 @@
    "region": "전국",
    "hs": "7410.21",
    "partner": "전세계",
-   "spec": "{\"api\": \"item\", \"hs\": \"741021\", \"flow\": \"export\"}"
+   "spec": "{\"api\": \"item\", \"hs\": \"741021\", \"flow\": \"export\"}",
+   "label_en": "Korea CCL exports"
   },
   {
    "id": "kr_exp_ccl_tw",
@@ -718,7 +767,8 @@
    "region": "전국",
    "hs": "7410.21",
    "partner": "대만",
-   "spec": "{\"api\": \"item_cty\", \"hs\": \"741021\", \"flow\": \"export\", \"cnty\": \"TW\"}"
+   "spec": "{\"api\": \"item_cty\", \"hs\": \"741021\", \"flow\": \"export\", \"cnty\": \"TW\"}",
+   "label_en": "Korea → Taiwan CCL exports"
   },
   {
    "id": "kr_exp_dram",
@@ -729,7 +779,8 @@
    "region": "전국",
    "hs": "8542.32-1010",
    "partner": "전세계",
-   "spec": "{\"api\": \"item\", \"hs\": \"8542321010\", \"flow\": \"export\"}"
+   "spec": "{\"api\": \"item\", \"hs\": \"8542321010\", \"flow\": \"export\"}",
+   "label_en": "Korea DRAM exports"
   },
   {
    "id": "kr_exp_flash",
@@ -740,7 +791,8 @@
    "region": "전국",
    "hs": "8542.32-1030",
    "partner": "전세계",
-   "spec": "{\"api\": \"item\", \"hs\": \"8542321030\", \"flow\": \"export\"}"
+   "spec": "{\"api\": \"item\", \"hs\": \"8542321030\", \"flow\": \"export\"}",
+   "label_en": "Korea flash memory exports"
   },
   {
    "id": "kr_exp_hbm",
@@ -751,7 +803,8 @@
    "region": "전국",
    "hs": "8542.32-3000",
    "partner": "전세계",
-   "spec": "{\"api\": \"item\", \"hs\": \"8542323000\", \"flow\": \"export\"}"
+   "spec": "{\"api\": \"item\", \"hs\": \"8542323000\", \"flow\": \"export\"}",
+   "label_en": "Korea multi-component IC exports (incl. HBM)"
   },
   {
    "id": "kr_exp_mlcc",
@@ -762,7 +815,8 @@
    "region": "전국",
    "hs": "8532.24",
    "partner": "전세계",
-   "spec": "{\"api\": \"item\", \"hs\": \"8532240000\", \"flow\": \"export\"}"
+   "spec": "{\"api\": \"item\", \"hs\": \"8532240000\", \"flow\": \"export\"}",
+   "label_en": "Korea MLCC exports"
   },
   {
    "id": "kr_exp_pcb",
@@ -773,7 +827,8 @@
    "region": "전국",
    "hs": "8534",
    "partner": "전세계",
-   "spec": "{\"api\": \"item\", \"hs\": \"853400\", \"flow\": \"export\"}"
+   "spec": "{\"api\": \"item\", \"hs\": \"853400\", \"flow\": \"export\"}",
+   "label_en": "Korea PCB exports"
   },
   {
    "id": "kr_exp_server",
@@ -784,7 +839,8 @@
    "region": "전국",
    "hs": "8471.50",
    "partner": "전세계",
-   "spec": "{\"api\": \"item\", \"hs\": \"847150\", \"flow\": \"export\"}"
+   "spec": "{\"api\": \"item\", \"hs\": \"847150\", \"flow\": \"export\"}",
+   "label_en": "Korea processing unit (server) exports"
   },
   {
    "id": "kr_sgg_gimcheon_ccl",
@@ -795,7 +851,8 @@
    "region": "경상북도 김천시",
    "hs": "7410.21",
    "partner": "전세계",
-   "spec": "{\"api\": \"sigungu\", \"hs\": \"741021\", \"flow\": \"export\", \"sido\": \"47\", \"sgg\": \"경상북도 김천시\"}"
+   "spec": "{\"api\": \"sigungu\", \"hs\": \"741021\", \"flow\": \"export\", \"sido\": \"47\", \"sgg\": \"경상북도 김천시\"}",
+   "label_en": "CCL exports from Gimcheon, Korea"
   },
   {
    "id": "kr_sgg_jeungpyeong_ccl",
@@ -806,7 +863,8 @@
    "region": "충청북도 증평군",
    "hs": "7410.21",
    "partner": "전세계",
-   "spec": "{\"api\": \"sigungu\", \"hs\": \"741021\", \"flow\": \"export\", \"sido\": \"43\", \"sgg\": \"충청북도 증평군\"}"
+   "spec": "{\"api\": \"sigungu\", \"hs\": \"741021\", \"flow\": \"export\", \"sido\": \"43\", \"sgg\": \"충청북도 증평군\"}",
+   "label_en": "CCL exports from Jeungpyeong, Korea"
   },
   {
    "id": "kr_sgg_suwon_mlcc",
@@ -817,7 +875,8 @@
    "region": "경기도 수원시",
    "hs": "8532.24",
    "partner": "전세계",
-   "spec": "{\"api\": \"sigungu\", \"hs\": \"853224\", \"flow\": \"export\", \"sido\": \"41\", \"sgg\": \"경기도 수원시\"}"
+   "spec": "{\"api\": \"sigungu\", \"hs\": \"853224\", \"flow\": \"export\", \"sido\": \"41\", \"sgg\": \"경기도 수원시\"}",
+   "label_en": "MLCC exports from Suwon, Korea"
   },
   {
    "id": "kr_sgg_icheon_mem",
@@ -828,7 +887,8 @@
    "region": "경기도 이천시",
    "hs": "8542.32",
    "partner": "전세계",
-   "spec": "{\"api\": \"sigungu\", \"hs\": \"854232\", \"flow\": \"export\", \"sido\": \"41\", \"sgg\": \"경기도 이천시\"}"
+   "spec": "{\"api\": \"sigungu\", \"hs\": \"854232\", \"flow\": \"export\", \"sido\": \"41\", \"sgg\": \"경기도 이천시\"}",
+   "label_en": "Memory IC exports from Icheon, Korea"
   },
   {
    "id": "kr_sgg_cheongju_mem",
@@ -839,7 +899,8 @@
    "region": "충청북도 청주시",
    "hs": "8542.32",
    "partner": "전세계",
-   "spec": "{\"api\": \"sigungu\", \"hs\": \"854232\", \"flow\": \"export\", \"sido\": \"43\", \"sgg\": \"충청북도 청주시\"}"
+   "spec": "{\"api\": \"sigungu\", \"hs\": \"854232\", \"flow\": \"export\", \"sido\": \"43\", \"sgg\": \"충청북도 청주시\"}",
+   "label_en": "Memory IC exports from Cheongju, Korea"
   },
   {
    "id": "kr_sgg_asan_mem",
@@ -850,7 +911,8 @@
    "region": "충청남도 아산시",
    "hs": "8542.32",
    "partner": "전세계",
-   "spec": "{\"api\": \"sigungu\", \"hs\": \"854232\", \"flow\": \"export\", \"sido\": \"44\", \"sgg\": \"충청남도 아산시\"}"
+   "spec": "{\"api\": \"sigungu\", \"hs\": \"854232\", \"flow\": \"export\", \"sido\": \"44\", \"sgg\": \"충청남도 아산시\"}",
+   "label_en": "Memory IC exports from Asan, Korea"
   },
   {
    "id": "kr_sgg_cheonan_mem",
@@ -861,7 +923,8 @@
    "region": "충청남도 천안시",
    "hs": "8542.32",
    "partner": "전세계",
-   "spec": "{\"api\": \"sigungu\", \"hs\": \"854232\", \"flow\": \"export\", \"sido\": \"44\", \"sgg\": \"충청남도 천안시\"}"
+   "spec": "{\"api\": \"sigungu\", \"hs\": \"854232\", \"flow\": \"export\", \"sido\": \"44\", \"sgg\": \"충청남도 천안시\"}",
+   "label_en": "Memory IC exports from Cheonan, Korea"
   },
   {
    "id": "kr_sgg_hwaseong_mem",
@@ -872,7 +935,8 @@
    "region": "경기도 화성시",
    "hs": "8542.32",
    "partner": "전세계",
-   "spec": "{\"api\": \"sigungu\", \"hs\": \"854232\", \"flow\": \"export\", \"sido\": \"41\", \"sgg\": \"경기도 화성시\"}"
+   "spec": "{\"api\": \"sigungu\", \"hs\": \"854232\", \"flow\": \"export\", \"sido\": \"41\", \"sgg\": \"경기도 화성시\"}",
+   "label_en": "Memory IC exports from Hwaseong, Korea"
   },
   {
    "id": "us_exp_ca_cn_labinst",
@@ -883,7 +947,8 @@
    "region": "캘리포니아",
    "hs": "9027.80/89",
    "partner": "중국",
-   "spec": "{\"dataset\": \"exports/statehs\", \"hs\": [\"902780\", \"902789\"], \"filters\": {\"STATE\": \"CA\", \"CTY_CODE\": \"5700\"}}"
+   "spec": "{\"dataset\": \"exports/statehs\", \"hs\": [\"902780\", \"902789\"], \"filters\": {\"STATE\": \"CA\", \"CTY_CODE\": \"5700\"}}",
+   "label_en": "California → China lab instrument exports"
   },
   {
    "id": "us_exp_ca_cn_reagent",
@@ -894,7 +959,8 @@
    "region": "캘리포니아",
    "hs": "3822.00/19",
    "partner": "중국",
-   "spec": "{\"dataset\": \"exports/statehs\", \"hs\": [\"382200\", \"382219\"], \"filters\": {\"STATE\": \"CA\", \"CTY_CODE\": \"5700\"}}"
+   "spec": "{\"dataset\": \"exports/statehs\", \"hs\": [\"382200\", \"382219\"], \"filters\": {\"STATE\": \"CA\", \"CTY_CODE\": \"5700\"}}",
+   "label_en": "California → China diagnostic reagent exports"
   },
   {
    "id": "us_exp_ca_laser",
@@ -905,7 +971,8 @@
    "region": "캘리포니아",
    "hs": "8541.41",
    "partner": "전세계",
-   "spec": "{\"dataset\": \"exports/statehs\", \"hs\": \"854141\", \"filters\": {\"STATE\": \"CA\", \"CTY_CODE\": \"-\"}}"
+   "spec": "{\"dataset\": \"exports/statehs\", \"hs\": \"854141\", \"filters\": {\"STATE\": \"CA\", \"CTY_CODE\": \"-\"}}",
+   "label_en": "California LED · laser diode exports"
   },
   {
    "id": "us_exp_ca_reagent",
@@ -916,7 +983,8 @@
    "region": "캘리포니아",
    "hs": "3822.00/19",
    "partner": "전세계",
-   "spec": "{\"dataset\": \"exports/statehs\", \"hs\": [\"382200\", \"382219\"], \"filters\": {\"STATE\": \"CA\", \"CTY_CODE\": \"-\"}}"
+   "spec": "{\"dataset\": \"exports/statehs\", \"hs\": [\"382200\", \"382219\"], \"filters\": {\"STATE\": \"CA\", \"CTY_CODE\": \"-\"}}",
+   "label_en": "California diagnostic reagent exports"
   },
   {
    "id": "us_exp_de_fuelcell",
@@ -927,7 +995,8 @@
    "region": "델라웨어",
    "hs": "8501.32",
    "partner": "전세계",
-   "spec": "{\"dataset\": \"exports/statehs\", \"hs\": \"850132\", \"filters\": {\"STATE\": \"DE\", \"CTY_CODE\": \"-\"}}"
+   "spec": "{\"dataset\": \"exports/statehs\", \"hs\": \"850132\", \"filters\": {\"STATE\": \"DE\", \"CTY_CODE\": \"-\"}}",
+   "label_en": "Delaware fuel-cell power module exports"
   },
   {
    "id": "us_exp_mx_compparts",
@@ -938,7 +1007,8 @@
    "region": "전국",
    "hs": "8473.30",
    "partner": "멕시코",
-   "spec": "{\"dataset\": \"exports/statehs\", \"hs\": \"847330\", \"filters\": {\"STATE\": \"-\", \"CTY_CODE\": \"2010\"}}"
+   "spec": "{\"dataset\": \"exports/statehs\", \"hs\": \"847330\", \"filters\": {\"STATE\": \"-\", \"CTY_CODE\": \"2010\"}}",
+   "label_en": "US → Mexico computer parts (GPU boards) exports"
   },
   {
    "id": "us_exp_ok_hvac_ca",
@@ -949,7 +1019,8 @@
    "region": "오클라호마",
    "hs": "8415.82",
    "partner": "캐나다",
-   "spec": "{\"dataset\": \"exports/statehs\", \"hs\": \"841582\", \"filters\": {\"STATE\": \"OK\", \"CTY_CODE\": \"1220\"}}"
+   "spec": "{\"dataset\": \"exports/statehs\", \"hs\": \"841582\", \"filters\": {\"STATE\": \"OK\", \"CTY_CODE\": \"1220\"}}",
+   "label_en": "Oklahoma → Canada HVAC exports"
   },
   {
    "id": "us_exp_tx_chiller",
@@ -960,7 +1031,8 @@
    "region": "텍사스",
    "hs": "8418.69",
    "partner": "전세계",
-   "spec": "{\"dataset\": \"exports/statehs\", \"hs\": \"841869\", \"filters\": {\"STATE\": \"TX\", \"CTY_CODE\": \"-\"}}"
+   "spec": "{\"dataset\": \"exports/statehs\", \"hs\": \"841869\", \"filters\": {\"STATE\": \"TX\", \"CTY_CODE\": \"-\"}}",
+   "label_en": "Texas chiller exports"
   },
   {
    "id": "us_imp_all_compsys",
@@ -971,7 +1043,8 @@
    "region": "전국",
    "hs": "8471.49",
    "partner": "전세계",
-   "spec": "{\"dataset\": \"imports/hs\", \"hs\": \"847149\", \"filters\": {\"CTY_CODE\": \"-\"}}"
+   "spec": "{\"dataset\": \"imports/hs\", \"hs\": \"847149\", \"filters\": {\"CTY_CODE\": \"-\"}}",
+   "label_en": "US imports of computer systems (incl. AI racks)"
   },
   {
    "id": "us_imp_all_dram",
@@ -982,7 +1055,8 @@
    "region": "전국",
    "hs": "8542.32.0036",
    "partner": "전세계",
-   "spec": "{\"dataset\": \"imports/hs\", \"hs\": \"8542320036\", \"filters\": {\"CTY_CODE\": \"-\"}}"
+   "spec": "{\"dataset\": \"imports/hs\", \"hs\": \"8542320036\", \"filters\": {\"CTY_CODE\": \"-\"}}",
+   "label_en": "US imports of DRAM (>1GB)"
   },
   {
    "id": "us_imp_all_gpuboard",
@@ -993,7 +1067,8 @@
    "region": "전국",
    "hs": "8473.30.1180",
    "partner": "전세계",
-   "spec": "{\"dataset\": \"imports/hs\", \"hs\": \"8473301180\", \"filters\": {\"CTY_CODE\": \"-\"}}"
+   "spec": "{\"dataset\": \"imports/hs\", \"hs\": \"8473301180\", \"filters\": {\"CTY_CODE\": \"-\"}}",
+   "label_en": "US imports of computer parts (incl. GPU boards)"
   },
   {
    "id": "us_imp_all_indcooling",
@@ -1004,7 +1079,8 @@
    "region": "전국",
    "hs": "8419.89.9540",
    "partner": "전세계",
-   "spec": "{\"dataset\": \"imports/hs\", \"hs\": \"8419899540\", \"filters\": {\"CTY_CODE\": \"-\"}}"
+   "spec": "{\"dataset\": \"imports/hs\", \"hs\": \"8419899540\", \"filters\": {\"CTY_CODE\": \"-\"}}",
+   "label_en": "US imports of industrial cooling equipment"
   },
   {
    "id": "us_imp_all_mlcc",
@@ -1015,7 +1091,8 @@
    "region": "전국",
    "hs": "8532.24.0020",
    "partner": "전세계",
-   "spec": "{\"dataset\": \"imports/hs\", \"hs\": \"8532240020\", \"filters\": {\"CTY_CODE\": \"-\"}}"
+   "spec": "{\"dataset\": \"imports/hs\", \"hs\": \"8532240020\", \"filters\": {\"CTY_CODE\": \"-\"}}",
+   "label_en": "US imports of MLCCs"
   },
   {
    "id": "us_imp_all_server6",
@@ -1026,7 +1103,8 @@
    "region": "전국",
    "hs": "8471.50",
    "partner": "전세계",
-   "spec": "{\"dataset\": \"imports/hs\", \"hs\": \"847150\", \"filters\": {\"CTY_CODE\": \"-\"}}"
+   "spec": "{\"dataset\": \"imports/hs\", \"hs\": \"847150\", \"filters\": {\"CTY_CODE\": \"-\"}}",
+   "label_en": "US imports of servers · computing units"
   },
   {
    "id": "us_imp_all_servsys",
@@ -1037,7 +1115,8 @@
    "region": "전국",
    "hs": "8471.49+8471.50",
    "partner": "전세계",
-   "spec": "{\"dataset\": \"imports/hs\", \"hs\": [\"847149\", \"847150\"], \"filters\": {\"CTY_CODE\": \"-\"}}"
+   "spec": "{\"dataset\": \"imports/hs\", \"hs\": [\"847149\", \"847150\"], \"filters\": {\"CTY_CODE\": \"-\"}}",
+   "label_en": "US imports of servers + computer systems"
   },
   {
    "id": "us_imp_all_ssd",
@@ -1048,7 +1127,8 @@
    "region": "전국",
    "hs": "8523.51",
    "partner": "전세계",
-   "spec": "{\"dataset\": \"imports/hs\", \"hs\": \"8523510000\", \"filters\": {\"CTY_CODE\": \"-\"}}"
+   "spec": "{\"dataset\": \"imports/hs\", \"hs\": \"8523510000\", \"filters\": {\"CTY_CODE\": \"-\"}}",
+   "label_en": "US imports of SSDs"
   },
   {
    "id": "us_imp_az_cn_liion",
@@ -1059,7 +1139,8 @@
    "region": "애리조나",
    "hs": "8507.60",
    "partner": "중국",
-   "spec": "{\"dataset\": \"imports/statehs\", \"hs\": \"850760\", \"filters\": {\"STATE\": \"AZ\", \"CTY_CODE\": \"5700\"}}"
+   "spec": "{\"dataset\": \"imports/statehs\", \"hs\": \"850760\", \"filters\": {\"STATE\": \"AZ\", \"CTY_CODE\": \"5700\"}}",
+   "label_en": "Arizona imports of Chinese Li-ion batteries"
   },
   {
    "id": "us_imp_ca_compparts",
@@ -1070,7 +1151,8 @@
    "region": "캘리포니아",
    "hs": "8473.30",
    "partner": "전세계",
-   "spec": "{\"dataset\": \"imports/statehs\", \"hs\": \"847330\", \"filters\": {\"STATE\": \"CA\", \"CTY_CODE\": \"-\"}}"
+   "spec": "{\"dataset\": \"imports/statehs\", \"hs\": \"847330\", \"filters\": {\"STATE\": \"CA\", \"CTY_CODE\": \"-\"}}",
+   "label_en": "California imports of computer parts (GPU boards)"
   },
   {
    "id": "us_imp_cn_liion",
@@ -1081,7 +1163,8 @@
    "region": "전국",
    "hs": "8507.60.0020/0030/0090",
    "partner": "중국",
-   "spec": "{\"dataset\": \"imports/hs\", \"hs\": [\"8507600020\", \"8507600030\", \"8507600090\"], \"filters\": {\"CTY_CODE\": \"5700\"}}"
+   "spec": "{\"dataset\": \"imports/hs\", \"hs\": [\"8507600020\", \"8507600030\", \"8507600090\"], \"filters\": {\"CTY_CODE\": \"5700\"}}",
+   "label_en": "US imports of Chinese Li-ion batteries"
   },
   {
    "id": "us_imp_de_inverter",
@@ -1092,7 +1175,8 @@
    "region": "델라웨어",
    "hs": "8504.40",
    "partner": "전세계",
-   "spec": "{\"dataset\": \"imports/statehs\", \"hs\": \"850440\", \"filters\": {\"STATE\": \"DE\", \"CTY_CODE\": \"-\"}}"
+   "spec": "{\"dataset\": \"imports/statehs\", \"hs\": \"850440\", \"filters\": {\"STATE\": \"DE\", \"CTY_CODE\": \"-\"}}",
+   "label_en": "Delaware imports of power inverters"
   },
   {
    "id": "us_imp_kr_mlcc",
@@ -1103,7 +1187,8 @@
    "region": "전국",
    "hs": "8532.24.0020",
    "partner": "한국",
-   "spec": "{\"dataset\": \"imports/hs\", \"hs\": \"8532240020\", \"filters\": {\"CTY_CODE\": \"5800\"}}"
+   "spec": "{\"dataset\": \"imports/hs\", \"hs\": \"8532240020\", \"filters\": {\"CTY_CODE\": \"5800\"}}",
+   "label_en": "US imports of Korean MLCCs"
   },
   {
    "id": "us_imp_mx_server",
@@ -1114,7 +1199,8 @@
    "region": "전국",
    "hs": "8471.50.0150",
    "partner": "멕시코",
-   "spec": "{\"dataset\": \"imports/hs\", \"hs\": \"8471500150\", \"filters\": {\"CTY_CODE\": \"2010\"}}"
+   "spec": "{\"dataset\": \"imports/hs\", \"hs\": \"8471500150\", \"filters\": {\"CTY_CODE\": \"2010\"}}",
+   "label_en": "US imports of Mexican servers"
   },
   {
    "id": "us_imp_mx_storage",
@@ -1125,7 +1211,8 @@
    "region": "전국",
    "hs": "8471.70.9000",
    "partner": "멕시코",
-   "spec": "{\"dataset\": \"imports/hs\", \"hs\": \"8471709000\", \"filters\": {\"CTY_CODE\": \"2010\"}}"
+   "spec": "{\"dataset\": \"imports/hs\", \"hs\": \"8471709000\", \"filters\": {\"CTY_CODE\": \"2010\"}}",
+   "label_en": "US imports of Mexican storage systems"
   },
   {
    "id": "us_imp_mx_switch",
@@ -1136,7 +1223,8 @@
    "region": "전국",
    "hs": "8517.62.0020",
    "partner": "멕시코",
-   "spec": "{\"dataset\": \"imports/hs\", \"hs\": \"8517620020\", \"filters\": {\"CTY_CODE\": \"2010\"}}"
+   "spec": "{\"dataset\": \"imports/hs\", \"hs\": \"8517620020\", \"filters\": {\"CTY_CODE\": \"2010\"}}",
+   "label_en": "US imports of Mexican switches · routers"
   },
   {
    "id": "us_imp_mx_switchboard",
@@ -1147,7 +1235,8 @@
    "region": "전국",
    "hs": "8537.10.9120",
    "partner": "멕시코",
-   "spec": "{\"dataset\": \"imports/hs\", \"hs\": \"8537109120\", \"filters\": {\"CTY_CODE\": \"2010\"}}"
+   "spec": "{\"dataset\": \"imports/hs\", \"hs\": \"8537109120\", \"filters\": {\"CTY_CODE\": \"2010\"}}",
+   "label_en": "US imports of Mexican switchboards (≤1kV)"
   },
   {
    "id": "us_imp_my_netequip",
@@ -1158,7 +1247,8 @@
    "region": "전국",
    "hs": "8517.62.0090",
    "partner": "말레이시아",
-   "spec": "{\"dataset\": \"imports/hs\", \"hs\": \"8517620090\", \"filters\": {\"CTY_CODE\": \"5570\"}}"
+   "spec": "{\"dataset\": \"imports/hs\", \"hs\": \"8517620090\", \"filters\": {\"CTY_CODE\": \"5570\"}}",
+   "label_en": "US imports of Malaysian network gear (incl. transceivers)"
   },
   {
    "id": "us_imp_my_ssd",
@@ -1169,7 +1259,8 @@
    "region": "전국",
    "hs": "8523.51",
    "partner": "말레이시아",
-   "spec": "{\"dataset\": \"imports/hs\", \"hs\": \"8523510000\", \"filters\": {\"CTY_CODE\": \"5570\"}}"
+   "spec": "{\"dataset\": \"imports/hs\", \"hs\": \"8523510000\", \"filters\": {\"CTY_CODE\": \"5570\"}}",
+   "label_en": "US imports of Malaysian SSDs"
   },
   {
    "id": "us_imp_oh_mx_inverter",
@@ -1180,7 +1271,8 @@
    "region": "오하이오",
    "hs": "8504.40",
    "partner": "멕시코",
-   "spec": "{\"dataset\": \"imports/statehs\", \"hs\": \"850440\", \"filters\": {\"STATE\": \"OH\", \"CTY_CODE\": \"2010\"}}"
+   "spec": "{\"dataset\": \"imports/statehs\", \"hs\": \"850440\", \"filters\": {\"STATE\": \"OH\", \"CTY_CODE\": \"2010\"}}",
+   "label_en": "Ohio imports of Mexican UPS · power converters"
   },
   {
    "id": "us_imp_ok_heatex",
@@ -1191,7 +1283,8 @@
    "region": "오클라호마",
    "hs": "8419.50",
    "partner": "전세계",
-   "spec": "{\"dataset\": \"imports/statehs\", \"hs\": \"841950\", \"filters\": {\"STATE\": \"OK\", \"CTY_CODE\": \"-\"}}"
+   "spec": "{\"dataset\": \"imports/statehs\", \"hs\": \"841950\", \"filters\": {\"STATE\": \"OK\", \"CTY_CODE\": \"-\"}}",
+   "label_en": "Oklahoma imports of industrial heat exchangers"
   },
   {
    "id": "us_imp_sc_swgear_parts",
@@ -1202,7 +1295,8 @@
    "region": "사우스캐롤라이나",
    "hs": "8538.90",
    "partner": "전세계",
-   "spec": "{\"dataset\": \"imports/statehs\", \"hs\": \"853890\", \"filters\": {\"STATE\": \"SC\", \"CTY_CODE\": \"-\"}}"
+   "spec": "{\"dataset\": \"imports/statehs\", \"hs\": \"853890\", \"filters\": {\"STATE\": \"SC\", \"CTY_CODE\": \"-\"}}",
+   "label_en": "South Carolina imports of switchgear parts"
   },
   {
    "id": "us_imp_sf_jp_wafer",
@@ -1213,7 +1307,8 @@
    "region": "샌프란시스코 세관구역",
    "hs": "3818.00.009x",
    "partner": "일본",
-   "spec": "{\"dataset\": \"imports/hs\", \"hs\": [\"3818000090\", \"3818000091\", \"3818000095\"], \"filters\": {\"CTY_CODE\": \"5880\", \"DISTRICT\": \"28\"}}"
+   "spec": "{\"dataset\": \"imports/hs\", \"hs\": [\"3818000090\", \"3818000091\", \"3818000095\"], \"filters\": {\"CTY_CODE\": \"5880\", \"DISTRICT\": \"28\"}}",
+   "label_en": "San Francisco imports of Japanese compound wafers (InP)"
   },
   {
    "id": "us_imp_th_netequip6",
@@ -1224,7 +1319,8 @@
    "region": "전국",
    "hs": "8517.62",
    "partner": "태국",
-   "spec": "{\"dataset\": \"imports/hs\", \"hs\": \"851762\", \"filters\": {\"CTY_CODE\": \"5490\"}}"
+   "spec": "{\"dataset\": \"imports/hs\", \"hs\": \"851762\", \"filters\": {\"CTY_CODE\": \"5490\"}}",
+   "label_en": "US imports of Thai network equipment"
   },
   {
    "id": "us_imp_th_switch",
@@ -1235,7 +1331,8 @@
    "region": "전국",
    "hs": "8517.62.0020",
    "partner": "태국",
-   "spec": "{\"dataset\": \"imports/hs\", \"hs\": \"8517620020\", \"filters\": {\"CTY_CODE\": \"5490\"}}"
+   "spec": "{\"dataset\": \"imports/hs\", \"hs\": \"8517620020\", \"filters\": {\"CTY_CODE\": \"5490\"}}",
+   "label_en": "US imports of Thai switches · routers"
   },
   {
    "id": "us_imp_th_transceiver",
@@ -1246,7 +1343,8 @@
    "region": "전국",
    "hs": "8517.62.0090",
    "partner": "태국",
-   "spec": "{\"dataset\": \"imports/hs\", \"hs\": \"8517620090\", \"filters\": {\"CTY_CODE\": \"5490\"}}"
+   "spec": "{\"dataset\": \"imports/hs\", \"hs\": \"8517620090\", \"filters\": {\"CTY_CODE\": \"5490\"}}",
+   "label_en": "US imports of Thai optical gear (incl. transceivers)"
   },
   {
    "id": "us_imp_tw_dram",
@@ -1257,7 +1355,8 @@
    "region": "전국",
    "hs": "8542.32.0036",
    "partner": "대만",
-   "spec": "{\"dataset\": \"imports/hs\", \"hs\": \"8542320036\", \"filters\": {\"CTY_CODE\": \"5830\"}}"
+   "spec": "{\"dataset\": \"imports/hs\", \"hs\": \"8542320036\", \"filters\": {\"CTY_CODE\": \"5830\"}}",
+   "label_en": "US imports of Taiwanese DRAM (>1GB)"
   },
   {
    "id": "us_imp_tw_mem6",
@@ -1268,7 +1367,8 @@
    "region": "전국",
    "hs": "8542.32",
    "partner": "대만",
-   "spec": "{\"dataset\": \"imports/hs\", \"hs\": \"854232\", \"filters\": {\"CTY_CODE\": \"5830\"}}"
+   "spec": "{\"dataset\": \"imports/hs\", \"hs\": \"854232\", \"filters\": {\"CTY_CODE\": \"5830\"}}",
+   "label_en": "US imports of Taiwanese memory ICs (incl. HBM)"
   },
   {
    "id": "us_imp_tw_otheric",
@@ -1279,7 +1379,8 @@
    "region": "전국",
    "hs": "8542.39",
    "partner": "대만",
-   "spec": "{\"dataset\": \"imports/hs\", \"hs\": \"854239\", \"filters\": {\"CTY_CODE\": \"5830\"}}"
+   "spec": "{\"dataset\": \"imports/hs\", \"hs\": \"854239\", \"filters\": {\"CTY_CODE\": \"5830\"}}",
+   "label_en": "US imports of Taiwanese other ICs (ASICs)"
   },
   {
    "id": "us_imp_tw_server",
@@ -1290,7 +1391,8 @@
    "region": "전국",
    "hs": "8471.50.0150",
    "partner": "대만",
-   "spec": "{\"dataset\": \"imports/hs\", \"hs\": \"8471500150\", \"filters\": {\"CTY_CODE\": \"5830\"}}"
+   "spec": "{\"dataset\": \"imports/hs\", \"hs\": \"8471500150\", \"filters\": {\"CTY_CODE\": \"5830\"}}",
+   "label_en": "US imports of Taiwanese servers"
   },
   {
    "id": "us_imp_tx_mx_hvacparts",
@@ -1301,7 +1403,8 @@
    "region": "텍사스",
    "hs": "8418.99",
    "partner": "멕시코",
-   "spec": "{\"dataset\": \"imports/statehs\", \"hs\": \"841899\", \"filters\": {\"STATE\": \"TX\", \"CTY_CODE\": \"2010\"}}"
+   "spec": "{\"dataset\": \"imports/statehs\", \"hs\": \"841899\", \"filters\": {\"STATE\": \"TX\", \"CTY_CODE\": \"2010\"}}",
+   "label_en": "Texas imports of Mexican refrigeration · heat pump parts"
   },
   {
    "id": "us_imp_vn_liion",
@@ -1312,7 +1415,8 @@
    "region": "전국",
    "hs": "8507.60.0020/0030/0090",
    "partner": "베트남",
-   "spec": "{\"dataset\": \"imports/hs\", \"hs\": [\"8507600020\", \"8507600030\", \"8507600090\"], \"filters\": {\"CTY_CODE\": \"5520\"}}"
+   "spec": "{\"dataset\": \"imports/hs\", \"hs\": [\"8507600020\", \"8507600030\", \"8507600090\"], \"filters\": {\"CTY_CODE\": \"5520\"}}",
+   "label_en": "US imports of Vietnamese Li-ion batteries"
   },
   {
    "id": "us_imp_vn_transceiver",
@@ -1323,7 +1427,8 @@
    "region": "전국",
    "hs": "8517.62.0090",
    "partner": "베트남",
-   "spec": "{\"dataset\": \"imports/hs\", \"hs\": \"8517620090\", \"filters\": {\"CTY_CODE\": \"5520\"}}"
+   "spec": "{\"dataset\": \"imports/hs\", \"hs\": \"8517620090\", \"filters\": {\"CTY_CODE\": \"5520\"}}",
+   "label_en": "US imports of Vietnamese network gear (incl. transceivers)"
   },
   {
    "id": "sec_ransomware",
@@ -1334,7 +1439,8 @@
    "region": "랜섬웨어 유출 사이트",
    "hs": "-",
    "partner": "전세계",
-   "spec": "{}"
+   "spec": "{}",
+   "label_en": "Ransomware victims disclosed (global, monthly)"
   },
   {
    "id": "us_const_datacenter",
@@ -1345,7 +1451,8 @@
    "region": "민간 건설",
    "hs": "-",
    "partner": "미국",
-   "spec": "{\"column\": \"Data center\"}"
+   "spec": "{\"column\": \"Data center\"}",
+   "label_en": "US data center construction spending (annualized)"
   },
   {
    "id": "us_const_electric",
@@ -1356,7 +1463,8 @@
    "region": "민간 건설",
    "hs": "-",
    "partner": "미국",
-   "spec": "{\"column\": \"Electric\"}"
+   "spec": "{\"column\": \"Electric\"}",
+   "label_en": "US power construction spending (annualized)"
   },
   {
    "id": "us_const_chipfab",
@@ -1367,7 +1475,8 @@
    "region": "민간 건설",
    "hs": "-",
    "partner": "미국",
-   "spec": "{\"column\": \"Computer/electronic/electrical\"}"
+   "spec": "{\"column\": \"Computer/electronic/electrical\"}",
+   "label_en": "US chip · electronics fab construction (annualized)"
   },
   {
    "id": "kr_exp_tr10",
@@ -1378,7 +1487,8 @@
    "region": "전국",
    "hs": "8504.23",
    "partner": "전세계",
-   "spec": "{\"api\": \"item\", \"hs\": \"850423\", \"flow\": \"export\"}"
+   "spec": "{\"api\": \"item\", \"hs\": \"850423\", \"flow\": \"export\"}",
+   "label_en": "Korea large transformer exports (>10MVA)"
   },
   {
    "id": "kr_exp_tr10_us",
@@ -1389,7 +1499,8 @@
    "region": "전국",
    "hs": "8504.23",
    "partner": "미국",
-   "spec": "{\"api\": \"item_cty\", \"hs\": \"850423\", \"flow\": \"export\", \"cnty\": \"US\"}"
+   "spec": "{\"api\": \"item_cty\", \"hs\": \"850423\", \"flow\": \"export\", \"cnty\": \"US\"}",
+   "label_en": "Korea → US large transformer exports"
   },
   {
    "id": "kr_exp_tr10_my",
@@ -1400,7 +1511,8 @@
    "region": "전국",
    "hs": "8504.23",
    "partner": "말레이시아",
-   "spec": "{\"api\": \"item_cty\", \"hs\": \"850423\", \"flow\": \"export\", \"cnty\": \"MY\"}"
+   "spec": "{\"api\": \"item_cty\", \"hs\": \"850423\", \"flow\": \"export\", \"cnty\": \"MY\"}",
+   "label_en": "Korea → Malaysia large transformer exports"
   },
   {
    "id": "us_imp_kr_tr10",
@@ -1411,7 +1523,8 @@
    "region": "전국",
    "hs": "8504.23",
    "partner": "한국",
-   "spec": "{\"dataset\": \"imports/hs\", \"hs\": \"850423\", \"filters\": {\"CTY_CODE\": \"5800\"}}"
+   "spec": "{\"dataset\": \"imports/hs\", \"hs\": \"850423\", \"filters\": {\"CTY_CODE\": \"5800\"}}",
+   "label_en": "US imports of Korean large transformers"
   },
   {
    "id": "us_imp_all_panel_lv",
@@ -1422,7 +1535,8 @@
    "region": "전국",
    "hs": "8537.10",
    "partner": "전세계",
-   "spec": "{\"dataset\": \"imports/hs\", \"hs\": \"853710\", \"filters\": {\"CTY_CODE\": \"-\"}}"
+   "spec": "{\"dataset\": \"imports/hs\", \"hs\": \"853710\", \"filters\": {\"CTY_CODE\": \"-\"}}",
+   "label_en": "US imports of switchboards · panels (≤1kV)"
   },
   {
    "id": "us_imp_all_panel_hv",
@@ -1433,7 +1547,8 @@
    "region": "전국",
    "hs": "8537.20",
    "partner": "전세계",
-   "spec": "{\"dataset\": \"imports/hs\", \"hs\": \"853720\", \"filters\": {\"CTY_CODE\": \"-\"}}"
+   "spec": "{\"dataset\": \"imports/hs\", \"hs\": \"853720\", \"filters\": {\"CTY_CODE\": \"-\"}}",
+   "label_en": "US imports of switchboards · panels (>1kV)"
   },
   {
    "id": "us_imp_cn_panel",
@@ -1444,7 +1559,8 @@
    "region": "전국",
    "hs": "8537.10+20",
    "partner": "중국",
-   "spec": "{\"dataset\": \"imports/hs\", \"hs\": [\"853710\", \"853720\"], \"filters\": {\"CTY_CODE\": \"5700\"}}"
+   "spec": "{\"dataset\": \"imports/hs\", \"hs\": [\"853710\", \"853720\"], \"filters\": {\"CTY_CODE\": \"5700\"}}",
+   "label_en": "US imports of Chinese switchboards · panels"
   },
   {
    "id": "kr_exp_tr_all",
@@ -1455,7 +1571,8 @@
    "region": "전국",
    "hs": "8504",
    "partner": "전세계",
-   "spec": "{\"api\": \"item\", \"hs\": \"8504\", \"flow\": \"export\"}"
+   "spec": "{\"api\": \"item\", \"hs\": \"8504\", \"flow\": \"export\"}",
+   "label_en": "Korea transformer · converter exports (all)"
   },
   {
    "id": "kr_exp_cable",
@@ -1466,7 +1583,8 @@
    "region": "전국",
    "hs": "8544",
    "partner": "전세계",
-   "spec": "{\"api\": \"item\", \"hs\": \"8544\", \"flow\": \"export\"}"
+   "spec": "{\"api\": \"item\", \"hs\": \"8544\", \"flow\": \"export\"}",
+   "label_en": "Korea wire · cable exports"
   },
   {
    "id": "kr_exp_panel_hv",
@@ -1477,7 +1595,8 @@
    "region": "전국",
    "hs": "8537.20",
    "partner": "전세계",
-   "spec": "{\"api\": \"item\", \"hs\": \"853720\", \"flow\": \"export\"}"
+   "spec": "{\"api\": \"item\", \"hs\": \"853720\", \"flow\": \"export\"}",
+   "label_en": "Korea switchboard exports (>1kV)"
   },
   {
    "id": "kr_exp_panel_us",
@@ -1488,7 +1607,8 @@
    "region": "전국",
    "hs": "8537",
    "partner": "미국",
-   "spec": "{\"api\": \"item_cty\", \"hs\": \"8537\", \"flow\": \"export\", \"cnty\": \"US\"}"
+   "spec": "{\"api\": \"item_cty\", \"hs\": \"8537\", \"flow\": \"export\", \"cnty\": \"US\"}",
+   "label_en": "Korea → US switchboard exports"
   },
   {
    "id": "kr_exp_hvcable_us",
@@ -1499,7 +1619,8 @@
    "region": "전국",
    "hs": "8544.60",
    "partner": "미국",
-   "spec": "{\"api\": \"item_cty\", \"hs\": \"854460\", \"flow\": \"export\", \"cnty\": \"US\"}"
+   "spec": "{\"api\": \"item_cty\", \"hs\": \"854460\", \"flow\": \"export\", \"cnty\": \"US\"}",
+   "label_en": "Korea → US high-voltage cable exports"
   },
   {
    "id": "us_plan_gas",
@@ -1510,7 +1631,8 @@
    "region": "전국",
    "hs": "-",
    "partner": "미국",
-   "spec": "{\"metric\": \"gas\"}"
+   "spec": "{\"metric\": \"gas\"}",
+   "label_en": "US planned gas generation capacity (EIA 860M)"
   },
   {
    "id": "us_plan_gas_uc",
@@ -1521,7 +1643,8 @@
    "region": "전국",
    "hs": "-",
    "partner": "미국",
-   "spec": "{\"metric\": \"gas_uc\"}"
+   "spec": "{\"metric\": \"gas_uc\"}",
+   "label_en": "US gas capacity under construction"
   },
   {
    "id": "us_plan_battery",
@@ -1532,7 +1655,8 @@
    "region": "전국",
    "hs": "-",
    "partner": "미국",
-   "spec": "{\"metric\": \"battery\"}"
+   "spec": "{\"metric\": \"battery\"}",
+   "label_en": "US planned battery storage capacity"
   },
   {
    "id": "us_plan_solar",
@@ -1543,7 +1667,8 @@
    "region": "전국",
    "hs": "-",
    "partner": "미국",
-   "spec": "{\"metric\": \"solar\"}"
+   "spec": "{\"metric\": \"solar\"}",
+   "label_en": "US planned solar capacity"
   },
   {
    "id": "us_elec_va_com",
@@ -1554,7 +1679,8 @@
    "region": "버지니아",
    "hs": "-",
    "partner": "미국",
-   "spec": "{\"state\": \"VA\", \"sector\": \"COM\"}"
+   "spec": "{\"state\": \"VA\", \"sector\": \"COM\"}",
+   "label_en": "Virginia commercial electricity sales (data centers)"
   },
   {
    "id": "us_elec_us_com",
@@ -1565,7 +1691,8 @@
    "region": "전국",
    "hs": "-",
    "partner": "미국",
-   "spec": "{\"state\": \"US\", \"sector\": \"COM\"}"
+   "spec": "{\"state\": \"US\", \"sector\": \"COM\"}",
+   "label_en": "US commercial electricity sales"
   },
   {
    "id": "us_plan_gas_cc",
@@ -1576,7 +1703,8 @@
    "region": "전국",
    "hs": "-",
    "partner": "미국",
-   "spec": "{\"metric\": \"gas_cc\"}"
+   "spec": "{\"metric\": \"gas_cc\"}",
+   "label_en": "US planned combined-cycle gas capacity (HRSG demand)"
   },
   {
    "id": "kr_exp_semiparts",
@@ -1587,7 +1715,8 @@
    "region": "전국",
    "hs": "8486.90",
    "partner": "전세계",
-   "spec": "{\"api\": \"item\", \"hs\": \"848690\", \"flow\": \"export\"}"
+   "spec": "{\"api\": \"item\", \"hs\": \"848690\", \"flow\": \"export\"}",
+   "label_en": "Korea chip equipment parts exports"
   },
   {
    "id": "kr_sgg_anseong_semiparts",
@@ -1598,7 +1727,8 @@
    "region": "경기 안성시",
    "hs": "8486.90",
    "partner": "전세계",
-   "spec": "{\"api\": \"sigungu\", \"hs\": \"848690\", \"flow\": \"export\", \"sido\": \"41\", \"sgg\": \"\\uacbd\\uae30\\ub3c4 \\uc548\\uc131\\uc2dc\"}"
+   "spec": "{\"api\": \"sigungu\", \"hs\": \"848690\", \"flow\": \"export\", \"sido\": \"41\", \"sgg\": \"\\uacbd\\uae30\\ub3c4 \\uc548\\uc131\\uc2dc\"}",
+   "label_en": "Chip equipment parts exports from Anseong, Korea"
   },
   {
    "id": "nl_exp_litho",
@@ -1609,7 +1739,8 @@
    "region": "전국(벨트호번)",
    "hs": "8486.20",
    "partner": "전세계",
-   "spec": "{\"reporter\": \"NL\", \"product\": \"848620\", \"partner\": \"WORLD\", \"flow\": \"export\"}"
+   "spec": "{\"reporter\": \"NL\", \"product\": \"848620\", \"partner\": \"WORLD\", \"flow\": \"export\"}",
+   "label_en": "Netherlands lithography tool exports (all)"
   },
   {
    "id": "nl_exp_litho_kr",
@@ -1620,7 +1751,8 @@
    "region": "전국(벨트호번)",
    "hs": "8486.20",
    "partner": "한국",
-   "spec": "{\"reporter\": \"NL\", \"product\": \"848620\", \"partner\": \"KR\", \"flow\": \"export\"}"
+   "spec": "{\"reporter\": \"NL\", \"product\": \"848620\", \"partner\": \"KR\", \"flow\": \"export\"}",
+   "label_en": "Netherlands → Korea lithography tool exports"
   },
   {
    "id": "nl_exp_litho_tw",
@@ -1631,7 +1763,8 @@
    "region": "전국(벨트호번)",
    "hs": "8486.20",
    "partner": "대만",
-   "spec": "{\"reporter\": \"NL\", \"product\": \"848620\", \"partner\": \"TW\", \"flow\": \"export\"}"
+   "spec": "{\"reporter\": \"NL\", \"product\": \"848620\", \"partner\": \"TW\", \"flow\": \"export\"}",
+   "label_en": "Netherlands → Taiwan lithography tool exports"
   },
   {
    "id": "nl_exp_litho_cn",
@@ -1642,7 +1775,8 @@
    "region": "전국(벨트호번)",
    "hs": "8486.20",
    "partner": "중국",
-   "spec": "{\"reporter\": \"NL\", \"product\": \"848620\", \"partner\": \"CN\", \"flow\": \"export\"}"
+   "spec": "{\"reporter\": \"NL\", \"product\": \"848620\", \"partner\": \"CN\", \"flow\": \"export\"}",
+   "label_en": "Netherlands → China lithography tool exports"
   },
   {
    "id": "nl_exp_litho_us",
@@ -1653,7 +1787,8 @@
    "region": "전국(벨트호번)",
    "hs": "8486.20",
    "partner": "미국",
-   "spec": "{\"reporter\": \"NL\", \"product\": \"848620\", \"partner\": \"US\", \"flow\": \"export\"}"
+   "spec": "{\"reporter\": \"NL\", \"product\": \"848620\", \"partner\": \"US\", \"flow\": \"export\"}",
+   "label_en": "Netherlands → US lithography tool exports"
   },
   {
    "id": "capex_memory3",
@@ -1664,7 +1799,8 @@
    "region": "분기 현금흐름표 (월 환산 = 분기÷3)",
    "hs": "-",
    "partner": "-",
-   "spec": "{\"company\": \"memory3\"}"
+   "spec": "{\"company\": \"memory3\"}",
+   "label_en": "Memory big-3 capex (Samsung · SK hynix · Micron)"
   },
   {
    "id": "capex_samsung",
@@ -1675,7 +1811,8 @@
    "region": "분기 현금흐름표 (월 환산 = 분기÷3)",
    "hs": "-",
    "partner": "-",
-   "spec": "{\"company\": \"005930\"}"
+   "spec": "{\"company\": \"005930\"}",
+   "label_en": "Samsung Electronics capex (company)"
   },
   {
    "id": "capex_skhynix",
@@ -1686,7 +1823,8 @@
    "region": "분기 현금흐름표 (월 환산 = 분기÷3)",
    "hs": "-",
    "partner": "-",
-   "spec": "{\"company\": \"000660\"}"
+   "spec": "{\"company\": \"000660\"}",
+   "label_en": "SK hynix capex"
   },
   {
    "id": "capex_mu",
@@ -1697,7 +1835,8 @@
    "region": "분기 현금흐름표 (월 환산 = 분기÷3)",
    "hs": "-",
    "partner": "-",
-   "spec": "{\"company\": \"MU\"}"
+   "spec": "{\"company\": \"MU\"}",
+   "label_en": "Micron capex"
   },
   {
    "id": "tsla_deliveries",
@@ -1708,7 +1847,8 @@
    "region": "전 세계 (생산·인도 보도자료)",
    "hs": "-",
    "partner": "-",
-   "spec": "{\"metric\": \"deliveries\"}"
+   "spec": "{\"metric\": \"deliveries\"}",
+   "label_en": "Tesla vehicle deliveries (quarterly ÷ 3)"
   },
   {
    "id": "tsla_storage_gwh",
@@ -1719,7 +1859,8 @@
    "region": "전 세계 (메가팩·파워월)",
    "hs": "-",
    "partner": "-",
-   "spec": "{\"metric\": \"storage_gwh\"}"
+   "spec": "{\"metric\": \"storage_gwh\"}",
+   "label_en": "Tesla energy storage deployed, GWh (quarterly ÷ 3)"
   },
   {
    "id": "us_imp_ca_cn_liion",
@@ -1730,7 +1871,8 @@
    "region": "캘리포니아",
    "hs": "850760",
    "partner": "중국",
-   "spec": "{\"dataset\": \"imports/statehs\", \"hs\": \"850760\", \"filters\": {\"STATE\": \"CA\", \"CTY_CODE\": \"5700\"}}"
+   "spec": "{\"dataset\": \"imports/statehs\", \"hs\": \"850760\", \"filters\": {\"STATE\": \"CA\", \"CTY_CODE\": \"5700\"}}",
+   "label_en": "California imports of Chinese Li-ion batteries"
   },
   {
    "id": "us_imp_tx_jp_liion",
@@ -1741,7 +1883,8 @@
    "region": "텍사스",
    "hs": "850760",
    "partner": "일본",
-   "spec": "{\"dataset\": \"imports/statehs\", \"hs\": \"850760\", \"filters\": {\"STATE\": \"TX\", \"CTY_CODE\": \"5880\"}}"
+   "spec": "{\"dataset\": \"imports/statehs\", \"hs\": \"850760\", \"filters\": {\"STATE\": \"TX\", \"CTY_CODE\": \"5880\"}}",
+   "label_en": "Texas imports of Japanese Li-ion batteries"
   }
  ],
  "mappings": [
