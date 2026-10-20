@@ -7,7 +7,7 @@ const GPUS = ["H100", "H200", "B200", "B300"];
 const SPIKE = 0.5; // 주간 ±50% 넘으면 확인 필요
 
 export type PriceRow = { gpu: string; avg: number; avgPrev: number | null; min: number; spark: number[] };
-export type PriceChart = { day: string; rows: PriceRow[]; vast: { gpu: string; median: number }[] };
+export type PriceChart = { day: string; dayIso: string; rows: PriceRow[]; vast: { gpu: string; median: number }[] };
 
 export async function priceCandidate(today = todayKst()): Promise<Candidate | null> {
   if (new Date(`${today}T12:00:00+09:00`).getUTCDay() !== 1) return null; // 월요일만
@@ -42,6 +42,6 @@ export async function priceCandidate(today = todayKst()): Promise<Candidate | nu
     guide: "Post type: weekly AI compute price check. Summarize GPU rental prices and their week-over-week change. Highlight the biggest move. Prices are hourly rental prices, not hardware prices.",
     asof: [dayEn(day)], sources: ["Nebius pricing", ...(vast.length ? ["Vast.ai marketplace"] : [])], flags,
     brief: out.map((r) => `${r.gpu}: 평균 ${usd(r.avg)} · 최저 ${usd(r.min)}${r.avgPrev ? ` · 주간 ${pctTxt(r.avg / r.avgPrev - 1)}` : ""}`),
-    data: { day: dayEn(day), rows: out, vast } satisfies PriceChart,
+    data: { day: dayEn(day), dayIso: day, rows: out, vast } satisfies PriceChart,
   };
 }

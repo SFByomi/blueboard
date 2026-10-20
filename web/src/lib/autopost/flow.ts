@@ -49,7 +49,7 @@ export async function runDaily({ force = false, dry = false, kind }: { force?: b
   const cands = await candidates(kind);
   if (dry) return { dry: true, candidates: cands.map(({ kind, sig, title, flags, brief, facts }) => ({ kind, sig, title, flags, brief, facts })) };
   if (!cands.length) return { skipped: "후보 없음" };
-  const missing = ["ANTHROPIC_API_KEY", "TELEGRAM_BOT_TOKEN", "TELEGRAM_CHAT_ID"].filter((k) => !process.env[k]);
+  const missing = ["TELEGRAM_BOT_TOKEN", "TELEGRAM_CHAT_ID"].filter((k) => !process.env[k]); // Claude·X 키는 없어도 됨 (문장 틀·직접 올리기)
   if (missing.length) return { skipped: `키 없음: ${missing.join(", ")}` }; // 키를 넣기 전 배포에서 크론이 매일 실패하지 않게
   await ensureTable();
   const done = new Set((await query<{ sig: string }>(`SELECT sig FROM autopost_drafts WHERE sig IN (${cands.map(() => "?").join(",")})`, cands.map((c) => c.sig))).map((r) => r.sig));
@@ -80,7 +80,7 @@ async function sendDraft(id: string, c: Candidate) {
   );
   const photo = await sendPhoto(owner(), png, `📊 초안 ${id} 차트`);
   const msg = await sendText(owner(), draftText({ id, status: "pending", cand: JSON.stringify(c), en: d.en, ko: d.ko, warnings: JSON.stringify(d.warnings) }),
-    { reply_markup: { inline_keyboard: draftButtons(id) } });
+    { reply_markup: { inline_keyboard: draftButtons(id, d.en, !X_READY()) } });
   await execute("UPDATE autopost_drafts SET tg_message_id = ?, tg_file_id = ? WHERE id = ?", [msg.message_id, photo.file_id, id]);
   return { id, kind: c.kind, title: c.title, warnings: d.warnings };
 }
@@ -105,7 +105,7 @@ function draftText(r: Partial<Row> & Pick<Row, "id" | "status" | "cand" | "en" |
 
 const refresh = async (id: string) => {
   const r = await getRow(id);
-  if (r?.tg_message_id) await editText(owner(), r.tg_message_id, draftText(r), r.status === "pending" ? draftButtons(id) : []);
+  if (r?.tg_message_id) await editText(owner(), r.tg_message_id, draftText(r), r.status === "pending" ? draftButtons(id, r.en, !X_READY()) : []);
 };
 
 type Update = {
@@ -164,8 +164,7 @@ async function publish(id: string) {
   const c: Candidate = JSON.parse(r.cand);
   const errors: string[] = [];
   if (!r.x_id) {
-    if (!X_READY()) errors.push("X 키가 없음 (Vercel 환경변수 X_API_KEY 등)");
-    else try {
+    if (X_READY()) try { // 키가 없으면 직접 올리기 — [✅ 올렸음]은 상태만 바꿈
       const png = await renderChart(c, JSON.parse(r.labels ?? "{}"));
       const xid = await postToX(r.en, png);
       await execute("UPDATE autopost_drafts SET x_id = ? WHERE id = ?", [xid, id]);

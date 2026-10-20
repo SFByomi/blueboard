@@ -53,7 +53,7 @@ function Trade({ picks, labels }: { picks: FlowPick[]; labels: Record<string, st
       {picks.map((p) => (
         <div key={p.key} style={{ flex: 1, display: "flex", flexDirection: "column", padding: "24px 24px 18px", borderRadius: 18, border: `1px solid ${C.line}`, background: C.panel }}>
           <div style={{ display: "flex", fontSize: 30, fontWeight: 700 }}>{p.tickers.join(" · ")}</div>
-          <div style={{ display: "flex", fontSize: 20, color: C.muted, marginTop: 6, height: 28, overflow: "hidden" }}>{(labels[p.key] ?? p.products[0]?.replace(/^HS \d+ /, "") ?? "").slice(0, 34)}</div>
+          <div style={{ display: "flex", fontSize: 20, color: C.muted, marginTop: 6, height: 28, overflow: "hidden" }}>{(labels[p.key] || p.names_en?.[0] || p.products[0]?.replace(/^HS \d+ /, "") || "").slice(0, 34)}</div>
           <div style={{ display: "flex", alignItems: "baseline", gap: 10, marginTop: 6 }}>
             <div style={{ fontSize: 58, fontWeight: 700, color: p.yoy3m >= 0 ? C.up : C.down }}>{p.yoy3m_txt}</div>
             {p.flags.length > 0 && <div style={{ fontSize: 30, color: C.warn }}>*</div>}

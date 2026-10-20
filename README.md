@@ -92,7 +92,8 @@ GitHub Actions (매일 03:43 KST 예약)                     Vercel (web/, 서�
 
 - 실적 게시물은 **추정에 무역·운영 데이터 흐름이 들어간 종목만** (가이던스만으로 낸 추정은 제외). 모델 설명도 출처대로 — 통관 데이터만이면 "customs trade flows", 아니면 실제 출처(예: 테슬라 인도량)
 - **확인 필요 표시**: 무역 = 전년비 200% 초과(`*`)·기준월 3개월 넘게 지남·표본 8분기 미만·연관도 C·D / 프리뷰 = 신뢰도 '보통'·추정 주의 문구·발표일 추정 / 결과 = 오차 ±5% 밖 / GPU = 주간 ±50% 초과
-- **초안**: Claude API(`claude-opus-5-5`, 구조화 출력)에 미리 포맷한 숫자만 넘김. 결과를 코드로 다시 검사해 넘겨주지 않은 숫자·출처/기준 시점 누락·X 280자 초과를 경고하고, "Not investment advice / 투자 권유 아님"은 빠지면 자동으로 붙임. 정책상 거절되면 서버 기본 대체 모델로 재시도(`fallbacks: "default"`). 컨센서스 원 금액은 넘기지 않음(재게시 금지)
+- **무료로 쓰기**: 꼭 필요한 키는 텔레그램 둘(`TELEGRAM_BOT_TOKEN`·`TELEGRAM_CHAT_ID`)뿐. `ANTHROPIC_API_KEY`가 없으면 정해진 문장 틀(`template.ts`)로 초안을 쓰고, X 키가 없으면 [✅ 올렸음] 버튼 + [📋 영어 글 복사] 버튼으로 직접 붙여 넣는 방식 (차트는 텔레그램 사진 저장)
+- **초안**: Claude API(`claude-opus-5-5`, 구조화 출력, 키가 있을 때)에 미리 포맷한 숫자만 넘김. 결과를 코드로 다시 검사해 넘겨주지 않은 숫자·출처/기준 시점 누락·X 280자 초과를 경고하고, "Not investment advice / 투자 권유 아님"은 빠지면 자동으로 붙임. 정책상 거절되면 서버 기본 대체 모델로 재시도(`fallbacks: "default"`). 컨센서스 원 금액은 넘기지 않음(재게시 금지)
 - **같은 후보(서명)는 다시 보내지 않음**. 상태는 Supabase `autopost_drafts` 테이블(웹이 만들고 RLS 켬, ETL 게시와 무관)
 - **수정**: [수정] → 봇 안내 메시지에 답장으로 `EN: …` / `KO: …` (한쪽만 가능). **게시**는 두 번 눌러도 한 번만, 한쪽만 실패하면 다시 눌러 나머지만 올림
 
@@ -101,7 +102,7 @@ GitHub Actions (매일 03:43 KST 예약)                     Vercel (web/, 서�
 2. X Developer Portal → 앱 권한 **Read and write** → API Key/Secret, Access Token/Secret(권한 변경 후 재발급)
 3. Vercel → Settings → Environment Variables (Production):
    `ANTHROPIC_API_KEY`, `X_API_KEY`, `X_API_SECRET`, `X_ACCESS_TOKEN`, `X_ACCESS_SECRET`, `TELEGRAM_BOT_TOKEN`, `TELEGRAM_CHAT_ID`, `TELEGRAM_WEBHOOK_SECRET`(임의 긴 문자열, 영문·숫자·`_-`), `CRON_SECRET`(임의 긴 문자열) — 선택 `TELEGRAM_CHANNEL`(기본 `@buywhenitgoesup`)
-4. 재배포 후 웹훅 등록 한 번: `curl -H "Authorization: Bearer <CRON_SECRET>" https://buywhenitgoesup.vercel.app/api/autopost/setup`
-5. 바로 시험: `…/api/autopost/cron?dry=1`(후보만), `…/api/autopost/preview?kind=trade|preview|result|prices`(차트 PNG), `…/api/autopost/cron?force=1&kind=trade`(초안 실제 발송) — 모두 같은 Authorization 헤더
+4. 재배포 후 웹훅 등록 한 번: 브라우저로 `https://buywhenitgoesup.vercel.app/api/autopost/setup?key=<CRON_SECRET>` (또는 `Authorization: Bearer` 헤더)
+5. 바로 시험: `…/api/autopost/cron?dry=1`(후보만), `…/api/autopost/preview?kind=trade|preview|result|prices`(차트 PNG), `…/api/autopost/cron?force=1&kind=trade`(초안 실제 발송) — 모두 같은 `?key=` 또는 Authorization 헤더
 
 Cron은 Vercel 프로덕션 배포에서만 돈다(미리보기 배포 X). 로컬(`DATABASE_URL` 없음)에서는 시크릿 없이 `localhost:3000/api/autopost/cron?dry=1`·`/preview`로 확인.
