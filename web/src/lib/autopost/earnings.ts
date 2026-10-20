@@ -32,7 +32,7 @@ async function history(ticker: string, upto: string, n = 8) {
   return fins.reverse().map((f) => ({ q: f.period_end, label: `${monthEn(f.period_end).slice(0, 3)} '${f.period_end.slice(2, 4)}`, value: f.revenue }));
 }
 
-export type EarnChart = { ticker: string; name: string; currency: string; quarters: { q: string; label: string; value: number }[]; est: number; low: number; high: number; actual: number | null; qLabel: string };
+export type EarnChart = { ticker: string; name: string; currency: string; qEnd: string; quarters: { q: string; label: string; value: number }[]; est: number; low: number; high: number; actual: number | null; qLabel: string };
 
 /** 발표 임박 종목 프리뷰 */
 export async function previewCandidates(today = todayKst()): Promise<Candidate[]> {
@@ -55,10 +55,11 @@ export async function previewCandidates(today = todayKst()): Promise<Candidate[]
     if (caution.length) flags.push({ code: "caution", ko: caution.join(" · ") });
     if (c.next_basis) flags.push({ code: "date", ko: `발표일 추정치 (${c.next_basis})` });
     const facts = {
-      ticker: c.ticker, company: name, report_date: dayEn(c.next_date), quarter: qLabel(e.q_end),
+      ticker: c.ticker, company: name, report_date: dayEn(c.next_date), report_iso: c.next_date, quarter: qLabel(e.q_end),
       our_revenue_estimate: moneyTxt(e.est, e.currency), estimate_range: `${moneyTxt(e.low, e.currency)}–${moneyTxt(e.high, e.currency)}`,
       vs_year_ago_quarter: e.yoy != null ? pctTxt(e.yoy) : null,
       vs_consensus: e.cons_gap != null ? `${pctTxt(e.cons_gap)} ${e.cons_gap >= 0 ? "above" : "below"} consensus` : null,
+      cons_gap: e.cons_gap != null ? pctTxt(e.cons_gap) : null,
       backtest: `within ±5% of actual in ${e.hits ?? 0} of ${e.bt_n} past quarters; average error ${e.mape != null ? (e.mape * 100).toFixed(1) : "?"}%`,
       ...(({ sources, model }) => ({ sources, model }))(await sourcesOf(e.flows, e.method)), flags: flags.map((f) => f.code),
     };
@@ -68,7 +69,7 @@ export async function previewCandidates(today = todayKst()): Promise<Candidate[]
       guide: `Post type: earnings preview. ${name} ($${c.ticker}) reports on report_date. Give our model's revenue estimate for the quarter (describe the model as in "model" — do not call it customs-trade based unless "model" says so), the range, the year-over-year change and the gap to consensus (as a percentage only — never a consensus dollar amount), and the backtest record so readers can judge it. Say it is a model estimate, not a forecast of the stock.`,
       asof: [dayEn(c.next_date), monthEn(e.q_end)], sources: facts.sources, flags,
       brief: [`추정 ${facts.our_revenue_estimate} (${facts.estimate_range}) · 전년비 ${facts.vs_year_ago_quarter ?? "-"} · 컨센 대비 ${e.cons_gap != null ? pctTxt(e.cons_gap) : "-"} · ${e.tier} (적중 ${e.hits ?? 0}/${e.bt_n})`],
-      data: { ticker: c.ticker, name, currency: e.currency, quarters: await history(c.ticker, e.q_end), est: e.est, low: e.low, high: e.high, actual: null, qLabel: monthEn(e.q_end) } satisfies EarnChart,
+      data: { ticker: c.ticker, name, currency: e.currency, qEnd: e.q_end, quarters: await history(c.ticker, e.q_end), est: e.est, low: e.low, high: e.high, actual: null, qLabel: monthEn(e.q_end) } satisfies EarnChart,
     });
   }
   return out;
@@ -109,7 +110,7 @@ export async function resultCandidates(today = todayKst()): Promise<Candidate[]>
       guide: `Post type: earnings scorecard. Compare our pre-report model estimate (describe the model as in "model") with the actual reported revenue for ${name} ($${s.ticker}). State the error honestly whether it was a hit or a miss. If consensus_error is given, compare our error with the consensus error (percentages only — never a consensus dollar amount).`,
       asof: [monthEn(s.q_end)], sources: facts.sources, flags,
       brief: [`발표 전 추정 ${facts.our_estimate_before_report} (${e.date}) vs 실제 ${facts.actual_revenue} → 오차 ${facts.our_error}${consErr != null ? ` · 컨센 오차 ${pctTxt(consErr)}` : ""} · 범위 안 ${inRange ? "예" : "아니오"}`],
-      data: { ticker: s.ticker, name, currency: fin.currency, quarters: await history(s.ticker, fin.period_end), est: e.est, low: e.low, high: e.high, actual: fin.revenue, qLabel: monthEn(s.q_end) } satisfies EarnChart,
+      data: { ticker: s.ticker, name, currency: fin.currency, qEnd: s.q_end, quarters: await history(s.ticker, fin.period_end), est: e.est, low: e.low, high: e.high, actual: fin.revenue, qLabel: monthEn(s.q_end) } satisfies EarnChart,
     });
   }
   return out;

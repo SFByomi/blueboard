@@ -18,7 +18,7 @@ const STALE_MONTHS = 3; // 오늘(한국) 기준 이보다 오래된 기준월
 const SOLID = 8; // etl/scores.SOLID_YOY — 비교 가능한 분기가 이보다 적으면 우연일 수 있음
 
 export type FlowPick = {
-  key: string; tickers: string[]; names: string[]; flow_ko: string; series: string[];
+  key: string; tickers: string[]; names: string[]; flow_ko: string; names_en: string[]; series: string[];
   sources: string[]; products: string[]; partner: string | null;
   month: string; month_en: string; yoy3m: number; yoy3m_txt: string; last_yoy_txt: string | null; last_value_txt: string | null;
   grade: string | null; corr_txt: string | null; n_yoy: number | null; flags: Flag[]; spark: number[];
@@ -27,14 +27,14 @@ export type FlowPick = {
 const usdTxt = (v: number) => (v >= 1e9 ? `$${(v / 1e9).toFixed(1)}B` : v >= 1e6 ? `$${(v / 1e6).toFixed(0)}M` : `$${(v / 1e3).toFixed(0)}K`);
 const monthsBetween = (a: string, b: string) => (Number(b.slice(0, 4)) - Number(a.slice(0, 4))) * 12 + Number(b.slice(5, 7)) - Number(a.slice(5, 7));
 
-type SeriesMeta = { id: string; source: string; hs: string | null; partner: string | null };
+type SeriesMeta = { id: string; label: string; label_en?: string | null; source: string; hs: string | null; partner: string | null };
 
 /** 변화(|최근 3개월 전년비|)가 큰 회사 고유 흐름 TOP n — 업황 대리 흐름(proxy)은 여러 종목이 같은 걸 공유해 제외 */
 export async function topFlows(n = 3, today = new Date()): Promise<FlowPick[]> {
   const [sig, scores] = await Promise.all([stockSignals(), flowScores()]);
   const ids = [...new Set(sig.flatMap((s) => s.ids))];
   const meta = ids.length
-    ? await query<SeriesMeta>(`SELECT id, source, hs, partner FROM series WHERE id IN (${ids.map(() => "?").join(",")})`, ids) : [];
+    ? await query<SeriesMeta>(`SELECT * FROM series WHERE id IN (${ids.map(() => "?").join(",")})`, ids) : [];
   const hs6 = [...new Set(meta.flatMap((m) => hsList(m.hs)).map((h) => h.slice(0, 6)))].filter((h) => h.length === 6);
   const names = hs6.length
     ? await query<{ hs: string; name_en: string | null }>(`SELECT hs, name_en FROM hs_names WHERE hs IN (${hs6.map(() => "?").join(",")})`, hs6).catch(() => [])
@@ -62,6 +62,7 @@ export async function topFlows(n = 3, today = new Date()): Promise<FlowPick[]> {
     if (!worst?.grade || worst.grade === "C" || worst.grade === "D") flags.push({ code: "weak", ko: `매출 연관도 ${worst?.grade ?? "없음"} — 매출과 직접 연동이 확인되지 않음` });
     byKey.set(key, {
       key, tickers: [s.c.ticker], names: [s.c.name], flow_ko: s.parts.length ? s.parts.map((x) => x.label).join(" + ") : s.flowLabel ?? "", series: s.ids,
+      names_en: s.ids.map((id) => { const m = ms.find((x) => x.id === id); return m?.label_en || m?.label || id; }),
       sources: [...new Set(ms.map((m) => SOURCE_EN[m.source] ?? m.source))],
       products: [...new Set(ms.flatMap((m) => hsList(m.hs)).map((h) => h.slice(0, 6)))].map((h) => (nameOf[h] ? `HS ${h} ${nameOf[h]}` : `HS ${h}`)).slice(0, 4),
       partner: ms.find((m) => m.partner)?.partner ?? null,

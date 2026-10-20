@@ -1,10 +1,12 @@
 // 텔레그램 봇 API — 키는 Vercel 환경변수(TELEGRAM_BOT_TOKEN)만. 실패하면 응답 설명을 담아 예외.
 const api = (method: string) => `https://api.telegram.org/bot${process.env.TELEGRAM_BOT_TOKEN}/${method}`;
 
-export type Button = { text: string; callback_data: string };
-export const draftButtons = (id: string): Button[][] => [[
-  { text: "✅ 게시", callback_data: `post:${id}` }, { text: "✏️ 수정", callback_data: `edit:${id}` }, { text: "🗑 버리기", callback_data: `drop:${id}` },
-]];
+export type Button = { text: string; callback_data?: string; copy_text?: { text: string } };
+/** 초안 버튼. X 키가 없으면(직접 올리기) [게시] 대신 [✅ 올렸음], 영어 글은 [📋 복사]로 바로 붙여 넣게 (복사 한도 256자) */
+export const draftButtons = (id: string, en?: string, manual = false): Button[][] => [
+  [{ text: manual ? "✅ 올렸음" : "✅ 게시", callback_data: `post:${id}` }, { text: "✏️ 수정", callback_data: `edit:${id}` }, { text: "🗑 버리기", callback_data: `drop:${id}` }],
+  ...(en && en.length <= 256 ? [[{ text: "📋 영어 글 복사", copy_text: { text: en } }]] : []),
+];
 
 export async function tg<T = unknown>(method: string, body: Record<string, unknown> | FormData): Promise<T> {
   const r = await fetch(api(method), body instanceof FormData ? { method: "POST", body } : {

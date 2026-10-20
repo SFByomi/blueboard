@@ -1,6 +1,7 @@
 import Anthropic from "@anthropic-ai/sdk";
 import { betaZodOutputFormat } from "@anthropic-ai/sdk/helpers/beta/zod";
 import { z } from "zod";
+import { templateDraft } from "./template";
 import type { Candidate } from "./types";
 
 // 자동 게시 초안: 후보(types.Candidate)의 facts → Claude가 X(영어)·텔레그램 채널(한국어) 글을 쓴다.
@@ -11,7 +12,7 @@ export const DISCLAIMER_KO = "투자 권유 아님.";
 const X_LIMIT = 280;
 
 const Draft = z.object({
-  en: z.string().describe("X post in English, at most 260 characters"),
+  en: z.string().describe("X post in English, at most 250 characters"),
   ko: z.string().describe("Telegram channel post in Korean, at most 600 characters"),
   labels: z.array(z.object({ key: z.string(), label_en: z.string().describe("Short English chart title, max 32 characters") })),
 });
@@ -25,11 +26,12 @@ Rules — these are strict:
 - Each post must name the data source(s) given, the as-of date or month, and end with the disclaimer exactly: English "${DISCLAIMER_EN}", Korean "${DISCLAIMER_KO}".
 - If there are flags, say plainly that the figure needs caution. Never present a flagged figure as a clean signal.
 - Open the English post with the most striking fact in the first line (that line decides whether people read on). Plain, factual tone. No hype words, at most one emoji, no hashtags except cashtags of the given tickers. No links.
-- English post: at most 260 characters including spaces. Korean post: natural Korean for Korean retail investors, at most 600 characters; tickers stay in Latin letters.
+- English post: at most 250 characters including spaces. Korean post: natural Korean for Korean retail investors, at most 600 characters; tickers stay in Latin letters.
 - labels: only when the post type asks for chart titles; otherwise return an empty list.`;
 
-/** 초안 작성 — 모델 거절·파싱 실패는 예외로 (크론이 텔레그램에 실패를 알림) */
+/** 초안 작성 — ANTHROPIC_API_KEY가 없으면 정해진 문장 틀(template.ts, 무료). 모델 거절·파싱 실패는 예외로 (크론이 텔레그램에 실패를 알림) */
 export async function writeDraft(c: Candidate): Promise<DraftOut> {
+  if (!process.env.ANTHROPIC_API_KEY) return finalize(templateDraft(c), c);
   const client = new Anthropic();
   const res = await client.beta.messages.parse({
     model: "claude-opus-5-5",
