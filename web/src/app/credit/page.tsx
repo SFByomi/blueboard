@@ -1,6 +1,7 @@
 import type { Metadata } from "next";
 import { CreditSection } from "@/components/CreditSection";
-import { ImpliedSpread, SPREAD_SET } from "@/components/ImpliedSpread";
+import { ImpliedSpread } from "@/components/ImpliedSpread";
+import { SPREAD_SET } from "@/lib/credit";
 import { companies, creditMetrics, finraMarket, marketCredit, ustCurve } from "@/lib/queries";
 import { PageHead } from "@/components/ui";
 
