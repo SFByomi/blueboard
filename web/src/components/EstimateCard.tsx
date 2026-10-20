@@ -1,6 +1,6 @@
 import { T } from "@/components/Names";
 import { PriceChart } from "@/components/ComputeCharts";
-import { type Guide, type GuideWhy, confNote, dday, estGuide, estCaution, estExtrap, estRange, estReported, estTier, methodLabel, money, pct, TIER_STYLE, tone, watchFlag } from "@/lib/format";
+import { type Guide, type GuideWhy, type XCheck, confNote, dday, estGuide, estCaution, estExtrap, estRange, estReported, estTier, methodLabel, money, pct, TIER_STYLE, tone, watchFlag } from "@/lib/format";
 import type { EstSkip, RevEstimate } from "@/lib/queries";
 
 type Bt = { q_end: string; actual: number; pred: number; naive: number | null };
@@ -69,6 +69,8 @@ export function EstimateCard({ hist, labels, nextEarn, lastReported, skip }: { h
           {estExtrap(e) && <div className="mt-1 text-xs text-down">입력 무역값이 과거 범위를 크게 벗어남 — 외삽이라 &lsquo;참고&rsquo;</div>}</div>
       </div>
 
+      {guide?.xcheck && !guide.prelim && !rep && <XCheckNote xs={guide.xcheck} gq={(guide.low + guide.high) / 2 / e.last_actual - 1} eq={e.est / e.last_actual - 1} />}
+
       {gaps.length >= 2 && (
         <div>
           <div className="mb-1 text-xs text-muted">컨센 대비 괴리율 추이 (이 분기)</div>
@@ -134,6 +136,32 @@ function GuideWhyNote({ g, w, byGuide }: { g: Guide; w: GuideWhy; byGuide: boole
       ) : (
         <div>→ 보정 안 함: 백테스트에서 가이던스 그대로({e(w.mape_mid)})가 보정판({e(w.mape_beat)})보다 정확하거나 표본 부족</div>
       )}
+    </div>
+  );
+}
+
+/** 가이던스 교차 확인: 매출과 같은 분기에 움직이는 무역 흐름의 진행 분기 성장률을 가이던스·추정의 성장률과 나란히 */
+function XCheckNote({ xs, gq, eq }: { xs: XCheck[]; gq: number; eq: number }) {
+  const top = xs[0];
+  const verdict = top.qoq >= eq - 0.03 ? "추정(가이던스 상회) 쪽을 지지" : top.qoq <= gq + 0.03 ? "가이던스 수준 — 상회 폭은 작을 수 있음" : "가이던스와 추정 사이";
+  return (
+    <div className="rounded-lg border border-line bg-panel2 px-3 py-2 text-xs leading-relaxed">
+      <div className="font-bold">무역 교차 확인 <span className="font-normal text-muted">— 같은 분기 매출 전년비와 함께 움직이는 흐름의 진행 분기(공표된 달만)</span></div>
+      <div className="mt-1 grid gap-x-4 gap-y-0.5 sm:grid-cols-[auto_auto_auto_1fr]">
+        <span className="text-muted">전분기 대비</span>
+        <span>가이던스 중간값 <b className={tone(gq)}>{pct(gq)}</b></span>
+        <span>우리 추정 <b className={tone(eq)}>{pct(eq)}</b></span>
+        <span />
+        {xs.map((x) => (
+          <span key={x.id} className="contents">
+            <span className="text-muted">{x.label}</span>
+            <span><b className={tone(x.qoq)}>{pct(x.qoq)}</b> <span className="text-muted">({x.months}개월)</span></span>
+            <span className="text-muted">전년비 {pct(x.yoy)}</span>
+            <span className="text-muted">매출 상관 {x.corr.toFixed(2)}</span>
+          </span>
+        ))}
+      </div>
+      <div className="mt-1 text-muted">→ {top.label}는 {verdict}. 무역 흐름은 업계 합산·가격 효과가 섞여 있어 모델에는 넣지 않고 참고로만 씁니다.</div>
     </div>
   );
 }

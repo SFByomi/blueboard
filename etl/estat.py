@@ -55,14 +55,31 @@ def _get(table, params, refresh):
     return values
 
 
+def national_tables(flow: str) -> list[str]:
+    """전국 합계 品別国別表 (세관 구분 없음) — 연도마다 새 표가 생기므로 목록에서 찾는다. 2021년 이후, 공개일 순"""
+    key = "輸出" if flow == "export" else "輸入"
+    r = requests.get("https://api.e-stat.go.jp/rest/3.0/app/json/getStatsList", timeout=120, params={
+        "appId": os.environ["ESTAT_APP_ID"], "statsCode": "00350300", "searchWord": f"品別国別表 {key}", "limit": 100})
+    out = []
+    for t in r.json()["GET_STATS_LIST"]["DATALIST_INF"].get("TABLE_INF", []):
+        title = t["TITLE"]["$"] if isinstance(t["TITLE"], dict) else t["TITLE"]
+        if not re.match(rf"^(確報|確定|速報) 品別国別表 \(?{key}", title) or str(t.get("SURVEY_DATE", "0"))[:4] < "2021":
+            continue
+        out.append((t.get("OPEN_DATE", ""), t["@id"]))
+    return [i for _, i in sorted(out)]
+
+
 def fetch(flow: str, hs9: list, office: str, country: str | None = None, refresh=False) -> pd.DataFrame:
-    """[month, hs9, country, value_kjpy(천엔), qty1] — 월별 행. country는 e-Stat 국가코드(예: 50113 말레이시아)."""
+    """[month, hs9, country, value_kjpy(천엔), qty1] — 월별 행. country는 e-Stat 국가코드(예: 50113 말레이시아).
+    office='全国'이면 세관별 표 대신 전국 합계 표(品別国別表) — 뒤에 공개된 표가 같은 달을 덮어씀(확보 → 확정)."""
     rows = []
-    q = {"cdCat01": ",".join(hs9), "cdCat03": OFFICES.get(office, office)}
+    q = {"cdCat01": ",".join(hs9)}
+    if office != "全国":
+        q["cdCat03"] = OFFICES.get(office, office)
     if country:
         q["cdArea"] = country
     units = {}
-    for table in TABLES[flow]:
+    for table in (national_tables(flow) if office == "全国" else TABLES[flow]):
         for v in _get(table, q, refresh):
             if v["@cat02"] in ("100", "110"):  # 단위1 / 단위2 (예: ＮＯ, ＫＧ)
                 units.setdefault(v["@cat02"], v["$"].translate(str.maketrans("ＡＢＣＤＥＦＧＨＩＪＫＬＭＮＯＰＱＲＳＴＵＶＷＸＹＺ", "ABCDEFGHIJKLMNOPQRSTUVWXYZ")))
