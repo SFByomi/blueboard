@@ -1,0 +1,231 @@
+{
+ "_note": "AI 랩 연환산 매출(ARR)과 네오클라우드 계약 관계. 손으로 관리하는 원본(git) — 빌드마다 ai_arr·ai_deals 테이블로 다시 읽음. kind/status: 회사 발표 · 보도 · 추정(애널리스트). 새 수치가 나오면 출처와 함께 한 줄 추가.",
+ "arr": [
+  {
+   "lab": "Anthropic",
+   "date": "2025-01-01",
+   "usd_b": 1.0,
+   "kind": "보도",
+   "note": "2025년 초 약 $1B",
+   "url": "https://explodingtopics.com/blog/anthropic-revenue"
+  },
+  {
+   "lab": "Anthropic",
+   "date": "2025-08-31",
+   "usd_b": 5.0,
+   "kind": "회사 발표",
+   "note": "시리즈 F 발표 — $5B 이상",
+   "url": "https://explodingtopics.com/blog/anthropic-revenue"
+  },
+  {
+   "lab": "Anthropic",
+   "date": "2025-12-31",
+   "usd_b": 9.0,
+   "kind": "회사 발표",
+   "note": "2026년 4월 회사 발표에서 2025년 말 약 $9B로 언급",
+   "url": "https://aeoeye.com/blog/anthropic-revenue"
+  },
+  {
+   "lab": "Anthropic",
+   "date": "2026-02-28",
+   "usd_b": 14.0,
+   "kind": "회사 발표",
+   "note": "시리즈 G 발표",
+   "url": "https://aeoeye.com/blog/anthropic-revenue"
+  },
+  {
+   "lab": "Anthropic",
+   "date": "2026-04-07",
+   "usd_b": 30.0,
+   "kind": "회사 발표",
+   "note": "구글·브로드컴 협력 발표 — $30B 돌파",
+   "url": "https://venturebeat.com/technology/anthropic-says-it-hit-a-30-billion-revenue-run-rate-after-crazy-80x-growth"
+  },
+  {
+   "lab": "Anthropic",
+   "date": "2026-05-15",
+   "usd_b": 47.0,
+   "kind": "회사 발표",
+   "note": "시리즈 H 발표 — $47B 돌파",
+   "url": "https://simonwillison.net/2026/May/29/anthropic/"
+  },
+  {
+   "lab": "Anthropic",
+   "date": "2026-07-31",
+   "usd_b": 65.0,
+   "kind": "보도",
+   "note": "투자자 업데이트 (Bloomberg·CNBC 보도)",
+   "url": "https://www.axios.com/2026/08/17/anthropic-revenue-run-rate-ipo-openai"
+  },
+  {
+   "lab": "Anthropic",
+   "date": "2026-09-30",
+   "usd_b": 74.0,
+   "kind": "추정(애널리스트)",
+   "note": "3분기 연환산 — SemiAnalysis 추정(FT 인용), 회사 발표 아님. 3분기 매출 $16.8B(10/14 투자자 회의 보도)",
+   "url": "https://www.investing.com/analysis/anthropic-q3-spectacular-numbers-harder-questions-200689718"
+  },
+  {
+   "lab": "OpenAI",
+   "date": "2025-06-30",
+   "usd_b": 10.0,
+   "kind": "보도",
+   "note": "Reuters — MS 라이선스·일회성 계약 제외",
+   "url": "https://explodingtopics.com/blog/openai-revenue"
+  },
+  {
+   "lab": "OpenAI",
+   "date": "2025-12-31",
+   "usd_b": 20.0,
+   "kind": "회사 발표",
+   "note": "CFO 사라 프라이어 — $20B 이상",
+   "url": "https://explodingtopics.com/blog/openai-revenue"
+  },
+  {
+   "lab": "OpenAI",
+   "date": "2026-02-28",
+   "usd_b": 25.0,
+   "kind": "보도",
+   "note": "The Information",
+   "url": "https://valueaddvc.com/blog/openai-revenue-2026-25b-arr-2b-month-and-the-path-to-profitability"
+  },
+  {
+   "lab": "OpenAI",
+   "date": "2026-08-15",
+   "usd_b": 40.0,
+   "kind": "보도",
+   "note": "Bloomberg — $40B 이상",
+   "url": "https://explodingtopics.com/blog/openai-revenue"
+  },
+  {
+   "lab": "OpenAI",
+   "date": "2026-09-30",
+   "usd_b": 50.0,
+   "kind": "보도",
+   "note": "FT(10/8) — 투자자에게 9월 말 약 $50B. 앞서 돌던 ~$70B는 파트너 매출 총액 기준",
+   "url": "https://cryptobriefing.com/openai-revenue-run-rate-nears-50-billion/"
+  }
+ ],
+ "deals": [
+  {
+   "company": "CRWV",
+   "counterparty": "OpenAI",
+   "date": "2025-09",
+   "value": "누적 약 $22.4B (2025년 3·5·9월 세 차례)",
+   "status": "회사 발표",
+   "link": "직접",
+   "note": "AI 랩 최대 직접 고객 중 하나",
+   "url": "https://augment.market/pulse/coreweave-has-now-signed-the-four-biggest-ai-labs"
+  },
+  {
+   "company": "CRWV",
+   "counterparty": "Anthropic",
+   "date": "2026-04",
+   "value": "다년·수십억 달러(금액 비공개)",
+   "status": "회사 발표",
+   "link": "직접",
+   "note": "2026년 하반기부터 가동, 학습·추론 모두",
+   "url": "https://tech-insider.org/coreweave-anthropic-multibillion-deal-meta-66-billion-backlog-2026/"
+  },
+  {
+   "company": "CRWV",
+   "counterparty": "Meta",
+   "date": "2026-03",
+   "value": "$14.2B(2025) + $21B 확장(~2032)",
+   "status": "회사 발표",
+   "link": "빅테크",
+   "note": "",
+   "url": "https://letsdatascience.com/news/coreweave-diversifies-revenue-with-multibillion-ai-contracts-03e02ae5"
+  },
+  {
+   "company": "CRWV",
+   "counterparty": "Microsoft",
+   "date": "2025",
+   "value": "2025년 매출의 약 67%",
+   "status": "회사 공시",
+   "link": "빅테크(→OpenAI 간접)",
+   "note": "MS 용량 상당 부분이 OpenAI 워크로드",
+   "url": "https://letsdatascience.com/news/coreweave-reports-large-backlog-amid-elevated-debt-costs-28a8d777"
+  },
+  {
+   "company": "NBIS",
+   "counterparty": "Microsoft",
+   "date": "2025-09",
+   "value": "$17.4B(최대 $19.4B), 5년",
+   "status": "회사 발표",
+   "link": "빅테크(→OpenAI 간접 가능)",
+   "note": "용량 단계별 인도 중",
+   "url": "https://www.techzine.eu/news/infrastructure/136967/nebius-expands-ai-through-billion-dollar-deals-with-microsoft-and-meta/"
+  },
+  {
+   "company": "NBIS",
+   "counterparty": "Meta",
+   "date": "2026-03",
+   "value": "$3B(2025-12) → 최대 $27B, 5년",
+   "status": "회사 발표",
+   "link": "빅테크",
+   "note": "$12B 전용 용량 + 다른 고객에 먼저 팔고 남은 용량을 Meta가 최대 $15B까지 사주는 백스톱 — 2027년 초부터 인도",
+   "url": "https://siliconangle.com/2026/03/16/nebius-secures-27b-ai-infrastructure-commitment-meta-platforms/"
+  },
+  {
+   "company": "NBIS",
+   "counterparty": "Reflection AI·Cohere 등 4건 (AI 랩·추론 업체)",
+   "date": "2026-Q2",
+   "value": "1~3년 중기, 금액 비공개 — 2분기 신규 계약 총액 QoQ 약 4배",
+   "status": "회사 발표",
+   "link": "AI 랩(중소)",
+   "note": "MW당 연 $20~25M(중기) vs 장기 $10~15M. 3분기엔 3~6개월 단기 계약(MW당 $40~50M) 첫 체결. OpenAI·Anthropic 직접 계약은 확인 안 됨",
+   "url": "https://www.nasdaq.com/articles/can-nebius-reach-its-2026-arr-target-amid-soaring-ai-demand"
+  },
+  {
+   "company": "IREN",
+   "counterparty": "Microsoft",
+   "date": "2025-11",
+   "value": "$9.7B, 5년 (GB300, 차일드리스)",
+   "status": "회사 발표",
+   "link": "빅테크(→OpenAI 간접 가능)",
+   "note": "Horizon 1 인도(2026-08)",
+   "url": "https://iren.com/resources/blog/iren-signs97-billion-agreement-with-microsoft-to-deploy-ai-cloud-infrastructure"
+  },
+  {
+   "company": "IREN",
+   "counterparty": "NVIDIA",
+   "date": "2026-05",
+   "value": "약 $3.4B, 5년",
+   "status": "회사 발표",
+   "link": "칩 회사",
+   "note": "",
+   "url": "https://www.sec.gov/Archives/edgar/data/0001878848/000187884826000052/iren-20260630.htm"
+  },
+  {
+   "company": "IREN",
+   "counterparty": "Prometheus·Perplexity·Together AI 등",
+   "date": "2026-07",
+   "value": "약 $2.8B",
+   "status": "회사 발표",
+   "link": "AI 랩(중소)",
+   "note": "",
+   "url": "https://www.sec.gov/Archives/edgar/data/0001878848/000187884826000052/iren-20260630.htm"
+  },
+  {
+   "company": "IREN",
+   "counterparty": "선도 프런티어 AI 랩(이름 비공개)",
+   "date": "2026-08",
+   "value": "다년, 금액 비공개",
+   "status": "회사 발표",
+   "link": "직접(랩 미상)",
+   "note": "FY26 실적 발표에서 언급 — 2026년 용량 대부분 판매 완료, 계약 ARR $4B",
+   "url": "https://www.sec.gov/Archives/edgar/data/0001878848/000187884826000051/irenreportsfy26results.htm"
+  },
+  {
+   "company": "IREN",
+   "counterparty": "Anthropic",
+   "date": "2026-10",
+   "value": "다년, 조건 미공개",
+   "status": "보도(미확인)",
+   "link": "직접(보도)",
+   "note": "The Information 10/12 보도 — 양사 확인 안 함. 8월 '프런티어 랩'과 같은 계약일 가능성",
+   "url": "https://www.benzinga.com/markets/tech/26/10/62297847/iren-scores-major-ai-cloud-deal-with-anthropic-report"
+  }
+ ]
+}

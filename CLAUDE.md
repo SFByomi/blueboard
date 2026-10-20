@@ -5,7 +5,7 @@
 사이트 표시 이름은 **Investing Idea** (사용자의 텔레그램 채널명). 코드·DB 이름(yomin)은 그대로.
 
 ## 사용자·범위 (결정 사항)
-- 한국 투자자 대상, AI·반도체 중심. 보유/관심: MU, SNDK, LITE, BE, IREN, NBIS, RXRX, TXG, INSM, 두산(전자BG CCL), 삼성전기(MLCC). 비교군 FN.
+- 한국 투자자 대상, AI·반도체 중심. 메모리 섹터에 삼성전자(DS 부문, 별도)·SK하이닉스(연결) 포함. 네오클라우드 그룹 = IREN·NBIS·CRWV. 보유/관심: MU, SNDK, LITE, BE, IREN, NBIS, RXRX, TXG, INSM, 두산(전자BG CCL), 삼성전기(MLCC). 비교군 FN.
 - 주가는 사용자가 따로 봄. 매출 컨센서스는 무역 추정과의 괴리율로만 공개(원 금액은 로컬). 범위는 무역데이터 수집·검증·매핑·매출 추정.
 - 작업 환경: 윈도우 PC, 맥북, claude.ai/code 클라우드 세션을 오가며 작업 → 모든 상태는 GitHub(SFByomi/blueboard)로 공유.
 
@@ -13,6 +13,7 @@
 - 종목·시리즈·매핑·HS태그는 `data/curation.json`이 원본. DB는 캐시라 언제든 재생성.
 - 관리 페이지에서 수정 → 웹이 curation.json 자동 저장 → **작업 끝나면 commit·push** (다른 환경에서 pull 후 `etl.build`로 반영).
 - 코드로 큐레이션을 바꿀 때도 DB 수정 후 `etl.curation.export` 또는 json 직접 수정 → commit.
+- AI 랩 ARR·네오클라우드 계약 = `data/ai_labs.json` (OpenAI·Anthropic 연환산 매출 공개 수치 + IREN·NBIS·CRWV 계약 관계, 출처·상태(회사 발표/보도/추정) 포함). 빌드마다 ai_arr·ai_deals로 다시 읽음 → 가격·지수 탭 'AI 랩 매출 규모', 네오클라우드 종목 'AI 랩 수요와의 연결'. 새 발표가 나오면 한 줄 추가.
 - 공장 지도 = `data/plants.json` (회사·분야·좌표·상태·제품·연결 시리즈 id). 빌드마다 plants 테이블로 다시 읽음 → 웹 /plants. 좌표는 산업단지·도시 수준, 상태는 `asof` 월 기준으로 갱신.
 
 ## 구조
