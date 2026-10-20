@@ -10,6 +10,7 @@
 한국(DART): 부채총계·자본총계·현금·차입금(IFRS 표준 계정 ID — 없으면 계정명), 영업이익, 이자지급(요약 현금흐름표 누적), 감가상각(XBRL 현금흐름표 조정 — 요약 API엔 없음). 원본 캐시
 """
 import json
+import re
 from datetime import date
 
 import pandas as pd
@@ -265,6 +266,70 @@ def kr(ticker: str, fs: str) -> list[dict]:
     return out
 
 
+def _num_after(txt: str, label: str, idx: int = 1) -> float | None:
+    """보도자료 표에서 label 다음 숫자들 중 idx번째 (괄호 = 음수, — = 0). 분기 표는 [전년 동기, 당분기, ...], 재무상태표는 [전기말, 당분기말]"""
+    m = re.search(re.escape(label) + r"((?:\s+(?:\(?[\d,]+\.?\d*(?:\s*\))?|—))+)", txt)
+    if not m:
+        return None
+    vals = re.findall(r"(\()?([\d,]+\.?\d*|—)\s*(\))?", m.group(1))
+    out = [0.0 if v == "—" else (-1 if p else 1) * float(v.replace(",", "")) for p, v, _ in vals]
+    return out[idx] if len(out) > idx else None
+
+
+def first(g, labels: list[str]) -> float | None:
+    """표 라벨이 분기마다 조금씩 달라(예: 'Net cash used in …') 후보를 차례로"""
+    return next((v for lab in labels if (v := g(lab)) is not None), None)
+
+
+def nbis(ticker: str, sec_t: str) -> list[dict]:
+    """6-K 분기 실적 보도자료(첨부 99.1) 표에서 — 20-F 외국 발행사라 SEC XBRL엔 연간만 있음. 백만 달러"""
+    import html
+    import requests
+
+    from etl import sec6k
+    from etl.sec import UA
+    f = sec6k.FILERS[sec_t]
+    res = json.loads(sec6k.RESULTS.read_text()) if sec6k.RESULTS.exists() else {}
+    q: dict[str, dict] = {}
+    for acc, v in res.items():
+        if not v or not v[0] or v[0] < f.get("since", "2000"):
+            continue
+        base = f"https://www.sec.gov/Archives/edgar/data/{f['cik']}/{acc.replace('-', '')}"
+        try:
+            items = json.loads(sec6k._get(f"{base}/index.json"))["directory"]["item"]
+        except Exception:  # noqa: BLE001
+            items = requests.get(f"{base}/index.json", headers=UA, timeout=60).json()["directory"]["item"]
+        for name in sorted(i["name"] for i in items if i["name"].endswith(".htm") and "index" not in i["name"]):
+            t = re.sub(r"\s+", " ", html.unescape(re.sub(r"<[^>]+>", " ", sec6k._get(f"{base}/{name}"))))
+            if "balance sheet" not in t.lower() or "Cash and cash equivalents" not in t:
+                continue
+            g = lambda label, i=1: _num_after(t, label, i)  # noqa: E731
+            debt = sum(x for x in (g("Debt, current"), g("Debt, non-current")) if x) or (g("Convertible notes") or 0.0)
+            oi = g("Loss from operations") if g("Loss from operations") is not None else g("Income / (loss) from operations")
+            q[v[0]] = {"cash": g("Cash and cash equivalents"), "debt": debt, "equity": g("Total shareholders’ equity"), "liab": g("Total liabilities"),
+                       "oi": oi, "dep": g("Depreciation and amortization"), "int": abs(g("Interest expense") or 0.0),
+                       "ocf": first(g, ["Net cash provided by / (used in) operating activities – continuing operations", "Net cash used in operating activities – continuing operations",
+                                        "Net cash provided by operating activities – continuing operations", "Net cash provided by / (used in) operating activities"]),
+                       "capex": abs(c) if (c := first(g, ["Purchases of property and equipment and intangible assets", "Purchases of property, plant and equipment"])) is not None else None}
+            break
+    ends = sorted(q)
+    out = []
+    for i, end in enumerate(ends):
+        x = q[end]
+        last4 = [q[e] for e in ends[max(0, i - 3): i + 1]]
+        ttm = (lambda k: sum(y[k] for y in last4) * 1e6 if len(last4) == 4 and all(y[k] is not None for y in last4) else None)
+        o, dep, it, ocf, capex = ttm("oi"), ttm("dep"), ttm("int"), ttm("ocf"), ttm("capex")
+        if x["cash"] is None:
+            continue
+        debt, cash = x["debt"] * 1e6, x["cash"] * 1e6
+        out.append({"ticker": ticker, "q_end": end, "currency": "USD", "debt": debt, "cash": cash, "net_debt": debt - cash,
+                    "equity": x["equity"] * 1e6 if x["equity"] is not None else None, "liabilities": x["liab"] * 1e6 if x["liab"] is not None else None,
+                    "due_1y": None, "ebit_ttm": o, "ebitda_ttm": o + dep if o is not None and dep is not None else None,
+                    "interest_ttm": it or None, "interest_basis": "이자비용" if it else None, "ocf_ttm": ocf, "capex_ttm": capex,
+                    "fcf_ttm": ocf - capex if ocf is not None and capex is not None else None})
+    return out
+
+
 COLS = ["ticker", "q_end", "currency", "debt", "cash", "net_debt", "equity", "liabilities", "due_1y", "ebit_ttm", "ebitda_ttm", "interest_ttm", "interest_basis", "ocf_ttm", "capex_ttm", "fcf_ttm"]
 
 
@@ -300,8 +365,10 @@ def collect(con, log=print) -> int:
                 got = kr(ticker, dart_fs)
             elif sec_t and sec_t not in sec6k.FILERS:
                 got = us(ticker, sec_t)
+            elif sec_t == "NBIS":  # 20-F 외국 발행사 — 분기 실적 보도자료 표에서
+                got = nbis(ticker, sec_t)
             else:
-                continue  # 6-K(IFRS) 외국 기업은 아직
+                continue  # ASML(IFRS 6-K)은 아직
         except Exception as e:  # noqa: BLE001
             log(f"  ✗ 신용 {ticker}: {e}")
             continue
