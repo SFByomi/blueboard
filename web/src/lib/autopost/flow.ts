@@ -36,6 +36,8 @@ export async function runDaily({ force = false, dry = false } = {}) {
   const sig = signature(picks);
   if (dry) return { dry: true, sig, picks };
   if (!picks.length) return { skipped: "흐름 없음" };
+  const missing = ["ANTHROPIC_API_KEY", "TELEGRAM_BOT_TOKEN", "TELEGRAM_CHAT_ID"].filter((k) => !process.env[k]);
+  if (missing.length) return { skipped: `키 없음: ${missing.join(", ")}` }; // 키를 넣기 전 배포에서 크론이 매일 실패하지 않게
   await ensureTable();
   if (!force && (await query("SELECT id FROM autopost_drafts WHERE sig = ?", [sig])).length) return { skipped: "같은 TOP 3·기준월 초안이 이미 있음", sig };
 
