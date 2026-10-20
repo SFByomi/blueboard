@@ -59,7 +59,7 @@ CREATE TABLE IF NOT EXISTS indicators (          -- 가격지수 정의 (etl/ind
   id TEXT PRIMARY KEY, label TEXT NOT NULL, grp TEXT NOT NULL, unit TEXT, source TEXT, note TEXT, sort INTEGER DEFAULT 100
 );
 CREATE TABLE IF NOT EXISTS price_snapshots (   -- GPU 렌탈가·토큰 가격 일별 스냅샷 (etl/prices.py)
-  date TEXT NOT NULL, kind TEXT NOT NULL,            -- kind: 'gpu' | 'token'
+  date TEXT NOT NULL, kind TEXT NOT NULL,            -- kind: 'gpu' | 'token' | 'nebius' | 'index'
   item TEXT NOT NULL, stat TEXT NOT NULL,            -- gpu: 'H100 SXM' / median·p25 · token: 'Opus' / input·output
   value REAL, n INTEGER, detail TEXT,                -- n: GPU 수(매물 기준) · detail: 실제 모델 ID 등
   PRIMARY KEY (date, kind, item, stat)
