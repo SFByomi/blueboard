@@ -14,6 +14,7 @@
 - 관리 페이지에서 수정 → 웹이 curation.json 자동 저장 → **작업 끝나면 commit·push** (다른 환경에서 pull 후 `etl.build`로 반영).
 - 코드로 큐레이션을 바꿀 때도 DB 수정 후 `etl.curation.export` 또는 json 직접 수정 → commit.
 - AI 랩 ARR·네오클라우드 계약 = `data/ai_labs.json` (OpenAI·Anthropic 연환산 매출 공개 수치 + IREN·NBIS·CRWV 계약 관계, 출처·상태(회사 발표/보도/추정) 포함). 빌드마다 ai_arr·ai_deals로 다시 읽음 → 업황 탭 'AI 랩 매출 규모', 네오클라우드 종목 'AI 랩 수요와의 연결'. 새 발표가 나오면 한 줄 추가.
+- 영어 이름 = curation.json의 `series.label_en`·`companies.thesis_en` (영어 페이지·X 게시용). 새 종목·시리즈를 추가하면 같이 채운다 — 비면 한국어 label로 대체됨
 - 공장 지도 = `data/plants.json` (회사·분야·좌표·상태·제품·연결 시리즈 id). 빌드마다 plants 테이블로 다시 읽음 → 웹 /plants. 좌표는 산업단지·도시 수준, 상태는 `asof` 월 기준으로 갱신.
 
 ## 구조
@@ -29,6 +30,7 @@
   - prices.py GPU 렌탈가(Vast.ai 온디맨드 매물 중앙값)·토큰 가격(OpenRouter ~latest 플래그십)·Nebius 스팟가(NBIS 공시 API, 지역별 → 하루 평균·최저, 최근 30일만 제공돼 매번 30일 백필) 일별 스냅샷 → `price_snapshots`. 과거 이력은 소스에 없어 Supabase에 누적(publish의 ACCUMULATE). Ornn·Silicon Data 지수는 재게시 금지 약관이라 링크만.
 - `web/` Next.js 16 (App Router, Turbopack). **Next 16은 학습 데이터와 다름 → `web/node_modules/next/dist/docs/` 확인 후 작성.** params는 Promise.
   - 메뉴: 브리핑(/) · 종목 · 실적 추정(/earnings) · 업황(/prices) · 매크로(/macro) · 신용 · 무역 탐색(/surge) · 일정 (+ 공장 지도·소개). 모바일은 하단 막대(앞 4개 + 더보기 시트)
+  - 영어 페이지(X 팔로워용): `/en`(실적 추정·스코어카드·공급망 급변·커버리지) · `/en/stocks/[ticker]` — `lib/en.ts`, 레이아웃 머리·꼬리는 `components/Lang.tsx`(OnlyLang)로 경로에 따라 한/영 전환. 선택 환경변수 `X_HANDLE`이면 영어 머리에 X 링크
   - 화면 원칙: 요약 먼저(숫자·한 줄 결론) → 근거는 접기(`Fold`)·정의/방법론은 카드 제목 옆 ⓘ(`InfoTip`)로. 공용 부품 `components/ui.tsx`(Card·CardHead·Stat·Badge·Fold·PageHead·SectionHead·Defs), 긴 페이지는 `SectionNav`(섹션 칩·스크롤 위치 강조), 같은 자리 차트 전환은 `SegTabs`
   - 종목 화면 순서: 한눈에(추정·최근 매출·핵심 흐름·밸류 타일 + 핵심 포인트) → 실적 추정 → 밸류에이션 → 공급망 흐름(연관도 표·관련 품목은 접기) → 신용 → 업황
 - **밸류에이션(multiples.py)**: 배수 = EV(시가총액 + 순부채) ÷ 분기 실적 × 4. 흑자·이익률 10%↑·비경기순환이면 EV/영업이익, 그 밖(적자·저마진·메모리)은 EV/매출. 최근 12분기 분기 말 배수 밴드(상위 25%·중앙·하위 25%) × 진행 분기 추정(상단·추정·하단) → Best·Base·Worst 예상 시가총액(− 순부채)과 주가(÷ 주식 수). 배수 변동 큼(상위25/하위25 > 1.8)·최근 1년 중앙이 3년 중앙과 30% 넘게 다름(재평가)·지금 배수가 3년 하위10~상위10% 밖·추정 보류면 시나리오 대신 이유만 → `multiple_now`(Supabase 누적)·`multiple_hist`. 과거 시가총액 = 야후 현재 시총 × 분기 말 종가/현재가 × SEC 희석 주식 수 비율(야후 분할 기록으로 분할 보정). 부문 매출 종목(삼성전자 DS·두산 전자BG·삼성전기)은 제외. 야후 주가·시총은 저장·표시하지 않고 배수·우리 계산 시나리오·현재 대비 %만. 주가는 하루 한 번(데이터 갱신 때) 값이라 실시간 아님 → 계산에 쓴 주가 시각·종가/장중(px_time·px_date·px_kind)을 저장해 화면에 '○/○ 종가 기준'으로 표시. 예상 시가총액은 주가와 무관

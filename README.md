@@ -75,6 +75,10 @@ GitHub Actions (매일 03:43 KST 예약)                     Vercel (web/, 서�
 
 테이블은 `public` 스키마에 만들고 RLS를 켜 둔다(Supabase REST API로는 접근 불가, 웹·ETL은 DB 직접 접속).
 
+## 영어 페이지
+
+`/en`(진행 분기 매출 추정·발표 전 추정 vs 실제 스코어카드·공급망 급변·커버리지)과 `/en/stocks/[ticker]` — X 팔로워가 프로필 링크로 들어오는 곳. 숫자는 한국어 화면과 같고 이름만 curation.json의 `label_en`·`thesis_en`. 컨센서스는 괴리율만. Vercel 환경변수 `X_HANDLE`(예: `InvestingIdea`)을 넣으면 영어 머리에 X 링크가 생김.
+
 ## X·텔레그램 자동 게시 (승인제)
 
 매일 08:30 KST Vercel Cron → 게시 후보를 골라 하루 최대 3개 초안 → 텔레그램으로 나에게 **[게시][수정][버리기]** → 게시를 누르면 X(영어)·텔레그램 채널 `@buywhenitgoesup`(한국어, `TELEGRAM_CHANNEL=off`면 끔)에 차트와 함께 올라감. 코드: `web/src/lib/autopost/`, `web/src/app/api/autopost/`.
