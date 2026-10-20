@@ -5,7 +5,8 @@ import { allFinancials, allMappingsLabeled, companies, observations, type Compan
 export type Signal = {
   c: Company;
   flowLabel: string | null; flows: number; proxy: boolean; // proxy: 합산 대상이 없어 첫 흐름(업황)으로 대신
-  month: string | null; yoy3m: number | null; spark: number[];
+  ids: string[]; // 신호에 쓴 시리즈 (자동 게시 초안의 출처·표본 확인용)
+  month: string | null; yoy3m: number | null; spark: number[]; sparkAt: number[]; // sparkAt: 기준월(yoy3m)에서 끝나는 24개월
   revYoY: number | null; currency: string;
   // 매핑 트렌드 카드용: 최근 월 전년비·금액·전월비, 최근 3개월 중 전년비 플러스 개월 수, 흐름별 분해
   last: { yoy: number | null; value: number | null; mom: number | null }; up3: number | null; unit: string | null;
@@ -39,9 +40,9 @@ export async function stockSignals(): Promise<Signal[]> {
         spark: m.value[u.series_id].slice(-24).map((v) => v ?? 0),
       })).sort((a, b) => (b.share ?? 0) - (a.share ?? 0)) : [],
       c, flowLabel: use.length === 1 ? use[0].label : use.length ? `${use.length}개 흐름 합산` : null,
-      flows: ms.length, proxy: !inc.length && ms.length > 0,
+      flows: ms.length, ids, proxy: !inc.length && ms.length > 0,
       month: y.index >= 0 ? m.months[y.index] : null, yoy3m: y.value,
-      spark: total.slice(-24).map((v) => v ?? 0),
+      spark: total.slice(-24).map((v) => v ?? 0), sparkAt: total.slice(Math.max(0, i - 23), i + 1).map((v) => v ?? 0),
       revYoY, currency: fin.at(-1)?.currency ?? "USD",
     };
   });
