@@ -4,15 +4,9 @@ import type * as echarts from "echarts";
 import { axis, baseOption, EChart } from "@/components/EChart";
 import { InfoTip } from "@/components/InfoTip";
 import { pct, tone } from "@/lib/format";
-import { bandWord, METRIC_HINT, METRIC_LABEL, mult, type MultipleHist, type MultipleNow, parseScen, priceFmt } from "@/lib/valuation";
+import { bandWord, capFmt, METRIC_HINT, METRIC_LABEL, mult, type MultipleHist, type MultipleNow, parseScen, priceFmt, pxLabel, SCEN } from "@/lib/valuation";
 
-const SCEN = [
-  { k: "bear", label: "약세", how: "3년 하위 25% 배수 × 추정 하단" },
-  { k: "base", label: "기준", how: "3년 중앙 배수 × 추정" },
-  { k: "bull", label: "강세", how: "3년 상위 25% 배수 × 추정 상단" },
-] as const;
-
-/** 밸류에이션: 추정 실적 × 과거 3년 배수 → 약세·기준·강세 주가, 배수 밴드 차트 (etl/multiples.py) */
+/** 밸류에이션: 추정 실적 × 과거 3년 배수 → Best·Base·Worst 예상 시가총액·주가, 배수 밴드 차트 (etl/multiples.py) */
 export function ValuationCard({ m, hist }: { m: MultipleNow; hist: MultipleHist[] }) {
   const s = parseScen(m);
   const label = m.metric ? METRIC_LABEL[m.metric] : "배수";
@@ -39,27 +33,34 @@ export function ValuationCard({ m, hist }: { m: MultipleNow; hist: MultipleHist[
   return (
     <div className="space-y-4">
       {s ? (
-        <div className="grid grid-cols-3 gap-2">
-          {SCEN.map(({ k, label: lb, how }) => {
-            const x = s[k];
-            return (
-              <div key={k} className={`rounded-xl px-3 py-3 ${k === "base" ? "bg-accent/10 ring-1 ring-accent/40" : "bg-panel2"}`}>
-                <div className="flex items-center gap-1 text-xs text-muted">{lb}<InfoTip>{how}: {mult(x.mult)} × 연환산 {m.metric === "ev_ebit" ? "영업이익" : "매출"} − 순부채 → 주식 수로 나눔</InfoTip></div>
-                <div className="mt-1 font-mono text-lg font-bold sm:text-xl">{priceFmt(x.price, m.currency)}</div>
-                <div className={`font-mono text-sm font-bold ${tone(x.upside)}`}>{pct(x.upside, 0)}</div>
-                <div className="mt-1 text-[11px] text-muted">{mult(x.mult)}</div>
-              </div>
-            );
-          })}
+        <div className="space-y-2">
+          <div className="grid grid-cols-3 gap-2">
+            {SCEN.map(({ k, label: lb, how }) => {
+              const x = s[k];
+              return (
+                <div key={k} className={`rounded-xl px-3 py-3 ${k === "base" ? "bg-accent/10 ring-1 ring-accent/40" : "bg-panel2"}`}>
+                  <div className="flex items-center gap-1 text-xs font-bold text-muted">{lb}<InfoTip>{how}: {mult(x.mult)} × 연환산 {m.metric === "ev_ebit" ? "영업이익" : "매출"} {capFmt(x.metric, m.currency)} − 순부채 = 예상 시가총액. 주식 수로 나누면 주가.</InfoTip></div>
+                  <div className="mt-1 text-[11px] text-muted">예상 시가총액</div>
+                  <div className="font-mono text-base font-bold sm:text-xl">{capFmt(x.equity, m.currency)}</div>
+                  <div className="mt-1 font-mono text-xs text-muted">주가 {priceFmt(x.price, m.currency)}</div>
+                  <div className={`font-mono text-sm font-bold ${tone(x.upside)}`}>{pct(x.upside, 0)}</div>
+                </div>
+              );
+            })}
+          </div>
+          <p className="text-xs text-muted">
+            % = {pxLabel(m) ?? "계산 시점"} 주가 대비 · 하루 한 번(데이터 갱신 때) 계산 — 실시간 주가에 반응하지 않음.
+            예상 시가총액은 주가와 무관(추정 실적 × 과거 배수)이라 하루 중 주가가 움직여도 그대로입니다.
+          </p>
         </div>
       ) : (
         <div className="rounded-xl bg-panel2 px-3 py-2.5 text-xs leading-relaxed text-muted">
-          <b className="text-fg">시나리오 주가 생략</b> — {m.reason}
+          <b className="text-fg">시나리오 생략</b> — {m.reason}
         </div>
       )}
       {m.now != null && (
         <div className="flex flex-wrap items-baseline gap-x-4 gap-y-1 text-sm">
-          <span>지금 <b className="font-mono">{mult(m.now)}</b> <span className="text-xs text-muted">({m.basis ?? "추정"} 연환산)</span></span>
+          <span>지금 <b className="font-mono">{mult(m.now)}</b> <span className="text-xs text-muted">({m.basis ?? "추정"} 연환산{pxLabel(m) ? ` · ${pxLabel(m)} 주가` : ""})</span></span>
           <span className="text-xs text-muted">3년 중앙 {mult(m.p50)} · 범위 {mult(m.p10)}~{mult(m.p90)} · {bandWord(m)}</span>
           {m.now_trail != null && <span className="text-xs text-muted">직전 분기 실적 기준 {mult(m.now_trail)}</span>}
         </div>
