@@ -1,4 +1,6 @@
 import { query, queryOne } from "./db";
+import type { MultipleHist, MultipleNow } from "./valuation";
+export type { MultipleHist, MultipleNow };
 
 export type Company = {
   ticker: string; name: string; name_ko: string | null; market: string | null; sector: string | null;
@@ -237,3 +239,18 @@ export type AiDeal = { company: string; counterparty: string; date: string | nul
 /** 네오클라우드 ↔ AI 랩·빅테크 계약 (data/ai_labs.json) */
 export const aiDeals = (company?: string) =>
   (company ? query<AiDeal>("SELECT * FROM ai_deals WHERE company=? ORDER BY sort", [company]) : query<AiDeal>("SELECT * FROM ai_deals ORDER BY sort")).catch(noTable<AiDeal>);
+
+/** 밸류에이션 밴드·시나리오 (etl/multiples.py) — 종목의 최신 행 */
+export const multipleNow = (ticker: string) =>
+  query<MultipleNow>("SELECT * FROM multiple_now WHERE ticker=? ORDER BY date DESC LIMIT 1", [ticker]).then((r) => r[0] ?? null).catch(() => null);
+/** 최신 날짜의 전 종목 밸류에이션 (실적 추정 표) */
+export const latestMultiples = () =>
+  query<MultipleNow>("SELECT * FROM multiple_now WHERE date = (SELECT max(date) FROM multiple_now)").catch(noTable<MultipleNow>);
+/** 분기 말 연환산 배수 이력 */
+export const multipleHist = (ticker: string) =>
+  query<MultipleHist>("SELECT * FROM multiple_hist WHERE ticker=? ORDER BY q_end", [ticker]).catch(noTable<MultipleHist>);
+/** 한 종목의 재무 신용 지표 (분기 이력) · 주가 내재 부도확률 최신값 */
+export const creditFor = (ticker: string) =>
+  query<CreditRow>("SELECT * FROM credit_metrics WHERE ticker=? ORDER BY q_end", [ticker]).catch(noTable<CreditRow>);
+export const marketCreditLast = (ticker: string) =>
+  query<MarketCredit>("SELECT * FROM market_credit WHERE ticker=? ORDER BY date DESC LIMIT 1", [ticker]).then((r) => r[0] ?? null).catch(() => null);

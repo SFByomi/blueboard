@@ -14,7 +14,7 @@ etl/        Python 수집기 → data/yomin.db (SQLite)
   surge.py    급등 탐지 (미국 HS6 세계 합계 + 관심 품목 국가별)
   seed.py     초기 종목·시리즈·매핑 (이후엔 관리 페이지에서 편집)
   build.py    전체 갱신 실행
-web/        Next.js 16 사이트 (급등 탐색 / 종목 / 관리)
+web/        Next.js 16 사이트 (브리핑 / 종목 / 실적 추정 / 업황 / 매크로 / 신용 / 무역 탐색 / 일정 / 관리)
 verify/     0단계 상관 검증 스크립트 → reports/
 ```
 

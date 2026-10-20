@@ -52,16 +52,38 @@ def quarterly_revenue(ticker: str, refresh=False) -> pd.DataFrame:
     df["prio"] = (~df.tag.isin([primary, "direct"])).astype(int)
     df = df.sort_values(["prio", "val"], ascending=[True, False])
 
-    q = df[df["days"].between(80, 100)].drop_duplicates("end")[["start", "end", "val"]]
-    annual = df[df["days"].between(350, 380)].drop_duplicates("end")
+    q = _fill_quarters(df, df[df["days"].between(80, 100)].drop_duplicates("end")[["start", "end", "val"]])
+    return q.rename(columns={"val": "revenue"}).reset_index(drop=True)
+
+
+def _fill_quarters(df: pd.DataFrame, q: pd.DataFrame) -> pd.DataFrame:
+    """분기 공시가 없는 분기를 누적값 차이로 복원 (df는 우선순위 순으로 정렬된 상태).
+    - 연간 − 안쪽 3개 분기 (4분기)
+    - 같은 회계연도 시작일의 누적(3·6·9·12개월) 차이 — 분사 기업처럼 앞 분기 단독 공시가 없을 때
+      (예: 샌디스크 2024-06 분기 = 연간 6,663 − 9개월 4,903, 2023-09 분기 = 6개월 3,198 − 2분기 1,665)"""
     derived = []
-    for _, a in annual.iterrows():  # 연간에만 있는 4분기 복원
+    for _, a in df[df["days"].between(350, 380)].drop_duplicates("end").iterrows():  # 연간에만 있는 4분기 복원
         inside = q[(q["start"] >= a["start"]) & (q["end"] <= a["end"])]
         if len(inside) == 3 and not (q["end"] == a["end"]).any():
-            derived.append({"start": inside["end"].max() + pd.Timedelta(days=1), "end": a["end"],
-                            "val": a["val"] - inside["val"].sum()})
-    q = pd.concat([q, pd.DataFrame(derived)]).drop_duplicates("end").sort_values("end")
-    return q.rename(columns={"val": "revenue"}).reset_index(drop=True)
+            derived.append({"start": inside["end"].max() + pd.Timedelta(days=1), "end": a["end"], "val": a["val"] - inside["val"].sum()})
+    have = set(q["end"]) | {d["end"] for d in derived}
+    cum = df[df["days"].between(80, 100) | df["days"].between(170, 190) | df["days"].between(260, 285) | df["days"].between(350, 380)]
+    for _, g in cum.drop_duplicates(["start", "end"]).groupby("start"):
+        g = g.sort_values("end")
+        for (_, p), (_, c) in zip(g.iterrows(), g.iloc[1:].iterrows()):
+            if c["end"] not in have and 80 <= (c["end"] - p["end"]).days <= 100:
+                derived.append({"start": p["end"] + pd.Timedelta(days=1), "end": c["end"], "val": c["val"] - p["val"]})
+                have.add(c["end"])
+        # 회계연도 첫 분기 = 6개월 누적 − 2분기 (첫 분기 단독·3개월 누적이 없을 때)
+        known = pd.concat([q, pd.DataFrame(derived, columns=["start", "end", "val"])])
+        for _, c in g[g["days"].between(170, 190)].iterrows():
+            q2 = known[known["end"] == c["end"]]
+            if len(q2):
+                e1 = q2["start"].iloc[0] - pd.Timedelta(days=1)
+                if e1 not in have and 80 <= (e1 - c["start"]).days <= 100:
+                    derived.append({"start": c["start"], "end": e1, "val": c["val"] - q2["val"].iloc[0]})
+                    have.add(e1)
+    return pd.concat([q, pd.DataFrame(derived)]).drop_duplicates("end").sort_values("end")
 
 
 INSTANCE_TAGS = REV_TAGS + ["OperatingIncomeLoss"]
@@ -127,11 +149,6 @@ def quarterly_operating_income(ticker: str, refresh=False) -> pd.DataFrame:
     df["start"], df["end"] = pd.to_datetime(df["start"]), pd.to_datetime(df["end"])
     df["days"] = (df["end"] - df["start"]).dt.days
     df = df.sort_values("filed").drop_duplicates(["start", "end"], keep="last")
-    q = df[df["days"].between(80, 100)].drop_duplicates("end", keep="last")[["start", "end", "val"]]
-    derived = []
-    for _, a in df[df["days"].between(350, 380)].drop_duplicates("end", keep="last").iterrows():
-        inside = q[(q["start"] >= a["start"]) & (q["end"] <= a["end"])]
-        if len(inside) == 3 and not (q["end"] == a["end"]).any():
-            derived.append({"start": inside["end"].max() + pd.Timedelta(days=1), "end": a["end"], "val": a["val"] - inside["val"].sum()})
-    q = pd.concat([q, pd.DataFrame(derived)]).drop_duplicates("end").sort_values("end")
+    df = df.iloc[::-1]  # 같은 구간은 최신 공시 우선
+    q = _fill_quarters(df, df[df["days"].between(80, 100)].drop_duplicates("end")[["start", "end", "val"]])
     return q.rename(columns={"val": "oi"})[["end", "oi"]].reset_index(drop=True)

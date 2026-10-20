@@ -6,16 +6,20 @@ import { baseEffect, GROUPS, pct, tone } from "@/lib/format";
 import { flowScores } from "@/lib/queries";
 import { stockSignals } from "@/lib/signals";
 import { TrendCard } from "@/components/TrendCard";
+import { SectionNav } from "@/components/SectionNav";
+import { PageHead } from "@/components/ui";
+import type { Metadata } from "next";
 
 // 게시 직후 바로 보이도록 요청마다 렌더 (ISR 캐시가 게시 후에도 이전 데이터로 남던 문제). DB가 작아 부담 없음
 export const dynamic = "force-dynamic";
+export const metadata: Metadata = { title: "종목", description: "추적 종목 — 섹터별 공급망 출하 흐름·매출 연관도, 흐름 순위" };
 
 export default async function Stocks({ searchParams }: PageProps<"/stocks">) {
   const sp = await searchParams;
   const view = sp.view === "trend" ? "trend" : "sector", sort = sp.sort === "1m" ? "1m" : "3m";
   const [sig, scores] = await Promise.all([stockSignals(), flowScores()]);
   const best = (t: string) => scores.filter((x) => x.ticker === t && x.best != null).sort((a, b) => b.best! - a.best!)[0];
-  const tab = (on: boolean) => `rounded-lg px-3 py-1 ${on ? "bg-accent/20 font-bold text-accent" : "text-muted hover:text-fg"}`;
+  const tab = (on: boolean) => `shrink-0 rounded-full px-3 py-1 ${on ? "bg-accent/20 font-bold text-accent" : "bg-panel2 text-muted hover:text-fg"}`;
   const key = (s: (typeof sig)[number]) => (sort === "1m" ? s.last.yoy : s.yoy3m);
   const ranked = sig.filter((s) => key(s) != null).sort((a, b) => key(b)! - key(a)!);
   const topGrade = (t: string) => scores.filter((x) => x.ticker === t && x.grade).map((x) => x.grade!).sort()[0] ?? null;
@@ -23,28 +27,31 @@ export default async function Stocks({ searchParams }: PageProps<"/stocks">) {
 
   return (
     <div className="space-y-6">
-      <div>
-        <h1 className="text-2xl font-bold"><T ko="종목" en="Stocks" /></h1>
-        <p className="mt-1 text-sm text-muted">{view === "trend" ? "매핑한 무역 흐름(매출 합산 대상)의 전년비 순위 · r = 매출 전년비와의 상관(가장 잘 맞는 흐름) · 흐름 분해 = 최근 월 비중과 전년비" : "섹터별 · 숫자는 주요 출하 흐름의 최근 3개월 전년비 (업황 = 회사 흐름이 없어 업계 지표로 대신) · 연관도 = 매출과 가장 잘 맞는 흐름의 등급"}</p>
-        <div className="mt-2 flex flex-wrap gap-1 text-sm">
+      <div className="space-y-2">
+        <PageHead title={<T ko="종목" en="Stocks" />} sub={view === "trend" ? "매출과 연결된 무역 흐름의 전년비 순위" : `${sig.length}종목 · 섹터별 · 숫자는 주요 출하 흐름의 최근 3개월 전년비`}
+          info={view === "trend"
+            ? <p>매핑한 무역 흐름(매출 합산 대상)의 전년비 순위. r = 매출 전년비와의 상관(가장 잘 맞는 흐름), 흐름 분해 = 최근 월 비중과 전년비. 전년 금액이 작아 ±200%를 넘는 값은 기저효과일 수 있어 *로 표시. 무역 흐름이 없는 종목(바이오 등)은 빠집니다.</p>
+            : <p>숫자는 종목마다 매출과 연결된 출하 흐름 합계의 최근 3개월 전년비. &lsquo;업황&rsquo;은 회사 고유 흐름이 없어 업계 지표로 대신 본 것. 연관도 = 매핑된 흐름 중 분기 매출과 가장 잘 맞는 흐름의 등급(A 직접 연동 · B 연동 · C 업황 참고 · D 연관 약함).</p>} />
+        <div className="flex gap-1 overflow-x-auto text-sm [scrollbar-width:none]">
           <Link href="/stocks" className={tab(view === "sector")}>섹터별</Link>
-          <Link href="/stocks?view=trend" className={tab(view === "trend" && sort === "3m")}>매핑 트렌드 · 3개월</Link>
-          <Link href="/stocks?view=trend&sort=1m" className={tab(view === "trend" && sort === "1m")}>매핑 트렌드 · 최근 월</Link>
+          <Link href="/stocks?view=trend" className={tab(view === "trend" && sort === "3m")}>흐름 순위 · 3개월</Link>
+          <Link href="/stocks?view=trend&sort=1m" className={tab(view === "trend" && sort === "1m")}>흐름 순위 · 최근 월</Link>
         </div>
       </div>
+      {view === "sector" && <SectionNav items={groups.filter((g) => sig.some((s) => (s.c.grp ?? "기타") === g)).map((g) => ({ id: `g-${groups.indexOf(g)}`, label: g }))} />}
       {view === "trend" && (
         <>
           <div className="grid gap-4 sm:grid-cols-2 xl:grid-cols-3">
             {ranked.map((s, i) => <TrendCard key={s.c.ticker} s={s} rank={i + 1} score={best(s.c.ticker)} />)}
           </div>
-          <p className="text-xs text-muted">순위 기준: {sort === "1m" ? "최근 월 전년비 (월별 변동이 큼)" : "최근 3개월 합 전년비"}. 전년 금액이 작아 ±200%를 넘는 값은 기저효과일 수 있어 *로 표시. 무역 흐름이 없는 종목(바이오 등)은 빠집니다.</p>
+          <p className="text-xs text-muted">순위 기준: {sort === "1m" ? "최근 월 전년비 (월별 변동이 큼)" : "최근 3개월 합 전년비"}</p>
         </>
       )}
       {view === "sector" && groups.map((g) => {
         const items = sig.filter((s) => (s.c.grp ?? "기타") === g);
         if (!items.length) return null;
         return (
-          <section key={g} className="space-y-3">
+          <section key={g} id={`g-${groups.indexOf(g)}`} className="scroll-mt-28 space-y-3">
             <h2 className="border-b border-line pb-1 text-lg font-bold">{g} <span className="text-sm font-normal text-muted">{items.length}</span></h2>
             <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
               {items.map((s) => (

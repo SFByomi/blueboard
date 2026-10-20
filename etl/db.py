@@ -127,6 +127,15 @@ CREATE TABLE IF NOT EXISTS valuation ( -- 배수·비율만 (etl/peers.py): 피�
   ticker TEXT NOT NULL, date TEXT NOT NULL, metric TEXT NOT NULL, value REAL,
   PRIMARY KEY (ticker, date, metric)
 );
+CREATE TABLE IF NOT EXISTS multiple_hist ( -- 분기 말 연환산 배수 이력 (etl/multiples.py): ev_s = EV/매출, ev_ebit = EV/영업이익. 배수만 저장
+  ticker TEXT NOT NULL, q_end TEXT NOT NULL, metric TEXT NOT NULL, value REAL,
+  PRIMARY KEY (ticker, q_end, metric)
+);
+CREATE TABLE IF NOT EXISTS multiple_now ( -- 지금 배수(추정 기준)·3년 밴드·시나리오(약세/기준/강세: 배수·우리 계산 주가·현재 대비) 또는 생략 이유. 원 주가·시총은 저장 안 함
+  date TEXT NOT NULL, ticker TEXT NOT NULL, metric TEXT, basis TEXT, tier TEXT, now REAL, now_trail REAL,
+  p10 REAL, p25 REAL, p50 REAL, p75 REAL, p90 REAL, p50_1y REAL, n INTEGER, pct REAL, scen TEXT, reason TEXT, currency TEXT,
+  PRIMARY KEY (date, ticker)
+);
 CREATE TABLE IF NOT EXISTS finra_market ( -- FINRA 회사채 시장 집계 (etl/finra.py): 숫자 필드를 이름 그대로
   dataset TEXT NOT NULL, date TEXT NOT NULL, category TEXT NOT NULL, field TEXT NOT NULL, value REAL,
   PRIMARY KEY (dataset, date, category, field)

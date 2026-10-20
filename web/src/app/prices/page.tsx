@@ -5,13 +5,15 @@ import { CountBars, PriceChart } from "@/components/ComputeCharts";
 import Link from "next/link";
 import { pct, tone } from "@/lib/format";
 import { IndexSection } from "@/components/IndexSection";
-import { InflationSection } from "@/components/InflationSection";
-import { MacroSection } from "@/components/MacroSection";
-import { aiArr, flowScores, indicators, inflationContrib, macroObs, observations, priceSnapshots, type PriceRow } from "@/lib/queries";
+import { aiArr, flowScores, indicators, observations, priceSnapshots, type PriceRow } from "@/lib/queries";
 import { AiLabsSection } from "@/components/AiLabsSection";
+import { SectionNav } from "@/components/SectionNav";
+import { PageHead, SectionHead } from "@/components/ui";
+import type { Metadata } from "next";
 
 // 게시 직후 바로 보이도록 요청마다 렌더 (ISR 캐시가 게시 후에도 이전 데이터로 남던 문제). DB가 작아 부담 없음
 export const dynamic = "force-dynamic";
+export const metadata: Metadata = { title: "업황 지표", description: "AI 수요(GPU 렌탈가·토큰 가격·AI 랩 매출)·반도체 투자·전력 인프라·보안 업황과 공급망 가격지수" };
 
 const GPU_COLORS: Record<string, string> = {
   "A100 SXM4": "#94a3b8", "A100 PCIE": "#64748b",
@@ -35,8 +37,7 @@ const series = (rows: PriceRow[], item: string, stat: string): [string, number][
   rows.filter((r) => r.item === item && r.stat === stat).map((r) => [r.date, r.value]);
 
 export default async function Prices() {
-  const [rows, defs, rw, fs, infl] = await Promise.all([priceSnapshots(), indicators(), observations(["sec_ransomware"]).catch(() => []), flowScores(), inflationContrib()]);
-  const [macro, labArr] = await Promise.all([macroObs(), aiArr()]);
+  const [rows, defs, rw, fs, labArr] = await Promise.all([priceSnapshots(), indicators(), observations(["sec_ransomware"]).catch(() => []), flowScores(), aiArr()]);
   const [power, capex] = await Promise.all([observations(POWER_IDS).catch(() => []), observations(CAPEX_IDS).catch(() => [])]);
   const sec = fs.filter((r) => r.series_id === "sec_ransomware").sort((a, b) => (b.best ?? -9) - (a.best ?? -9));
   const SEC_KO: Record<string, string> = { PANW: "팔로알토", CRWD: "크라우드스트라이크", RBRK: "루브릭", S: "센티넬원", ZS: "지스케일러", FTNT: "포티넷", OKTA: "옥타", NET: "클라우드플레어" };
@@ -59,28 +60,20 @@ export default async function Prices() {
 
   return (
     <div className="space-y-6">
-      <div>
-        <h1 className="text-2xl font-bold"><T ko="가격·지수" en="Prices & indices" /></h1>
-        <p className="mt-1 text-sm text-muted">
-          GPU·토큰 가격(일별) · 공급망 가격지수(월별) · {first ? `GPU·토큰 ${first} ~ ${last} 수집` : "수집 전"} · 매일 아침 갱신
-        </p>
-      </div>
+      <PageHead title={<T ko="업황 지표" en="Industry indicators" />}
+        sub={<>AI 수요 · 반도체 · 전력 · 보안 업황과 공급망 가격 · {first ? `GPU·토큰 ${first} ~ ${last} 일별` : "수집 전"} · 매일 아침 갱신</>}
+        info={<p>추적 종목 매출의 &lsquo;단가·수요&rsquo; 쪽 지표입니다. 무역 흐름(물량)은 종목 화면, 거시 지표(물가·유동성)는 <Link className="text-accent" href="/macro">매크로</Link> 탭에 있습니다. 재게시가 금지된 지수(Ornn OCPI·Silicon Data·DDR5 스팟가 등)는 링크로만 안내합니다.</p>} />
+      <SectionNav items={[{ id: "ai", label: "AI·GPU" }, { id: "semi", label: "반도체" }, { id: "power", label: "전력" }, ...(rw.length ? [{ id: "security", label: "보안" }] : []), ...(idxGroups.length ? [{ id: "index", label: "가격지수" }] : [])]} />
 
       {!daily.length && <div className="card text-sm text-muted">아직 수집된 가격이 없습니다. 매일 아침 데이터 갱신 때 첫 값이 쌓입니다.</div>}
 
+      <div id="ai" className="scroll-mt-28 space-y-6">
       <section className="space-y-3">
-        <div className="flex flex-wrap items-baseline justify-between gap-2">
-          <h2 className="text-lg font-bold"><T ko="GPU 렌탈가" en="GPU rental price" /> <span className="text-sm font-normal text-muted">$ / GPU·시간, 온디맨드</span></h2>
-          <span className="text-xs text-muted">Vast.ai 마켓플레이스 대여 가능 매물의 중앙값 · 범례를 누르면 기종을 켜고 끕니다</span>
-        </div>
-        <div className="rounded-lg border border-line bg-panel2 px-4 py-3 text-sm leading-relaxed">
-          이 탭의 GPU 가격은 <b>Vast.ai 공개 매물로 Investing Idea가 직접 계산한 지수</b>입니다.
-          실제 거래 체결가 기반 지수(Ornn OCPI)는 재게시가 허용되지 않아 여기 싣지 않으니, 아래 사이트에서 확인하세요.
-          <div className="mt-1 flex flex-wrap gap-x-4 gap-y-1">
-            <a className="text-accent" href="https://data.ornn.com/markets" target="_blank" rel="noreferrer">Ornn OCPI (H100·H200·B200 등) →</a>
-            <a className="text-accent" href="https://www.silicondata.com/products/silicon-index/h100" target="_blank" rel="noreferrer">Silicon Data H100 지수 →</a>
-          </div>
-        </div>
+        <SectionHead title={<T ko="GPU 렌탈가" en="GPU rental price" />} sub="$ / GPU·시간, 온디맨드 · Vast.ai 대여 가능 매물 중앙값 · 범례를 누르면 기종을 켜고 끔"
+          info={<>
+            <p>이 가격은 <b>Vast.ai 공개 매물로 Investing Idea가 직접 계산한 지수</b>입니다. 스팟 매물 가격이라 GPU 클라우드 업체가 받는 장기계약 단가와는 다릅니다 — GPU 공급이 빠듯한지(가격↑·매물↓) 남는지(가격↓·매물↑)를 보는 업황 신호. 매물이 기종당 수십 개라 하루 단위로는 출렁일 수 있습니다.</p>
+            <p>실제 거래 체결가 기반 지수는 재게시가 허용되지 않아 링크만: <a className="text-accent" href="https://data.ornn.com/markets" target="_blank" rel="noreferrer">Ornn OCPI</a> · <a className="text-accent" href="https://www.silicondata.com/products/silicon-index/h100" target="_blank" rel="noreferrer">Silicon Data H100</a></p>
+          </>} />
         {gpus.length > 0 && (
           <div className="card min-w-0 space-y-4">
             {short && <div className="text-xs text-muted">{short}</div>}
@@ -113,20 +106,15 @@ export default async function Prices() {
             </div>
           </div>
         )}
-        <p className="text-xs leading-relaxed text-muted">
-          스팟 매물 가격이라 GPU 클라우드 업체가 실제 받는 장기계약 단가와는 다릅니다. GPU 공급이 빠듯한지(가격↑·매물↓) 남는지(가격↓·매물↑)를 보는 업황 신호로 쓰세요.
-          매물이 기종당 수십 개 수준이라 하루 단위로는 출렁일 수 있습니다.
-        </p>
       </section>
 
       {labArr.length > 0 && <AiLabsSection arr={labArr} />}
 
       {nebGpus.length > 0 && (
         <section className="space-y-3">
-          <div className="flex flex-wrap items-baseline justify-between gap-2">
-            <h2 className="text-lg font-bold"><T ko="Nebius GPU 스팟 가격" en="Nebius GPU spot price" /> <span className="text-sm font-normal text-muted">$ / GPU·시간, 선점형 · NBIS 공시</span></h2>
-            <a className="text-xs text-accent" href="https://nebius.com/spot-prices" target="_blank" rel="noreferrer">nebius.com/spot-prices →</a>
-          </div>
+          <SectionHead title={<T ko="Nebius GPU 스팟 가격" en="Nebius GPU spot price" />} sub="$ / GPU·시간, 선점형 · NBIS 공시 · 지역별 하루 평균"
+            right={<a className="text-accent" href="https://nebius.com/spot-prices" target="_blank" rel="noreferrer">nebius.com/spot-prices →</a>}
+            info={<p>네비우스가 직접 공시하는 선점형(언제든 회수될 수 있는) GPU의 지역별 실시간 가격을 하루 평균으로 모은 것 — 남는 GPU가 많으면 싸지고, 빠듯하면 오릅니다. NBIS 자체 클러스터의 유휴 용량 신호라 Vast.ai(여러 호스트 매물)와 함께 보면 좋습니다. 소스가 최근 30일 시간별 이력만 주므로 그 이전은 매일 쌓아 갑니다.</p>} />
           <div className="card min-w-0 space-y-4">
             <PriceChart unit="$/GPU·h" height={300} lines={nebGpus.map((g) => ({ name: g, color: NEB_COLORS[g], points: series(neb, g, "avg") }))} />
             <div className="overflow-x-auto">
@@ -156,18 +144,12 @@ export default async function Prices() {
               </table>
             </div>
           </div>
-          <p className="text-xs leading-relaxed text-muted">
-            네비우스가 직접 공시하는 선점형(언제든 회수될 수 있는) GPU의 지역별 실시간 가격을 하루 평균으로 모은 것 — 남는 GPU가 많으면 싸지고, 빠듯하면 오릅니다.
-            NBIS 자체 클러스터의 유휴 용량 신호라 Vast.ai(여러 호스트 매물)와 함께 보면 좋습니다. 소스가 최근 30일 시간별 이력만 주므로 그 이전은 매일 쌓아 갑니다.
-          </p>
         </section>
       )}
 
       <section className="space-y-3">
-        <div className="flex flex-wrap items-baseline justify-between gap-2">
-          <h2 className="text-lg font-bold"><T ko="프런티어 모델 토큰 가격" en="Frontier model token prices" /> <span className="text-sm font-normal text-muted">$ / 100만 토큰</span></h2>
-          <span className="text-xs text-muted">OpenRouter 정가 · 각 회사 최신 플래그십</span>
-        </div>
+        <SectionHead title={<T ko="프런티어 모델 토큰 가격" en="Frontier model token prices" />} sub="$ / 100만 토큰 · OpenRouter 정가 · 각 회사 최신 플래그십"
+          info={<p>정가는 신모델 출시·가격 인하 때만 계단식으로 바뀝니다. 같은 성능의 토큰이 싸지는 속도가 GPU 수요(추론 물량)와 GPU 클라우드 마진을 가르는 변수입니다.</p>} />
         <div className="card overflow-x-auto">
           <table className="w-full min-w-[560px] whitespace-nowrap text-sm">
             <thead className="text-xs text-muted"><tr className="border-b border-line">
@@ -199,70 +181,37 @@ export default async function Prices() {
             <PriceChart unit="$/M" height={260} lines={models.map((md, i) => ({ name: md, color: TOKEN_COLORS[i % TOKEN_COLORS.length], points: series(tok, md, "output"), step: true }))} />
           </div>
         )}
-        <p className="text-xs leading-relaxed text-muted">
-          정가는 신모델 출시·가격 인하 때만 계단식으로 바뀝니다. 같은 성능의 토큰이 싸지는 속도가 GPU 수요(추론 물량)와 GPU 클라우드 마진을 가르는 변수입니다.
-        </p>
       </section>
+      </div>
 
-      <PowerSection obs={power} />
+      <div id="semi" className="scroll-mt-28"><SemiSection obs={capex} /></div>
 
-      <SemiSection obs={capex} />
+      <div id="power" className="scroll-mt-28"><PowerSection obs={power} /></div>
 
       {rw.length > 0 && (
-        <section className="space-y-3">
-          <div className="flex flex-wrap items-baseline justify-between gap-2">
-            <h2 className="text-lg font-bold"><T ko="보안 업황 · 랜섬웨어 피해 공개 건수" en="Security · ransomware victims posted" /> <span className="text-sm font-normal text-muted">월별, 전 세계</span></h2>
-            <span className="text-xs text-muted">ransomware.live 유출 사이트 집계 · 최근 2개월은 늦게 공개되는 피해로 늘어날 수 있음</span>
-          </div>
+        <section id="security" className="scroll-mt-28 space-y-3">
+          <SectionHead title={<T ko="보안 업황 · 랜섬웨어 피해 공개 건수" en="Security · ransomware victims posted" />} sub="월별, 전 세계 · ransomware.live 유출 사이트 집계"
+            info={<p>공격이 늘면 보안 예산이 뒤따른다는 가설의 업황 지표. 최근 2개월은 늦게 공개되는 피해로 늘어날 수 있습니다. 구독 매출이라 매출과의 직접 연동은 약하니 방향 참고용.</p>} />
           <div className="card min-w-0">
             <CountBars name="피해 공개 건수" months={rw.map((o) => o.month)} values={rw.map((o) => o.value_usd ?? 0)} />
           </div>
           <p className="text-xs leading-relaxed text-muted">
-            공격이 늘면 보안 예산이 뒤따른다는 가설의 업황 지표. 매출과 전년비 상관(지표가 0~2분기 앞설 때 중 최고):{" "}
+            보안주 매출 전년비와의 상관(지표가 0~2분기 앞설 때 중 최고):{" "}
             {sec.map((r, i) => (
               <span key={r.ticker}>{i > 0 && " · "}<Link className="text-accent" href={`/stocks/${r.ticker}`}>{SEC_KO[r.ticker] ?? r.ticker}</Link>{" "}
                 {r.best == null ? "-" : `${r.best.toFixed(2)} (${r.best_lag ? `${r.best_lag}분기 선행` : "동행"}, ${r.grade ?? "-"}${r.recent != null && r.recent < 0 ? ", 최근 8분기 역상관" : ""})`}</span>
             ))}
-            {" "}— 구독 매출이라 직접 연동은 약하니 방향 참고용으로 보세요.
           </p>
-        </section>
-      )}
-
-      {infl.length > 0 && (
-        <section className="space-y-3">
-          <div className="flex flex-wrap items-baseline justify-between gap-2">
-            <h2 className="text-lg font-bold"><T ko="미국 물가 기여도" en="US inflation contributions" /> <span className="text-sm font-normal text-muted">CPI·PCE 서비스·공산품·식품·에너지</span></h2>
-            <Link href="/calendar" className="text-xs text-muted hover:text-fg">발표 일정 →</Link>
-          </div>
-          <InflationSection rows={infl} />
-        </section>
-      )}
-
-      {macro.length > 0 && (
-        <section className="space-y-3">
-          <div className="flex flex-wrap items-baseline justify-between gap-2">
-            <h2 className="text-lg font-bold"><T ko="거시 유동성" en="Macro liquidity" /> <span className="text-sm font-normal text-muted">연준 대차대조표·TGA·역레포·M2·연방부채</span></h2>
-            <Link href="/calendar" className="text-xs text-muted hover:text-fg">FOMC 일정 →</Link>
-          </div>
-          <MacroSection rows={macro} />
         </section>
       )}
 
       {idxGroups.length > 0 && (
-        <section className="space-y-3">
-          <div className="flex flex-wrap items-baseline justify-between gap-2">
-            <h2 className="text-lg font-bold"><T ko="공급망 가격지수" en="Supply chain price indices" /> <span className="text-sm font-normal text-muted">생산자물가·수출입 가격 (BLS)</span></h2>
-            <span className="text-xs text-muted">물량이 아니라 단가 사이클 — 매출 = 물량 × 단가의 단가 쪽</span>
-          </div>
+        <section id="index" className="scroll-mt-28 space-y-3">
+          <SectionHead title={<T ko="공급망 가격지수" en="Supply chain price indices" />} sub="생산자물가·수출입 가격 (BLS) · 매출 = 물량 × 단가의 단가 쪽"
+            info={<p>메모리 단가는 한국·미국 무역통계의 금액÷수량으로 직접 계산한 값입니다(월별, 제품 구성 변화도 섞임). DDR5 RDIMM 스팟·계약가는 출처 약관상 재게시가 안 되어 링크로: <a className="text-accent" href="https://www.memorymarket.com/price/ems/100263" target="_blank" rel="noreferrer">MemoryMarket DDR5 RDIMM 64GB</a> · <a className="text-accent" href="https://memoryindex.io/ddr5-price" target="_blank" rel="noreferrer">MemoryIndex DDR5</a></p>} />
           <div className="grid gap-4 xl:grid-cols-2">
             {idxGroups.map((g) => <IndexSection key={g} grp={g} defs={defs.filter((d) => d.grp === g)} rows={idx} />)}
           </div>
-          <p className="text-xs leading-relaxed text-muted">
-            메모리 단가는 한국·미국 무역통계의 금액÷수량으로 직접 계산한 값입니다 (월별, 제품 구성 변화도 섞임).
-            DDR5 RDIMM 스팟·계약가는 출처 약관상 재게시가 안 되어 링크로 안내합니다:{" "}
-            <a className="text-accent" href="https://www.memorymarket.com/price/ems/100263" target="_blank" rel="noreferrer">MemoryMarket DDR5 RDIMM 64GB</a> ·{" "}
-            <a className="text-accent" href="https://memoryindex.io/ddr5-price" target="_blank" rel="noreferrer">MemoryIndex DDR5</a>
-          </p>
         </section>
       )}
     </div>

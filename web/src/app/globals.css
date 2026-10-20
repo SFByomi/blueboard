@@ -33,7 +33,7 @@ body {
 }
 
 .card {
-  @apply rounded-2xl border border-line bg-panel p-5;
+  @apply rounded-2xl border border-line bg-panel p-4 sm:p-5;
 }
 .input {
   @apply w-full rounded-lg border border-line bg-panel2 px-3 py-2 text-sm outline-none focus:border-accent;
@@ -49,4 +49,19 @@ body {
 html[data-names="en"] .nm-ko,
 html:not([data-names="en"]) .nm-en {
   display: none;
+}
+
+/* 섹션 바로가기(#id)로 이동할 때 고정 헤더·섹션 칩에 가리지 않게 */
+html {
+  scroll-padding-top: 110px;
+  scroll-behavior: smooth;
+}
+@media (prefers-reduced-motion: reduce) {
+  html {
+    scroll-behavior: auto;
+  }
+}
+/* 표 숫자 정렬 */
+.tnum {
+  font-variant-numeric: tabular-nums;
 }

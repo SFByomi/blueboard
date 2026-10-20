@@ -14,7 +14,7 @@ export default async function Tags({ searchParams }: PageProps<"/admin/tags">) {
       <div className="flex items-center justify-between">
         <div>
           <h1 className="text-2xl font-bold">품목 → 종목 태그</h1>
-          <p className="text-sm text-muted">급등 탐색에서 HS 코드 앞자리가 일치하면 해당 종목이 표시됩니다 (예: 8542 → 반도체 전체, 854232 → 메모리).</p>
+          <p className="text-sm text-muted">무역 탐색(급등 품목)에서 HS 코드 앞자리가 일치하면 해당 종목이 표시됩니다 (예: 8542 → 반도체 전체, 854232 → 메모리).</p>
         </div>
         <Link href="/admin" className="btn-ghost">← 관리</Link>
       </div>
