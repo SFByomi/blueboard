@@ -9,6 +9,7 @@
     "lint": "eslint"
   },
   "dependencies": {
+    "@anthropic-ai/sdk": "^0.135.0",
     "better-sqlite3": "^13.0.3",
     "echarts": "^6.1.0",
     "next": "16.3.8",
@@ -16,7 +17,8 @@
     "react": "19.2.8",
     "react-dom": "19.2.8",
     "topojson-client": "^3.1.0",
-    "world-atlas": "^2.0.2"
+    "world-atlas": "^2.0.2",
+    "zod": "^4.6.7"
   },
   "devDependencies": {
     "@tailwindcss/postcss": "^4",

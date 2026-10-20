@@ -62,3 +62,14 @@ export async function query<T>(text: string, params: unknown[] = []): Promise<T[
 }
 
 export const queryOne = async <T>(text: string, params: unknown[] = []) => (await query<T>(text, params))[0];
+
+/** 쓰기 쿼리(자동 게시 초안 상태 등). 바뀐 행 수를 돌려준다 — `UPDATE … WHERE status='pending'`로 중복 처리를 막는 데 씀 */
+export async function execute(text: string, params: unknown[] = []): Promise<number> {
+  if (USE_PG) {
+    let i = 0;
+    const sql = text.replace(/\?/g, () => `$${++i}`);
+    const r = await withSlot(() => pg().unsafe(sql, params as postgres.ParameterOrJSON<never>[]));
+    return r.count ?? 0;
+  }
+  return sqlite().prepare(text).run(...params).changes;
+}
