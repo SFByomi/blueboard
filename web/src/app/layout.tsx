@@ -2,7 +2,7 @@ import type { Metadata } from "next";
 import { JetBrains_Mono, Noto_Sans_KR } from "next/font/google";
 import Link from "next/link";
 import { NameToggle, NAME_INIT } from "@/components/NameToggle";
-import { NavTabs } from "@/components/NavTabs";
+import { BottomNav, NavTabs } from "@/components/NavTabs";
 import { ADMIN_ENABLED } from "@/lib/db";
 import "./globals.css";
 
@@ -26,21 +26,22 @@ export default function RootLayout({ children }: LayoutProps<"/">) {
         <script dangerouslySetInnerHTML={{ __html: NAME_INIT }} />
       </head>
       <body className="min-h-screen font-sans">
-        <header className="sticky top-0 z-10 border-b border-line bg-bg/90 backdrop-blur">
-          <div className="mx-auto flex max-w-7xl items-center gap-2 px-4">
-            <nav className="flex min-w-0 flex-1 items-center gap-1 overflow-x-auto whitespace-nowrap py-2.5 text-sm">
-              <Link href="/" className="mr-3 shrink-0 text-base font-bold">Investing Idea</Link>
+        <header className="sticky top-0 z-30 border-b border-line bg-bg/90 backdrop-blur">
+          <div className="mx-auto flex h-12 max-w-7xl items-center gap-2 px-4 sm:h-[52px]">
+            <Link href="/" className="mr-2 shrink-0 text-base font-bold tracking-tight">Investing Idea</Link>
+            <nav className="flex min-w-0 flex-1 items-center overflow-x-auto whitespace-nowrap text-sm" aria-label="메뉴">
               <NavTabs admin={ADMIN_ENABLED} />
             </nav>
             <NameToggle />
           </div>
         </header>
-        <main className="mx-auto max-w-7xl px-4 py-6">{children}</main>
-        <footer className="mx-auto max-w-7xl px-4 pb-10 text-xs text-muted">
-          출처: U.S. Census Bureau, 일본 재무성 무역통계(e-Stat), 한국 관세청, SEC EDGAR·DART, BLS, Vast.ai, OpenRouter. 투자 권유가 아닙니다.{" "}
+        <main className="mx-auto max-w-7xl px-4 pt-5 pb-24 md:pb-10">{children}</main>
+        <footer className="mx-auto max-w-7xl px-4 pb-28 text-xs leading-relaxed text-muted md:pb-10">
+          출처: U.S. Census Bureau, 일본 재무성 무역통계(e-Stat), 한국 관세청, SEC EDGAR·DART, BLS, FRED, Vast.ai, OpenRouter 등. 투자 권유가 아닙니다.{" "}
           <Link href="/about" className="text-accent">운영·방법론 소개 →</Link> ·{" "}
           <a href="https://t.me/buywhenitgoesup" target="_blank" rel="noreferrer" className="text-accent">텔레그램 채널</a>
         </footer>
+        <BottomNav />
       </body>
     </html>
   );

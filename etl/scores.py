@@ -61,6 +61,17 @@ def fin_frame(con, ticker: str, since="2021-01-01") -> pd.DataFrame:
     fin = pd.read_sql("SELECT period_start start, period_end end, revenue FROM financials "
                       "WHERE ticker=? AND period_end>=? ORDER BY period_end", con, params=(ticker, since))
     fin["start"], fin["end"] = pd.to_datetime(fin.start), pd.to_datetime(fin.end)
+    # 빠진 분기는 빈 행으로 채워 위치 기반 전년비(pct_change(4))·선행(shift)이 다른 분기와 짝지어지지 않게
+    gaps = [{"start": a + pd.Timedelta(days=1), "end": b - pd.Timedelta(days=1)}
+            for a, b in zip(fin.end, fin.start.iloc[1:]) if (b - a).days > 45]
+    if gaps:
+        fill = []
+        for g in gaps:  # 빈 구간을 약 3개월씩 나눔
+            s, e = g["start"], g["end"]
+            k = max(1, round((e - s).days / 91))
+            fill += [{"start": s + pd.Timedelta(days=round(i * (e - s).days / k)), "end": s + pd.Timedelta(days=round((i + 1) * (e - s).days / k) - 1) if i < k - 1 else e,
+                      "revenue": float("nan")} for i in range(k)]
+        fin = pd.concat([fin, pd.DataFrame(fill)]).sort_values("end").reset_index(drop=True)
     return fin
 
 

@@ -6,39 +6,10 @@ import { axis, baseOption, EChart } from "@/components/EChart";
 import { mini, Mini, refLine } from "@/components/MiniCard";
 import { money } from "@/lib/format";
 import type { CreditRow, FinraRow, MacroObs, MarketCredit } from "@/lib/queries";
+import { cov, de, dueCash, ebitda, lev, pdFmt, pdTone, risk, RISK_STYLE, x } from "@/lib/credit";
+import { SectionHead } from "@/components/ui";
 
 export type CreditCo = { ticker: string; name: string; grp: string | null };
-
-const ebitda = (r?: CreditRow) => r?.ebitda_ttm ?? r?.ebit_ttm ?? null; // 감가상각이 없으면(한국 요약 현금흐름표) 영업이익으로 — 레버리지가 다소 높게 나옴
-const lev = (r?: CreditRow) => { const e = ebitda(r); return r && r.net_debt != null && e && e > 0 ? r.net_debt / e : null; };
-const cov = (r?: CreditRow) => (r && r.ebit_ttm != null && r.interest_ttm ? r.ebit_ttm / r.interest_ttm : null);
-const dueCash = (r?: CreditRow) => (r && r.due_1y != null && r.cash ? r.due_1y / r.cash : null);
-const de = (r?: CreditRow) => (r && r.equity && r.equity > 0 ? (r.currency === "KRW" ? (r.liabilities ?? 0) : (r.debt ?? 0)) / r.equity : null);
-
-/** 주의·관찰·양호 — 레버리지·이자 감당·현금흐름·단기 만기 기준(장부, 단순 규칙) */
-function risk(r?: CreditRow): ["주의" | "관찰" | "양호", string[]] {
-  const why: string[] = [], l = lev(r), c = cov(r), d = dueCash(r);
-  const e = ebitda(r), netCash = (r?.net_debt ?? 0) <= 0;
-  let lvl = 0;
-  if (netCash) {  // 순현금: 이자 부담은 기준이 아님 → 현금이 FCF 적자를 몇 년 버티나
-    if (r?.fcf_ttm != null && r.fcf_ttm < 0) {
-      const run = (r.cash ?? 0) / -r.fcf_ttm;
-      lvl = run < 1.5 ? 2 : 1;
-      why.push(`순현금이지만 FCF 적자 — 현금으로 ${run.toFixed(1)}년`);
-    }
-    return [(["양호", "관찰", "주의"] as const)[lvl], why];
-  }
-  if (e != null && e <= 0) { lvl = 2; why.push("EBITDA 적자인데 순부채"); }
-  if (l != null && l > 4) { lvl = 2; why.push(`순부채/EBITDA ${l.toFixed(1)}배`); } else if (l != null && l > 2.5) { lvl = Math.max(lvl, 1); why.push(`순부채/EBITDA ${l.toFixed(1)}배`); }
-  if (c != null && c < 2) { lvl = 2; why.push(`이자보상 ${c.toFixed(1)}배`); } else if (c != null && c < 5) { lvl = Math.max(lvl, 1); why.push(`이자보상 ${c.toFixed(1)}배`); }
-  if (r?.fcf_ttm != null && r.fcf_ttm < 0) { lvl = Math.max(lvl, d != null && d > 1 ? 2 : 1); why.push(d != null && d > 1 ? "FCF 적자 + 1년 내 만기 > 현금" : "FCF 적자(차입·증자로 투자)"); }
-  return [(["양호", "관찰", "주의"] as const)[lvl], why];
-}
-const RISK_STYLE = { 주의: "bg-red-950 text-red-300", 관찰: "bg-amber-950 text-amber-300", 양호: "bg-up/20 text-up" };
-const x = (v: number | null, d = 1) => (v == null ? "-" : `${v.toFixed(d)}배`);
-
-const pdFmt = (p?: number | null) => (p == null ? "-" : p < 0.0005 ? "<0.1%" : `${(p * 100).toFixed(p < 0.1 ? 1 : 0)}%`);
-const pdTone = (p?: number | null) => (p == null ? "" : p >= 0.2 ? "text-down font-bold" : p >= 0.05 ? "text-amber-300" : "");
 
 export function CreditSection({ rows, cos, ust, finra, mkt }: { rows: CreditRow[]; cos: CreditCo[]; ust: MacroObs[]; finra: FinraRow[]; mkt: MarketCredit[] }) {
   const pdBy = useMemo(() => {
@@ -62,10 +33,13 @@ export function CreditSection({ rows, cos, ust, finra, mkt }: { rows: CreditRow[
       <MarketPanel ust={ust} finra={finra} />
 
       <section className="space-y-3">
-        <div className="flex flex-wrap items-baseline justify-between gap-2">
-          <h2 className="text-lg font-bold">기업별 재무 신용 <span className="text-sm font-normal text-muted">최근 분기 장부 · 흐름은 최근 4분기 합</span></h2>
-          <span className="text-xs"><span className={`rounded px-1.5 ${RISK_STYLE.주의}`}>주의 {counts.주의}</span> <span className={`rounded px-1.5 ${RISK_STYLE.관찰}`}>관찰 {counts.관찰}</span> <span className={`rounded px-1.5 ${RISK_STYLE.양호}`}>양호 {counts.양호}</span></span>
-        </div>
+        <SectionHead title="기업별 재무 신용" sub="최근 분기 장부 · 흐름은 최근 4분기 합 · 신용등급이 아닌 단순 규칙"
+          right={<span><span className={`rounded px-1.5 ${RISK_STYLE.주의}`}>주의 {counts.주의}</span> <span className={`rounded px-1.5 ${RISK_STYLE.관찰}`}>관찰 {counts.관찰}</span> <span className={`rounded px-1.5 ${RISK_STYLE.양호}`}>양호 {counts.양호}</span></span>}
+          info={<>
+            <p><b className="text-fg">주가 내재 부도확률</b> = Merton 모형(KMV·Bharath-Shumway 단순판): 시가총액·1년 주가 변동성·부도 기준 부채(1년 내 만기 + 나머지 차입의 절반)로 1년 부도거리를 구하고 5년 누적으로 환산. 회사채 스프레드와 같은 &lsquo;시장 신호&rsquo;지만 주가 변동이 큰 성장주는 과대, 투자등급 대형주는 과소로 나오는 경향 — 순위·추세 위주로 보세요(주가 원 데이터는 출처 약관상 표시하지 않음).</p>
+            <p><b className="text-fg">장부 기준</b>(SEC XBRL·DART) — 총차입 = 단·장기 차입금·사채 + 금융리스(운용리스 제외), 현금 = 현금성자산 + 단기 투자, 이자보상 = 영업이익 ÷ 이자비용(최근 4분기, 없으면 이자 지급액), 1년 내 만기 = 12개월 안 상환 원금 또는 유동성 차입금. 한국 종목은 회사 전체(두산은 별도) 기준, 부채/자본은 부채총계 ÷ 자본, * 표시는 감가상각이 요약 현금흐름표에 없어 EBITDA 대신 영업이익 기준.</p>
+            <p><b className="text-fg">판정</b>: 순부채 회사 — 주의 = 순부채/EBITDA 4배 초과·이자보상 2배 미만·EBITDA 적자·FCF 적자이면서 1년 내 만기가 현금보다 많음, 관찰 = 2.5배 초과·5배 미만·FCF 적자. 순현금 회사 — FCF 적자면 현금으로 버틸 햇수 1.5년 미만 주의, 그 외 관찰. 판정 칸에 마우스를 올리면 이유.</p>
+          </>} />
         <div className="card min-w-0 overflow-x-auto">
           <table className="w-full min-w-[1000px] whitespace-nowrap text-sm">
             <thead className="text-xs text-muted"><tr className="border-b border-line">
@@ -102,13 +76,7 @@ export function CreditSection({ rows, cos, ust, finra, mkt }: { rows: CreditRow[
           </table>
         </div>
         {sel && by[sel] && <Detail co={cos.find((c) => c.ticker === sel)!} h={by[sel]} pd={pdBy[sel] ?? []} />}
-        <p className="text-xs leading-relaxed text-muted">
-          주가 내재 부도확률 = Merton 모형(KMV·Bharath-Shumway 단순판): 시가총액·1년 주가 변동성·부도 기준 부채(1년 내 만기 + 나머지 차입의 절반)로 1년 부도거리를 구하고 5년 누적으로 환산.
-          회사채 스프레드와 같은 &lsquo;시장 신호&rsquo;지만 주가 변동이 큰 성장주는 과대, 투자등급 대형주는 과소로 나오는 경향 — 순위·추세 위주로 보세요(주가 원 데이터는 출처 약관상 표시하지 않음).
-          나머지는 장부 기준(SEC XBRL·DART) — &lsquo;빚을 감당할 체력&rsquo;. 총차입 = 단·장기 차입금·사채 + 금융리스(운용리스 제외), 현금 = 현금성자산 + 단기 투자,
-          이자보상 = 영업이익 ÷ 이자비용(최근 4분기, 이자비용 공시가 없으면 이자 지급액), 1년 내 만기 = 12개월 안 상환 원금(공시 시) 또는 유동성 차입금. 한국 종목은 회사 전체(두산은 별도) 기준이고 부채/자본은 부채총계 ÷ 자본, 감가상각이 요약 현금흐름표에 없어 * 표시는 EBITDA 대신 영업이익 기준(레버리지가 다소 높게 나옴).
-          판정: 순부채 회사 — 주의 = 순부채/EBITDA 4배 초과·이자보상 2배 미만·EBITDA 적자·FCF 적자이면서 1년 내 만기가 현금보다 많음, 관찰 = 2.5배 초과·5배 미만·FCF 적자. 순현금 회사 — FCF 적자면 현금으로 버틸 햇수 1.5년 미만 주의, 그 외 관찰. 판정 칸에 마우스를 올리면 이유. 신용등급이 아닌 단순 규칙입니다.
-        </p>
+
       </section>
     </div>
   );
@@ -240,7 +208,8 @@ function MarketPanel({ ust, finra }: { ust: MacroObs[]; finra: FinraRow[] }) {
 
   return (
     <section className="space-y-3">
-      <h2 className="text-lg font-bold">회사채 시장 <span className="text-sm font-normal text-muted">미 국채 곡선 · FINRA 회사채 상승−하락 비율</span></h2>
+      <SectionHead title="회사채 시장" sub="미 국채 곡선 · 회사채 상승−하락 비율"
+        info={<p>국채: 미 재무부(FRED DGS). 회사채 상승−하락: FINRA TRACE 시장 집계 — 그날 거래된 회사채 중 (가격 오른 수 − 내린 수) ÷ 전체, 10일 평균. 0 위면 신용 시장이 편안, 하이일드가 계속 0 아래면 스프레드 확대 신호(금리 상승기엔 투자등급도 같이 내림). 종목별 회사채 스프레드는 무료 공개 API가 없고 FINRA 사이트 수집은 약관상 금지라, 아래 표의 &lsquo;주가 내재 부도확률&rsquo;로 대신합니다.</p>} />
       <div className="grid gap-4 xl:grid-cols-3">
         <div className="card min-w-0"><h3 className="font-bold">미 국채 수익률 곡선 <span className="text-xs font-normal text-muted">{last}</span></h3><EChart option={curve} height={260} /></div>
         <div className="card min-w-0"><h3 className="font-bold">10년물 · 장단기 금리차</h3><EChart option={sl} height={260} /></div>
@@ -249,7 +218,7 @@ function MarketPanel({ ust, finra }: { ust: MacroObs[]; finra: FinraRow[] }) {
           {cats.length ? <EChart option={br} height={260} /> : <p className="mt-6 text-sm text-muted">FINRA 데이터 수집 대기 — 다음 데이터 갱신(GitHub Actions)부터 채워집니다.</p>}
         </div>
       </div>
-      <p className="text-xs text-muted">국채: 미 재무부(FRED DGS). 회사채 상승−하락: FINRA TRACE 시장 집계(Source: FINRA) — 그날 거래된 회사채 중 (가격 오른 수 − 내린 수) ÷ 전체, 10일 평균. 0 위면 신용 시장이 편안, 하이일드가 계속 0 아래면 스프레드 확대 신호(금리 상승기엔 투자등급도 같이 내림). 종목별 회사채 스프레드는 무료 공개 API가 없고 FINRA 사이트 수집은 약관상 금지라, 아래 표의 “주가 내재 부도확률”로 대신합니다.</p>
+      <p className="text-xs text-muted">국채: FRED(미 재무부) · 회사채 상승−하락: Source: FINRA</p>
     </section>
   );
 }
