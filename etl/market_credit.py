@@ -82,6 +82,9 @@ def collect(con, log=print) -> int:
             p1 = _ncdf(-dd)
             sp = implied_spread(e, f, sv, r)
             out.append((t, x.date.strftime("%Y-%m-%d"), round(float(x.vol), 4), round(dd, 3), round(p1, 6), round(1 - (1 - p1) ** 5, 5), round(f / (e + f), 4), round(sp * 1e4, 1)))
+    if not out:  # 야후 실패 등으로 한 종목도 못 구하면 기존 값을 지우지 않음
+        log("  ✗ 주가 내재 신용: 계산된 종목 없음 — 기존 값 유지")
+        return 0
     con.execute("DELETE FROM market_credit")
     con.executemany("INSERT INTO market_credit (ticker, date, vol, dd, pd1, pd5, lev_mkt, spread_bp) VALUES (?,?,?,?,?,?,?,?)", out)
     con.commit()
