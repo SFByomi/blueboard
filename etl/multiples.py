@@ -6,7 +6,8 @@
 과거 밴드 = 최근 12분기(3년) 각 분기 말 EV ÷ 그 분기 실적 × 4 → 하위 10·25·50·75·90%
 지금 배수 = 오늘 EV ÷ 진행 분기 추정 × 4 (추정이 없으면 직전 분기 실적)
 시나리오 (배수가 안정적이고, 최근 1년 배수가 3년과 비슷하고, 지금 배수가 3년 범위 안일 때만 — 재평가·경기순환 국면엔 과거 배수 적용이 왜곡이라 이유만 남김)
-  약세 = 하위 25% 배수 × 추정 하단 · 기준 = 중앙 배수 × 추정 · 강세 = 상위 25% 배수 × 추정 상단 → (− 순부채) ÷ 주식 수
+  Worst = 하위 25% 배수 × 추정 하단 · Base = 중앙 배수 × 추정 · Best = 상위 25% 배수 × 추정 상단 → 예상 시가총액(− 순부채), ÷ 주식 수 = 주가
+주가는 하루 한 번(데이터 갱신 때) 야후 값 — 그 시각·종가/장중을 함께 저장(px_time·px_date·px_kind)해 화면에 '○월 ○일 종가 기준'으로. 예상 시가총액은 주가와 무관
 
 시가총액: 야후 현재 시가총액 × (분기 말 종가 ÷ 현재가) × (그 분기 희석 주식 수 ÷ 최근, SEC — 액면분할은 야후 분할 기록으로 보정).
 야후 가격은 재게시 금지 → 원 가격·시가총액은 저장하지 않고 배수·시나리오 결과(우리 계산)와 비율만 (multiple_hist·multiple_now).
@@ -14,8 +15,9 @@
 """
 import json
 import time
-from datetime import date
+from datetime import date, datetime, timezone
 from pathlib import Path
+from zoneinfo import ZoneInfo
 
 import numpy as np
 import pandas as pd
@@ -32,7 +34,7 @@ SHARE_TAGS = ["WeightedAverageNumberOfDilutedSharesOutstanding", "WeightedAverag
 
 
 def _yahoo(s, crumb, sym: str) -> dict:
-    """일간 종가(액면분할 반영)·분할 기록·현재 시가총액·가격·통화"""
+    """일간 종가(액면분할 반영)·분할 기록·현재 시가총액·가격·통화 + 그 가격의 시각(종가/장중)"""
     r = s.get(f"{consensus.BASE}/v8/finance/chart/{sym}", params={"range": "5y", "interval": "1d", "events": "split", "crumb": crumb}, timeout=30)
     r.raise_for_status()
     j = r.json()["chart"]["result"][0]
@@ -40,8 +42,17 @@ def _yahoo(s, crumb, sym: str) -> dict:
     splits = [(pd.Timestamp(v["date"], unit="s"), v["numerator"] / v["denominator"]) for v in (j.get("events") or {}).get("splits", {}).values()]
     q = s.get(f"{consensus.BASE}/v10/finance/quoteSummary/{sym}", params={"modules": "price", "crumb": crumb}, timeout=30).json()
     p = ((q["quoteSummary"]["result"] or [{}])[0].get("price") or {})
+    # 이 계산에 쓴 주가가 언제 값인지 — 하루 한 번 갱신이라 화면에 '○월 ○일 종가 기준'으로 표시
+    meta = j.get("meta") or {}
+    t, tz = p.get("regularMarketTime") or meta.get("regularMarketTime"), meta.get("exchangeTimezoneName") or "UTC"
+    reg = (meta.get("currentTradingPeriod") or {}).get("regular") or {}
+    now = time.time()
+    live = bool(t and reg and reg.get("start", 0) <= now <= reg.get("end", 0) and t >= reg.get("start", 0))
+    px_at = datetime.fromtimestamp(t, ZoneInfo(tz)) if t else None
     return {"px": px[~px.index.duplicated(keep="last")], "splits": splits, "mcap": (p.get("marketCap") or {}).get("raw"),
-            "price": (p.get("regularMarketPrice") or {}).get("raw"), "currency": p.get("currency")}
+            "price": (p.get("regularMarketPrice") or {}).get("raw"), "currency": p.get("currency"),
+            "px_time": px_at.astimezone(timezone.utc).isoformat(timespec="minutes") if px_at else None,
+            "px_date": px_at.date().isoformat() if px_at else None, "px_kind": "장중" if live else "종가"}
 
 
 def _sec_shares(sec_t: str, splits: list[tuple[pd.Timestamp, float]]) -> pd.Series | None:
@@ -88,7 +99,7 @@ def value_one(con, ticker: str, sec_t: str | None, dart_fs: str | None, grp: str
     fin = pd.read_sql("SELECT period_end e, revenue r, currency c FROM financials WHERE ticker=? ORDER BY period_end", con, params=(ticker,))
     fin["e"] = pd.to_datetime(fin.e)
     cur = fin.c.iloc[-1] if len(fin) else None
-    out = {"currency": cur}
+    out = {"currency": cur, **{k: y.get(k) for k in ("px_time", "px_date", "px_kind")}}
     if y["currency"] and cur and y["currency"] != cur:
         return [], {**out, "reason": f"주가 통화({y['currency']})와 실적 통화({cur})가 달라 비교하지 않음"}
     if not y["mcap"] or not y["price"] or y["px"].empty:
@@ -207,16 +218,17 @@ def collect(con, log=print) -> int:
             con.executemany("INSERT OR REPLACE INTO multiple_hist (ticker, q_end, metric, value) VALUES (?,?,?,?)", rows)
             time.sleep(0.2)
         scen = res.get("scen")
-        con.execute("INSERT OR REPLACE INTO multiple_now (date, ticker, metric, basis, tier, now, now_trail, p10, p25, p50, p75, p90, p50_1y, n, pct, scen, reason, currency) "
-                    "VALUES (?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)",
+        con.execute("INSERT OR REPLACE INTO multiple_now (date, ticker, metric, basis, tier, now, now_trail, p10, p25, p50, p75, p90, p50_1y, n, pct, scen, reason, currency, px_time, px_date, px_kind) "
+                    "VALUES (?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)",
                     (today, ticker, res.get("metric"), res.get("basis"), res.get("tier"), _r(res.get("now")), _r(res.get("now_trail")),
                      *[_r(res.get(k)) for k in ("p10", "p25", "p50", "p75", "p90", "p50_1y")], res.get("n"), _r(res.get("pct"), 3),
-                     json.dumps(scen, ensure_ascii=False) if scen else None, res.get("reason"), res.get("currency")))
+                     json.dumps(scen, ensure_ascii=False) if scen else None, res.get("reason"), res.get("currency"),
+                     res.get("px_time"), res.get("px_date"), res.get("px_kind")))
         n_ok += res.get("now") is not None
         n_scen += bool(scen)
         if scen:
             log(f"  · {ticker} {res['metric']} 지금 {res['now']:.1f}배 (3년 {res['p25']:.1f}/{res['p50']:.1f}/{res['p75']:.1f}) → "
-                + " / ".join(f"{k} {v['upside']:+.0%}" for k, v in scen.items()))
+                + " / ".join(f"{k} {v['upside']:+.0%}" for k, v in scen.items()) + f" · 주가 {res.get('px_date')} {res.get('px_kind')}")
         else:
             log(f"  · {ticker} 시나리오 없음 — {res.get('reason')}")
     con.commit()

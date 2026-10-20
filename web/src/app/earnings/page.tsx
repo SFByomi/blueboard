@@ -4,7 +4,7 @@ import { T } from "@/components/Names";
 import { Badge, Defs, Fold, PageHead } from "@/components/ui";
 import { confNote, dday, estCaution, estRange, estReported, estTier, money, pct, TIER_STYLE, tone, watchFlag } from "@/lib/format";
 import { companies, earningsBasis, earningsDates, latestEstimates, latestMultiples, reportedQuarters, unestimated, type RevEstimate } from "@/lib/queries";
-import { parseScen } from "@/lib/valuation";
+import { parseScen, pxLabel } from "@/lib/valuation";
 
 export const dynamic = "force-dynamic";
 export const metadata: Metadata = { title: "실적 추정", description: "진행 분기 매출 — 세관 무역 흐름·회사 가이던스 기반 추정과 애널리스트 컨센서스의 차이, 실적 발표 일정" };
@@ -51,7 +51,7 @@ export default async function EarningsPage({ searchParams }: PageProps<"/earning
           ["보류", "회사 가이던스 없이 모델만으로 낸 추정이 컨센서스와 25% 넘게 달라 외삽 가능성이 큼"],
           ["발표됨", "실적은 나왔지만 SEC 공시 반영 전이라 아직 다음 분기로 안 넘어간 추정"],
           ["주목", "신뢰 추정 + 컨센 차이 10% 이상(오차범위 밖) + 실적 발표 30일 이내"],
-          ["밸류 기준", "기준 시나리오: 추정 실적 × 과거 3년 중앙 배수일 때 지금 주가 대비 (종목 화면 '밸류에이션')"],
+          ["밸류 Best·Base·Worst", "추정 실적 × 이 회사가 과거 3년 받은 배수(상위 25%·중앙·하위 25%)로 낸 예상 시가총액이 지금 주가 대비 몇 %인지. 주가는 하루 한 번 데이터 갱신 때 값(실시간 아님) — 종목 화면 '밸류에이션'에 날짜 표시"],
           ["실적 발표 ~", "회사가 아직 일정을 안 내 작년 같은 분기 기준으로 추정한 날짜"],
         ]} />}
       />
@@ -77,7 +77,8 @@ export default async function EarningsPage({ searchParams }: PageProps<"/earning
                 <div className="mt-2 grid grid-cols-3 gap-2 text-xs">
                   <div><div className="text-muted">추정 매출</div><div className="font-mono text-sm font-bold">{money(e.est, e.currency)}</div><div className={`font-mono ${tone(e.est / e.last_actual - 1)}`}>{pct(e.est / e.last_actual - 1)}</div></div>
                   <div><div className="text-muted">컨센 대비</div><div className={`font-mono text-sm font-bold ${e.cons_gap == null || c.inRange ? "text-muted" : tone(e.cons_gap)}`}>{e.cons_gap == null ? "-" : pct(e.cons_gap)}</div><div className="text-muted">오차 ±{c.r == null ? "-" : (c.r * 100).toFixed(0)}%</div></div>
-                  <div><div className="text-muted">밸류 기준</div><div className={`font-mono text-sm font-bold ${c.s ? tone(c.s.base.upside) : "text-muted"}`}>{c.s ? pct(c.s.base.upside, 0) : "-"}</div><div className="text-muted">{c.s ? "3년 중앙 배수" : "생략"}</div></div>
+                  <div><div className="text-muted">밸류 Base</div><div className={`font-mono text-sm font-bold ${c.s ? tone(c.s.base.upside) : "text-muted"}`}>{c.s ? pct(c.s.base.upside, 0) : "-"}</div>
+                    <div className="font-mono text-muted">{c.s ? <>B <span className={tone(c.s.bull.upside)}>{pct(c.s.bull.upside, 0)}</span> · W <span className={tone(c.s.bear.upside)}>{pct(c.s.bear.upside, 0)}</span></> : "생략"}</div></div>
                 </div>
               )}
             </Link>
@@ -90,7 +91,7 @@ export default async function EarningsPage({ searchParams }: PageProps<"/earning
         <table className="w-full whitespace-nowrap text-sm">
           <thead className="text-xs text-muted"><tr className="border-b border-line">
             <th className="py-2 text-left">종목</th><th className="text-left">분기</th><th className="text-right">추정 매출</th><th className="text-right">직전 분기 대비</th>
-            <th className="text-right">컨센 대비</th><th className="text-right">오차범위</th><th className="text-right">신뢰도</th><th className="text-right">밸류 기준</th><th className="text-right">실적 발표</th>
+            <th className="text-right">컨센 대비</th><th className="text-right">오차범위</th><th className="text-right">신뢰도</th><th className="text-right" title="예상 시가총액이 지금 주가 대비 — Best / Base / Worst">밸류 Best / Base / Worst</th><th className="text-right">실적 발표</th>
           </tr></thead>
           <tbody className="font-mono">
             {list.map((e) => {
@@ -106,7 +107,9 @@ export default async function EarningsPage({ searchParams }: PageProps<"/earning
                     <td className={`text-right font-bold ${e.cons_gap == null || c.inRange ? "text-muted" : tone(e.cons_gap)}`} title={c.inRange ? "차이가 오차범위 안 — 의미 있는 차이로 보기 어려움" : undefined}>{e.cons_gap == null ? "-" : pct(e.cons_gap)}</td>
                     <td className="text-right text-xs text-muted">{c.r == null ? "-" : `±${(c.r * 100).toFixed(0)}%`}</td>
                     <td className="text-right text-xs" title={confNote(e)}><span className={`mr-1 rounded px-1.5 py-0.5 font-sans ${TIER_STYLE[c.tr]}`}>{c.tr}</span>{e.conf == null ? "-" : `${(e.conf * 100).toFixed(0)}%`}</td>
-                    <td className={`text-right ${c.s ? tone(c.s.base.upside) : "text-muted"}`} title={c.s ? "추정 × 3년 중앙 배수 기준 시나리오" : mBy[e.ticker]?.reason ?? undefined}>{c.s ? pct(c.s.base.upside, 0) : "-"}</td>
+                    <td className="text-right" title={c.s ? `추정 × 3년 배수 시나리오 · ${pxLabel(mBy[e.ticker]) ?? ""} 주가 대비` : mBy[e.ticker]?.reason ?? undefined}>{c.s ? <>
+                      <span className={`text-xs ${tone(c.s.bull.upside)}`}>{pct(c.s.bull.upside, 0)}</span> / <b className={tone(c.s.base.upside)}>{pct(c.s.base.upside, 0)}</b> / <span className={`text-xs ${tone(c.s.bear.upside)}`}>{pct(c.s.bear.upside, 0)}</span>
+                    </> : <span className="text-muted">-</span>}</td>
                   </>)}
                   <td className="text-right text-xs text-muted" title={basis[e.ticker]}>{c.nx ? `${basis[e.ticker] ? "~" : ""}${c.nx.slice(5)} D-${c.d}` : "-"}</td>
                 </tr>
@@ -125,7 +128,7 @@ export default async function EarningsPage({ searchParams }: PageProps<"/earning
           </ul>
         </Fold>
       )}
-      <p className="text-xs text-muted">한국 종목은 사업부문·연결 매출이라 컨센서스 비교가 없습니다. 투자 권유가 아닙니다.</p>
+      <p className="text-xs text-muted">밸류 %는 하루 한 번 데이터 갱신 때의 주가 기준{mults[0]?.date ? ` (${mults[0].date} 계산)` : ""} — 실시간 아님. 한국 종목은 사업부문·연결 매출이라 컨센서스 비교가 없습니다. 투자 권유가 아닙니다.</p>
     </div>
   );
 }

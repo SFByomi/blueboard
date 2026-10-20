@@ -134,6 +134,7 @@ CREATE TABLE IF NOT EXISTS multiple_hist ( -- 분기 말 연환산 배수 이력
 CREATE TABLE IF NOT EXISTS multiple_now ( -- 지금 배수(추정 기준)·3년 밴드·시나리오(약세/기준/강세: 배수·우리 계산 주가·현재 대비) 또는 생략 이유. 원 주가·시총은 저장 안 함
   date TEXT NOT NULL, ticker TEXT NOT NULL, metric TEXT, basis TEXT, tier TEXT, now REAL, now_trail REAL,
   p10 REAL, p25 REAL, p50 REAL, p75 REAL, p90 REAL, p50_1y REAL, n INTEGER, pct REAL, scen TEXT, reason TEXT, currency TEXT,
+  px_time TEXT, px_date TEXT, px_kind TEXT, -- 계산에 쓴 주가의 시각(UTC)·거래소 현지 날짜·종가/장중
   PRIMARY KEY (date, ticker)
 );
 CREATE TABLE IF NOT EXISTS finra_market ( -- FINRA 회사채 시장 집계 (etl/finra.py): 숫자 필드를 이름 그대로
@@ -174,6 +175,9 @@ MIGRATIONS = [
     ("revenue_estimates", "hits INTEGER"),            # 백테스트 적중 분기 수
     ("revenue_estimates", "tier TEXT"),
     ("revenue_estimates", "guide TEXT"),
+    ("multiple_now", "px_time TEXT"),                 # 밸류에이션 계산에 쓴 주가 시각(UTC) · 거래소 현지 날짜 · 종가/장중 (etl/multiples.py)
+    ("multiple_now", "px_date TEXT"),
+    ("multiple_now", "px_kind TEXT"),
     ("earnings_calendar", "next_basis TEXT"),          # 발표 예정일 근거: NULL = 야후 확정 일정, 아니면 '작년 같은 분기 … 기준 추정' 등              # 진행 분기 회사 가이던스 JSON {low, high, filed, beat, prelim} (etl/guidance.py)               # 신뢰 / 보통 / 참고      # 실적 발표가 끝난 마지막 분기 말일 (야후 earningsHistory)
 ]
 

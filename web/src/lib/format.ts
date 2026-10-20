@@ -1,5 +1,8 @@
-export const pct = (v: number | null | undefined, digits = 1) =>
-  v == null || !isFinite(v) ? "-" : `${v >= 0 ? "+" : ""}${(v * 100).toFixed(digits)}%`;
+export const pct = (v: number | null | undefined, digits = 1) => {
+  if (v == null || !isFinite(v)) return "-";
+  const r = Number((v * 100).toFixed(digits)); // 반올림 후 0이면 부호 없이 (-0% 방지)
+  return `${r > 0 ? "+" : ""}${(r === 0 ? 0 : r).toFixed(digits)}%`;
+};
 
 export function usd(v: number | null | undefined) {
   if (v == null) return "-";
