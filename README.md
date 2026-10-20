@@ -102,7 +102,7 @@ GitHub Actions (매일 03:43 KST 예약)                     Vercel (web/, 서�
 2. X Developer Portal → 앱 권한 **Read and write** → API Key/Secret, Access Token/Secret(권한 변경 후 재발급)
 3. Vercel → Settings → Environment Variables (Production):
    `ANTHROPIC_API_KEY`, `X_API_KEY`, `X_API_SECRET`, `X_ACCESS_TOKEN`, `X_ACCESS_SECRET`, `TELEGRAM_BOT_TOKEN`, `TELEGRAM_CHAT_ID`, `TELEGRAM_WEBHOOK_SECRET`(임의 긴 문자열, 영문·숫자·`_-`), `CRON_SECRET`(임의 긴 문자열) — 선택 `TELEGRAM_CHANNEL`(기본 `@buywhenitgoesup`)
-4. 재배포 후 웹훅 등록 한 번: `curl -H "Authorization: Bearer <CRON_SECRET>" https://buywhenitgoesup.vercel.app/api/autopost/setup`
-5. 바로 시험: `…/api/autopost/cron?dry=1`(후보만), `…/api/autopost/preview?kind=trade|preview|result|prices`(차트 PNG), `…/api/autopost/cron?force=1&kind=trade`(초안 실제 발송) — 모두 같은 Authorization 헤더
+4. 재배포 후 웹훅 등록 한 번: 브라우저로 `https://buywhenitgoesup.vercel.app/api/autopost/setup?key=<CRON_SECRET>` (또는 `Authorization: Bearer` 헤더)
+5. 바로 시험: `…/api/autopost/cron?dry=1`(후보만), `…/api/autopost/preview?kind=trade|preview|result|prices`(차트 PNG), `…/api/autopost/cron?force=1&kind=trade`(초안 실제 발송) — 모두 같은 `?key=` 또는 Authorization 헤더
 
 Cron은 Vercel 프로덕션 배포에서만 돈다(미리보기 배포 X). 로컬(`DATABASE_URL` 없음)에서는 시크릿 없이 `localhost:3000/api/autopost/cron?dry=1`·`/preview`로 확인.
