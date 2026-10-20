@@ -77,12 +77,19 @@ GitHub Actions (매일 03:43 KST 예약)                     Vercel (web/, 서�
 
 ## X·텔레그램 자동 게시 (승인제)
 
-매일 08:30 KST Vercel Cron → 공급망 흐름 TOP 3 초안 → 텔레그램으로 나에게 **[게시][수정][버리기]** → 게시를 누르면 X(영어)·텔레그램 채널 `@buywhenitgoesup`(한국어)에 차트와 함께 올라감. 코드: `web/src/lib/autopost/`, `web/src/app/api/autopost/`.
+매일 08:30 KST Vercel Cron → 게시 후보를 골라 하루 최대 3개 초안 → 텔레그램으로 나에게 **[게시][수정][버리기]** → 게시를 누르면 X(영어)·텔레그램 채널 `@buywhenitgoesup`(한국어, `TELEGRAM_CHANNEL=off`면 끔)에 차트와 함께 올라감. 코드: `web/src/lib/autopost/`, `web/src/app/api/autopost/`.
 
-- **TOP 3**: 홈 '공급망 모멘텀'과 같은 숫자(`lib/signals.ts`) 중 최근 3개월 전년비 절댓값이 큰 회사 고유 흐름(업황 대리 흐름 제외, 같은 흐름 쓰는 종목은 합침)
-- **확인 필요 표시**: 전년비 200% 초과(사이트의 `*`, 기저효과 가능), 기준월이 3개월 넘게 지남, 매출 비교 표본 8분기 미만, 매출 연관도 C·D
-- **초안**: Claude API(`claude-opus-5-5`, 구조화 출력)에 미리 포맷한 숫자만 넘김. 결과를 코드로 다시 검사해 넘겨주지 않은 숫자·출처/기준월 누락·X 280자 초과를 경고하고, "Not investment advice / 투자 권유 아님"은 빠지면 자동으로 붙임. 정책상 거절되면 서버 기본 대체 모델로 재시도(`fallbacks: "default"`)
-- **같은 TOP 3·기준월이면 다시 보내지 않음** (무역 데이터는 월 단위라 매일 바뀌지 않음). 상태는 Supabase `autopost_drafts` 테이블(웹이 만들고 RLS 켬, ETL 게시와 무관)
+| 우선순위 | 종류 | 언제 | 내용 |
+|---|---|---|---|
+| 1 | 실적 결과 (`earnings.ts`) | 발표 확인(`earnings_reports`) 후 실제 매출이 들어오면 (21일 안) | 발표 전 마지막 추정 vs 실제 — 오차·범위 안 여부·컨센서스 오차(%만). 맞든 틀리든 올려 신뢰를 쌓음 |
+| 2 | 실적 프리뷰 (`earnings.ts`) | 발표일이 오늘~이틀 뒤 | 진행 분기 추정·범위·전년비·컨센서스 괴리(%만)·백테스트 적중. 신뢰·보통 등급만 |
+| 3 | 무역 TOP 3 (`pick.ts`) | 기준월이 바뀔 때 (월 1회꼴) | 최근 3개월 전년비 변화가 큰 회사 고유 흐름 |
+| 4 | 주간 GPU 렌탈가 (`prices.ts`) | 월요일 | Nebius 하루 평균·최저, 지난주 대비 |
+
+- 실적 게시물은 **추정에 무역·운영 데이터 흐름이 들어간 종목만** (가이던스만으로 낸 추정은 제외). 모델 설명도 출처대로 — 통관 데이터만이면 "customs trade flows", 아니면 실제 출처(예: 테슬라 인도량)
+- **확인 필요 표시**: 무역 = 전년비 200% 초과(`*`)·기준월 3개월 넘게 지남·표본 8분기 미만·연관도 C·D / 프리뷰 = 신뢰도 '보통'·추정 주의 문구·발표일 추정 / 결과 = 오차 ±5% 밖 / GPU = 주간 ±50% 초과
+- **초안**: Claude API(`claude-opus-5-5`, 구조화 출력)에 미리 포맷한 숫자만 넘김. 결과를 코드로 다시 검사해 넘겨주지 않은 숫자·출처/기준 시점 누락·X 280자 초과를 경고하고, "Not investment advice / 투자 권유 아님"은 빠지면 자동으로 붙임. 정책상 거절되면 서버 기본 대체 모델로 재시도(`fallbacks: "default"`). 컨센서스 원 금액은 넘기지 않음(재게시 금지)
+- **같은 후보(서명)는 다시 보내지 않음**. 상태는 Supabase `autopost_drafts` 테이블(웹이 만들고 RLS 켬, ETL 게시와 무관)
 - **수정**: [수정] → 봇 안내 메시지에 답장으로 `EN: …` / `KO: …` (한쪽만 가능). **게시**는 두 번 눌러도 한 번만, 한쪽만 실패하면 다시 눌러 나머지만 올림
 
 ### 처음 한 번 설정 (키는 Vercel 환경변수에만 — 코드·채팅에 붙이지 않기)
@@ -91,6 +98,6 @@ GitHub Actions (매일 03:43 KST 예약)                     Vercel (web/, 서�
 3. Vercel → Settings → Environment Variables (Production):
    `ANTHROPIC_API_KEY`, `X_API_KEY`, `X_API_SECRET`, `X_ACCESS_TOKEN`, `X_ACCESS_SECRET`, `TELEGRAM_BOT_TOKEN`, `TELEGRAM_CHAT_ID`, `TELEGRAM_WEBHOOK_SECRET`(임의 긴 문자열, 영문·숫자·`_-`), `CRON_SECRET`(임의 긴 문자열) — 선택 `TELEGRAM_CHANNEL`(기본 `@buywhenitgoesup`)
 4. 재배포 후 웹훅 등록 한 번: `curl -H "Authorization: Bearer <CRON_SECRET>" https://buywhenitgoesup.vercel.app/api/autopost/setup`
-5. 바로 시험: `…/api/autopost/cron?dry=1`(고른 흐름만), `…/api/autopost/preview`(차트 PNG), `…/api/autopost/cron?force=1`(초안 실제 발송) — 모두 같은 Authorization 헤더
+5. 바로 시험: `…/api/autopost/cron?dry=1`(후보만), `…/api/autopost/preview?kind=trade|preview|result|prices`(차트 PNG), `…/api/autopost/cron?force=1&kind=trade`(초안 실제 발송) — 모두 같은 Authorization 헤더
 
 Cron은 Vercel 프로덕션 배포에서만 돈다(미리보기 배포 X). 로컬(`DATABASE_URL` 없음)에서는 시크릿 없이 `localhost:3000/api/autopost/cron?dry=1`·`/preview`로 확인.

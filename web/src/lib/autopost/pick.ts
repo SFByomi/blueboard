@@ -1,20 +1,22 @@
 import { query } from "../db";
 import { flowScores } from "../queries";
 import { stockSignals } from "../signals";
+import { type Candidate, type Flag, monthEn, pctTxt } from "./types";
 
 // 자동 게시 초안 1단계: 사이트의 '공급망 모멘텀'(lib/signals.ts)과 같은 숫자에서 최근 변화가 큰 흐름 TOP N을 고르고
 // 이상치를 '확인 필요'로 표시한다. 여기서 만든 문자열(…_txt)만 Claude에 넘기고, 초안에 그 밖의 숫자가 나오면 경고한다.
 
 export const SOURCE_EN: Record<string, string> = {
   census: "US Census Bureau", estat: "Japan MOF trade stats (e-Stat)", kcs: "Korea Customs Service",
-  comext: "Eurostat Comext", c30: "US Census Bureau", eia_planned: "US EIA", eia_retail: "US EIA",
+  comext: "Eurostat Comext", c30: "US Census Bureau (construction spending)", eia_planned: "US EIA", eia_retail: "US EIA",
+  tsla_pd: "Tesla production & deliveries reports", capex: "company capex disclosures", ransomware: "public ransomware leak-site counts",
 };
-const TRADE = new Set(["census", "estat", "kcs", "comext"]); // 금액(달러) 시리즈
+/** 통관(무역) 데이터 소스 — 이것만으로 만든 추정이어야 '통관 데이터 모델'이라고 부른다 */
+export const TRADE_SOURCES = new Set(["census", "estat", "kcs", "comext"]);
 const EXTREME = 2; // |YoY| > 200% — 사이트에서 * (format.baseEffect)
 const STALE_MONTHS = 3; // 오늘(한국) 기준 이보다 오래된 기준월
 const SOLID = 8; // etl/scores.SOLID_YOY — 비교 가능한 분기가 이보다 적으면 우연일 수 있음
 
-export type Flag = { code: "extreme" | "stale" | "short" | "weak"; ko: string };
 export type FlowPick = {
   key: string; tickers: string[]; names: string[]; flow_ko: string; series: string[];
   sources: string[]; products: string[]; partner: string | null;
@@ -22,9 +24,6 @@ export type FlowPick = {
   grade: string | null; corr_txt: string | null; n_yoy: number | null; flags: Flag[]; spark: number[];
 };
 
-const MONTHS = ["Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"];
-export const monthEn = (m: string) => `${MONTHS[Number(m.slice(5, 7)) - 1]} ${m.slice(0, 4)}`;
-export const pctTxt = (v: number) => `${v >= 0 ? "+" : "−"}${Math.abs(v * 100).toFixed(Math.abs(v) < 0.1 ? 1 : 0)}%`;
 const usdTxt = (v: number) => (v >= 1e9 ? `$${(v / 1e9).toFixed(1)}B` : v >= 1e6 ? `$${(v / 1e6).toFixed(0)}M` : `$${(v / 1e3).toFixed(0)}K`);
 const monthsBetween = (a: string, b: string) => (Number(b.slice(0, 4)) - Number(a.slice(0, 4))) * 12 + Number(b.slice(5, 7)) - Number(a.slice(5, 7));
 
@@ -68,7 +67,7 @@ export async function topFlows(n = 3, today = new Date()): Promise<FlowPick[]> {
       partner: ms.find((m) => m.partner)?.partner ?? null,
       month: s.month, month_en: monthEn(s.month), yoy3m: s.yoy3m, yoy3m_txt: pctTxt(s.yoy3m),
       last_yoy_txt: s.last.yoy != null ? pctTxt(s.last.yoy) : null,
-      last_value_txt: s.last.value != null && ms.every((m) => TRADE.has(m.source)) ? usdTxt(s.last.value) : null,
+      last_value_txt: s.last.value != null && ms.every((m) => TRADE_SOURCES.has(m.source)) ? usdTxt(s.last.value) : null,
       grade: worst?.grade ?? null, corr_txt: worst?.best != null ? worst.best.toFixed(2) : null, n_yoy: nYoy, flags, spark: s.sparkAt,
     });
   }
@@ -83,3 +82,25 @@ function hsList(hs: string | null): string[] {
 
 /** 같은 TOP N·기준월이면 같은 서명 → 이미 초안을 만든 조합은 다시 보내지 않음 */
 export const signature = (ps: FlowPick[]) => ps.map((p) => `${p.key}@${p.month}`).join("|");
+
+const TRADE_GUIDE = `Post type: monthly customs-trade movers. The items are the supply-chain flows with the largest recent change (3-month total vs the same 3 months a year earlier). Flag meanings: extreme = change above 200%, likely a small base last year; stale = data month is old; short = fewer than 8 comparable quarters against revenue; weak = trade flow not confirmed to move with company revenue. Also give each item a short English chart title (label_en, max 32 chars) keyed by its "key".`;
+
+/** 무역 TOP 3 후보 (월 1회꼴 — 기준월이 바뀌어야 서명이 바뀜) */
+export async function tradeCandidate(): Promise<Candidate | null> {
+  const picks = await topFlows(3);
+  if (!picks.length) return null;
+  return {
+    kind: "trade", sig: signature(picks), title: "무역 흐름 TOP 3",
+    facts: picks.map((p) => ({
+      key: p.key, tickers: p.tickers, companies: p.names, flow_korean_label: p.flow_ko, products: p.products, partner_country_korean: p.partner,
+      source: p.sources.join(" + "), month_en: p.month_en, change_3m_vs_year_ago: p.yoy3m_txt, latest_month_vs_year_ago: p.last_yoy_txt,
+      latest_month_value: p.last_value_txt, revenue_link_grade: p.grade, revenue_link_corr: p.corr_txt, flags: p.flags.map((f) => f.code),
+    })),
+    guide: TRADE_GUIDE,
+    asof: [...new Set(picks.map((p) => p.month_en))],
+    sources: [...new Set(picks.flatMap((p) => p.sources))],
+    flags: picks.flatMap((p) => p.flags.map((f) => ({ ...f, ko: `${p.tickers.join("·")}: ${f.ko}` }))),
+    brief: picks.map((p, i) => `${i + 1}. ${p.tickers.join("·")} ${p.flow_ko}: 3개월 ${p.yoy3m_txt}${p.last_yoy_txt ? ` · 최근 월 ${p.last_yoy_txt}` : ""} (${p.month}, 연관도 ${p.grade ?? "-"}${p.corr_txt ? ` ${p.corr_txt}` : ""}, 표본 ${p.n_yoy ?? 0}분기)`),
+    data: picks,
+  };
+}
