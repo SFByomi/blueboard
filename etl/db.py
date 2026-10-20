@@ -162,6 +162,7 @@ CREATE TABLE IF NOT EXISTS oi_estimates ( -- 진행 분기 GAAP 영업이익 추
 
 
 MIGRATIONS = [
+    ("market_credit", "spread_bp REAL"),              # 머튼 모형 내재 신용 스프레드(bp, 5년) — 실제 회사채 스프레드 아님
     ("series", "label_en TEXT"),                      # 영어 이름 (영어 페이지·X 게시) — 없으면 한국어 label
     ("companies", "thesis_en TEXT"),                  # 영어 한두 줄 설명 (영어 페이지)
     ("companies", "dart_fs TEXT"),                    # 한국 상장사: CFS(연결)/OFS(별도) — 있으면 DART에서 매출 수집
