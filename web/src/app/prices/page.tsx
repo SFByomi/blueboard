@@ -16,6 +16,9 @@ const GPU_COLORS: Record<string, string> = {
   "A100 SXM4": "#94a3b8", "A100 PCIE": "#64748b",
   "H100 SXM": "#60a5fa", "H100 NVL": "#22d3ee", H200: "#f59e0b", "H200 NVL": "#f472b6", B200: "#34d399", B300: "#a78bfa",
 };
+const NEB_COLORS: Record<string, string> = { H100: "#60a5fa", H200: "#f59e0b", B200: "#34d399", B300: "#a78bfa", "RTX PRO 6000": "#94a3b8" };
+const REGION_KO: Record<string, string> = { "eu-north1": "핀란드", "eu-west1": "파리", "eu-west2": "아이슬란드", "us-central1": "캔자스시티", "me-west1": "이스라엘" };  // 위치가 확인된 지역만, 나머지는 코드 그대로
+const regionName = (r: string) => { const base = r.replace(/-a$/, ""); return REGION_KO[base] ?? base; };
 const TOKEN_COLORS = ["#f472b6", "#a78bfa", "#60a5fa", "#34d399"];
 
 /** 기준일로부터 days일 이전(이하) 가장 가까운 값 대비 변화율 */
@@ -40,9 +43,11 @@ export default async function Prices() {
   const idxGroups = [...new Set(defs.map((d) => d.grp))];
   const gpu = rows.filter((r) => r.kind === "gpu");
   const tok = rows.filter((r) => r.kind === "token");
+  const neb = rows.filter((r) => r.kind === "nebius");
+  const nebGpus = Object.keys(NEB_COLORS).filter((g) => neb.some((r) => r.item === g));
   const gpus = Object.keys(GPU_COLORS).filter((g) => gpu.some((r) => r.item === g));
   const models = [...new Set(tok.map((r) => r.item))];
-  const daily = rows.filter((r) => r.kind !== "index");
+  const daily = rows.filter((r) => r.kind === "gpu" || r.kind === "token");
   const first = daily[0]?.date, last = daily.at(-1)?.date;
   const days = new Set(daily.map((r) => r.date)).size;
   // 이력이 짧아 1주·1달 변화가 아직 계산 안 되면 열 자체를 숨김
@@ -112,6 +117,48 @@ export default async function Prices() {
           매물이 기종당 수십 개 수준이라 하루 단위로는 출렁일 수 있습니다.
         </p>
       </section>
+
+      {nebGpus.length > 0 && (
+        <section className="space-y-3">
+          <div className="flex flex-wrap items-baseline justify-between gap-2">
+            <h2 className="text-lg font-bold"><T ko="Nebius GPU 스팟 가격" en="Nebius GPU spot price" /> <span className="text-sm font-normal text-muted">$ / GPU·시간, 선점형 · NBIS 공시</span></h2>
+            <a className="text-xs text-accent" href="https://nebius.com/spot-prices" target="_blank" rel="noreferrer">nebius.com/spot-prices →</a>
+          </div>
+          <div className="card min-w-0 space-y-4">
+            <PriceChart unit="$/GPU·h" height={300} lines={nebGpus.map((g) => ({ name: g, color: NEB_COLORS[g], points: series(neb, g, "avg") }))} />
+            <div className="overflow-x-auto">
+              <table className="w-full min-w-[620px] whitespace-nowrap text-sm [&_td]:pl-3 [&_th]:pl-3">
+                <thead className="text-xs text-muted"><tr className="border-b border-line">
+                  <th className="py-2 text-left"><T ko="기종" en="GPU" /></th><th className="text-right"><T ko="지역 평균" en="Avg" /></th><th className="text-right"><T ko="가장 싼 지역" en="Cheapest" /></th>
+                  <th className="text-right">1주</th><th className="text-right">1달</th><th className="text-right"><T ko="지역별" en="By region" /></th>
+                </tr></thead>
+                <tbody className="font-mono">
+                  {nebGpus.map((g) => {
+                    const avg = series(neb, g, "avg"), d = avg.at(-1)![0];
+                    const mn = neb.find((r) => r.item === g && r.stat === "min" && r.date === d);
+                    const regs = neb.filter((r) => r.item === g && r.date === d && r.stat.startsWith("r:")).sort((a, b) => a.value - b.value);
+                    const w = change(avg, 7), m = change(avg, 29);
+                    return (
+                      <tr key={g} className="border-b border-line/50">
+                        <td className="py-2 font-sans font-bold"><span className="mr-2 inline-block h-2.5 w-2.5 rounded-sm" style={{ background: NEB_COLORS[g] }} />{g}</td>
+                        <td className="text-right font-bold">${avg.at(-1)![1].toFixed(2)}</td>
+                        <td className="text-right">{mn ? <>${mn.value.toFixed(2)} <span className="font-sans text-xs text-muted">{regionName(mn.detail ?? "")}</span></> : "-"}</td>
+                        <td className={`text-right ${tone(w)}`}>{pct(w)}</td>
+                        <td className={`text-right ${tone(m)}`}>{pct(m)}</td>
+                        <td className="text-right font-sans text-xs text-muted">{regs.map((r) => `${regionName(r.stat.slice(2))} $${r.value.toFixed(2)}`).join(" · ")}</td>
+                      </tr>
+                    );
+                  })}
+                </tbody>
+              </table>
+            </div>
+          </div>
+          <p className="text-xs leading-relaxed text-muted">
+            네비우스가 직접 공시하는 선점형(언제든 회수될 수 있는) GPU의 지역별 실시간 가격을 하루 평균으로 모은 것 — 남는 GPU가 많으면 싸지고, 빠듯하면 오릅니다.
+            NBIS 자체 클러스터의 유휴 용량 신호라 Vast.ai(여러 호스트 매물)와 함께 보면 좋습니다. 소스가 최근 30일 시간별 이력만 주므로 그 이전은 매일 쌓아 갑니다.
+          </p>
+        </section>
+      )}
 
       <section className="space-y-3">
         <div className="flex flex-wrap items-baseline justify-between gap-2">

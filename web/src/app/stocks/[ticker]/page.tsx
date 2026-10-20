@@ -44,6 +44,8 @@ export default async function StockPage({ params }: PageProps<"/stocks/[ticker]"
     hasPeers ? valuations() : Promise.resolve([]),
   ]);
   const gpuLatest = (NEOCLOUD.has(ticker) ? NEO_GPUS : []).map((g) => prices.filter((r) => r.kind === "gpu" && r.item === g && r.stat === "median").at(-1)).filter((r) => r != null);
+  // 네비우스는 자기 클러스터 스팟가를 직접 공시 (etl/prices.nebius_spot)
+  const nebLatest = (ticker === "NBIS" ? ["H200", "B200", "B300"] : []).map((g) => prices.filter((r) => r.kind === "nebius" && r.item === g && r.stat === "avg").at(-1)).filter((r) => r != null);
   const m = toMonthly(obs, ids);
   const fin = allFin.filter((f) => f.period_end >= "2021-01-01");
   const revYoY = qYoY(fin.map((f) => f.revenue));
@@ -127,6 +129,12 @@ export default async function StockPage({ params }: PageProps<"/stocks/[ticker]"
           <div className="mt-2 grid grid-cols-3 gap-3 font-mono">
             {gpuLatest.map((r) => <div key={r.item}><div className="text-xs text-muted">{r.item}</div><div className="text-lg font-bold">${r.value.toFixed(2)}<span className="text-xs font-normal text-muted">/h</span></div></div>)}
           </div>
+          {nebLatest.length > 0 && (<>
+            <div className="mt-3 text-xs text-muted">Nebius 자체 스팟가(선점형, 지역 평균) · {nebLatest[0].date}</div>
+            <div className="mt-1 grid grid-cols-3 gap-3 font-mono">
+              {nebLatest.map((r) => <div key={r.item}><div className="text-xs text-muted">{r.item}</div><div className="text-lg font-bold">${r.value.toFixed(2)}<span className="text-xs font-normal text-muted">/h</span></div></div>)}
+            </div>
+          </>)}
         </Link>
       )}
 
