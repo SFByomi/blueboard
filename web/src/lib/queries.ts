@@ -194,7 +194,7 @@ export type CreditRow = { ticker: string; q_end: string; currency: string; debt:
   due_1y: number | null; ebit_ttm: number | null; ebitda_ttm: number | null; interest_ttm: number | null; interest_basis: string | null; ocf_ttm: number | null; capex_ttm: number | null; fcf_ttm: number | null };
 /** 기업별 재무 신용 지표 (etl/credit.py) — 본인 전용 신용 탭 */
 export const creditMetrics = () => query<CreditRow>("SELECT * FROM credit_metrics ORDER BY ticker, q_end").catch(noTable<CreditRow>);
-export type MarketCredit = { ticker: string; date: string; vol: number; dd: number; pd1: number; pd5: number; lev_mkt: number };
+export type MarketCredit = { ticker: string; date: string; vol: number; dd: number; pd1: number; pd5: number; lev_mkt: number; spread_bp?: number | null };
 /** 주가 내재 부도확률 (etl/market_credit.py, Merton) — 주 1회로 줄여 전송 */
 export const marketCredit = () =>
   query<MarketCredit>("SELECT * FROM market_credit WHERE date >= ? ORDER BY ticker, date", [new Date(Date.now() - 3 * 365 * 864e5).toISOString().slice(0, 10)]).catch(noTable<MarketCredit>);

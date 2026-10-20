@@ -4,6 +4,8 @@
   F = 부도 기준 부채 = 1년 내 만기 + 0.5 × 나머지 차입 (KMV 관행, 그 날 기준 최근 분기 장부 — credit_metrics)
   σD = 0.05 + 0.25σE,  σV = E/(E+F)·σE + F/(E+F)·σD,  r = 미 국채 1년(한국 종목도 단순화)
   DD = [ln((E+F)/F) + (r − σV²/2)] / σV (1년, KMV 표준),  1년 부도확률 = N(−DD),  5년 = 1 − (1 − p₁)⁵ (누적 환산)
+  내재 스프레드(bp) = 머튼 위험중립 채권가: V = E+F, 액면 F, 만기 T=5년 → B = V·N(−d1) + F·e^(−rT)·N(d2), 수익률 −ln(B/F)/T − r
+    (실제 회사채 스프레드가 아니라 주가·변동성·부채로 역산한 모델값 — 회사 간·시점 간 비교용)
   ※ 5년 지평으로 바로 풀면 변동성 큰 무차입 회사(샌디스크 등)가 과대 — 1년으로 풀고 누적
 주가는 야후(재게시 금지) → 원 가격·시가총액은 저장하지 않고 결과(변동성·DD·부도확률)만. 부채가 거의 없으면 계산하지 않음.
 """
@@ -28,6 +30,18 @@ def _yahoo(s, crumb, sym: str, rng: str = "4y") -> tuple[pd.Series, float | None
     k = s.get(f"{consensus.BASE}/v10/finance/quoteSummary/{sym}", params={"modules": "defaultKeyStatistics", "crumb": crumb}, timeout=30).json()
     sh = ((k["quoteSummary"]["result"] or [{}])[0].get("defaultKeyStatistics") or {}).get("sharesOutstanding", {}).get("raw")
     return px[~px.index.duplicated(keep="last")], sh
+
+
+T_SPREAD = 5.0  # 내재 스프레드 만기(년) — AI 인프라 회사채 대표 만기(2030~31년물) 근처
+
+
+def implied_spread(e: float, f: float, sv: float, r: float, t: float = T_SPREAD) -> float:
+    """머튼 모형 위험중립 채권 수익률 − 무위험 금리 (소수). 자산 V=E+F, 부채 액면 F"""
+    v = e + f
+    d1 = (math.log(v / f) + (r + sv * sv / 2) * t) / (sv * math.sqrt(t))
+    d2 = d1 - sv * math.sqrt(t)
+    b = v * _ncdf(-d1) + f * math.exp(-r * t) * _ncdf(d2)
+    return max(-math.log(b / f) / t - r, 0.0)
 
 
 def collect(con, log=print) -> int:
@@ -66,12 +80,13 @@ def collect(con, log=print) -> int:
             r = x.r if x.r == x.r else 0.04
             dd = (math.log((e + f) / f) + (r - sv * sv / 2)) / sv
             p1 = _ncdf(-dd)
-            out.append((t, x.date.strftime("%Y-%m-%d"), round(float(x.vol), 4), round(dd, 3), round(p1, 6), round(1 - (1 - p1) ** 5, 5), round(f / (e + f), 4)))
+            sp = implied_spread(e, f, sv, r)
+            out.append((t, x.date.strftime("%Y-%m-%d"), round(float(x.vol), 4), round(dd, 3), round(p1, 6), round(1 - (1 - p1) ** 5, 5), round(f / (e + f), 4), round(sp * 1e4, 1)))
     con.execute("DELETE FROM market_credit")
-    con.executemany("INSERT INTO market_credit (ticker, date, vol, dd, pd1, pd5, lev_mkt) VALUES (?,?,?,?,?,?,?)", out)
+    con.executemany("INSERT INTO market_credit (ticker, date, vol, dd, pd1, pd5, lev_mkt, spread_bp) VALUES (?,?,?,?,?,?,?,?)", out)
     con.commit()
     last = {}
-    for t, d, v, dd, p1, p, lv in out:
+    for t, d, v, dd, p1, p, lv, sp in out:
         last[t] = p
     top = sorted(last.items(), key=lambda kv: -kv[1])[:5]
     log(f"  ✓ 주가 내재 5년 부도확률 {len(last)}종목 · 높은 순 " + ", ".join(f"{t} {p:.1%}" for t, p in top))
