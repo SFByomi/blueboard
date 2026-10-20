@@ -4,6 +4,7 @@ import { Spark } from "@/components/Spark";
 import { StockView, type FlowData, type QuarterRow } from "@/components/StockView";
 import { corr, quarterize, sumSeries, toMonthly } from "@/lib/compute";
 import { PeerSection } from "@/components/PeerSection";
+import { AiLinkCard } from "@/components/AiLinkCard";
 import { EstimateCard } from "@/components/EstimateCard";
 import { OiCard } from "@/components/OiCard";
 import { FlowScores } from "@/components/FlowScores";
@@ -11,12 +12,12 @@ import { CtyName, HsName } from "@/components/Names";
 import { IndexSection } from "@/components/IndexSection";
 import { INDEX_FOR_GROUP, dday, estReported, money, parseSites, pct, tone, usd } from "@/lib/format";
 import { ADMIN_ENABLED } from "@/lib/db";
-import { alertsFor, company, earningsDates, estimateDate, estimateHistory, financials, flowScores, indicators, mappingsFor, observations, priceSnapshots, reportedQuarters, surgeForTicker, unestimated, earningsBasis, oiEstimate, peerRevenue, valuations } from "@/lib/queries";
+import { alertsFor, company, earningsDates, estimateDate, estimateHistory, financials, flowScores, indicators, mappingsFor, observations, priceSnapshots, reportedQuarters, surgeForTicker, unestimated, earningsBasis, oiEstimate, peerRevenue, valuations, aiArr, aiDeals } from "@/lib/queries";
 
 // 게시 직후 바로 보이도록 요청마다 렌더 (ISR 캐시가 게시 후에도 이전 데이터로 남던 문제). DB가 작아 부담 없음
 export const dynamic = "force-dynamic";
 
-const NEOCLOUD = new Set(["IREN", "NBIS"]); // GPU 렌탈가가 핵심 업황인 종목
+const NEOCLOUD = new Set(["IREN", "NBIS", "CRWV"]); // GPU 렌탈가가 핵심 업황인 종목
 const NEO_GPUS = ["H100 SXM", "H200", "B200"];
 
 const qYoY = (a: (number | null)[]) => a.map((v, i) => (i >= 4 && v != null && a[i - 4] ? v / a[i - 4]! - 1 : null));
@@ -37,11 +38,13 @@ export default async function StockPage({ params }: PageProps<"/stocks/[ticker]"
   const related = relatedAll.slice(0, 8);
   const idxGroups = INDEX_FOR_GROUP[c.grp ?? ""] ?? [];
   const hasPeers = ticker === "000150.KS";  // 대만 CCL 피어·지주사 할인 (etl/peers.py)
-  const [prices, defs, peerRev, vals] = await Promise.all([
+  const [prices, defs, peerRev, vals, labArr, deals] = await Promise.all([
     NEOCLOUD.has(ticker) || idxGroups.length ? priceSnapshots() : Promise.resolve([]),
     idxGroups.length ? indicators() : Promise.resolve([]),
     hasPeers ? peerRevenue() : Promise.resolve([]),
     hasPeers ? valuations() : Promise.resolve([]),
+    NEOCLOUD.has(ticker) ? aiArr() : Promise.resolve([]),
+    NEOCLOUD.has(ticker) ? aiDeals(ticker) : Promise.resolve([]),
   ]);
   const gpuLatest = (NEOCLOUD.has(ticker) ? NEO_GPUS : []).map((g) => prices.filter((r) => r.kind === "gpu" && r.item === g && r.stat === "median").at(-1)).filter((r) => r != null);
   // 네비우스는 자기 클러스터 스팟가를 직접 공시 (etl/prices.nebius_spot)
@@ -144,6 +147,8 @@ export default async function StockPage({ params }: PageProps<"/stocks/[ticker]"
 
       <EstimateCard skip={skips.find((s) => s.ticker === ticker)} hist={estHist} nextEarn={nextEarn} lastReported={lastReported} labels={Object.fromEntries(maps.map((mp) => [mp.series_id, mp.label]))} />
       <OiCard o={oi && oi.date >= (estDate ?? "") ? oi : null} />
+
+      {deals.length > 0 && <AiLinkCard name={c.name_ko ?? c.name} deals={deals} arr={labArr} rev={fin.map((f) => ({ end: f.period_end, revenue: f.revenue }))} />}
 
       {hasPeers && (peerRev.length > 0 || vals.length > 0) && (
         <PeerSection rev={peerRev} val={vals} own={fin.flatMap((f, i) => (revYoY[i] == null ? [] : [{ month: f.period_end.slice(0, 7), yoy: revYoY[i]! }]))} />

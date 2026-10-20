@@ -31,6 +31,36 @@
    "sites": "[{\"name\": \"요카이치·기타카미 (Kioxia JV)\", \"country\": \"일본\", \"what\": \"NAND 웨이퍼\"}, {\"name\": \"페낭\", \"country\": \"말레이시아\", \"what\": \"조립·테스트·SSD\"}, {\"name\": \"상하이\", \"country\": \"중국\", \"what\": \"조립·테스트\"}]"
   },
   {
+   "ticker": "005930.KS",
+   "name": "Samsung Electronics",
+   "name_ko": "삼성전자",
+   "market": "KOSPI",
+   "sector": "메모리",
+   "thesis": "DRAM·HBM·NAND 세계 1위권. 매출은 반도체(DS) 부문만 추적(별도 기준 — 2026년 분기보고서부터 DS 부문 매출이 별도로만 공시). 메모리는 평택·화성·기흥(용인) 팹에서 만들어 수출 — 한국 메모리 수출의 절반 이상. 파운드리·시스템LSI도 DS에 포함.",
+   "sec_ticker": null,
+   "fy_note": "FY 12월",
+   "sort": 21,
+   "dart_fs": "CFS",
+   "dart_segment": "DsDivision:Separate",
+   "grp": "메모리",
+   "sites": "[{\"name\": \"평택 캠퍼스\", \"country\": \"한국 경기 평택\", \"what\": \"DRAM·HBM·NAND·파운드리\"}, {\"name\": \"화성 캠퍼스\", \"country\": \"한국 경기 화성\", \"what\": \"DRAM·파운드리\"}, {\"name\": \"기흥 캠퍼스\", \"country\": \"한국 경기 용인\", \"what\": \"메모리·R&D\"}, {\"name\": \"시안\", \"country\": \"중국\", \"what\": \"NAND\"}, {\"name\": \"천안·온양\", \"country\": \"한국 충남\", \"what\": \"HBM 패키징·테스트\"}]"
+  },
+  {
+   "ticker": "000660.KS",
+   "name": "SK hynix",
+   "name_ko": "SK하이닉스",
+   "market": "KOSPI",
+   "sector": "메모리",
+   "thesis": "HBM 1위·DRAM 2위·NAND(솔리다임 포함). 매출은 회사 전체(연결). 이천(DRAM·HBM)·청주(NAND·HBM 패키징) 팹에서 만들어 수출 — 한국 메모리 수출의 나머지 절반 가까이. 중국 우시(DRAM)·다롄(NAND) 생산분은 한국 수출에 안 잡힘.",
+   "sec_ticker": null,
+   "fy_note": "FY 12월",
+   "sort": 22,
+   "dart_fs": "CFS",
+   "dart_segment": null,
+   "grp": "메모리",
+   "sites": "[{\"name\": \"이천 캠퍼스\", \"country\": \"한국 경기 이천\", \"what\": \"DRAM·HBM\"}, {\"name\": \"청주 캠퍼스\", \"country\": \"한국 충북 청주\", \"what\": \"NAND·HBM 패키징(M15X)\"}, {\"name\": \"우시\", \"country\": \"중국\", \"what\": \"DRAM\"}, {\"name\": \"다롄\", \"country\": \"중국\", \"what\": \"NAND (솔리다임)\"}]"
+  },
+  {
    "ticker": "LITE",
    "name": "Lumentum",
    "name_ko": "루멘텀",
@@ -66,13 +96,13 @@
    "name_ko": "아이렌",
    "market": "NASDAQ",
    "sector": "AI 클라우드",
-   "thesis": "비트코인 채굴 → GPU 클라우드 전환. 개별 무역 흐름 없음 → AI 서버 수입(업황) 프록시.",
+   "thesis": "비트코인 채굴 → GPU 클라우드 전환. 매출은 아직 대부분 채굴이라 AI 랩 수요와의 연결은 앞으로 커지는 구간 — Microsoft $9.7B(GB300, 2025-11), NVIDIA $3.4B, Perplexity·Together 등 $2.8B, 이름 비공개 프런티어 랩(2026-08), Anthropic 다년 계약 보도(2026-10, 미확인). 2026년 말 운영 ARR $4B 목표. 개별 무역 흐름 없음 → AI 서버 수입(업황) 프록시.",
    "sec_ticker": "IREN",
    "fy_note": "FY 6월말 종료 (해외발행인, 20-F/10-K 확인)",
    "sort": 50,
    "dart_fs": null,
    "dart_segment": null,
-   "grp": "AI 클라우드",
+   "grp": "네오클라우드",
    "sites": "[{\"name\": \"차일드레스\", \"country\": \"미국 텍사스\", \"what\": \"GPU 데이터센터\"}, {\"name\": \"브리티시컬럼비아\", \"country\": \"캐나다\", \"what\": \"GPU·채굴 데이터센터\"}]"
   },
   {
@@ -81,14 +111,14 @@
    "name_ko": "네비우스",
    "market": "NASDAQ",
    "sector": "AI 클라우드",
-   "thesis": "GPU 클라우드 — 핀란드와 미국 데이터센터. AI 서버·GPU 보드 수입 업황 프록시.",
+   "thesis": "GPU 클라우드 — 데이터센터·베어메탈·AI 클라우드·토큰 팩토리(관리형 추론)까지 풀스택. 빅테크 장기계약(Microsoft $17.4B·Meta 최대 $27B)이 바닥을 받치고, 2026년 2분기부터 Reflection AI·Cohere 등 AI 랩·추론 업체와 1~3년 중기 계약, 3분기엔 3~6개월 단기 계약을 처음 체결. MW당 연 매출은 장기 $10~15M · 중기 $20~25M · 단기 $40~50M — 신규 계약 단가가 연초 $12M → 2분기 $20M+로 상승. 비하이퍼스케일러 매출 비중 약 55%(코어위브 약 30%). Meta 계약은 다른 고객에 먼저 팔고 남은 용량을 Meta가 사주는 백스톱 구조라 고단가 단기 물량을 남겨둘 수 있음. OpenAI·Anthropic 직접 계약은 확인 안 됨 → 프런티어 랩 수요는 Microsoft 경유(간접). 자체 스팟가를 공시(가격·지수 탭). (SMIC 5팀 리포트 2026-10-09 참고)",
    "sec_ticker": "NBIS",
    "fy_note": "FY 12월 (20-F)",
    "sort": 60,
    "dart_fs": null,
    "dart_segment": null,
-   "grp": "AI 클라우드",
-   "sites": "[{\"name\": \"멘살라\", \"country\": \"핀란드\", \"what\": \"GPU 데이터센터\"}, {\"name\": \"캔자스시티·뉴저지\", \"country\": \"미국\", \"what\": \"GPU 데이터센터\"}]"
+   "grp": "네오클라우드",
+   "sites": "[{\"name\": \"멘살라 I·II\", \"country\": \"핀란드\", \"what\": \"자체 데이터센터 145MW\"}, {\"name\": \"라펜란타\", \"country\": \"핀란드\", \"what\": \"310MW (개발)\"}, {\"name\": \"바인랜드\", \"country\": \"미국 뉴저지\", \"what\": \"빌드투수트 300MW — Microsoft향\"}, {\"name\": \"캔자스시티\", \"country\": \"미국 미주리\", \"what\": \"코로케이션 40MW\"}, {\"name\": \"인디펜던스\", \"country\": \"미국 미주리\", \"what\": \"그린필드 1.2GW\"}, {\"name\": \"펜실베이니아\", \"country\": \"미국\", \"what\": \"그린필드 1.2GW\"}, {\"name\": \"버밍엄\", \"country\": \"미국\", \"what\": \"300MW\"}, {\"name\": \"베튄\", \"country\": \"프랑스\", \"what\": \"240MW\"}, {\"name\": \"영국(할로·롱크로스·웨일스)\", \"country\": \"영국\", \"what\": \"코로케이션 약 65MW\"}, {\"name\": \"케플라비크·게타페·모디인\", \"country\": \"아이슬란드·스페인·이스라엘\", \"what\": \"코로케이션 10~24MW\"}]"
   },
   {
    "ticker": "RXRX",
@@ -576,13 +606,13 @@
    "name_ko": "코어위브",
    "market": "NASDAQ",
    "sector": "AI 클라우드(GPU 임대)",
-   "thesis": "엔비디아 GPU 임대 전문 클라우드 — 마이크로소프트·OpenAI·메타 장기 계약을 담보로 대규모 차입(GPU 담보 대출·하이일드 회사채). 매출은 가동 GPU 수, 신용은 이자 부담과 차환이 관건.",
+   "thesis": "엔비디아 GPU 임대 전문 클라우드 — OpenAI(누적 약 $22.4B)·Anthropic(2026-04)·Meta($14.2B+$21B)와 직접 계약, 2025년 매출의 약 67%는 Microsoft. 네오클라우드 중 AI 랩 ARR과 가장 직접 연결. 장기 계약을 담보로 대규모 차입(GPU 담보 대출·하이일드 회사채) — 매출은 가동 GPU 수, 신용은 이자 부담과 차환이 관건.",
    "sec_ticker": "CRWV",
    "fy_note": "FY 12월",
    "sort": 62,
    "dart_fs": null,
    "dart_segment": null,
-   "grp": "AI 클라우드",
+   "grp": "네오클라우드",
    "sites": "[{\"name\": \"뉴저지·텍사스·펜실베이니아 등\", \"country\": \"미국\", \"what\": \"GPU 데이터센터(임차·자체)\"}, {\"name\": \"영국·노르웨이·스페인\", \"country\": \"유럽\", \"what\": \"GPU 데이터센터\"}]"
   },
   {
@@ -788,6 +818,61 @@
    "hs": "8532.24",
    "partner": "전세계",
    "spec": "{\"api\": \"sigungu\", \"hs\": \"853224\", \"flow\": \"export\", \"sido\": \"41\", \"sgg\": \"경기도 수원시\"}"
+  },
+  {
+   "id": "kr_sgg_icheon_mem",
+   "label": "경기 이천시 메모리IC 수출",
+   "source": "kcs",
+   "reporter": "🇰🇷 한국",
+   "flow": "수출",
+   "region": "경기도 이천시",
+   "hs": "8542.32",
+   "partner": "전세계",
+   "spec": "{\"api\": \"sigungu\", \"hs\": \"854232\", \"flow\": \"export\", \"sido\": \"41\", \"sgg\": \"경기도 이천시\"}"
+  },
+  {
+   "id": "kr_sgg_cheongju_mem",
+   "label": "충북 청주시 메모리IC 수출",
+   "source": "kcs",
+   "reporter": "🇰🇷 한국",
+   "flow": "수출",
+   "region": "충청북도 청주시",
+   "hs": "8542.32",
+   "partner": "전세계",
+   "spec": "{\"api\": \"sigungu\", \"hs\": \"854232\", \"flow\": \"export\", \"sido\": \"43\", \"sgg\": \"충청북도 청주시\"}"
+  },
+  {
+   "id": "kr_sgg_asan_mem",
+   "label": "충남 아산시 메모리IC 수출",
+   "source": "kcs",
+   "reporter": "🇰🇷 한국",
+   "flow": "수출",
+   "region": "충청남도 아산시",
+   "hs": "8542.32",
+   "partner": "전세계",
+   "spec": "{\"api\": \"sigungu\", \"hs\": \"854232\", \"flow\": \"export\", \"sido\": \"44\", \"sgg\": \"충청남도 아산시\"}"
+  },
+  {
+   "id": "kr_sgg_cheonan_mem",
+   "label": "충남 천안시 메모리IC 수출",
+   "source": "kcs",
+   "reporter": "🇰🇷 한국",
+   "flow": "수출",
+   "region": "충청남도 천안시",
+   "hs": "8542.32",
+   "partner": "전세계",
+   "spec": "{\"api\": \"sigungu\", \"hs\": \"854232\", \"flow\": \"export\", \"sido\": \"44\", \"sgg\": \"충청남도 천안시\"}"
+  },
+  {
+   "id": "kr_sgg_hwaseong_mem",
+   "label": "경기 화성시 메모리IC 수출",
+   "source": "kcs",
+   "reporter": "🇰🇷 한국",
+   "flow": "수출",
+   "region": "경기도 화성시",
+   "hs": "8542.32",
+   "partner": "전세계",
+   "spec": "{\"api\": \"sigungu\", \"hs\": \"854232\", \"flow\": \"export\", \"sido\": \"41\", \"sgg\": \"경기도 화성시\"}"
   },
   {
    "id": "us_exp_ca_cn_labinst",
@@ -2361,6 +2446,106 @@
    "sort": 50
   },
   {
+   "ticker": "000660.KS",
+   "series_id": "kr_sgg_icheon_mem",
+   "role": "생산출하",
+   "confidence": "높음",
+   "rationale": "이천 캠퍼스(DRAM·HBM) 수출 신고. 매출 전년비와 같은 분기 상관 0.92, 한 분기 선행도 0.92 (A, 18분기).",
+   "caveat": "삼성 등 다른 업체 신고분 일부 혼재 가능.",
+   "include_in_total": 1,
+   "sort": 10
+  },
+  {
+   "ticker": "000660.KS",
+   "series_id": "kr_sgg_cheongju_mem",
+   "role": "생산출하",
+   "confidence": "낮음",
+   "rationale": "청주 캠퍼스(NAND·HBM 패키징 M15X). 전년비 상관 0.47(B), 최근 8분기 0.09로 약함.",
+   "caveat": "패키징 신고지 변경 가능 — 합산 제외.",
+   "include_in_total": 0,
+   "sort": 20
+  },
+  {
+   "ticker": "000660.KS",
+   "series_id": "kr_exp_hbm",
+   "role": "가격벤치마크",
+   "confidence": "중간",
+   "rationale": "한국 HBM·복합구조칩 수출 — 매출 전년비 상관 0.96(A).",
+   "caveat": "삼성 포함 업계 합산.",
+   "include_in_total": 0,
+   "sort": 30
+  },
+  {
+   "ticker": "000660.KS",
+   "series_id": "kr_exp_dram",
+   "role": "가격벤치마크",
+   "confidence": "중간",
+   "rationale": "한국 DRAM 수출 — 상관 0.91(A). DRAM 가격 사이클.",
+   "caveat": "삼성 포함 업계 합산.",
+   "include_in_total": 0,
+   "sort": 40
+  },
+  {
+   "ticker": "000660.KS",
+   "series_id": "kr_exp_flash",
+   "role": "가격벤치마크",
+   "confidence": "낮음",
+   "rationale": "한국 플래시 수출 — 상관 0.81(A). 솔리다임 NAND는 중국 다롄 생산이라 일부만.",
+   "caveat": "삼성 포함 업계 합산.",
+   "include_in_total": 0,
+   "sort": 50
+  },
+  {
+   "ticker": "005930.KS",
+   "series_id": "kr_sgg_asan_mem",
+   "role": "생산출하",
+   "confidence": "높음",
+   "rationale": "온양(아산) 패키징·테스트 사업장 — 평택·화성 팹 칩이 여기서 최종 검사 후 수출 신고. DS 매출 전년비 상관 0.97(A).",
+   "caveat": "DS 매출엔 파운드리·시스템LSI 포함, 표본 10분기.",
+   "include_in_total": 1,
+   "sort": 10
+  },
+  {
+   "ticker": "005930.KS",
+   "series_id": "kr_sgg_cheonan_mem",
+   "role": "생산출하",
+   "confidence": "중간",
+   "rationale": "천안 패키징(HBM 등). 전년비 상관 0.84(A).",
+   "caveat": "표본 10분기.",
+   "include_in_total": 1,
+   "sort": 20
+  },
+  {
+   "ticker": "005930.KS",
+   "series_id": "kr_sgg_hwaseong_mem",
+   "role": "생산출하",
+   "confidence": "중간",
+   "rationale": "화성 캠퍼스. 전년비 0.79, 두 분기 선행 0.88.",
+   "caveat": "금액 상관은 0.60으로 낮음 — 합산 제외.",
+   "include_in_total": 0,
+   "sort": 30
+  },
+  {
+   "ticker": "005930.KS",
+   "series_id": "kr_exp_dram",
+   "role": "가격벤치마크",
+   "confidence": "중간",
+   "rationale": "한국 DRAM 수출 — DS 매출 전년비 상관 0.98(A).",
+   "caveat": "SK하이닉스 포함 업계 합산.",
+   "include_in_total": 0,
+   "sort": 40
+  },
+  {
+   "ticker": "005930.KS",
+   "series_id": "kr_exp_hbm",
+   "role": "가격벤치마크",
+   "confidence": "중간",
+   "rationale": "한국 HBM·복합구조칩 수출 — 상관 0.91(A).",
+   "caveat": "SK하이닉스 포함 업계 합산.",
+   "include_in_total": 0,
+   "sort": 50
+  },
+  {
    "ticker": "TXG",
    "series_id": "us_exp_ca_cn_labinst",
    "role": "생산출하",
@@ -3236,6 +3421,16 @@
    "hs_prefix": "850760",
    "ticker": "TSLA",
    "note": "리튬이온 배터리"
+  },
+  {
+   "hs_prefix": "854232",
+   "ticker": "005930.KS",
+   "note": "메모리 IC"
+  },
+  {
+   "hs_prefix": "854232",
+   "ticker": "000660.KS",
+   "note": "메모리 IC"
   }
  ]
 }

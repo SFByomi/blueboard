@@ -7,7 +7,8 @@ import { pct, tone } from "@/lib/format";
 import { IndexSection } from "@/components/IndexSection";
 import { InflationSection } from "@/components/InflationSection";
 import { MacroSection } from "@/components/MacroSection";
-import { flowScores, indicators, inflationContrib, macroObs, observations, priceSnapshots, type PriceRow } from "@/lib/queries";
+import { aiArr, flowScores, indicators, inflationContrib, macroObs, observations, priceSnapshots, type PriceRow } from "@/lib/queries";
+import { AiLabsSection } from "@/components/AiLabsSection";
 
 // 게시 직후 바로 보이도록 요청마다 렌더 (ISR 캐시가 게시 후에도 이전 데이터로 남던 문제). DB가 작아 부담 없음
 export const dynamic = "force-dynamic";
@@ -35,7 +36,7 @@ const series = (rows: PriceRow[], item: string, stat: string): [string, number][
 
 export default async function Prices() {
   const [rows, defs, rw, fs, infl] = await Promise.all([priceSnapshots(), indicators(), observations(["sec_ransomware"]).catch(() => []), flowScores(), inflationContrib()]);
-  const macro = await macroObs();
+  const [macro, labArr] = await Promise.all([macroObs(), aiArr()]);
   const [power, capex] = await Promise.all([observations(POWER_IDS).catch(() => []), observations(CAPEX_IDS).catch(() => [])]);
   const sec = fs.filter((r) => r.series_id === "sec_ransomware").sort((a, b) => (b.best ?? -9) - (a.best ?? -9));
   const SEC_KO: Record<string, string> = { PANW: "팔로알토", CRWD: "크라우드스트라이크", RBRK: "루브릭", S: "센티넬원", ZS: "지스케일러", FTNT: "포티넷", OKTA: "옥타", NET: "클라우드플레어" };
@@ -117,6 +118,8 @@ export default async function Prices() {
           매물이 기종당 수십 개 수준이라 하루 단위로는 출렁일 수 있습니다.
         </p>
       </section>
+
+      {labArr.length > 0 && <AiLabsSection arr={labArr} />}
 
       {nebGpus.length > 0 && (
         <section className="space-y-3">

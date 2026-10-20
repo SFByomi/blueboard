@@ -229,3 +229,11 @@ export const peerRevenue = () => query<PeerRevenue>("SELECT * FROM peer_revenue 
 export type Valuation = { ticker: string; date: string; metric: string; value: number };
 /** 피어 EV/EBITDA · 두산 지분가치 할인율 등 배수·비율 (etl/peers.py) */
 export const valuations = () => query<Valuation>("SELECT * FROM valuation ORDER BY date").catch(noTable<Valuation>);
+
+export type AiArr = { lab: string; date: string; usd_b: number; kind: string | null; note: string | null; url: string | null };
+/** AI 랩 연환산 매출 공개 수치 (data/ai_labs.json) */
+export const aiArr = () => query<AiArr>("SELECT * FROM ai_arr ORDER BY lab, date").catch(noTable<AiArr>);
+export type AiDeal = { company: string; counterparty: string; date: string | null; value: string | null; status: string | null; link: string | null; note: string | null; url: string | null; sort: number };
+/** 네오클라우드 ↔ AI 랩·빅테크 계약 (data/ai_labs.json) */
+export const aiDeals = (company?: string) =>
+  (company ? query<AiDeal>("SELECT * FROM ai_deals WHERE company=? ORDER BY sort", [company]) : query<AiDeal>("SELECT * FROM ai_deals ORDER BY sort")).catch(noTable<AiDeal>);

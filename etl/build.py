@@ -31,6 +31,20 @@ def load_plants(con) -> int:
     return len(rows)
 
 
+def load_ai_labs(con) -> int:
+    """data/ai_labs.json → ai_arr · ai_deals (AI 랩 ARR 공개 수치, 네오클라우드 계약 관계 — 손으로 관리)"""
+    path = Path(__file__).resolve().parents[1] / "data" / "ai_labs.json"
+    if not path.exists():
+        return 0
+    d = json.loads(path.read_text(encoding="utf-8"))
+    con.execute("DELETE FROM ai_arr")
+    con.execute("DELETE FROM ai_deals")
+    con.executemany("INSERT INTO ai_arr VALUES (?,?,?,?,?,?)", [(r["lab"], r["date"], r["usd_b"], r.get("kind"), r.get("note"), r.get("url")) for r in d["arr"]])
+    con.executemany("INSERT INTO ai_deals VALUES (?,?,?,?,?,?,?,?,?)", [(r["company"], r["counterparty"], r.get("date"), r.get("value"), r.get("status"),
+                                                                       r.get("link"), r.get("note"), r.get("url"), i) for i, r in enumerate(d["deals"])])
+    return len(d["arr"]) + len(d["deals"])
+
+
 def apply_seed(con):
     con.executemany("INSERT OR IGNORE INTO companies (ticker, name, name_ko, market, sector, thesis, sec_ticker, fy_note, sort) "
                     "VALUES (?,?,?,?,?,?,?,?,?)", seed.COMPANIES)
@@ -133,7 +147,7 @@ def main():
         log("1) 큐레이션: data/curation.json 적용")
     else:
         log("1) 시드 → data/curation.json 생성"); apply_seed(con); curation.export(con)
-    log(f"  ✓ 공장 지도 {load_plants(con)}곳 (data/plants.json)"); con.commit()
+    log(f"  ✓ 공장 지도 {load_plants(con)}곳 (data/plants.json) · AI 랩 ARR·계약 {load_ai_labs(con)}행 (data/ai_labs.json)"); con.commit()
     step("2) 시계열"); fetch_series(con)
     step("3) 회사 매출 가이던스·실적 보도자료")
     guidance.collect([t for (t,) in con.execute("SELECT sec_ticker FROM companies WHERE sec_ticker IS NOT NULL ORDER BY sec_ticker")], log)
