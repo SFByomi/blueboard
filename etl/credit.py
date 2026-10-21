@@ -355,16 +355,11 @@ def _prefetch_kr(con, log) -> None:
         log(f"  · 한국 신용 원본 받기 실패 {len(errs)}건 (예: {errs[0]})")
 
 
-# 추적 종목은 아니지만 신용 차트(주가 내재 스프레드)에만 넣는 AI 인프라 차입 기업 — 매출 추정·매핑 대상 아님
-CREDIT_ONLY = {"CORZ": "Core Scientific", "APLD": "Applied Digital", "CIFR": "Cipher Mining", "WULF": "TeraWulf"}
-
-
 def collect(con, log=print) -> int:
     from etl import sec6k
     _prefetch_kr(con, log)
     rows = []
-    cos = con.execute("SELECT ticker, sec_ticker, dart_fs FROM companies ORDER BY sort").fetchall()
-    for ticker, sec_t, dart_fs in cos + [(t, t, None) for t in CREDIT_ONLY if t not in {c[0] for c in cos}]:
+    for ticker, sec_t, dart_fs in con.execute("SELECT ticker, sec_ticker, dart_fs FROM companies ORDER BY sort").fetchall():
         try:
             if dart_fs:
                 got = kr(ticker, dart_fs)

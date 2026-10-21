@@ -32,15 +32,3 @@ export const x = (v: number | null, d = 1) => (v == null ? "-" : `${v.toFixed(d)
 export const pdFmt = (p?: number | null) => (p == null ? "-" : p < 0.0005 ? "<0.1%" : `${(p * 100).toFixed(p < 0.1 ? 1 : 0)}%`);
 export const pdTone = (p?: number | null) => (p == null ? "" : p >= 0.2 ? "text-down font-bold" : p >= 0.05 ? "text-amber-300" : "");
 
-// 회사채 체결가(TRACE)는 개인 키로 못 받아(약관상 화면 수집도 금지) — 주가·변동성·부채로 역산한 머튼 모형 스프레드를 대신 보여준다
-export const SPREAD_SET: { ticker: string; name: string; color: string }[] = [
-  { ticker: "CRWV", name: "코어위브", color: "#ef4444" },
-  { ticker: "CORZ", name: "코어 사이언티픽", color: "#a855f7" },
-  { ticker: "APLD", name: "어플라이드 디지털", color: "#3b82f6" },
-  { ticker: "CIFR", name: "사이퍼", color: "#06b6d4" },
-  { ticker: "WULF", name: "테라울프", color: "#eab308" },
-  { ticker: "IREN", name: "아이렌", color: "#f97316" },
-  { ticker: "NBIS", name: "네비우스", color: "#ec4899" },
-  { ticker: "ORCL", name: "오라클", color: "#22c55e" },
-  { ticker: "META", name: "메타", color: "#9ca3af" },
-];
