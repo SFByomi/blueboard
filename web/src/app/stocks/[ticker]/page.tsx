@@ -7,6 +7,7 @@ import { FlowScores, GradeBadge } from "@/components/FlowScores";
 import { IndexSection } from "@/components/IndexSection";
 import { CtyName, HsName } from "@/components/Names";
 import { OiCard } from "@/components/OiCard";
+import { PartnerMix } from "@/components/PartnerMix";
 import { PeerSection } from "@/components/PeerSection";
 import { SectionNav } from "@/components/SectionNav";
 import { Spark } from "@/components/Spark";
@@ -18,7 +19,7 @@ import { risk, RISK_STYLE } from "@/lib/credit";
 import { ADMIN_ENABLED } from "@/lib/db";
 import { yoy3m } from "@/lib/estimate";
 import { INDEX_FOR_GROUP, dday, estGuide, estRange, estReported, estTier, money, parseSites, pct, TIER_STYLE, tone, usd } from "@/lib/format";
-import { aiArr, aiDeals, alertsFor, company, creditFor, earningsBasis, earningsDates, estimateDate, estimateHistory, financials, flowScores, indicators, mappingsFor, marketCreditLast, multipleHist, multipleNow, observations, oiEstimate, peerRevenue, priceSnapshots, reportedQuarters, surgeForTicker, unestimated, valuations } from "@/lib/queries";
+import { aiArr, aiDeals, alertsFor, company, creditFor, earningsBasis, earningsDates, estimateDate, estimateHistory, financials, flowScores, indicators, mappingsFor, marketCreditLast, multipleHist, multipleNow, observations, oiEstimate, partnersFor, peerRevenue, priceSnapshots, reportedQuarters, surgeForTicker, unestimated, valuations } from "@/lib/queries";
 import { valuationBrief } from "@/lib/valuation";
 
 // 게시 직후 바로 보이도록 요청마다 렌더 (ISR 캐시가 게시 후에도 이전 데이터로 남던 문제). DB가 작아 부담 없음
@@ -55,13 +56,14 @@ export default async function StockPage({ params }: PageProps<"/stocks/[ticker]"
   const nextEarn = earn[ticker] ?? null, lastReported = done[ticker] ?? null;
   const idxGroups = INDEX_FOR_GROUP[c.grp ?? ""] ?? [];
   const hasPeers = ticker === "000150.KS";  // 대만 CCL 피어·지주사 할인 (etl/peers.py)
-  const [prices, defs, peerRev, vals, labArr, deals] = await Promise.all([
+  const [prices, defs, peerRev, vals, labArr, deals, pmix] = await Promise.all([
     NEOCLOUD.has(ticker) || idxGroups.length ? priceSnapshots() : Promise.resolve([]),
     idxGroups.length ? indicators() : Promise.resolve([]),
     hasPeers ? peerRevenue() : Promise.resolve([]),
     hasPeers ? valuations() : Promise.resolve([]),
     NEOCLOUD.has(ticker) ? aiArr() : Promise.resolve([]),
     NEOCLOUD.has(ticker) ? aiDeals(ticker) : Promise.resolve([]),
+    partnersFor(ticker),
   ]);
   const gpuLatest = (NEOCLOUD.has(ticker) ? NEO_GPUS : []).map((g) => prices.filter((r) => r.kind === "gpu" && r.item === g && r.stat === "median").at(-1)).filter((r) => r != null);
   // 네비우스는 자기 클러스터 스팟가를 직접 공시 (etl/prices.nebius_spot)
@@ -207,6 +209,11 @@ export default async function StockPage({ params }: PageProps<"/stocks/[ticker]"
                 return mp ? [{ ...sc, label: mp.label, role: mp.role }] : [];
               })} />
             </Fold>
+          )}
+          {pmix.keys.length > 0 && (
+            <div className="mt-4 border-t border-line/60 pt-4">
+              <PartnerMix keys={pmix.keys} flows={pmix.flows} initial={pmix.keys.find((k) => core && (JSON.parse(k.series) as string[]).includes(core.id))?.key} />
+            </div>
           )}
           {related.length > 0 && (
             <Fold summary={`관련 품목 급등 — 이 종목 HS 코드의 미국 무역 (${related.length}건)`} className="mt-3 border-t border-line/60 pt-3">
