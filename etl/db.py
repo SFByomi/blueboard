@@ -112,6 +112,13 @@ CREATE TABLE IF NOT EXISTS market_credit ( -- 주가 내재 신용위험 (etl/ma
   ticker TEXT NOT NULL, date TEXT NOT NULL, vol REAL, dd REAL, pd1 REAL, pd5 REAL, lev_mkt REAL,  -- 주가 변동성(연율)·부도거리(1년)·1년·5년(누적) 부도확률·부채/(시총+부채)
   PRIMARY KEY (ticker, date)
 );
+CREATE TABLE IF NOT EXISTS partner_keys ( -- 상대국별 추이 대상 품목 (etl/partners.py): 매핑된 무역 흐름의 같은 품목을 상대국별로
+  key TEXT PRIMARY KEY, label TEXT NOT NULL, source TEXT, tickers TEXT, series TEXT, others INTEGER  -- tickers·series JSON, others = '기타'로 묶인 나라 수
+);
+CREATE TABLE IF NOT EXISTS partner_flows ( -- 상대국별 월 금액(달러): 최근 24개월 상위 10개국 + '기타'
+  key TEXT NOT NULL, month TEXT NOT NULL, partner TEXT NOT NULL, value_usd REAL,
+  PRIMARY KEY (key, month, partner)
+);
 CREATE TABLE IF NOT EXISTS ai_arr ( -- AI 랩 연환산 매출(ARR) 공개 수치 (data/ai_labs.json이 원본, 빌드마다 다시 읽음)
   lab TEXT NOT NULL, date TEXT NOT NULL, usd_b REAL, kind TEXT, note TEXT, url TEXT,
   PRIMARY KEY (lab, date)

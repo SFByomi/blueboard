@@ -254,3 +254,13 @@ export const creditFor = (ticker: string) =>
   query<CreditRow>("SELECT * FROM credit_metrics WHERE ticker=? ORDER BY q_end", [ticker]).catch(noTable<CreditRow>);
 export const marketCreditLast = (ticker: string) =>
   query<MarketCredit>("SELECT * FROM market_credit WHERE ticker=? ORDER BY date DESC LIMIT 1", [ticker]).then((r) => r[0] ?? null).catch(() => null);
+
+export type PartnerKey = { key: string; label: string; source: string; tickers: string; series: string; others: number | null };
+export type PartnerFlow = { key: string; month: string; partner: string; value_usd: number };
+/** 상대국별 추이 (etl/partners.py) — 이 종목에 매핑된 무역 품목들의 나라별 월 금액 */
+export async function partnersFor(ticker: string): Promise<{ keys: PartnerKey[]; flows: PartnerFlow[] }> {
+  const keys = await query<PartnerKey>("SELECT * FROM partner_keys WHERE tickers LIKE ? ORDER BY label", [`%"${ticker}"%`]).catch(noTable<PartnerKey>);
+  if (!keys.length) return { keys, flows: [] };
+  const flows = await query<PartnerFlow>(`SELECT key, month, partner, value_usd FROM partner_flows WHERE key IN (${keys.map(() => "?").join(",")}) ORDER BY month`, keys.map((k) => k.key));
+  return { keys, flows };
+}
