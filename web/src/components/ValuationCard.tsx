@@ -62,7 +62,7 @@ export function ValuationCard({ m, hist }: { m: MultipleNow; hist: MultipleHist[
         <div className="flex flex-wrap items-baseline gap-x-4 gap-y-1 text-sm">
           <span>지금 <b className="font-mono">{mult(m.now)}</b> <span className="text-xs text-muted">({m.basis ?? "추정"} 연환산{pxLabel(m) ? ` · ${pxLabel(m)} 주가` : ""})</span></span>
           <span className="text-xs text-muted">3년 중앙 {mult(m.p50)} · 범위 {mult(m.p10)}~{mult(m.p90)} · {bandWord(m)}</span>
-          {m.now_trail != null && <span className="text-xs text-muted">직전 분기 실적 기준 {mult(m.now_trail)}</span>}
+          {m.now_trail != null && !m.basis?.startsWith("직전 분기") && <span className="text-xs text-muted">직전 분기 실적 기준 {mult(m.now_trail)}</span>}
         </div>
       )}
       {opt && <EChart option={opt} height={190} />}

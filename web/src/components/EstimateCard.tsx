@@ -1,7 +1,7 @@
 import { PriceChart } from "@/components/ComputeCharts";
 import { InfoTip } from "@/components/InfoTip";
 import { Badge, CardHead, Defs, Fold } from "@/components/ui";
-import { type Guide, type GuideWhy, type XCheck, confNote, dday, estGuide, estCaution, estExtrap, estRange, estReported, estTier, methodLabel, money, pct, TIER_STYLE, tone, watchFlag } from "@/lib/format";
+import { type Guide, type GuideWhy, type XCheck, confNote, dday, estGuide, estCaution, estExtrap, estRange, estReported, estTier, estWeak, methodLabel, money, pct, TIER_STYLE, tone, watchFlag } from "@/lib/format";
 import type { EstSkip, RevEstimate } from "@/lib/queries";
 
 type Bt = { q_end: string; actual: number; pred: number; naive: number | null };
@@ -34,6 +34,7 @@ export function EstimateCard({ hist, labels, nextEarn, lastReported, skip }: { h
   const tr = rep ? "발표됨" : estTier(e), ok = tr === "신뢰";
   const why = estCaution(e);
   const range = estRange(e);
+  const weak = !rep && tr !== "보류" && estWeak(e);
   const d = dday(nextEarn);
   const watch = watchFlag(e, nextEarn, lastReported);
   const cur = e.currency;
@@ -59,17 +60,18 @@ export function EstimateCard({ hist, labels, nextEarn, lastReported, skip }: { h
         </span>}
       />
       {tr === "보류" && <div className="rounded border border-red-900 bg-red-950/40 px-3 py-2 text-xs text-red-200">추정 보류 — {why[0]}. 아래 숫자는 모델 원값으로, 투자 판단 근거로 쓰지 마세요.</div>}
+      {weak && <div className="rounded border border-amber-900 bg-amber-950/40 px-3 py-2 text-xs text-amber-200">신뢰 낮음 — {e.hits === 0 ? `백테스트 ${e.bt_n}분기 중 ±5% 안에 든 적이 없고` : "적중률이 낮고"} 오차가 ±{((range ?? 0) * 100).toFixed(0)}%라 방향 참고용입니다.</div>}
       {rep && <div className="rounded bg-panel2 px-3 py-2 text-xs text-muted">이 분기 실적은 이미 발표됐습니다. SEC 공시가 들어오면 백테스트에 반영하고 다음 분기 추정으로 넘어갑니다.</div>}
 
       <div className="grid grid-cols-2 gap-3 sm:grid-cols-3">
         <div className="col-span-2 sm:col-span-1">
           <div className="text-xs text-muted">{trend ? "단순 추세 추정" : byGuide ? (e.method === "guide" ? "가이던스 기반 추정" : "가이던스·무역 결합 추정") : "무역 기반 추정"}</div>
-          <div className="font-mono text-2xl font-bold">{money(e.est, cur)}</div>
+          <div className={`font-mono text-2xl font-bold ${weak ? "text-muted" : ""}`}>{money(e.est, cur)}</div>
           <div className="text-xs text-muted">직전 분기 {money(e.last_actual, cur)} 대비 <b className={tone(qoq)}>{pct(qoq)}</b> · 오차 ±{range != null ? `${(range * 100).toFixed(0)}%` : money(e.high - e.est, cur)}</div>
         </div>
         <div>
           <div className="text-xs text-muted">컨센서스 대비</div>
-          <div className={`font-mono text-2xl font-bold ${e.cons_gap == null ? "text-muted" : tone(e.cons_gap)}`}>{e.cons_gap == null ? "-" : pct(e.cons_gap)}</div>
+          <div className={`font-mono text-2xl font-bold ${e.cons_gap == null || weak ? "text-muted" : tone(e.cons_gap)}`}>{e.cons_gap == null ? "-" : pct(e.cons_gap)}</div>
           <div className="text-xs text-muted">{e.cons_gap == null ? "비교할 컨센서스 없음" : `${e.date} 기준`}</div>
         </div>
         <div>

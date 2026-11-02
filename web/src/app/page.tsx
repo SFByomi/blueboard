@@ -150,7 +150,7 @@ export default async function Home() {
             {top.map((r) => (
               <div key={`${r.hs6}${r.partner}`} className="flex items-center justify-between gap-3">
                 <span className="min-w-0 truncate"><HsName ko={r.name_ko} en={r.name_en} hs={r.hs6} />
-                  {related(r.hs6).slice(0, 2).map((t) => <Link key={t} href={`/stocks/${encodeURIComponent(t)}`} className="ml-1 rounded bg-accent/20 px-1.5 text-xs text-accent">{names[t] ?? t}</Link>)}
+                  {related(r.hs6).slice(0, 2).map((t) => <span key={t}>{" "}<Link href={`/stocks/${encodeURIComponent(t)}`} className="rounded bg-accent/20 px-1.5 text-xs text-accent">{names[t] ?? t}</Link></span>)}
                 </span>
                 <span className="shrink-0 font-mono text-xs text-muted">{usd(r.value_usd)} <b className={tone(r.yoy3m)}>{pct(r.yoy3m, 0)}</b></span>
               </div>

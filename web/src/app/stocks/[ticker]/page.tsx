@@ -18,7 +18,7 @@ import { quarterize, sumSeries, toMonthly } from "@/lib/compute";
 import { risk, RISK_STYLE } from "@/lib/credit";
 import { ADMIN_ENABLED } from "@/lib/db";
 import { yoy3m } from "@/lib/estimate";
-import { INDEX_FOR_GROUP, dday, estGuide, estRange, estReported, estTier, money, parseSites, pct, TIER_STYLE, tone, usd } from "@/lib/format";
+import { INDEX_FOR_GROUP, dday, estGuide, estRange, estReported, estTier, estWeak, money, parseSites, pct, TIER_STYLE, tone, usd } from "@/lib/format";
 import { aiArr, aiDeals, alertsFor, company, creditFor, earningsBasis, earningsDates, estimateDate, estimateHistory, financials, flowScores, indicators, mappingsFor, marketCreditLast, multipleHist, multipleNow, observations, oiEstimate, partnersFor, peerRevenue, priceSnapshots, reportedQuarters, surgeForTicker, unestimated, valuations } from "@/lib/queries";
 import { valuationBrief } from "@/lib/valuation";
 
@@ -103,8 +103,11 @@ export default async function StockPage({ params }: PageProps<"/stocks/[ticker]"
   const tier = est ? (rep ? "발표됨" : estTier(est)) : null;
   const skip = skips.find((s) => s.ticker === ticker);
   const g = est ? estGuide(est) : null;
+  const weak = !!est && !rep && tier !== "보류" && estWeak(est);
   const points: React.ReactNode[] = [];
-  if (est && !rep && tier !== "보류") {
+  if (est && weak) {
+    points.push(<>매출 추정은 참고용 — {est.hits === 0 ? `백테스트 ${est.bt_n}분기 중 ±5% 적중 0번` : "적중률 낮음"} · 오차 ±{((estRange(est) ?? 0) * 100).toFixed(0)}%</>);
+  } else if (est && !rep && tier !== "보류") {
     if (g && !g.prelim) {
       const mid = (g.low + g.high) / 2;
       points.push(<>회사 가이던스 {money(g.low, est.currency)}~{money(g.high, est.currency)} — 우리 추정은 중간값보다 <b className={tone(est.est / mid - 1)}>{pct(est.est / mid - 1)}</b>{g.why?.n && g.why.min != null && g.why.min > 0 ? ` (과거 ${g.why.n}분기 모두 가이던스 상회)` : ""}</>);
@@ -146,8 +149,9 @@ export default async function StockPage({ params }: PageProps<"/stocks/[ticker]"
         <div className="grid grid-cols-2 gap-2 lg:grid-cols-4">
           {est ? (
             <Stat href="#earnings" label={<>{rep ? "발표된 분기 추정" : "진행 분기 매출 추정"} <span className={`rounded px-1 text-[10px] ${TIER_STYLE[tier!] ?? ""}`}>{tier}</span></>}
-              value={money(est.est, est.currency)} tone={tier === "보류" ? "text-muted" : ""}
-              sub={<>직전 대비 <span className={tone(est.est / est.last_actual - 1)}>{pct(est.est / est.last_actual - 1)}</span>{est.cons_gap != null && tier !== "보류" ? <> · 컨센 <span className={tone(est.cons_gap)}>{pct(est.cons_gap)}</span></> : null}</>} />
+              value={money(est.est, est.currency)} tone={tier === "보류" || weak ? "text-muted" : ""}
+              sub={weak ? <>참고용 · 오차 ±{((estRange(est) ?? 0) * 100).toFixed(0)}%</>
+                : <>직전 대비 <span className={tone(est.est / est.last_actual - 1)}>{pct(est.est / est.last_actual - 1)}</span>{est.cons_gap != null && tier !== "보류" ? <> · 컨센 <span className={tone(est.cons_gap)}>{pct(est.cons_gap)}</span></> : null}</>} />
           ) : (
             <Stat href="#earnings" label="진행 분기 매출 추정" value="추정불가" tone="text-muted" sub={skip ? "매출과 연동된 흐름·이력 부족" : "추정 없음"} />
           )}

@@ -3,7 +3,7 @@
 - 총차입금: 그 분기에 값이 있는 첫 정의 (회사·시기마다 태그가 달라 우선순위로)
     단·장기 합계 태그 → LongTermDebt(유동 포함)+단기차입·CP → 비유동+유동 → 리스 포함 태그 → DebtInstrumentCarryingAmount(코어위브)
   + 금융리스 부채(별도 보고 시). 운용리스는 제외(신용평가사는 포함하기도 함)
-- 현금 = 현금성자산 + 단기 투자·유가증권
+- 현금 = 현금성자산(10x 지노믹스처럼 CashEquivalentsAtCarryingValue로만 내는 곳도) + 단기 투자·유가증권
 - 순부채/EBITDA, 이자보상배율 = 영업이익(TTM) ÷ 이자비용(TTM, 없으면 이자 지급액), FCF = 영업현금흐름 − 설비투자
 - 1년 내 만기: '12개월 안 상환 원금' 공시 → 없으면 유동성 부채(유동 차입금+CP)
 - 현금흐름표는 연초 누적(YTD)이라 분기값 = 누적 차이
@@ -24,14 +24,15 @@ DEBT_DEFS = [["DebtLongtermAndShorttermCombinedAmount"], ["LongTermDebt", "+Shor
              ["LongTermNotesPayable", "+NotesPayableCurrent|DebtCurrent", "+ShortTermBorrowings", "+CommercialPaper"],
              ["LongTermDebtAndCapitalLeaseObligations", "+LongTermDebtAndCapitalLeaseObligationsCurrent|DebtCurrent", "+ShortTermBorrowings", "+CommercialPaper"],
              ["DebtInstrumentCarryingAmount"], ["ConvertibleLongTermNotesPayable", "+ConvertibleNotesPayableCurrent", "+ShortTermBorrowings"],
-             ["ConvertibleDebtNoncurrent", "+ConvertibleDebtCurrent", "+ShortTermBorrowings"], ["ConvertibleDebtCurrent", "+ShortTermBorrowings"]]  # 비유동이 사라진 상환 직전(옥타)  # 전환사채만 있는 회사(플루언스 등)
+             ["ConvertibleDebtNoncurrent", "+ConvertibleDebtCurrent", "+ShortTermBorrowings"], ["ConvertibleDebtCurrent", "+ShortTermBorrowings"],  # 비유동이 사라진 상환 직전(옥타)  # 전환사채만 있는 회사(플루언스 등)
+             ["LongTermLineOfCredit|LineOfCredit", "+LongTermDebtCurrent|DebtCurrent", "+ShortTermBorrowings"]]  # 회전 한도 대출만 있는 회사(AAON 2026-06 4.35억 달러)
 LEASE = ["FinanceLeaseLiabilityNoncurrent", "FinanceLeaseLiabilityCurrent"]
-CASH = ["CashAndCashEquivalentsAtCarryingValue", "+ShortTermInvestments", "+MarketableSecuritiesCurrent", "+AvailableForSaleSecuritiesDebtSecuritiesCurrent"]
+CASH = ["CashAndCashEquivalentsAtCarryingValue|CashEquivalentsAtCarryingValue", "+ShortTermInvestments", "+MarketableSecuritiesCurrent", "+AvailableForSaleSecuritiesDebtSecuritiesCurrent"]
 DUE = ["LongTermDebtMaturitiesRepaymentsOfPrincipalInNextTwelveMonths"]
 DUE_ALT = ["LongTermDebtCurrent|DebtCurrent|LongTermDebtAndCapitalLeaseObligationsCurrent", "+ShortTermBorrowings", "+CommercialPaper"]
 FLOWS = {"oi": ["OperatingIncomeLoss"], "da": ["DepreciationDepletionAndAmortization", "DepreciationAmortizationAndAccretionNet", "DepreciationAndAmortization", "Depreciation"],
          "int": ["InterestExpense", "InterestExpenseNonoperating", "InterestExpenseDebt", "InterestAndDebtExpense", "InterestExpenseOperating"], "int_paid": ["InterestPaidNet"],
-         "ocf": ["NetCashProvidedByUsedInOperatingActivities"], "capex": ["PaymentsToAcquirePropertyPlantAndEquipment", "PaymentsToAcquireProductiveAssets"]}
+         "ocf": ["NetCashProvidedByUsedInOperatingActivities"], "capex": ["PaymentsToAcquirePropertyPlantAndEquipment", "PaymentsToAcquireProductiveAssets", "PaymentsToAcquireMachineryAndEquipment"]}  # AAON은 마지막
 
 
 def _instant(facts: dict, tag: str) -> dict[str, float]:
