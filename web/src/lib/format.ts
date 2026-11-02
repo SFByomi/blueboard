@@ -99,6 +99,9 @@ export const estGuide = (e: { guide?: string | null }): Guide | null => (e.guide
 export const estCaution = (e: { caution?: string | null }): string[] => (e.caution ? JSON.parse(e.caution) : []);
 /** 추정 오차범위 (±, 추정 대비 비율) */
 export const estRange = (e: { est: number; high: number }) => (e.est ? (e.high - e.est) / Math.abs(e.est) : null);
+/** 신뢰 낮은 추정 — 백테스트에서 한 번도 ±5% 안에 못 들었거나 오차범위가 ±50% 넘음 → 요약에서 숫자를 앞세우지 않고 '참고용'으로 */
+export const estWeak = (e: { est: number; high: number; hits?: number | null; bt_n?: number }) =>
+  (e.hits === 0 && (e.bt_n ?? 0) >= 4) || (estRange(e) ?? 0) > 0.5;
 /** 추정 대상 분기가 이미 실적 발표됨 (SEC 공시 반영 전) — 야후 분기 말일은 달 말일로 찍혀 보름 여유 */
 export function estReported(e: { q_end: string }, lastReported?: string | null): boolean {
   if (!lastReported) return false;

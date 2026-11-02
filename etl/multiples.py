@@ -137,11 +137,12 @@ def value_one(con, ticker: str, sec_t: str | None, dart_fs: str | None, grp: str
     est = con.execute("SELECT est, low, high, tier, q_end FROM revenue_estimates WHERE ticker=? ORDER BY date DESC LIMIT 1", (ticker,)).fetchone()
     oie = con.execute("SELECT est, tier FROM oi_estimates WHERE ticker=? ORDER BY date DESC LIMIT 1", (ticker,)).fetchone()
     last_rev = float(fin.r.iloc[-1])
-    if est and est[0]:
+    if est and est[0] and est[3] != "보류":
         r_est, r_lo, r_hi, tier, basis = float(est[0]), float(est[1]), float(est[2]), est[3], "진행 분기 추정"
-    else:
+    else:  # 보류된 추정으로 '지금 배수'를 내면 시나리오만 숨기고 같은 값을 보여 주는 셈 → 직전 분기 실적으로
         r_est = r_lo = r_hi = last_rev
-        tier, basis = None, "직전 분기 실적 (추정 없음)"
+        tier = est[3] if est and est[0] else None
+        basis = "직전 분기 실적 (추정 보류)" if tier == "보류" else "직전 분기 실적 (추정 없음)"
     oi_tail = [o for o in h.oi.tail(4)]
     margins = [o / r for o, r in zip(oi_tail, h.rev.tail(4)) if o is not None]
     use_ebit = (grp not in CYCLICAL and len(margins) == 4 and min(margins) > 0 and sum(oi_tail) / h.rev.tail(4).sum() >= EBIT_MARGIN
