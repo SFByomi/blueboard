@@ -6,7 +6,7 @@ import { axis, baseOption, EChart } from "@/components/EChart";
 import { mini, Mini, refLine } from "@/components/MiniCard";
 import { money } from "@/lib/format";
 import type { CreditRow, FinraRow, MacroObs, MarketCredit } from "@/lib/queries";
-import { cov, de, dueCash, ebitda, lev, pdFmt, pdTone, risk, RISK_STYLE, x } from "@/lib/credit";
+import { cov, de, dueCash, ebitda, lev, pdFmt, pdTone, risk, RISK_STYLE, TINY_CASH_NOTE, tinyCash, x } from "@/lib/credit";
 import { SectionHead } from "@/components/ui";
 
 export type CreditCo = { ticker: string; name: string; grp: string | null };
@@ -25,6 +25,9 @@ export function CreditSection({ rows, cos, ust, finra, mkt }: { rows: CreditRow[
   const [sel, setSel] = useState<string | null>("CRWV");
   const groups = [...new Set(cos.filter((c) => by[c.ticker]).map((c) => c.grp ?? "기타"))];
   const order = { 주의: 0, 관찰: 1, 양호: 2 };
+  // 회사마다 실적 공시 시점이 달라 장부 분기가 섞임 → 가장 최근 분기보다 45일 넘게 이전이면 표시
+  const newest = cos.map((c) => by[c.ticker]?.at(-1)?.q_end).filter((d): d is string => !!d).sort().at(-1);
+  const stale = (d: string) => newest != null && (new Date(newest).getTime() - new Date(d).getTime()) / 864e5 > 45;
   const counts = { 주의: 0, 관찰: 0, 양호: 0 };
   for (const c of cos) if (by[c.ticker]) counts[risk(by[c.ticker].at(-1))[0]]++;
 
@@ -33,19 +36,20 @@ export function CreditSection({ rows, cos, ust, finra, mkt }: { rows: CreditRow[
       <MarketPanel ust={ust} finra={finra} />
 
       <section className="space-y-3">
-        <SectionHead title="기업별 재무 신용" sub="최근 분기 장부 · 흐름은 최근 4분기 합 · 신용등급이 아닌 단순 규칙"
+        <SectionHead title="기업별 재무 신용" sub="회사별 최근 공시 분기 장부 · 흐름은 최근 4분기 합 · 신용등급이 아닌 단순 규칙"
           right={<span><span className={`rounded px-1.5 ${RISK_STYLE.주의}`}>주의 {counts.주의}</span> <span className={`rounded px-1.5 ${RISK_STYLE.관찰}`}>관찰 {counts.관찰}</span> <span className={`rounded px-1.5 ${RISK_STYLE.양호}`}>양호 {counts.양호}</span></span>}
           info={<>
             <p><b className="text-fg">주가 내재 부도확률</b> = Merton 모형(KMV·Bharath-Shumway 단순판): 시가총액·1년 주가 변동성·부도 기준 부채(1년 내 만기 + 나머지 차입의 절반)로 1년 부도거리를 구하고 5년 누적으로 환산. 회사채 스프레드와 같은 &lsquo;시장 신호&rsquo;지만 주가 변동이 큰 성장주는 과대, 투자등급 대형주는 과소로 나오는 경향 — 순위·추세 위주로 보세요(주가 원 데이터는 출처 약관상 표시하지 않음).</p>
             <p><b className="text-fg">장부 기준</b>(SEC XBRL·DART) — 총차입 = 단·장기 차입금·사채 + 금융리스(운용리스 제외), 현금 = 현금성자산 + 단기 투자, 이자보상 = 영업이익 ÷ 이자비용(최근 4분기, 없으면 이자 지급액), 1년 내 만기 = 12개월 안 상환 원금 또는 유동성 차입금. 한국 종목은 회사 전체(두산은 별도) 기준, 부채/자본은 부채총계 ÷ 자본, * 표시는 감가상각이 요약 현금흐름표에 없어 EBITDA 대신 영업이익 기준.</p>
             <p><b className="text-fg">판정</b>: 순부채 회사 — 주의 = 순부채/EBITDA 4배 초과·이자보상 2배 미만·EBITDA 적자·FCF 적자이면서 1년 내 만기가 현금보다 많음, 관찰 = 2.5배 초과·5배 미만·FCF 적자. 순현금 회사 — FCF 적자면 현금으로 버틸 햇수 1.5년 미만 주의, 그 외 관찰. 판정 칸에 마우스를 올리면 이유.</p>
           </>} />
+        <p className="text-xs text-muted">장부 분기는 회사마다 다릅니다 — 실적을 이미 낸 회사는 {newest?.slice(0, 7) ?? "최근"} 분기, 아직 안 낸 회사는 그 전 분기(<span className="text-amber-300">노란색</span>). † 현금이 거의 0인 건 공시 그대로(차입 한도로 운영). 표는 옆으로 밀면 열이 더 있습니다.</p>
         <div className="card min-w-0 overflow-x-auto">
           <table className="w-full min-w-[1000px] whitespace-nowrap text-sm">
             <thead className="text-xs text-muted"><tr className="border-b border-line">
               <th className="py-2 text-left">회사</th><th className="text-left">판정</th><th className="text-right" title="주가·변동성·부채로 계산한 5년 누적 부도확률(Merton)">주가 내재 5년 부도</th><th className="text-right">3개월 전</th><th className="text-right">순부채/EBITDA</th><th className="text-right">1년 전</th>
               <th className="text-right">이자보상</th><th className="text-right">총차입</th><th className="text-right">현금</th><th className="text-right">1년 내 만기÷현금</th>
-              <th className="text-right">FCF(4분기)</th><th className="text-right">부채/자본</th><th className="text-right">기준</th>
+              <th className="text-right">FCF(4분기)</th><th className="text-right">부채/자본</th><th className="text-right" title="회사마다 실적 공시 시점이 달라 분기가 섞임 — 노란색은 다음 분기 실적이 아직 공시 전">장부 분기</th>
             </tr></thead>
             {groups.map((g) => (
               <tbody key={g}>
@@ -63,11 +67,11 @@ export function CreditSection({ rows, cos, ust, finra, mkt }: { rows: CreditRow[
                         {(ebitda(r) ?? 1) <= 0 && (r.net_debt ?? 0) > 0 ? "적자" : (r.net_debt ?? 0) < 0 ? "순현금" : x(l)}{r.ebitda_ttm == null && r.ebit_ttm != null ? "*" : ""}</td>
                       <td className="text-right text-xs text-muted">{y ? ((y.net_debt ?? 0) < 0 ? "순현금" : x(ly)) : "-"}</td>
                       <td className={`text-right ${(cov(r) ?? 99) < 2 ? "text-down" : ""}`} title={r.interest_basis ?? undefined}>{x(cov(r))}</td>
-                      <td className="text-right">{money(r.debt, r.currency)}</td><td className="text-right">{money(r.cash, r.currency)}</td>
+                      <td className="text-right">{money(r.debt, r.currency)}</td><td className="text-right" title={tinyCash(r) ? TINY_CASH_NOTE : undefined}>{money(r.cash, r.currency)}{tinyCash(r) ? "†" : ""}</td>
                       <td className={`text-right ${(dueCash(r) ?? 0) > 1 ? "text-down" : ""}`}>{x(dueCash(r), 2)}</td>
                       <td className={`text-right ${(r.fcf_ttm ?? 0) < 0 ? "text-down" : ""}`}>{money(r.fcf_ttm, r.currency)}</td>
                       <td className="text-right">{x(de(r))}</td>
-                      <td className="text-right text-xs text-muted">{r.q_end.slice(0, 7)}</td>
+                      <td className={`text-right text-xs ${stale(r.q_end) ? "text-amber-300" : "text-muted"}`} title={stale(r.q_end) ? "다음 분기 실적이 아직 공시 전 — 직전 공시 분기 기준" : undefined}>{r.q_end.slice(0, 7)}</td>
                     </tr>
                   );
                 })}

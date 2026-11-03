@@ -5,6 +5,7 @@ name: 데이터 갱신
 on:
   schedule:
     - cron: "43 18 * * *" # 매일 03:43 KST 예약 — GitHub 예약 실행은 보통 1~4시간 늦게 시작해 아침에 게시됨
+    - cron: "17 21 * * *" # 06:17 KST 예비 — 첫 예약이 밀리거나(11/3 6시간 지연) 실패해도 아침 안에 갱신. 이미 갱신됐으면 아래 check가 건너뜀
   workflow_dispatch:
   push:
     branches: [main]
@@ -14,8 +15,30 @@ concurrency:
   group: etl
   cancel-in-progress: false
 
+permissions:
+  contents: read
+  actions: read
+
 jobs:
+  # 예약 실행만: 최근 8시간 안에 성공한 갱신이 있으면 건너뜀 (예약 두 개 중 먼저 돈 쪽만 실제 수집)
+  check:
+    runs-on: ubuntu-latest
+    outputs:
+      run: ${{ steps.c.outputs.run }}
+    steps:
+      - id: c
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          if [ "${{ github.event_name }}" != "schedule" ]; then echo "run=true" >> "$GITHUB_OUTPUT"; exit 0; fi
+          since=$(date -u -d '8 hours ago' +%Y-%m-%dT%H:%M:%SZ)
+          n=$(gh run list -R "${{ github.repository }}" -w etl.yml --status success --created ">=$since" --json databaseId --jq "[.[] | select(.databaseId != ${{ github.run_id }})] | length")
+          echo "최근 8시간 성공 실행: $n"
+          if [ "$n" -gt 0 ]; then echo "run=false" >> "$GITHUB_OUTPUT"; else echo "run=true" >> "$GITHUB_OUTPUT"; fi
+
   etl:
+    needs: check
+    if: needs.check.outputs.run == 'true'
     runs-on: ubuntu-latest
     timeout-minutes: 120
     steps:

@@ -27,6 +27,9 @@ export function risk(r?: CreditRow): ["주의" | "관찰" | "양호", string[]] 
   return [(["양호", "관찰", "주의"] as const)[lvl], why];
 }
 export const RISK_STYLE = { 주의: "bg-red-950 text-red-300", 관찰: "bg-amber-950 text-amber-300", 양호: "bg-up/20 text-up" };
+/** 현금이 차입에 비해 거의 0 — 단위 오류처럼 보이지만 공시 그대로(예: AAON은 현금을 두지 않고 회전 한도 대출로 운영) */
+export const tinyCash = (r?: CreditRow) => !!r && r.cash != null && (r.debt ?? 0) > 0 && r.cash < (r.currency === "KRW" ? 1e9 : 1e6) && r.cash < (r.debt ?? 0) * 0.01;
+export const TINY_CASH_NOTE = "공시값 그대로(단위 오류 아님) — 현금을 거의 두지 않고 차입 한도로 운영하는 회사";
 export const x = (v: number | null, d = 1) => (v == null ? "-" : `${v.toFixed(d)}배`);
 
 export const pdFmt = (p?: number | null) => (p == null ? "-" : p < 0.0005 ? "<0.1%" : `${(p * 100).toFixed(p < 0.1 ? 1 : 0)}%`);

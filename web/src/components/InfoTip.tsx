@@ -5,7 +5,7 @@ import { useEffect, useLayoutEffect, useRef, useState } from "react";
 /** ⓘ 버튼 — 누르면(데스크톱은 올려도) 설명이 뜨는 작은 창. 화면 가장자리에 붙지 않게 위치를 맞춤.
  *  방법론·정의처럼 '궁금할 때만 보는' 글을 본문에서 빼는 용도.
  *  마우스는 올리면 미리 뜨고, 누르면 고정(다시 누르거나 바깥을 누르면 닫힘) — 올려서 뜬 창을 누르면 닫히던 문제 방지 */
-export function InfoTip({ children, label = "설명 보기", wide = false }: { children: React.ReactNode; label?: string; wide?: boolean }) {
+export function InfoTip({ children, label = "설명 보기", wide = false, inline = false }: { children: React.ReactNode; label?: string; wide?: boolean; inline?: boolean }) {
   const [open, setOpen] = useState(false);
   const [pos, setPos] = useState<{ left: number; top: number } | null>(null);
   const btn = useRef<HTMLButtonElement>(null);
@@ -14,16 +14,16 @@ export function InfoTip({ children, label = "설명 보기", wide = false }: { c
   const pinned = useRef(false);
 
   useLayoutEffect(() => {
-    if (!open || !btn.current || !box.current) return;
+    if (inline || !open || !btn.current || !box.current) return;
     const r = btn.current.getBoundingClientRect(), w = box.current.offsetWidth, h = box.current.offsetHeight;
     const vw = window.innerWidth, vh = window.innerHeight;
     const left = Math.min(Math.max(8, r.left + r.width / 2 - w / 2), vw - w - 8);
     const top = r.bottom + 6 + h > vh - 8 && r.top - 6 - h > 8 ? r.top - 6 - h : r.bottom + 6;
     setPos({ left, top });
-  }, [open]);
+  }, [open, inline]);
 
   useEffect(() => {
-    if (!open) return;
+    if (!open || inline) return;
     const close = (e: Event) => {
       if (e.type === "keydown" && (e as KeyboardEvent).key !== "Escape") return;
       if (e.type === "pointerdown" && (box.current?.contains(e.target as Node) || btn.current?.contains(e.target as Node))) return;
@@ -41,7 +41,25 @@ export function InfoTip({ children, label = "설명 보기", wide = false }: { c
       window.removeEventListener("scroll", close, opts);
       window.removeEventListener("resize", close);
     };
-  }, [open]);
+  }, [open, inline]);
+
+  if (inline) {  // 페이지 제목용 — 떠 있는 창 대신 제목 아래에 펼쳐 본문을 밀어냄 (제목·첫 카드를 덮지 않게)
+    return (
+      <>
+        <button
+          type="button" aria-label={label} aria-expanded={open} onClick={() => setOpen((o) => !o)}
+          className={`inline-flex h-[18px] w-[18px] shrink-0 items-center justify-center rounded-full border align-middle font-serif text-[11px] font-bold italic leading-none transition ${open ? "border-accent bg-accent/20 text-accent" : "border-line text-muted hover:border-accent hover:text-accent"}`}
+        >
+          i
+        </button>
+        {open && (
+          <span role="note" className="mt-1 block basis-full space-y-1.5 rounded-xl border border-line bg-panel2 p-3 text-left text-xs font-normal not-italic leading-relaxed text-[#c9cde3]">
+            {children}
+          </span>
+        )}
+      </>
+    );
+  }
 
   return (
     <>

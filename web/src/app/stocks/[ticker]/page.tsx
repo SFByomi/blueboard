@@ -18,7 +18,7 @@ import { quarterize, sumSeries, toMonthly } from "@/lib/compute";
 import { risk, RISK_STYLE } from "@/lib/credit";
 import { ADMIN_ENABLED } from "@/lib/db";
 import { yoy3m } from "@/lib/estimate";
-import { INDEX_FOR_GROUP, dday, estGuide, estRange, estReported, estTier, estWeak, money, parseSites, pct, TIER_STYLE, tone, usd } from "@/lib/format";
+import { INDEX_FOR_GROUP, dday, estCaution, estGuide, estRange, estReported, estTier, estWeak, money, parseSites, pct, TIER_STYLE, tone, usd } from "@/lib/format";
 import { aiArr, aiDeals, alertsFor, company, creditFor, earningsBasis, earningsDates, estimateDate, estimateHistory, financials, flowScores, indicators, mappingsFor, marketCreditLast, multipleHist, multipleNow, observations, oiEstimate, partnersFor, peerRevenue, priceSnapshots, reportedQuarters, surgeForTicker, unestimated, valuations } from "@/lib/queries";
 import { valuationBrief } from "@/lib/valuation";
 
@@ -110,7 +110,7 @@ export default async function StockPage({ params }: PageProps<"/stocks/[ticker]"
   } else if (est && !rep && tier !== "보류") {
     if (g && !g.prelim) {
       const mid = (g.low + g.high) / 2;
-      points.push(<>회사 가이던스 {money(g.low, est.currency)}~{money(g.high, est.currency)} — 우리 추정은 중간값보다 <b className={tone(est.est / mid - 1)}>{pct(est.est / mid - 1)}</b>{g.why?.n && g.why.min != null && g.why.min > 0 ? ` (과거 ${g.why.n}분기 모두 가이던스 상회)` : ""}</>);
+      points.push(<>회사 가이던스 {money(g.low, est.currency)}{g.high !== g.low ? `~${money(g.high, est.currency)}` : ""} — 우리 추정은 {g.high !== g.low ? "중간값" : "가이던스"}보다 <b className={tone(est.est / mid - 1)}>{pct(est.est / mid - 1)}</b>{g.why?.n && g.why.min != null && g.why.min > 0 ? ` (과거 ${g.why.n}분기 모두 가이던스 상회)` : ""}</>);
     }
     if (est.cons_gap != null) {
       const r = estRange(est), inR = r != null && Math.abs(est.cons_gap) < r;
@@ -153,7 +153,7 @@ export default async function StockPage({ params }: PageProps<"/stocks/[ticker]"
               sub={weak ? <>참고용 · 오차 ±{((estRange(est) ?? 0) * 100).toFixed(0)}%</>
                 : <>직전 대비 <span className={tone(est.est / est.last_actual - 1)}>{pct(est.est / est.last_actual - 1)}</span>{est.cons_gap != null && tier !== "보류" ? <> · 컨센 <span className={tone(est.cons_gap)}>{pct(est.cons_gap)}</span></> : null}</>} />
           ) : (
-            <Stat href="#earnings" label="진행 분기 매출 추정" value="추정불가" tone="text-muted" sub={skip ? "매출과 연동된 흐름·이력 부족" : "추정 없음"} />
+            <Stat href="#earnings" label="진행 분기 매출 추정" value="추정불가" tone="text-muted" sub={<span className="line-clamp-2">{skip ? estCaution(skip)[0] ?? "매출과 연동된 흐름·이력 부족" : "추정 없음"}</span>} />
           )}
           <Stat label={`최근 분기 매출${last?.basis ? ` · ${last.basis}` : ""}`} value={last ? money(last.revenue, last.currency) : "-"}
             sub={<>전년비 <span className={tone(revYoY.at(-1))}>{pct(revYoY.at(-1), 0)}</span>{last ? ` · ${last.period_end.slice(0, 7)}` : ""}</>} />

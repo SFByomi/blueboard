@@ -66,7 +66,7 @@ export function PageHead({ title, sub, info, right }: { title: React.ReactNode; 
   return (
     <div className="flex flex-wrap items-end justify-between gap-2">
       <div className="min-w-0">
-        <h1 className="flex items-center gap-2 text-2xl font-bold">{title}{info && <InfoTip wide>{info}</InfoTip>}</h1>
+        <h1 className="flex flex-wrap items-center gap-x-2 text-2xl font-bold">{title}{info && <InfoTip inline>{info}</InfoTip>}</h1>
         {sub && <p className="mt-1 text-sm text-muted">{sub}</p>}
       </div>
       {right}
