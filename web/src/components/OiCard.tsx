@@ -40,6 +40,20 @@ export function OiCard({ o }: { o: OiEstimate | null }) {
         </div>
       )}
       {o.est != null && why.length > 0 && <div className="text-xs text-muted">· {why.join(" · ")}</div>}
+      {o.est != null && o.margin != null && (() => {
+        // 영업이익률이 어디서 나왔는지 접지 않고 한 줄로 — 특히 과거 최고 마진을 넘는 추정(메모리 급등기 등)은 바로 보이게
+        const top = bt.length ? Math.max(...bt.map((r) => r.actual / r.rev)) : null;
+        const above = top != null && o.margin > top + 0.005;
+        const src = o.method === "guide" && g?.used
+          ? <>회사 가이던스 마진 {mp(g.margin)}{g.gap != null && g.gap < 0 ? <>에 과거 {g.n}분기 실제가 가이던스를 웃돈 폭(중앙 {(-g.gap * 100).toFixed(1)}%p)을 더한 값</> : g.gap != null && g.gap > 0 ? <>에서 과거 {g.n}분기 실제와의 차이(중앙 {(g.gap * 100).toFixed(1)}%p)를 뺀 값</> : null}</>
+          : <>{METHOD[o.method] ?? o.method}</>;
+        return (
+          <div className={`rounded px-3 py-2 text-xs ${above ? "border border-amber-900 bg-amber-950/40 text-amber-200" : "bg-panel2 text-muted"}`}>
+            영업이익률 {mp(o.margin)} = {src}. 직전 분기 실제 {mp(o.last_margin)}{top != null ? ` · 백테스트 기간 최고 ${mp(top)}` : ""}.
+            {above && " 과거 최고 마진보다 높은 추정이라, 매출이 가이던스 수준에 그치거나 원가가 오르면 크게 빗나갈 수 있습니다."}
+          </div>
+        );
+      })()}
       {(g || bt.length > 0) && (
         <Fold summary={`근거 자세히${g ? " — 회사 수익성 가이던스" : ""}${bt.length ? ` · 백테스트 ${bt.length}분기` : ""}`}>
           {g && (

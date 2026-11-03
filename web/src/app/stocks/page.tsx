@@ -2,8 +2,8 @@ import { T } from "@/components/Names";
 import Link from "next/link";
 import { GradeBadge } from "@/components/FlowScores";
 import { Spark } from "@/components/Spark";
-import { baseEffect, GROUPS, pct, tone } from "@/lib/format";
-import { flowScores } from "@/lib/queries";
+import { baseEffect, estCaution, GROUPS, pct, tone } from "@/lib/format";
+import { flowScores, unestimated } from "@/lib/queries";
 import { stockSignals } from "@/lib/signals";
 import { TrendCard } from "@/components/TrendCard";
 import { SectionNav } from "@/components/SectionNav";
@@ -17,7 +17,8 @@ export const metadata: Metadata = { title: "종목", description: "추적 종목
 export default async function Stocks({ searchParams }: PageProps<"/stocks">) {
   const sp = await searchParams;
   const view = sp.view === "trend" ? "trend" : "sector", sort = sp.sort === "1m" ? "1m" : "3m";
-  const [sig, scores] = await Promise.all([stockSignals(), flowScores()]);
+  const [sig, scores, skips] = await Promise.all([stockSignals(), flowScores(), unestimated()]);
+  const skipWhy = (t: string) => { const s = skips.find((x) => x.ticker === t); return s ? estCaution(s)[0] ?? "매출과 연동된 흐름·이력 부족" : null; };
   const best = (t: string) => scores.filter((x) => x.ticker === t && x.best != null).sort((a, b) => b.best! - a.best!)[0];
   const tab = (on: boolean) => `shrink-0 rounded-full px-3 py-1 ${on ? "bg-accent/20 font-bold text-accent" : "bg-panel2 text-muted hover:text-fg"}`;
   const key = (s: (typeof sig)[number]) => (sort === "1m" ? s.last.yoy : s.yoy3m);
@@ -69,6 +70,7 @@ export default async function Stocks({ searchParams }: PageProps<"/stocks">) {
                     )}
                   </div>
                   <p className="mt-3 line-clamp-2 text-sm text-muted">{s.c.thesis}</p>
+                  {skipWhy(s.c.ticker) && <p className="mt-2 line-clamp-2 text-xs text-muted" title={skipWhy(s.c.ticker)!}><span className="rounded bg-panel2 px-1">실적 추정 불가</span> {skipWhy(s.c.ticker)}</p>}
                   <div className="mt-3 flex items-center justify-between gap-2">
                     <span className="truncate text-xs text-muted">
                       {s.flows ? `${s.proxy ? "업황 · " : ""}흐름 ${s.flows}개` : "매핑 없음"}{s.revYoY != null ? ` · 매출 YoY ${pct(s.revYoY)}` : ""}

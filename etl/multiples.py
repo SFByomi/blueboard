@@ -7,7 +7,7 @@
 지금 배수 = 오늘 EV ÷ 진행 분기 추정 × 4 (추정이 없으면 직전 분기 실적)
 시나리오 (배수가 안정적이고, 최근 1년 배수가 3년과 비슷하고, 지금 배수가 3년 범위 안일 때만 — 재평가·경기순환 국면엔 과거 배수 적용이 왜곡이라 이유만 남김)
   Worst = 하위 25% 배수 × 추정 하단 · Base = 중앙 배수 × 추정 · Best = 상위 25% 배수 × 추정 상단 → 예상 시가총액(− 순부채), ÷ 주식 수 = 주가
-주가는 하루 한 번(데이터 갱신 때) 야후 값 — 그 시각·종가/장중을 함께 저장(px_time·px_date·px_kind)해 화면에 '○월 ○일 종가 기준'으로. 예상 시가총액은 주가와 무관
+주가는 하루 한 번(데이터 갱신 때) 야후 값 — 장중이면 직전 거래일 종가로 맞춰 모든 종목을 종가 기준으로, 그 날짜(px_time·px_date·px_kind)를 저장해 화면에 '○월 ○일 종가 기준'으로. 예상 시가총액은 주가와 무관
 
 시가총액: 야후 현재 시가총액 × (분기 말 종가 ÷ 현재가) × (그 분기 희석 주식 수 ÷ 최근, SEC — 액면분할은 야후 분할 기록으로 보정).
 야후 가격은 재게시 금지 → 원 가격·시가총액은 저장하지 않고 배수·시나리오 결과(우리 계산)와 비율만 (multiple_hist·multiple_now).
@@ -49,8 +49,14 @@ def _yahoo(s, crumb, sym: str) -> dict:
     now = time.time()
     live = bool(t and reg and reg.get("start", 0) <= now <= reg.get("end", 0) and t >= reg.get("start", 0))
     px_at = datetime.fromtimestamp(t, ZoneInfo(tz)) if t else None
-    return {"px": px[~px.index.duplicated(keep="last")], "splits": splits, "mcap": (p.get("marketCap") or {}).get("raw"),
-            "price": (p.get("regularMarketPrice") or {}).get("raw"), "currency": p.get("currency"),
+    px = px[~px.index.duplicated(keep="last")]
+    mcap, price = (p.get("marketCap") or {}).get("raw"), (p.get("regularMarketPrice") or {}).get("raw")
+    if live and px_at and mcap and price:  # 장중이면 직전 거래일 종가로 — 한국 종목만 갱신 시각(아침)에 장이 열려 있어 기준이 섞이던 문제
+        prev = px[px.index.date < px_at.date()]
+        if len(prev):
+            mcap, price, live = mcap * float(prev.iloc[-1]) / price, float(prev.iloc[-1]), False
+            px_at = datetime.combine(prev.index[-1].date(), datetime.fromtimestamp(reg["end"], ZoneInfo(tz)).time(), ZoneInfo(tz))  # 그날 장 마감 시각
+    return {"px": px, "splits": splits, "mcap": mcap, "price": price, "currency": p.get("currency"),
             "px_time": px_at.astimezone(timezone.utc).isoformat(timespec="minutes") if px_at else None,
             "px_date": px_at.date().isoformat() if px_at else None, "px_kind": "장중" if live else "종가"}
 
