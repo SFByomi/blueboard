@@ -21,7 +21,7 @@ from etl.sec import UA, cik
 ROOT = Path(__file__).resolve().parents[1]
 STORE = ROOT / "data" / "guidance.json"
 TEXT = ROOT / "data" / "raw" / "guidance"  # 보도자료 본문 캐시(git 제외) — 파서를 고치면 다시 받지 않고 재해석
-VERSION = 10  # 파서 버전: 저장된 결과가 이보다 낮으면 본문으로 다시 해석
+VERSION = 11  # 파서 버전: 저장된 결과가 이보다 낮으면 본문으로 다시 해석
 SINCE = "2021-06-01"
 NUM = r"[$€]\s?([\d,]+(?:\.\d+)?)\s*(billion|million|B|M)?"  # ASML은 유로
 SEP = r"\s*(?:to|and|-|–|—)\s*[$€]?\s?([\d,]+(?:\.\d+)?)\s*(billion|million|B|M)?"
@@ -205,7 +205,7 @@ def parse_actual(text: str) -> dict | None:
     연간·반기 합계나 부문 매출이 먼저 나오는 회사도 있어, 회사별 과거 일치율(actual_trust)로 쓸지 정한다."""
     head = text[:4000]
     for m in re.finditer(rf"(?i){REV}\b(?:\s+for\s+the\s+(?:fiscal\s+)?(?:first|second|third|fourth)\s+(?:fiscal\s+)?quarter(?:\s+of\s+(?:fiscal\s+)?(?:year\s+)?20\d\d)?)?"
-                         r"\s*(?:was|were|of|totaled|reached|grew\s+\d+%\s+to|increased\s+\d+%\s+to|:)\s*(?:a\s+record\s+)?[$€]\s?([\d,]+(?:\.\d+)?)\s*(billion|million|B|M)?", head):
+                         r"\s*(?:was|were|of|totaled|reached|(?:grew|increased|rose|decreased|declined)\s+(?:by\s+)?\d+(?:\.\d+)?%\s+(?:year[\s-]+over[\s-]+year\s+)?to|:)\s*(?:a\s+record\s+)?[$€]\s?([\d,]+(?:\.\d+)?)\s*(billion|million|B|M)?", head):
         pre = head[max(0, m.start() - 150): m.start()]
         if re.search(r"(?i)expect|guidance|outlook|full[\s-]+year|fiscal\s+year\s+20\d\d\s+revenue|annual|six months|nine months|twelve months", pre[-80:] + m.group(0)):
             continue

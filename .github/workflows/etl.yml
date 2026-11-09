@@ -4,12 +4,17 @@ name: 데이터 갱신
 # 필요한 저장소 Secrets: CENSUS_API_KEY, ESTAT_APP_ID, DATA_GO_KR_KEY, DART_API_KEY, EIA_API_KEY, DATABASE_URL (+ FINRA_API_CLIENT_ID/SECRET: 신용 탭 회사채 시장 집계)
 on:
   schedule:
-    - cron: "43 18 * * *" # 매일 03:43 KST 예약 — GitHub 예약 실행은 보통 1~4시간 늦게 시작해 아침에 게시됨
+    - cron: "43 18 * * *" # 03:43 KST 예비 — GitHub 예약은 3~5시간 늦게 시작해서, 주 실행은 Vercel Cron(web/vercel.json, 07:10 KST)이 workflow_dispatch로 시작
     - cron: "17 21 * * *" # 06:17 KST 예비 — 첫 예약이 밀리거나(11/3 6시간 지연) 실패해도 아침 안에 갱신. 이미 갱신됐으면 아래 check가 건너뜀
   workflow_dispatch:
+    inputs:
+      auto:
+        description: "자동 시작(Vercel Cron) — 최근 갱신이 있으면 건너뜀. 손으로 돌릴 땐 비워 두기"
+        required: false
+        default: ""
   push:
     branches: [main]
-    paths: ["data/curation.json", "data/plants.json", "data/hs_names_ko.json", "etl/**", "requirements.txt"] # 큐레이션·수집 코드 변경 시 바로 반영
+    paths: ["data/curation.json", "data/plants.json", "data/hs_names_ko.json", "data/estimate_reviews.json", "data/ai_labs.json", "etl/**", "requirements.txt"] # 큐레이션·수집 코드 변경 시 바로 반영
 
 concurrency:
   group: etl
@@ -30,10 +35,17 @@ jobs:
         env:
           GH_TOKEN: ${{ github.token }}
         run: |
-          if [ "${{ github.event_name }}" != "schedule" ]; then echo "run=true" >> "$GITHUB_OUTPUT"; exit 0; fi
-          since=$(date -u -d '8 hours ago' +%Y-%m-%dT%H:%M:%SZ)
-          n=$(gh run list -R "${{ github.repository }}" -w etl.yml --status success --created ">=$since" --json databaseId --jq "[.[] | select(.databaseId != ${{ github.run_id }})] | length")
-          echo "최근 8시간 성공 실행: $n"
+          if [ "${{ github.event_name }}" != "schedule" ] && [ -z "${{ inputs.auto }}" ]; then echo "run=true" >> "$GITHUB_OUTPUT"; exit 0; fi
+          # 예약: 최근 8시간 안에 성공했거나 돌고 있는 실행이 있으면 건너뜀.
+          # Vercel 자동 시작(07:10 KST): 최근 2시간만 봄 — 새벽에 일찍 돈 예약 뒤에 나온 미국 장 마감 후 실적(06:05 KST 전후)까지 반영
+          hrs=8; [ -n "${{ inputs.auto }}" ] && hrs=2
+          since=$(date -u -d "$hrs hours ago" +%Y-%m-%dT%H:%M:%SZ)
+          n=0
+          for st in success in_progress queued; do
+            k=$(gh run list -R "${{ github.repository }}" -w etl.yml --status $st --created ">=$since" --json databaseId --jq "[.[] | select(.databaseId != ${{ github.run_id }})] | length")
+            n=$((n + k))
+          done
+          echo "최근 ${hrs}시간 성공·진행 중 실행: $n"
           if [ "$n" -gt 0 ]; then echo "run=false" >> "$GITHUB_OUTPUT"; else echo "run=true" >> "$GITHUB_OUTPUT"; fi
 
   etl:

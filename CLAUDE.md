@@ -13,6 +13,7 @@
 - 종목·시리즈·매핑·HS태그는 `data/curation.json`이 원본. DB는 캐시라 언제든 재생성.
 - 관리 페이지에서 수정 → 웹이 curation.json 자동 저장 → **작업 끝나면 commit·push** (다른 환경에서 pull 후 `etl.build`로 반영).
 - 코드로 큐레이션을 바꿀 때도 DB 수정 후 `etl.curation.export` 또는 json 직접 수정 → commit.
+- **실적 추정 복기 = `data/estimate_reviews.json` (Claude가 계속 관리 — 사용자 요청)**: 종목 실적이 나올 때마다 한 줄 추가 — 발표 전 마지막 추정(est·low·high·est_asof·method), 실제(actual: 부문 매출처럼 자동 수집 안 되는 것만 — 분기보고서·10-Q 전에 basis='발표'로 먼저 반영), 틀린 이유(cause는 파일의 causes 중 하나 + why에 흐름 숫자로), 조정(fix: 모델을 무엇을 바꿨나/다음에 볼 것). 같은 원인이 반복되면 메모로 끝내지 말고 모델·매핑을 고친다(예: AAON 일회성 급증 → estimates.spike 보류). 실적 시즌엔 /earnings '최근 실적 복기'와 일정 탭으로 발표된 종목을 확인해 빠짐없이 채울 것. 웹: 종목 화면 '지난 추정 복기'(발표 전 고정 추정 = earnings_reports 기준 실적 검증 + 메모), /earnings '최근 실적 복기'
 - AI 랩 ARR·네오클라우드 계약 = `data/ai_labs.json` (OpenAI·Anthropic 연환산 매출 공개 수치 + IREN·NBIS·CRWV 계약 관계, 출처·상태(회사 발표/보도/추정) 포함). 빌드마다 ai_arr·ai_deals로 다시 읽음 → 업황 탭 'AI 랩 매출 규모', 네오클라우드 종목 'AI 랩 수요와의 연결'. 새 발표가 나오면 한 줄 추가.
 - 영어 이름 = curation.json의 `series.label_en`·`companies.thesis_en` (영어 페이지·X 게시용). 새 종목·시리즈를 추가하면 같이 채운다 — 비면 한국어 label로 대체됨
 - 공장 지도 = `data/plants.json` (회사·분야·좌표·상태·제품·연결 시리즈 id). 빌드마다 plants 테이블로 다시 읽음 → 웹 /plants. 좌표는 산업단지·도시 수준, 상태는 `asof` 월 기준으로 갱신.
@@ -23,6 +24,7 @@
   - 소스: census.py(미국) · estat.py(일본, 엔→달러) · kcs.py(한국 관세청, 시군구) · sec.py/dart.py/dart_segment.py(매출)
   - surge.py 급등 탐지 · breaks.py 통계 단절 경고
   - **상관 모델(핵심 원칙: 어떤 품목이 매출과 직접 연결되는지 숫자로)**: scores.py가 빌드마다 모든 매핑을 분기 매출과 비교 → `flow_scores`(전년비 상관 0~2분기 선행·최근 8분기·등급 A~D). check.py로 개별 검증, discover.py로 HS×국가/주 후보 자동 탐색
+  - **공시 전 실적(속도)**: 분기보고서·10-Q는 발표 몇 주 뒤라 그 전에 — 미국은 실적 보도자료(guidance.parse_actual, 회사별 과거 일치율 90% 이상만), 한국 연결 매출은 DART 영업(잠정)실적 공정공시(dart_prelim.py, 전기실적이 우리 직전 분기와 맞을 때만, `data/dart_prelim.json` 캐시), 부문 매출은 estimate_reviews.json actual. 공식 공시가 들어오면 그 값으로 대체
   - **진행 분기 매출 추정**: estimates.py가 (가이던스 종목은 같은 분기 상관 0.7 이상 흐름의 진행 분기 전분기·전년비를 `guide.xcheck`로 교차 확인 — 모델엔 안 넣음) A·B 흐름으로 전년비·금액 회귀(+직전 4분기 편향 보정판) 중 백테스트 오차가 작은 모델을 골라 추정 → `revenue_estimates`(Supabase 누적: 추정·괴리율 추이). consensus.py가 야후 매출 컨센서스 수집 → `consensus`는 **재게시 금지라 로컬 전용**(publish.PRIVATE), 공개엔 괴리율만. 원 금액은 /admin/consensus
   - inflation.py 미국 CPI·PCE 구성요소 기여도(서비스·공산품·식품·에너지, FRED) → `inflation_contrib` · econ_calendar.py 주요 일정(BLS·BEA·FOMC·Census·한국 수출입·실적, 한국 시간) → `econ_events`. bls.gov는 자동 수집을 403으로 막아 `data/bls_schedule.json` 사본을 씀(연 1회 갱신) · macro.py 연준 총자산·TGA·역레포·지준·순유동성·M2·연방부채/M2·/GDP(FRED, 십억 달러) → `macro_obs`
   - **신용(공개 탭 /credit)**: credit.py 기업별 재무 신용 지표(SEC XBRL·DART, 네비우스는 20-F 외국 발행사라 6-K 분기 실적 보도자료 표에서: 총차입·현금·순부채/EBITDA·이자보상·1년 내 만기·FCF, 분기 + 최근 4분기 합; 한국 감가상각은 요약 API에 없어 정기보고서 XBRL 현금흐름표에서) → `credit_metrics` · market_credit.py 주가 내재 부도확률(머튼/KMV 간편식: 야후 주가 변동성 + 장부 부채 → 1년 거리·5년 누적 부도확률, 주가·시총은 저장 안 하고 파생값만) → `market_credit` — 내재 신용 스프레드(bp)도 시험했으나 실제 회사채 스프레드와 방향까지 어긋나(코어위브 6개월 실제 +540bp vs 모델 −260bp) 빼기로 함 · finra.py FINRA API 회사채 시장 집계(개인 Public 키로는 종목별 TRACE 불가, finra.org 화면 수집은 약관 금지 — 상승/하락 종목 수 등만, 필드 그대로 `finra_market`, 표시 시 "Source: FINRA") + 미 국채 곡선(FRED DGS → `macro_obs`). ICE BofA 스프레드(FRED)는 재게시 금지라 안 씀
@@ -38,7 +40,7 @@
 - 분기 매출·영업이익(sec.py)은 분기 단독 공시가 없으면 연간 − 3개 분기, 같은 회계연도 누적(3·6·9·12개월) 차이로 복원(분사 기업 샌디스크 2023-09·2024-06 분기). scores.py는 그래도 빠진 분기를 빈 행으로 채워 위치 기반 전년비가 엉뚱한 분기와 짝지어지지 않게 함
 - `verify/` 상관 검증 스크립트 (0단계)
 - **자동 게시(X·텔레그램, 승인제)**: `web/src/lib/autopost/` — 후보(types.Candidate: earnings.ts 실적 결과·프리뷰, pick.ts 무역 TOP 3, prices.ts 주간 GPU 가격, 확인 필요 플래그) → draft.ts(Claude, 넘긴 숫자만·코드로 숫자 재검사) → chart.tsx(ImageResponse) → flow.ts(Supabase `autopost_drafts` 상태, 텔레그램 [게시][수정][버리기], X OAuth 1.0a·채널 게시). 경로 `/api/autopost/{cron,telegram,setup,preview}`, Vercel Cron 매일 08:30 KST. 키는 Vercel 환경변수만(README '자동 게시'). 게시 글엔 무역 흐름 숫자만 — 야후 주가·컨센서스 등 재게시 금지 데이터는 넘기지 않는다
-- 공개 사이트: GitHub Actions(`.github/workflows/etl.yml`)가 매일 `etl.build` → `etl.publish`(SQLite→Supabase Postgres 전체 교체), Vercel(`web/`)이 `DATABASE_URL`로 읽음.
+- 공개 사이트: GitHub Actions(`.github/workflows/etl.yml`)가 매일 `etl.build` → `etl.publish`(SQLite→Supabase Postgres 전체 교체), Vercel(`web/`)이 `DATABASE_URL`로 읽음. **시작은 Vercel Cron**(`/api/etl/kick`, 07:10 KST → workflow_dispatch, Vercel 환경변수 `GH_DISPATCH_TOKEN` 필요) — GitHub 예약 실행은 3~5시간씩 늦어(03:43 → 07:15~08:50) 예비로만 둠. 중복은 check 잡이 막음.
   - 웹 조회는 `web/src/lib/db.ts`의 `query()` 하나로 SQLite·Postgres 공용 → SQL은 양쪽 공통 문법, 파라미터 `?`.
   - `DATABASE_URL`이 있으면 관리 페이지·서버 액션 비활성(`ADMIN_ENABLED`). 큐레이션 수정은 로컬에서만 → curation.json push.
 

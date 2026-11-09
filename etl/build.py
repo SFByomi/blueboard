@@ -9,7 +9,7 @@ import time
 from concurrent.futures import ThreadPoolExecutor, as_completed
 from datetime import datetime, timezone
 
-from etl import breaks, consensus, credit, curation, dart, dart_segment, econ_calendar, estimates, finra, guidance, indicators, inflation, macro, market_credit, multiples, oi_estimates, partners, peers, prices, scores, sec, sec6k, seed, sources, surge
+from etl import breaks, consensus, credit, curation, dart, dart_prelim, dart_segment, econ_calendar, estimates, finra, guidance, indicators, inflation, macro, market_credit, multiples, oi_estimates, partners, peers, prices, reviews, scores, sec, sec6k, seed, sources, surge
 from etl.db import connect
 
 
@@ -152,6 +152,8 @@ def main():
     step("3) 회사 매출 가이던스·실적 보도자료")
     guidance.collect([t for (t,) in con.execute("SELECT sec_ticker FROM companies WHERE sec_ticker IS NOT NULL ORDER BY sec_ticker")], log)
     step("3-0) 분기 매출 (SEC·DART)"); fetch_financials(con)
+    step("3-0b) 공시 전 실적: DART 잠정실적 · 추정 복기(data/estimate_reviews.json)")
+    log(f"  잠정실적 {dart_prelim.apply(con, log)}건 · 복기 {reviews.load(con, log)}건")
     step("3-1) 통계 단절 탐지"); n = breaks.scan(con, log); con.commit(); log(f"  경고 {n}건")
     step("3-2) 매출 상관 점수"); scores.score_all(con, log); con.commit()
     step("3-3) 컨센서스 (로컬 전용)"); consensus.collect(con, log); con.commit()

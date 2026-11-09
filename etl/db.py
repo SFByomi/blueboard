@@ -126,6 +126,11 @@ CREATE TABLE IF NOT EXISTS ai_arr ( -- AI 랩 연환산 매출(ARR) 공개 수�
 CREATE TABLE IF NOT EXISTS ai_deals ( -- 네오클라우드 ↔ AI 랩·빅테크 계약 (data/ai_labs.json)
   company TEXT NOT NULL, counterparty TEXT NOT NULL, date TEXT, value TEXT, status TEXT, link TEXT, note TEXT, url TEXT, sort INTEGER
 );
+CREATE TABLE IF NOT EXISTS estimate_reviews ( -- 실적 추정 복기 (data/estimate_reviews.json, 손으로 관리): 발표 전 추정 vs 실제 · 틀린 이유 · 조정
+  ticker TEXT NOT NULL, q_end TEXT NOT NULL, announced TEXT, actual REAL, source TEXT, url TEXT,
+  est REAL, low REAL, high REAL, est_asof TEXT, method TEXT, tier TEXT, cause TEXT, why TEXT, fix TEXT,
+  PRIMARY KEY (ticker, q_end)
+);
 CREATE TABLE IF NOT EXISTS peer_revenue ( -- 대만 CCL 경쟁사 월매출 (etl/peers.py, MOPS 공시 · FinMind), 대만달러
   ticker TEXT NOT NULL, month TEXT NOT NULL, revenue REAL,
   PRIMARY KEY (ticker, month)
