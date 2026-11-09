@@ -6,7 +6,7 @@
 "annual": [],
 "actual": null,
 "fye": "1231",
-"v": 10
+"v": 11
 },
 "0000824142-21-000133": {
 "ticker": "AAON",
@@ -15,7 +15,7 @@
 "annual": [],
 "actual": null,
 "fye": "1231",
-"v": 10
+"v": 11
 },
 "0000824142-22-000033": {
 "ticker": "AAON",
@@ -28,142 +28,202 @@
 "ctx": "revenue of $136.3 million"
 },
 "fye": "1231",
-"v": 10
+"v": 11
 },
 "0000824142-22-000096": {
 "ticker": "AAON",
 "filed": "2022-05-05",
 "cands": [],
 "annual": [],
-"actual": null,
+"actual": {
+"value": 182.8,
+"unit": 1000000.0,
+"ctx": "Net sales for the first quarter of 2022 increased 57.8% to $182.8 million"
+},
 "fye": "1231",
-"v": 10
+"v": 11
 },
 "0000824142-22-000169": {
 "ticker": "AAON",
 "filed": "2022-08-08",
 "cands": [],
 "annual": [],
-"actual": null,
+"actual": {
+"value": 208.8,
+"unit": 1000000.0,
+"ctx": "Net sales for the second quarter of 2022 increased 45.1% to $208.8 million"
+},
 "fye": "1231",
-"v": 10
+"v": 11
 },
 "0000824142-22-000234": {
 "ticker": "AAON",
 "filed": "2022-11-07",
 "cands": [],
 "annual": [],
-"actual": null,
+"actual": {
+"value": 242.6,
+"unit": 1000000.0,
+"ctx": "Net sales for the third quarter of 2022 increased 75.1% to a record $242.6 million"
+},
 "fye": "1231",
-"v": 10
+"v": 11
 },
 "0000824142-23-000020": {
 "ticker": "AAON",
 "filed": "2023-02-27",
 "cands": [],
 "annual": [],
-"actual": null,
+"actual": {
+"value": 254.6,
+"unit": 1000000.0,
+"ctx": "Net sales for the fourth quarter of 2022 increased 86.8% to a record $254.6 million"
+},
 "fye": "1231",
-"v": 10
+"v": 11
 },
 "0000824142-23-000094": {
 "ticker": "AAON",
 "filed": "2023-05-04",
 "cands": [],
 "annual": [],
-"actual": null,
+"actual": {
+"value": 266.0,
+"unit": 1000000.0,
+"ctx": "Net sales for the first quarter of 2023 increased 45.5% to a record $266.0 million"
+},
 "fye": "1231",
-"v": 10
+"v": 11
 },
 "0000824142-23-000148": {
 "ticker": "AAON",
 "filed": "2023-08-03",
 "cands": [],
 "annual": [],
-"actual": null,
+"actual": {
+"value": 284.0,
+"unit": 1000000.0,
+"ctx": "Net sales for the second quarter of 2023 increased 36.0% to a record $284.0 million"
+},
 "fye": "1231",
-"v": 10
+"v": 11
 },
 "0000824142-23-000175": {
 "ticker": "AAON",
 "filed": "2023-11-06",
 "cands": [],
 "annual": [],
-"actual": null,
+"actual": {
+"value": 312.0,
+"unit": 1000000.0,
+"ctx": "Net sales for the third quarter of 2023 increased 28.6% to $312.0 million"
+},
 "fye": "1231",
-"v": 10
+"v": 11
 },
 "0000824142-24-000029": {
 "ticker": "AAON",
 "filed": "2024-02-28",
 "cands": [],
 "annual": [],
-"actual": null,
+"actual": {
+"value": 306.6,
+"unit": 1000000.0,
+"ctx": "Net sales for the fourth quarter of 2023 increased 20.4% to a record $306.6 million"
+},
 "fye": "1231",
-"v": 10
+"v": 11
 },
 "0000824142-24-000121": {
 "ticker": "AAON",
 "filed": "2024-05-02",
 "cands": [],
 "annual": [],
-"actual": null,
+"actual": {
+"value": 262.1,
+"unit": 1000000.0,
+"ctx": "Net sales for the first quarter of 2024 decreased 1.4% to $262.1 million"
+},
 "fye": "1231",
-"v": 10
+"v": 11
 },
 "0000824142-24-000185": {
 "ticker": "AAON",
 "filed": "2024-08-01",
 "cands": [],
 "annual": [],
-"actual": null,
+"actual": {
+"value": 313.6,
+"unit": 1000000.0,
+"ctx": "Net sales for the second quarter of 2024 increased 10.4% to a record $313.6 million"
+},
 "fye": "1231",
-"v": 10
+"v": 11
 },
 "0000824142-24-000209": {
 "ticker": "AAON",
 "filed": "2024-11-07",
 "cands": [],
 "annual": [],
-"actual": null,
+"actual": {
+"value": 327.3,
+"unit": 1000000.0,
+"ctx": "Net sales for the third quarter of 2024 increased 4.9% to a record $327.3 million"
+},
 "fye": "1231",
-"v": 10
+"v": 11
 },
 "0000824142-25-000041": {
 "ticker": "AAON",
 "filed": "2025-02-27",
 "cands": [],
 "annual": [],
-"actual": null,
+"actual": {
+"value": 297.7,
+"unit": 1000000.0,
+"ctx": "Net sales for the fourth quarter of 2024 decreased 2.9% to $297.7 million"
+},
 "fye": "1231",
-"v": 10
+"v": 11
 },
 "0000824142-25-000122": {
 "ticker": "AAON",
 "filed": "2025-05-01",
 "cands": [],
 "annual": [],
-"actual": null,
+"actual": {
+"value": 322.1,
+"unit": 1000000.0,
+"ctx": "Net sales for the first quarter of 2025 increased 22.9% to $322.1 million"
+},
 "fye": "1231",
-"v": 10
+"v": 11
 },
 "0000824142-25-000185": {
 "ticker": "AAON",
 "filed": "2025-08-11",
 "cands": [],
 "annual": [],
-"actual": null,
+"actual": {
+"value": 311.6,
+"unit": 1000000.0,
+"ctx": "Net sales for the second quarter of 2025 decreased 0.6% to $311.6 million"
+},
 "fye": "1231",
-"v": 10
+"v": 11
 },
 "0000824142-25-000197": {
 "ticker": "AAON",
 "filed": "2025-11-06",
 "cands": [],
 "annual": [],
-"actual": null,
+"actual": {
+"value": 384.2,
+"unit": 1000000.0,
+"ctx": "Net sales for the third quarter of 2025 increased 17.4% to $384.2 million"
+},
 "fye": "1231",
-"v": 10
+"v": 11
 },
 "0000824142-26-000003": {
 "ticker": "AAON",
@@ -176,9 +236,13 @@
 "ctx": "Sales Growth 18%-20%"
 }
 ],
-"actual": null,
+"actual": {
+"value": 1.44,
+"unit": 1000000000.0,
+"ctx": "Net sales increased 20.1% to $1.44 billion"
+},
 "fye": "1231",
-"v": 10
+"v": 11
 },
 "0000824142-26-000034": {
 "ticker": "AAON",
@@ -191,9 +255,13 @@
 "ctx": "Sales Growth 40%-45%"
 }
 ],
-"actual": null,
+"actual": {
+"value": 496.9,
+"unit": 1000000.0,
+"ctx": "Net sales grew 54.3% to a record $496.9 million"
+},
 "fye": "1231",
-"v": 10
+"v": 11
 },
 "0000824142-26-000052": {
 "ticker": "AAON",
@@ -206,9 +274,32 @@
 "ctx": "Sales Growth 55%-60%"
 }
 ],
-"actual": null,
+"actual": {
+"value": 627.0,
+"unit": 1000000.0,
+"ctx": "Net sales increased 101.2% to a record $627.0 million"
+},
 "fye": "1231",
-"v": 10
+"v": 11
+},
+"0000824142-26-000083": {
+"ticker": "AAON",
+"filed": "2026-11-09",
+"cands": [],
+"annual": [
+{
+"g_low": 0.72,
+"g_high": 0.75,
+"ctx": "Sales Growth 72%-75%"
+}
+],
+"actual": {
+"value": 707.4,
+"unit": 1000000.0,
+"ctx": "Net sales increased 84.1% to a record $707.4 million"
+},
+"fye": "1231",
+"v": 11
 },
 "0001596532-22-000111": {
 "ticker": "ANET",
@@ -240,7 +331,7 @@
 "basis": "non-GAAP"
 },
 "fye": "1231",
-"v": 10
+"v": 11
 },
 "0001596532-22-000218": {
 "ticker": "ANET",
@@ -272,7 +363,7 @@
 "basis": "non-GAAP"
 },
 "fye": "1231",
-"v": 10
+"v": 11
 },
 "0001596532-22-000292": {
 "ticker": "ANET",
@@ -304,7 +395,7 @@
 "basis": "non-GAAP"
 },
 "fye": "1231",
-"v": 10
+"v": 11
 },
 "0001596532-23-000015": {
 "ticker": "ANET",
@@ -336,7 +427,7 @@
 "basis": "non-GAAP"
 },
 "fye": "1231",
-"v": 10
+"v": 11
 },
 "0001596532-23-000101": {
 "ticker": "ANET",
@@ -368,7 +459,7 @@
 "basis": "non-GAAP"
 },
 "fye": "1231",
-"v": 10
+"v": 11
 },
 "0001596532-23-000196": {
 "ticker": "ANET",
@@ -400,7 +491,7 @@
 "basis": "non-GAAP"
 },
 "fye": "1231",
-"v": 10
+"v": 11
 },
 "0001596532-23-000272": {
 "ticker": "ANET",
@@ -432,7 +523,7 @@
 "basis": "non-GAAP"
 },
 "fye": "1231",
-"v": 10
+"v": 11
 },
 "0001596532-24-000041": {
 "ticker": "ANET",
@@ -464,7 +555,7 @@
 "basis": "non-GAAP"
 },
 "fye": "1231",
-"v": 10
+"v": 11
 },
 "0001596532-24-000171": {
 "ticker": "ANET",
@@ -496,7 +587,7 @@
 "basis": "non-GAAP"
 },
 "fye": "1231",
-"v": 10
+"v": 11
 },
 "0001596532-24-000277": {
 "ticker": "ANET",
@@ -528,7 +619,7 @@
 "basis": "non-GAAP"
 },
 "fye": "1231",
-"v": 10
+"v": 11
 },
 "0001596532-24-000366": {
 "ticker": "ANET",
@@ -560,7 +651,7 @@
 "basis": "non-GAAP"
 },
 "fye": "1231",
-"v": 10
+"v": 11
 },
 "0001596532-25-000018": {
 "ticker": "ANET",
@@ -592,7 +683,7 @@
 "basis": "non-GAAP"
 },
 "fye": "1231",
-"v": 10
+"v": 11
 },
 "0001596532-25-000103": {
 "ticker": "ANET",
@@ -624,7 +715,7 @@
 "basis": "non-GAAP"
 },
 "fye": "1231",
-"v": 10
+"v": 11
 },
 "0001596532-25-000214": {
 "ticker": "ANET",
@@ -656,7 +747,7 @@
 "basis": "non-GAAP"
 },
 "fye": "1231",
-"v": 10
+"v": 11
 },
 "0001596532-25-000284": {
 "ticker": "ANET",
@@ -688,7 +779,7 @@
 "basis": "non-GAAP"
 },
 "fye": "1231",
-"v": 10
+"v": 11
 },
 "0001596532-26-000010": {
 "ticker": "ANET",
@@ -720,7 +811,7 @@
 "basis": "non-GAAP"
 },
 "fye": "1231",
-"v": 10
+"v": 11
 },
 "0001596532-26-000074": {
 "ticker": "ANET",
@@ -748,7 +839,7 @@
 "basis": "non-GAAP"
 },
 "fye": "1231",
-"v": 10
+"v": 11
 },
 "0001596532-26-000174": {
 "ticker": "ANET",
@@ -776,7 +867,7 @@
 "basis": "non-GAAP"
 },
 "fye": "1231",
-"v": 10
+"v": 11
 },
 "0001596532-26-000252": {
 "ticker": "ANET",
@@ -804,21 +895,21 @@
 "basis": "non-GAAP"
 },
 "fye": "1231",
-"v": 10
+"v": 11
 },
 "0000937966-21-000016": {
 "ticker": "ASML",
 "filed": "2021-07-21",
 "cands": [],
 "skip": true,
-"v": 10
+"v": 11
 },
 "0000937966-21-000019": {
 "ticker": "ASML",
 "filed": "2021-10-20",
 "cands": [],
 "skip": true,
-"v": 10
+"v": 11
 },
 "0000937966-22-000004": {
 "ticker": "ASML",
@@ -846,7 +937,7 @@
 "basis": "GAAP"
 },
 "fye": "1231",
-"v": 10
+"v": 11
 },
 "0000937966-22-000016": {
 "ticker": "ASML",
@@ -874,7 +965,7 @@
 "basis": "GAAP"
 },
 "fye": "1231",
-"v": 10
+"v": 11
 },
 "0000937966-22-000019": {
 "ticker": "ASML",
@@ -902,7 +993,7 @@
 "basis": "GAAP"
 },
 "fye": "1231",
-"v": 10
+"v": 11
 },
 "0000937966-22-000022": {
 "ticker": "ASML",
@@ -944,7 +1035,7 @@
 "basis": "GAAP"
 },
 "fye": "1231",
-"v": 10
+"v": 11
 },
 "0000937966-23-000003": {
 "ticker": "ASML",
@@ -979,7 +1070,7 @@
 "basis": "GAAP"
 },
 "fye": "1231",
-"v": 10
+"v": 11
 },
 "0000937966-23-000019": {
 "ticker": "ASML",
@@ -1007,7 +1098,7 @@
 "basis": "GAAP"
 },
 "fye": "1231",
-"v": 10
+"v": 11
 },
 "0000937966-23-000026": {
 "ticker": "ASML",
@@ -1035,7 +1126,7 @@
 "basis": "GAAP"
 },
 "fye": "1231",
-"v": 10
+"v": 11
 },
 "0000937966-23-000029": {
 "ticker": "ASML",
@@ -1063,7 +1154,7 @@
 "basis": "GAAP"
 },
 "fye": "1231",
-"v": 10
+"v": 11
 },
 "0000937966-24-000003": {
 "ticker": "ASML",
@@ -1092,7 +1183,7 @@
 "ctx": "net sales of €27.6 billion"
 },
 "fye": "1231",
-"v": 10
+"v": 11
 },
 "0000937966-24-000013": {
 "ticker": "ASML",
@@ -1120,7 +1211,7 @@
 "basis": "GAAP"
 },
 "fye": "1231",
-"v": 10
+"v": 11
 },
 "0000937966-24-000019": {
 "ticker": "ASML",
@@ -1148,7 +1239,7 @@
 "basis": "GAAP"
 },
 "fye": "1231",
-"v": 10
+"v": 11
 },
 "0000937966-24-000022": {
 "ticker": "ASML",
@@ -1205,7 +1296,7 @@
 "basis": "GAAP"
 },
 "fye": "1231",
-"v": 10
+"v": 11
 },
 "0000937966-25-000003": {
 "ticker": "ASML",
@@ -1248,7 +1339,7 @@
 "basis": "GAAP"
 },
 "fye": "1231",
-"v": 10
+"v": 11
 },
 "0000937966-25-000014": {
 "ticker": "ASML",
@@ -1291,7 +1382,7 @@
 "basis": "GAAP"
 },
 "fye": "1231",
-"v": 10
+"v": 11
 },
 "0001628280-25-034992": {
 "ticker": "ASML",
@@ -1319,7 +1410,7 @@
 "basis": "GAAP"
 },
 "fye": "1231",
-"v": 10
+"v": 11
 },
 "0001628280-25-045043": {
 "ticker": "ASML",
@@ -1347,7 +1438,7 @@
 "basis": "GAAP"
 },
 "fye": "1231",
-"v": 10
+"v": 11
 },
 "0001628280-26-003701": {
 "ticker": "ASML",
@@ -1390,7 +1481,7 @@
 "basis": "GAAP"
 },
 "fye": "1231",
-"v": 10
+"v": 11
 },
 "0001628280-26-025147": {
 "ticker": "ASML",
@@ -1440,7 +1531,7 @@
 "basis": "GAAP"
 },
 "fye": "1231",
-"v": 10
+"v": 11
 },
 "0001628280-26-048235": {
 "ticker": "ASML",
@@ -1490,7 +1581,7 @@
 "basis": "GAAP"
 },
 "fye": "1231",
-"v": 10
+"v": 11
 },
 "0001628280-26-065813": {
 "ticker": "ASML",
@@ -1540,7 +1631,7 @@
 "basis": "GAAP"
 },
 "fye": "1231",
-"v": 10
+"v": 11
 },
 "0001664703-21-000130": {
 "ticker": "BE",
@@ -1561,7 +1652,7 @@
 "ctx": "Revenue of $228.5 million"
 },
 "fye": "1231",
-"v": 10
+"v": 11
 },
 "0001664703-21-000167": {
 "ticker": "BE",
@@ -1574,7 +1665,7 @@
 "ctx": "Revenue of $207.2 million"
 },
 "fye": "1231",
-"v": 10
+"v": 11
 },
 "0001664703-22-000015": {
 "ticker": "BE",
@@ -1595,7 +1686,7 @@
 "ctx": "Revenue of $342.5 million"
 },
 "fye": "1231",
-"v": 10
+"v": 11
 },
 "0001664703-22-000056": {
 "ticker": "BE",
@@ -1616,7 +1707,7 @@
 "ctx": "revenue of $201.0 million"
 },
 "fye": "1231",
-"v": 10
+"v": 11
 },
 "0001664703-22-000067": {
 "ticker": "BE",
@@ -1637,7 +1728,7 @@
 "ctx": "revenue of $243.2 million"
 },
 "fye": "1231",
-"v": 10
+"v": 11
 },
 "0001628280-22-028185": {
 "ticker": "BE",
@@ -1658,7 +1749,7 @@
 "ctx": "revenue of $292.3 million"
 },
 "fye": "1231",
-"v": 10
+"v": 11
 },
 "0001628280-23-002960": {
 "ticker": "BE",
@@ -1686,7 +1777,7 @@
 "ctx": "revenue of $400.2 million"
 },
 "fye": "1231",
-"v": 10
+"v": 11
 },
 "0001628280-23-016807": {
 "ticker": "BE",
@@ -1714,7 +1805,7 @@
 "ctx": "Revenue of $275.2 million"
 },
 "fye": "1231",
-"v": 10
+"v": 11
 },
 "0001628280-23-027206": {
 "ticker": "BE",
@@ -1742,7 +1833,7 @@
 "ctx": "Revenue of $301.1 million"
 },
 "fye": "1231",
-"v": 10
+"v": 11
 },
 "0001628280-23-037826": {
 "ticker": "BE",
@@ -1770,7 +1861,7 @@
 "ctx": "Revenue of $400.3 million"
 },
 "fye": "1231",
-"v": 10
+"v": 11
 },
 "0001628280-24-005031": {
 "ticker": "BE",
@@ -1791,7 +1882,7 @@
 "ctx": "Revenue of $356.9 million"
 },
 "fye": "1231",
-"v": 10
+"v": 11
 },
 "0001628280-24-022195": {
 "ticker": "BE",
@@ -1812,7 +1903,7 @@
 "ctx": "revenue of $235.3 million"
 },
 "fye": "1231",
-"v": 10
+"v": 11
 },
 "0001628280-24-036108": {
 "ticker": "BE",
@@ -1833,7 +1924,7 @@
 "ctx": "revenue of $335.8 million"
 },
 "fye": "1231",
-"v": 10
+"v": 11
 },
 "0001628280-24-046303": {
 "ticker": "BE",
@@ -1854,7 +1945,7 @@
 "ctx": "revenue of $330.4 million"
 },
 "fye": "1231",
-"v": 10
+"v": 11
 },
 "0001628280-25-008626": {
 "ticker": "BE",
@@ -1875,7 +1966,7 @@
 "ctx": "Revenue of $572.4 million"
 },
 "fye": "1231",
-"v": 10
+"v": 11
 },
 "0001628280-25-021092": {
 "ticker": "BE",
@@ -1896,7 +1987,7 @@
 "ctx": "revenue of $326.0 million"
 },
 "fye": "1231",
-"v": 10
+"v": 11
 },
 "0001628280-25-036998": {
 "ticker": "BE",
@@ -1917,7 +2008,7 @@
 "ctx": "revenue of $401.2 million"
 },
 "fye": "1231",
-"v": 10
+"v": 11
 },
 "0001628280-25-046745": {
 "ticker": "BE",
@@ -1930,7 +2021,7 @@
 "ctx": "revenue of $519.0 million"
 },
 "fye": "1231",
-"v": 10
+"v": 11
 },
 "0001628280-26-005798": {
 "ticker": "BE",
@@ -1951,7 +2042,7 @@
 "ctx": "revenue of $1.76 billion"
 },
 "fye": "1231",
-"v": 10
+"v": 11
 },
 "0001628280-26-027913": {
 "ticker": "BE",
@@ -1972,7 +2063,7 @@
 "ctx": "Revenue of $751.1 million"
 },
 "fye": "1231",
-"v": 10
+"v": 11
 },
 "0001628280-26-050150": {
 "ticker": "BE",
@@ -2000,7 +2091,7 @@
 "ctx": "Revenue of $1,065.4 million"
 },
 "fye": "1231",
-"v": 10
+"v": 11
 },
 "0001628280-26-066890": {
 "ticker": "BE",
@@ -2028,7 +2119,7 @@
 "ctx": "Revenue of $1,235.8 million"
 },
 "fye": "1231",
-"v": 10
+"v": 11
 },
 "0001193125-21-241180": {
 "ticker": "COHR",
@@ -2045,7 +2136,7 @@
 "annual": [],
 "actual": null,
 "fye": "0630",
-"v": 10
+"v": 11
 },
 "0001193125-21-323826": {
 "ticker": "COHR",
@@ -2066,7 +2157,7 @@
 "ctx": "Revenue of $795 million"
 },
 "fye": "0630",
-"v": 10
+"v": 11
 },
 "0001193125-22-031889": {
 "ticker": "COHR",
@@ -2087,7 +2178,7 @@
 "ctx": "Revenue of $807 million"
 },
 "fye": "0630",
-"v": 10
+"v": 11
 },
 "0001193125-22-145674": {
 "ticker": "COHR",
@@ -2108,7 +2199,7 @@
 "ctx": "Revenue of $828 million"
 },
 "fye": "0630",
-"v": 10
+"v": 11
 },
 "0001193125-22-228112": {
 "ticker": "COHR",
@@ -2129,7 +2220,7 @@
 "ctx": "revenue of $3.32 billion"
 },
 "fye": "0630",
-"v": 10
+"v": 11
 },
 "0001193125-22-280764": {
 "ticker": "COHR",
@@ -2158,7 +2249,7 @@
 "ctx": "revenue of $1.34 billion"
 },
 "fye": "0630",
-"v": 10
+"v": 11
 },
 "0001193125-23-027572": {
 "ticker": "COHR",
@@ -2187,7 +2278,7 @@
 "ctx": "Revenue of $1.37 billion"
 },
 "fye": "0630",
-"v": 10
+"v": 11
 },
 "0001193125-23-139932": {
 "ticker": "COHR",
@@ -2216,7 +2307,7 @@
 "ctx": "Revenue of $1.24 billion"
 },
 "fye": "0630",
-"v": 10
+"v": 11
 },
 "0001193125-23-213587": {
 "ticker": "COHR",
@@ -2225,7 +2316,7 @@
 "annual": [],
 "actual": null,
 "fye": "0630",
-"v": 10
+"v": 11
 },
 "0001193125-23-271381": {
 "ticker": "COHR",
@@ -2234,7 +2325,7 @@
 "annual": [],
 "actual": null,
 "fye": "0630",
-"v": 10
+"v": 11
 },
 "0001193125-24-024186": {
 "ticker": "COHR",
@@ -2243,7 +2334,7 @@
 "annual": [],
 "actual": null,
 "fye": "0630",
-"v": 10
+"v": 11
 },
 "0001193125-24-131935": {
 "ticker": "COHR",
@@ -2252,7 +2343,7 @@
 "annual": [],
 "actual": null,
 "fye": "0630",
-"v": 10
+"v": 11
 },
 "0001193125-24-201297": {
 "ticker": "COHR",
@@ -2282,7 +2373,7 @@
 "basis": "non-GAAP"
 },
 "fye": "0630",
-"v": 10
+"v": 11
 },
 "0001193125-24-252062": {
 "ticker": "COHR",
@@ -2316,7 +2407,7 @@
 "basis": "non-GAAP"
 },
 "fye": "0630",
-"v": 10
+"v": 11
 },
 "0001193125-25-020821": {
 "ticker": "COHR",
@@ -2350,7 +2441,7 @@
 "basis": "non-GAAP"
 },
 "fye": "0630",
-"v": 10
+"v": 11
 },
 "0001193125-25-114882": {
 "ticker": "COHR",
@@ -2384,7 +2475,7 @@
 "basis": "non-GAAP"
 },
 "fye": "0630",
-"v": 10
+"v": 11
 },
 "0001193125-25-179833": {
 "ticker": "COHR",
@@ -2414,7 +2505,7 @@
 "basis": "non-GAAP"
 },
 "fye": "0630",
-"v": 10
+"v": 11
 },
 "0001193125-25-266951": {
 "ticker": "COHR",
@@ -2448,7 +2539,7 @@
 "basis": "non-GAAP"
 },
 "fye": "0630",
-"v": 10
+"v": 11
 },
 "0001193125-26-037556": {
 "ticker": "COHR",
@@ -2482,7 +2573,7 @@
 "basis": "non-GAAP"
 },
 "fye": "0630",
-"v": 10
+"v": 11
 },
 "0001193125-26-208972": {
 "ticker": "COHR",
@@ -2516,7 +2607,7 @@
 "basis": "non-GAAP"
 },
 "fye": "0630",
-"v": 10
+"v": 11
 },
 "0001193125-26-346860": {
 "ticker": "COHR",
@@ -2546,7 +2637,7 @@
 "basis": "non-GAAP"
 },
 "fye": "0630",
-"v": 10
+"v": 11
 },
 "0001193125-26-447200": {
 "ticker": "COHR",
@@ -2580,7 +2671,7 @@
 "basis": "non-GAAP"
 },
 "fye": "0630",
-"v": 10
+"v": 11
 },
 "0001535527-21-000011": {
 "ticker": "CRWD",
@@ -2618,7 +2709,7 @@
 "basis": "non-GAAP"
 },
 "fye": "0131",
-"v": 10
+"v": 11
 },
 "0001535527-21-000017": {
 "ticker": "CRWD",
@@ -2656,7 +2747,7 @@
 "basis": "non-GAAP"
 },
 "fye": "0131",
-"v": 10
+"v": 11
 },
 "0001535527-21-000026": {
 "ticker": "CRWD",
@@ -2694,7 +2785,7 @@
 "basis": "non-GAAP"
 },
 "fye": "0131",
-"v": 10
+"v": 11
 },
 "0001535527-22-000004": {
 "ticker": "CRWD",
@@ -2732,7 +2823,7 @@
 "basis": "non-GAAP"
 },
 "fye": "0131",
-"v": 10
+"v": 11
 },
 "0001535527-22-000010": {
 "ticker": "CRWD",
@@ -2770,7 +2861,7 @@
 "basis": "non-GAAP"
 },
 "fye": "0131",
-"v": 10
+"v": 11
 },
 "0001535527-22-000016": {
 "ticker": "CRWD",
@@ -2808,7 +2899,7 @@
 "basis": "non-GAAP"
 },
 "fye": "0131",
-"v": 10
+"v": 11
 },
 "0001535527-22-000023": {
 "ticker": "CRWD",
@@ -2846,7 +2937,7 @@
 "basis": "non-GAAP"
 },
 "fye": "0131",
-"v": 10
+"v": 11
 },
 "0001535527-23-000006": {
 "ticker": "CRWD",
@@ -2884,7 +2975,7 @@
 "basis": "non-GAAP"
 },
 "fye": "0131",
-"v": 10
+"v": 11
 },
 "0001535527-23-000012": {
 "ticker": "CRWD",
@@ -2922,7 +3013,7 @@
 "basis": "non-GAAP"
 },
 "fye": "0131",
-"v": 10
+"v": 11
 },
 "0001535527-23-000018": {
 "ticker": "CRWD",
@@ -2960,7 +3051,7 @@
 "basis": "non-GAAP"
 },
 "fye": "0131",
-"v": 10
+"v": 11
 },
 "0001535527-23-000024": {
 "ticker": "CRWD",
@@ -2998,7 +3089,7 @@
 "basis": "non-GAAP"
 },
 "fye": "0131",
-"v": 10
+"v": 11
 },
 "0001535527-24-000004": {
 "ticker": "CRWD",
@@ -3036,7 +3127,7 @@
 "basis": "non-GAAP"
 },
 "fye": "0131",
-"v": 10
+"v": 11
 },
 "0001535527-24-000011": {
 "ticker": "CRWD",
@@ -3074,7 +3165,7 @@
 "basis": "non-GAAP"
 },
 "fye": "0131",
-"v": 10
+"v": 11
 },
 "0001535527-24-000017": {
 "ticker": "CRWD",
@@ -3112,7 +3203,7 @@
 "basis": "non-GAAP"
 },
 "fye": "0131",
-"v": 10
+"v": 11
 },
 "0001535527-24-000024": {
 "ticker": "CRWD",
@@ -3150,7 +3241,7 @@
 "basis": "non-GAAP"
 },
 "fye": "0131",
-"v": 10
+"v": 11
 },
 "0001535527-25-000005": {
 "ticker": "CRWD",
@@ -3188,7 +3279,7 @@
 "basis": "non-GAAP"
 },
 "fye": "0131",
-"v": 10
+"v": 11
 },
 "0001104659-25-045244": {
 "ticker": "CRWD",
@@ -3197,7 +3288,7 @@
 "annual": [],
 "actual": null,
 "fye": "0131",
-"v": 10
+"v": 11
 },
 "0001535527-25-000017": {
 "ticker": "CRWD",
@@ -3235,7 +3326,7 @@
 "basis": "non-GAAP"
 },
 "fye": "0131",
-"v": 10
+"v": 11
 },
 "0001535527-25-000023": {
 "ticker": "CRWD",
@@ -3273,7 +3364,7 @@
 "basis": "non-GAAP"
 },
 "fye": "0131",
-"v": 10
+"v": 11
 },
 "0001535527-25-000030": {
 "ticker": "CRWD",
@@ -3311,7 +3402,7 @@
 "basis": "non-GAAP"
 },
 "fye": "0131",
-"v": 10
+"v": 11
 },
 "0001535527-26-000007": {
 "ticker": "CRWD",
@@ -3349,7 +3440,7 @@
 "basis": "non-GAAP"
 },
 "fye": "0131",
-"v": 10
+"v": 11
 },
 "0001535527-26-000022": {
 "ticker": "CRWD",
@@ -3387,7 +3478,7 @@
 "basis": "non-GAAP"
 },
 "fye": "0131",
-"v": 10
+"v": 11
 },
 "0001535527-26-000029": {
 "ticker": "CRWD",
@@ -3425,7 +3516,7 @@
 "basis": "non-GAAP"
 },
 "fye": "0131",
-"v": 10
+"v": 11
 },
 "0001769628-25-000059": {
 "ticker": "CRWV",
@@ -3434,7 +3525,7 @@
 "annual": [],
 "actual": null,
 "fye": "1231",
-"v": 10
+"v": 11
 },
 "0001769628-26-000094": {
 "ticker": "CRWV",
@@ -3443,7 +3534,7 @@
 "annual": [],
 "actual": null,
 "fye": "1231",
-"v": 10
+"v": 11
 },
 "0001769628-26-000220": {
 "ticker": "CRWV",
@@ -3452,7 +3543,7 @@
 "annual": [],
 "actual": null,
 "fye": "1231",
-"v": 10
+"v": 11
 },
 "0001769628-26-000362": {
 "ticker": "CRWV",
@@ -3461,7 +3552,7 @@
 "annual": [],
 "actual": null,
 "fye": "1231",
-"v": 10
+"v": 11
 },
 "0001571996-24-000050": {
 "ticker": "DELL",
@@ -3474,7 +3565,7 @@
 "ctx": "revenue of $22.2 billion"
 },
 "fye": "0129",
-"v": 10
+"v": 11
 },
 "0001571996-24-000081": {
 "ticker": "DELL",
@@ -3487,7 +3578,7 @@
 "ctx": "revenue of $25.0 billion"
 },
 "fye": "0129",
-"v": 10
+"v": 11
 },
 "0001571996-24-000130": {
 "ticker": "DELL",
@@ -3500,7 +3591,7 @@
 "ctx": "revenue of $24.4 billion"
 },
 "fye": "0129",
-"v": 10
+"v": 11
 },
 "0001571996-25-000014": {
 "ticker": "DELL",
@@ -3529,7 +3620,7 @@
 "ctx": "revenue of $23.9 billion"
 },
 "fye": "0129",
-"v": 10
+"v": 11
 },
 "0001571996-25-000046": {
 "ticker": "DELL",
@@ -3567,7 +3658,7 @@
 "basis": "non-GAAP"
 },
 "fye": "0129",
-"v": 10
+"v": 11
 },
 "0001571996-25-000096": {
 "ticker": "DELL",
@@ -3605,7 +3696,7 @@
 "basis": "non-GAAP"
 },
 "fye": "0129",
-"v": 10
+"v": 11
 },
 "0001571996-25-000118": {
 "ticker": "DELL",
@@ -3643,7 +3734,7 @@
 "basis": "non-GAAP"
 },
 "fye": "0129",
-"v": 10
+"v": 11
 },
 "0001571996-26-000003": {
 "ticker": "DELL",
@@ -3681,7 +3772,7 @@
 "basis": "non-GAAP"
 },
 "fye": "0129",
-"v": 10
+"v": 11
 },
 "0001571996-26-000021": {
 "ticker": "DELL",
@@ -3710,7 +3801,7 @@
 "ctx": "revenue of $43.8 billion"
 },
 "fye": "0129",
-"v": 10
+"v": 11
 },
 "0001571996-26-000039": {
 "ticker": "DELL",
@@ -3731,7 +3822,7 @@
 "ctx": "revenue of $47 billion"
 },
 "fye": "0129",
-"v": 10
+"v": 11
 },
 "0001868941-21-000007": {
 "ticker": "FLNC",
@@ -3744,7 +3835,7 @@
 "ctx": "total revenues of $188 million"
 },
 "fye": "0930",
-"v": 10
+"v": 11
 },
 "0001868941-22-000006": {
 "ticker": "FLNC",
@@ -3765,7 +3856,7 @@
 "ctx": "Total revenues for the first fiscal quarter were $175 million"
 },
 "fye": "0930",
-"v": 10
+"v": 11
 },
 "0001868941-22-000030": {
 "ticker": "FLNC",
@@ -3786,7 +3877,7 @@
 "ctx": "revenue of $343 million"
 },
 "fye": "0930",
-"v": 10
+"v": 11
 },
 "0001868941-22-000072": {
 "ticker": "FLNC",
@@ -3799,7 +3890,7 @@
 "ctx": "Revenue of $239 million"
 },
 "fye": "0930",
-"v": 10
+"v": 11
 },
 "0001868941-22-000114": {
 "ticker": "FLNC",
@@ -3812,7 +3903,7 @@
 "ctx": "revenue of $1.2 billion"
 },
 "fye": "0930",
-"v": 10
+"v": 11
 },
 "0001868941-23-000019": {
 "ticker": "FLNC",
@@ -3833,7 +3924,7 @@
 "ctx": "Revenue of $310.5 million"
 },
 "fye": "0930",
-"v": 10
+"v": 11
 },
 "0001868941-23-000041": {
 "ticker": "FLNC",
@@ -3857,7 +3948,7 @@
 ],
 "actual": null,
 "fye": "0930",
-"v": 10
+"v": 11
 },
 "0001868941-23-000057": {
 "ticker": "FLNC",
@@ -3882,7 +3973,7 @@
 ],
 "actual": null,
 "fye": "0930",
-"v": 10
+"v": 11
 },
 "0001868941-23-000081": {
 "ticker": "FLNC",
@@ -3903,7 +3994,7 @@
 "ctx": "revenue for the fourth quarter of $673 million"
 },
 "fye": "0930",
-"v": 10
+"v": 11
 },
 "0001868941-24-000012": {
 "ticker": "FLNC",
@@ -3928,7 +4019,7 @@
 ],
 "actual": null,
 "fye": "0930",
-"v": 10
+"v": 11
 },
 "0001868941-24-000033": {
 "ticker": "FLNC",
@@ -3937,7 +4028,7 @@
 "annual": [],
 "actual": null,
 "fye": "0930",
-"v": 10
+"v": 11
 },
 "0001868941-24-000041": {
 "ticker": "FLNC",
@@ -3954,7 +4045,7 @@
 "annual": [],
 "actual": null,
 "fye": "0930",
-"v": 10
+"v": 11
 },
 "0001868941-24-000057": {
 "ticker": "FLNC",
@@ -3979,7 +4070,7 @@
 ],
 "actual": null,
 "fye": "0930",
-"v": 10
+"v": 11
 },
 "0001868941-24-000066": {
 "ticker": "FLNC",
@@ -3996,7 +4087,7 @@
 "annual": [],
 "actual": null,
 "fye": "0930",
-"v": 10
+"v": 11
 },
 "0001868941-25-000013": {
 "ticker": "FLNC",
@@ -4021,7 +4112,7 @@
 ],
 "actual": null,
 "fye": "0930",
-"v": 10
+"v": 11
 },
 "0001868941-25-000055": {
 "ticker": "FLNC",
@@ -4030,7 +4121,7 @@
 "annual": [],
 "actual": null,
 "fye": "0930",
-"v": 10
+"v": 11
 },
 "0001868941-25-000075": {
 "ticker": "FLNC",
@@ -4047,7 +4138,7 @@
 "annual": [],
 "actual": null,
 "fye": "0930",
-"v": 10
+"v": 11
 },
 "0001868941-25-000079": {
 "ticker": "FLNC",
@@ -4068,7 +4159,7 @@
 "ctx": "Revenue of $2.3 billion"
 },
 "fye": "0930",
-"v": 10
+"v": 11
 },
 "0001868941-26-000004": {
 "ticker": "FLNC",
@@ -4093,7 +4184,7 @@
 ],
 "actual": null,
 "fye": "0930",
-"v": 10
+"v": 11
 },
 "0001868941-26-000014": {
 "ticker": "FLNC",
@@ -4118,7 +4209,7 @@
 ],
 "actual": null,
 "fye": "0930",
-"v": 10
+"v": 11
 },
 "0001868941-26-000028": {
 "ticker": "FLNC",
@@ -4135,7 +4226,7 @@
 ],
 "actual": null,
 "fye": "0930",
-"v": 10
+"v": 11
 },
 "0001408710-21-000031": {
 "ticker": "FN",
@@ -4156,7 +4247,7 @@
 "ctx": "Revenue of $509.6 Million"
 },
 "fye": "0627",
-"v": 10
+"v": 11
 },
 "0001408710-21-000045": {
 "ticker": "FN",
@@ -4177,7 +4268,7 @@
 "ctx": "Revenue of $543.3 Million"
 },
 "fye": "0627",
-"v": 10
+"v": 11
 },
 "0001408710-22-000016": {
 "ticker": "FN",
@@ -4198,7 +4289,7 @@
 "ctx": "Revenue of $566.6 Million"
 },
 "fye": "0627",
-"v": 10
+"v": 11
 },
 "0001408710-22-000026": {
 "ticker": "FN",
@@ -4219,7 +4310,7 @@
 "ctx": "Revenue of $564.4 Million"
 },
 "fye": "0627",
-"v": 10
+"v": 11
 },
 "0001408710-22-000041": {
 "ticker": "FN",
@@ -4240,7 +4331,7 @@
 "ctx": "Revenue of $587.9 Million"
 },
 "fye": "0627",
-"v": 10
+"v": 11
 },
 "0001408710-22-000058": {
 "ticker": "FN",
@@ -4261,7 +4352,7 @@
 "ctx": "Revenue of $655.4 Million"
 },
 "fye": "0627",
-"v": 10
+"v": 11
 },
 "0001408710-23-000006": {
 "ticker": "FN",
@@ -4282,7 +4373,7 @@
 "ctx": "Revenue of $668.7 Million"
 },
 "fye": "0627",
-"v": 10
+"v": 11
 },
 "0001408710-23-000016": {
 "ticker": "FN",
@@ -4303,7 +4394,7 @@
 "ctx": "Revenue of $665.3 Million"
 },
 "fye": "0627",
-"v": 10
+"v": 11
 },
 "0001408710-23-000026": {
 "ticker": "FN",
@@ -4324,7 +4415,7 @@
 "ctx": "Revenue for the fourth quarter of fiscal year 2023 was $655.9 million"
 },
 "fye": "0627",
-"v": 10
+"v": 11
 },
 "0001408710-23-000034": {
 "ticker": "FN",
@@ -4341,7 +4432,7 @@
 "annual": [],
 "actual": null,
 "fye": "0627",
-"v": 10
+"v": 11
 },
 "0001408710-24-000007": {
 "ticker": "FN",
@@ -4362,7 +4453,7 @@
 "ctx": "Revenue for the second quarter of fiscal year 2024 was $712.7 million"
 },
 "fye": "0627",
-"v": 10
+"v": 11
 },
 "0001408710-24-000017": {
 "ticker": "FN",
@@ -4383,7 +4474,7 @@
 "ctx": "Revenue for the third quarter of fiscal year 2024 was $731.5 million"
 },
 "fye": "0627",
-"v": 10
+"v": 11
 },
 "0001408710-24-000030": {
 "ticker": "FN",
@@ -4404,7 +4495,7 @@
 "ctx": "Revenue for the fourth quarter of fiscal year 2024 was $753.3 million"
 },
 "fye": "0627",
-"v": 10
+"v": 11
 },
 "0001408710-24-000038": {
 "ticker": "FN",
@@ -4425,7 +4516,7 @@
 "ctx": "revenue of $804 million"
 },
 "fye": "0627",
-"v": 10
+"v": 11
 },
 "0001408710-25-000006": {
 "ticker": "FN",
@@ -4446,7 +4537,7 @@
 "ctx": "Revenue for the second quarter of fiscal year 2025 was $833.6 million"
 },
 "fye": "0627",
-"v": 10
+"v": 11
 },
 "0001408710-25-000021": {
 "ticker": "FN",
@@ -4467,7 +4558,7 @@
 "ctx": "revenue of $872 million"
 },
 "fye": "0627",
-"v": 10
+"v": 11
 },
 "0001408710-25-000036": {
 "ticker": "FN",
@@ -4488,7 +4579,7 @@
 "ctx": "revenue of $910 million"
 },
 "fye": "0627",
-"v": 10
+"v": 11
 },
 "0001408710-25-000054": {
 "ticker": "FN",
@@ -4509,7 +4600,7 @@
 "ctx": "revenue of $978 million"
 },
 "fye": "0627",
-"v": 10
+"v": 11
 },
 "0001408710-26-000006": {
 "ticker": "FN",
@@ -4526,7 +4617,7 @@
 "annual": [],
 "actual": null,
 "fye": "0627",
-"v": 10
+"v": 11
 },
 "0001408710-26-000014": {
 "ticker": "FN",
@@ -4547,7 +4638,7 @@
 "ctx": "Revenue for the third quarter of fiscal year 2026 was $1,214.3 million"
 },
 "fye": "0627",
-"v": 10
+"v": 11
 },
 "0001408710-26-000026": {
 "ticker": "FN",
@@ -4568,7 +4659,7 @@
 "ctx": "revenue of $1.316 billion"
 },
 "fye": "0627",
-"v": 10
+"v": 11
 },
 "0001408710-26-000034": {
 "ticker": "FN",
@@ -4589,7 +4680,7 @@
 "ctx": "Revenue for the first quarter of fiscal year 2027 was $1,474.5 million"
 },
 "fye": "0627",
-"v": 10
+"v": 11
 },
 "0001262039-21-000019": {
 "ticker": "FTNT",
@@ -4621,7 +4712,7 @@
 "basis": "non-GAAP"
 },
 "fye": "1231",
-"v": 10
+"v": 11
 },
 "0001262039-21-000027": {
 "ticker": "FTNT",
@@ -4653,7 +4744,7 @@
 "basis": "non-GAAP"
 },
 "fye": "1231",
-"v": 10
+"v": 11
 },
 "0001262039-22-000005": {
 "ticker": "FTNT",
@@ -4685,7 +4776,7 @@
 "basis": "non-GAAP"
 },
 "fye": "1231",
-"v": 10
+"v": 11
 },
 "0001262039-22-000015": {
 "ticker": "FTNT",
@@ -4717,7 +4808,7 @@
 "basis": "non-GAAP"
 },
 "fye": "1231",
-"v": 10
+"v": 11
 },
 "0001262039-22-000026": {
 "ticker": "FTNT",
@@ -4749,7 +4840,7 @@
 "basis": "non-GAAP"
 },
 "fye": "1231",
-"v": 10
+"v": 11
 },
 "0001262039-22-000035": {
 "ticker": "FTNT",
@@ -4781,7 +4872,7 @@
 "basis": "non-GAAP"
 },
 "fye": "1231",
-"v": 10
+"v": 11
 },
 "0001262039-23-000003": {
 "ticker": "FTNT",
@@ -4813,7 +4904,7 @@
 "basis": "non-GAAP"
 },
 "fye": "1231",
-"v": 10
+"v": 11
 },
 "0001262039-23-000013": {
 "ticker": "FTNT",
@@ -4845,7 +4936,7 @@
 "basis": "non-GAAP"
 },
 "fye": "1231",
-"v": 10
+"v": 11
 },
 "0001262039-23-000027": {
 "ticker": "FTNT",
@@ -4877,7 +4968,7 @@
 "basis": "non-GAAP"
 },
 "fye": "1231",
-"v": 10
+"v": 11
 },
 "0001262039-23-000035": {
 "ticker": "FTNT",
@@ -4909,7 +5000,7 @@
 "basis": "non-GAAP"
 },
 "fye": "1231",
-"v": 10
+"v": 11
 },
 "0001262039-24-000006": {
 "ticker": "FTNT",
@@ -4941,7 +5032,7 @@
 "basis": "non-GAAP"
 },
 "fye": "1231",
-"v": 10
+"v": 11
 },
 "0001262039-24-000017": {
 "ticker": "FTNT",
@@ -4973,7 +5064,7 @@
 "basis": "non-GAAP"
 },
 "fye": "1231",
-"v": 10
+"v": 11
 },
 "0001262039-24-000032": {
 "ticker": "FTNT",
@@ -5005,7 +5096,7 @@
 "basis": "non-GAAP"
 },
 "fye": "1231",
-"v": 10
+"v": 11
 },
 "0001262039-24-000040": {
 "ticker": "FTNT",
@@ -5037,7 +5128,7 @@
 "basis": "non-GAAP"
 },
 "fye": "1231",
-"v": 10
+"v": 11
 },
 "0001262039-25-000007": {
 "ticker": "FTNT",
@@ -5069,7 +5160,7 @@
 "basis": "non-GAAP"
 },
 "fye": "1231",
-"v": 10
+"v": 11
 },
 "0001262039-25-000014": {
 "ticker": "FTNT",
@@ -5101,7 +5192,7 @@
 "basis": "non-GAAP"
 },
 "fye": "1231",
-"v": 10
+"v": 11
 },
 "0001262039-25-000025": {
 "ticker": "FTNT",
@@ -5116,7 +5207,11 @@
 }
 ],
 "annual": [],
-"actual": null,
+"actual": {
+"value": 1.63,
+"unit": 1000000000.0,
+"ctx": "Revenue grew 14% year over year to $1.63 billion"
+},
 "margin": {
 "om": [
 0.325,
@@ -5129,7 +5224,7 @@
 "basis": "non-GAAP"
 },
 "fye": "1231",
-"v": 10
+"v": 11
 },
 "0001262039-25-000036": {
 "ticker": "FTNT",
@@ -5144,7 +5239,11 @@
 }
 ],
 "annual": [],
-"actual": null,
+"actual": {
+"value": 1.72,
+"unit": 1000000000.0,
+"ctx": "Revenue grew 14% year over year to $1.72 billion"
+},
 "margin": {
 "om": [
 0.345,
@@ -5157,7 +5256,7 @@
 "basis": "non-GAAP"
 },
 "fye": "1231",
-"v": 10
+"v": 11
 },
 "0001262039-26-000003": {
 "ticker": "FTNT",
@@ -5172,7 +5271,11 @@
 }
 ],
 "annual": [],
-"actual": null,
+"actual": {
+"value": 691.0,
+"unit": 1000000.0,
+"ctx": "revenue grew 20% year over year to $691 million"
+},
 "margin": {
 "om": [
 0.3,
@@ -5185,7 +5288,7 @@
 "basis": "non-GAAP"
 },
 "fye": "1231",
-"v": 10
+"v": 11
 },
 "0001262039-26-000010": {
 "ticker": "FTNT",
@@ -5200,7 +5303,11 @@
 }
 ],
 "annual": [],
-"actual": null,
+"actual": {
+"value": 645.0,
+"unit": 1000000.0,
+"ctx": "revenue grew 41% year over year to $645 million"
+},
 "margin": {
 "om": [
 0.33,
@@ -5213,7 +5320,7 @@
 "basis": "non-GAAP"
 },
 "fye": "1231",
-"v": 10
+"v": 11
 },
 "0001262039-26-000018": {
 "ticker": "FTNT",
@@ -5228,7 +5335,11 @@
 }
 ],
 "annual": [],
-"actual": null,
+"actual": {
+"value": 773.0,
+"unit": 1000000.0,
+"ctx": "revenue grew 52% year over year to $773 million"
+},
 "margin": {
 "om": [
 0.35,
@@ -5241,7 +5352,7 @@
 "basis": "non-GAAP"
 },
 "fye": "1231",
-"v": 10
+"v": 11
 },
 "0001262039-26-000024": {
 "ticker": "FTNT",
@@ -5256,7 +5367,11 @@
 }
 ],
 "annual": [],
-"actual": null,
+"actual": {
+"value": 765.0,
+"unit": 1000000.0,
+"ctx": "revenue grew 37% year over year to $765 million"
+},
 "margin": {
 "om": [
 0.355,
@@ -5269,7 +5384,7 @@
 "basis": "non-GAAP"
 },
 "fye": "1231",
-"v": 10
+"v": 11
 },
 "0001645590-21-000038": {
 "ticker": "HPE",
@@ -5282,7 +5397,7 @@
 "ctx": "revenue: $799 million"
 },
 "fye": "1031",
-"v": 10
+"v": 11
 },
 "0001645590-21-000053": {
 "ticker": "HPE",
@@ -5295,7 +5410,7 @@
 "ctx": "Revenue: $6.9 billion"
 },
 "fye": "1031",
-"v": 10
+"v": 11
 },
 "0001645590-21-000063": {
 "ticker": "HPE",
@@ -5308,7 +5423,7 @@
 "ctx": "Revenue: $27.8 billion"
 },
 "fye": "1031",
-"v": 10
+"v": 11
 },
 "0001645590-22-000010": {
 "ticker": "HPE",
@@ -5321,7 +5436,7 @@
 "ctx": "Revenue: $7.0 billion"
 },
 "fye": "1031",
-"v": 10
+"v": 11
 },
 "0001645590-22-000025": {
 "ticker": "HPE",
@@ -5334,7 +5449,7 @@
 "ctx": "Revenue: $6.7 billion"
 },
 "fye": "1031",
-"v": 10
+"v": 11
 },
 "0001645590-22-000047": {
 "ticker": "HPE",
@@ -5347,7 +5462,7 @@
 "ctx": "Revenue: $7.0 billion"
 },
 "fye": "1031",
-"v": 10
+"v": 11
 },
 "0001645590-22-000067": {
 "ticker": "HPE",
@@ -5368,7 +5483,7 @@
 "ctx": "Revenue : $7.9 billion"
 },
 "fye": "1031",
-"v": 10
+"v": 11
 },
 "0001645590-23-000011": {
 "ticker": "HPE",
@@ -5377,7 +5492,7 @@
 "annual": [],
 "actual": null,
 "fye": "1031",
-"v": 10
+"v": 11
 },
 "0001645590-23-000029": {
 "ticker": "HPE",
@@ -5398,7 +5513,7 @@
 "ctx": "revenue was $1.1 billion"
 },
 "fye": "1031",
-"v": 10
+"v": 11
 },
 "0001645590-23-000054": {
 "ticker": "HPE",
@@ -5419,7 +5534,7 @@
 "ctx": "revenue was $1.3 billion"
 },
 "fye": "1031",
-"v": 10
+"v": 11
 },
 "0001645590-23-000079": {
 "ticker": "HPE",
@@ -5428,7 +5543,7 @@
 "annual": [],
 "actual": null,
 "fye": "1031",
-"v": 10
+"v": 11
 },
 "0001645590-23-000082": {
 "ticker": "HPE",
@@ -5449,7 +5564,7 @@
 "ctx": "revenue was $1.4 billion"
 },
 "fye": "1031",
-"v": 10
+"v": 11
 },
 "0001645590-23-000105": {
 "ticker": "HPE",
@@ -5470,7 +5585,7 @@
 "ctx": "Revenue : $7.4 billion"
 },
 "fye": "1031",
-"v": 10
+"v": 11
 },
 "0001645590-24-000012": {
 "ticker": "HPE",
@@ -5479,7 +5594,7 @@
 "annual": [],
 "actual": null,
 "fye": "1031",
-"v": 10
+"v": 11
 },
 "0001645590-24-000058": {
 "ticker": "HPE",
@@ -5500,7 +5615,7 @@
 "ctx": "Revenue : $6.8 billion"
 },
 "fye": "1031",
-"v": 10
+"v": 11
 },
 "0001645590-24-000090": {
 "ticker": "HPE",
@@ -5521,7 +5636,7 @@
 "ctx": "Revenue : $7.2 billion"
 },
 "fye": "1031",
-"v": 10
+"v": 11
 },
 "0001645590-24-000114": {
 "ticker": "HPE",
@@ -5542,7 +5657,7 @@
 "ctx": "revenue was $4.3 billion"
 },
 "fye": "1031",
-"v": 10
+"v": 11
 },
 "0001645590-24-000132": {
 "ticker": "HPE",
@@ -5563,7 +5678,7 @@
 "ctx": "Revenue : $8.5 billion"
 },
 "fye": "1031",
-"v": 10
+"v": 11
 },
 "0001645590-25-000034": {
 "ticker": "HPE",
@@ -5584,7 +5699,7 @@
 "ctx": "Revenue : $7.9 billion"
 },
 "fye": "1031",
-"v": 10
+"v": 11
 },
 "0001645590-25-000060": {
 "ticker": "HPE",
@@ -5605,7 +5720,7 @@
 "ctx": "revenue was $4.1 billion"
 },
 "fye": "1031",
-"v": 10
+"v": 11
 },
 "0001645590-25-000096": {
 "ticker": "HPE",
@@ -5626,7 +5741,7 @@
 "ctx": "Revenue : $9.1 billion"
 },
 "fye": "1031",
-"v": 10
+"v": 11
 },
 "0001645590-25-000111": {
 "ticker": "HPE",
@@ -5635,7 +5750,7 @@
 "annual": [],
 "actual": null,
 "fye": "1031",
-"v": 10
+"v": 11
 },
 "0001645590-25-000126": {
 "ticker": "HPE",
@@ -5656,7 +5771,7 @@
 "ctx": "revenue was $4.5 billion"
 },
 "fye": "1031",
-"v": 10
+"v": 11
 },
 "0001645590-26-000028": {
 "ticker": "HPE",
@@ -5677,7 +5792,7 @@
 "ctx": "Revenue : $9.3 billion"
 },
 "fye": "1031",
-"v": 10
+"v": 11
 },
 "0001645590-26-000052": {
 "ticker": "HPE",
@@ -5698,7 +5813,7 @@
 "ctx": "Revenue : $10.7 billion"
 },
 "fye": "1031",
-"v": 10
+"v": 11
 },
 "0001645590-26-000078": {
 "ticker": "HPE",
@@ -5719,7 +5834,7 @@
 "ctx": "Revenue : $12.2 billion"
 },
 "fye": "1031",
-"v": 10
+"v": 11
 },
 "0001140361-21-027020": {
 "ticker": "INSM",
@@ -5732,7 +5847,7 @@
 "ctx": "Total Revenue of $45.4 Million"
 },
 "fye": "1231",
-"v": 10
+"v": 11
 },
 "0001140361-21-035715": {
 "ticker": "INSM",
@@ -5745,7 +5860,7 @@
 "ctx": "Total Revenue of $46.8 Million"
 },
 "fye": "1231",
-"v": 10
+"v": 11
 },
 "0001140361-22-005849": {
 "ticker": "INSM",
@@ -5758,7 +5873,7 @@
 "ctx": "Total Revenue of $56.1 Million"
 },
 "fye": "1231",
-"v": 10
+"v": 11
 },
 "0001140361-22-017738": {
 "ticker": "INSM",
@@ -5771,7 +5886,7 @@
 "ctx": "Total Revenue of $53.1 Million"
 },
 "fye": "1231",
-"v": 10
+"v": 11
 },
 "0001140361-22-028126": {
 "ticker": "INSM",
@@ -5784,16 +5899,24 @@
 "ctx": "Total Revenue of $65.2 Million"
 },
 "fye": "1231",
-"v": 10
+"v": 11
 },
 "0001140361-22-037727": {
 "ticker": "INSM",
 "filed": "2022-10-19",
-"cands": [],
+"cands": [
+{
+"low": 67.7,
+"high": 67.7,
+"unit_low": 1000000.0,
+"unit_high": 1000000.0,
+"ctx": "revenue to be approximately $67.7 million"
+}
+],
 "annual": [],
 "actual": null,
 "fye": "1231",
-"v": 10
+"v": 11
 },
 "0001140361-22-038593": {
 "ticker": "INSM",
@@ -5806,7 +5929,7 @@
 "ctx": "Total Revenue of $67.7 Million"
 },
 "fye": "1231",
-"v": 10
+"v": 11
 },
 "0001140361-23-008163": {
 "ticker": "INSM",
@@ -5819,7 +5942,7 @@
 "ctx": "Total Revenue of $59.3 Million"
 },
 "fye": "1231",
-"v": 10
+"v": 11
 },
 "0001140361-23-022852": {
 "ticker": "INSM",
@@ -5840,7 +5963,7 @@
 "ctx": "Total Revenue of $65.2 Million"
 },
 "fye": "1231",
-"v": 10
+"v": 11
 },
 "0001140361-23-037767": {
 "ticker": "INSM",
@@ -5861,7 +5984,7 @@
 "ctx": "Total Revenue of $77.2 Million"
 },
 "fye": "1231",
-"v": 10
+"v": 11
 },
 "0001140361-23-049591": {
 "ticker": "INSM",
@@ -5882,7 +6005,7 @@
 "ctx": "Total Revenue of $79.1 Million"
 },
 "fye": "1231",
-"v": 10
+"v": 11
 },
 "0001140361-24-008937": {
 "ticker": "INSM",
@@ -5891,7 +6014,7 @@
 "annual": [],
 "actual": null,
 "fye": "1231",
-"v": 10
+"v": 11
 },
 "0001140361-24-025047": {
 "ticker": "INSM",
@@ -5912,7 +6035,7 @@
 "ctx": "Total Revenue of $75.5 Million"
 },
 "fye": "1231",
-"v": 10
+"v": 11
 },
 "0001140361-24-036279": {
 "ticker": "INSM",
@@ -5933,7 +6056,7 @@
 "ctx": "Total Revenue of $90.3 Million"
 },
 "fye": "1231",
-"v": 10
+"v": 11
 },
 "0001140361-24-044703": {
 "ticker": "INSM",
@@ -5954,7 +6077,7 @@
 "ctx": "Total Revenue of $93.4 Million"
 },
 "fye": "1231",
-"v": 10
+"v": 11
 },
 "0001140361-25-005190": {
 "ticker": "INSM",
@@ -5967,7 +6090,7 @@
 "ctx": "Total Revenue of $104.4 Million"
 },
 "fye": "1231",
-"v": 10
+"v": 11
 },
 "0001140361-25-017858": {
 "ticker": "INSM",
@@ -5988,7 +6111,7 @@
 "ctx": "Total Revenue of $92.8 Million"
 },
 "fye": "1231",
-"v": 10
+"v": 11
 },
 "0001140361-25-029343": {
 "ticker": "INSM",
@@ -6009,7 +6132,7 @@
 "ctx": "Total Revenue of $107.4 Million"
 },
 "fye": "1231",
-"v": 10
+"v": 11
 },
 "0001140361-25-039789": {
 "ticker": "INSM",
@@ -6022,7 +6145,7 @@
 "ctx": "Total Revenue of $28.1 Million"
 },
 "fye": "1231",
-"v": 10
+"v": 11
 },
 "0001140361-26-006116": {
 "ticker": "INSM",
@@ -6039,7 +6162,7 @@
 ],
 "actual": null,
 "fye": "1231",
-"v": 10
+"v": 11
 },
 "0001140361-26-019430": {
 "ticker": "INSM",
@@ -6060,7 +6183,7 @@
 "ctx": "Revenues of $306.0 Million"
 },
 "fye": "1231",
-"v": 10
+"v": 11
 },
 "0001140361-26-031502": {
 "ticker": "INSM",
@@ -6081,7 +6204,7 @@
 "ctx": "Revenues of $425.5 Million"
 },
 "fye": "1231",
-"v": 10
+"v": 11
 },
 "0001140361-26-041097": {
 "ticker": "INSM",
@@ -6102,7 +6225,7 @@
 "ctx": "Revenues of $524.4 Million"
 },
 "fye": "1231",
-"v": 10
+"v": 11
 },
 "0001878848-25-000062": {
 "ticker": "IREN",
@@ -6111,7 +6234,7 @@
 "annual": [],
 "actual": null,
 "fye": "0630",
-"v": 10
+"v": 11
 },
 "0001878848-25-000079": {
 "ticker": "IREN",
@@ -6120,7 +6243,7 @@
 "annual": [],
 "actual": null,
 "fye": "0630",
-"v": 10
+"v": 11
 },
 "0001878848-26-000014": {
 "ticker": "IREN",
@@ -6129,7 +6252,7 @@
 "annual": [],
 "actual": null,
 "fye": "0630",
-"v": 10
+"v": 11
 },
 "0001878848-26-000025": {
 "ticker": "IREN",
@@ -6138,7 +6261,7 @@
 "annual": [],
 "actual": null,
 "fye": "0630",
-"v": 10
+"v": 11
 },
 "0001878848-26-000028": {
 "ticker": "IREN",
@@ -6147,7 +6270,7 @@
 "annual": [],
 "actual": null,
 "fye": "0630",
-"v": 10
+"v": 11
 },
 "0001140361-26-028871": {
 "ticker": "IREN",
@@ -6156,7 +6279,7 @@
 "annual": [],
 "actual": null,
 "fye": "0630",
-"v": 10
+"v": 11
 },
 "0001878848-26-000051": {
 "ticker": "IREN",
@@ -6165,7 +6288,7 @@
 "annual": [],
 "actual": null,
 "fye": "0630",
-"v": 10
+"v": 11
 },
 "0001878848-26-000065": {
 "ticker": "IREN",
@@ -6174,7 +6297,7 @@
 "annual": [],
 "actual": null,
 "fye": "0630",
-"v": 10
+"v": 11
 },
 "0001628280-21-017219": {
 "ticker": "LITE",
@@ -6202,7 +6325,7 @@
 "basis": "non-GAAP"
 },
 "fye": "0627",
-"v": 10
+"v": 11
 },
 "0001628280-21-021618": {
 "ticker": "LITE",
@@ -6230,7 +6353,7 @@
 "basis": "non-GAAP"
 },
 "fye": "0627",
-"v": 10
+"v": 11
 },
 "0001628280-22-001736": {
 "ticker": "LITE",
@@ -6258,7 +6381,7 @@
 "basis": "non-GAAP"
 },
 "fye": "0627",
-"v": 10
+"v": 11
 },
 "0001628280-22-012145": {
 "ticker": "LITE",
@@ -6286,7 +6409,7 @@
 "basis": "non-GAAP"
 },
 "fye": "0627",
-"v": 10
+"v": 11
 },
 "0001628280-22-022980": {
 "ticker": "LITE",
@@ -6314,7 +6437,7 @@
 "basis": "non-GAAP"
 },
 "fye": "0627",
-"v": 10
+"v": 11
 },
 "0001628280-22-028758": {
 "ticker": "LITE",
@@ -6342,7 +6465,7 @@
 "basis": "non-GAAP"
 },
 "fye": "0627",
-"v": 10
+"v": 11
 },
 "0001628280-23-002866": {
 "ticker": "LITE",
@@ -6370,7 +6493,7 @@
 "basis": "non-GAAP"
 },
 "fye": "0627",
-"v": 10
+"v": 11
 },
 "0001628280-23-010935": {
 "ticker": "LITE",
@@ -6380,7 +6503,7 @@
 "actual": null,
 "fye": "0627",
 "prelim": true,
-"v": 10
+"v": 11
 },
 "0001628280-23-016629": {
 "ticker": "LITE",
@@ -6408,7 +6531,7 @@
 "basis": "non-GAAP"
 },
 "fye": "0627",
-"v": 10
+"v": 11
 },
 "0001628280-23-029741": {
 "ticker": "LITE",
@@ -6436,7 +6559,7 @@
 "basis": "non-GAAP"
 },
 "fye": "0627",
-"v": 10
+"v": 11
 },
 "0001193125-23-265658": {
 "ticker": "LITE",
@@ -6445,7 +6568,7 @@
 "annual": [],
 "actual": null,
 "fye": "0627",
-"v": 10
+"v": 11
 },
 "0001628280-23-037563": {
 "ticker": "LITE",
@@ -6473,7 +6596,7 @@
 "basis": "non-GAAP"
 },
 "fye": "0627",
-"v": 10
+"v": 11
 },
 "0001628280-24-003789": {
 "ticker": "LITE",
@@ -6501,7 +6624,7 @@
 "basis": "non-GAAP"
 },
 "fye": "0627",
-"v": 10
+"v": 11
 },
 "0001628280-24-020640": {
 "ticker": "LITE",
@@ -6529,7 +6652,7 @@
 "basis": "non-GAAP"
 },
 "fye": "0627",
-"v": 10
+"v": 11
 },
 "0001628280-24-037191": {
 "ticker": "LITE",
@@ -6557,7 +6680,7 @@
 "basis": "non-GAAP"
 },
 "fye": "0627",
-"v": 10
+"v": 11
 },
 "0001628280-24-046302": {
 "ticker": "LITE",
@@ -6585,7 +6708,7 @@
 "basis": "non-GAAP"
 },
 "fye": "0627",
-"v": 10
+"v": 11
 },
 "0001193125-25-019371": {
 "ticker": "LITE",
@@ -6609,7 +6732,7 @@
 "annual": [],
 "actual": null,
 "fye": "0627",
-"v": 10
+"v": 11
 },
 "0001628280-25-004265": {
 "ticker": "LITE",
@@ -6637,7 +6760,7 @@
 "basis": "non-GAAP"
 },
 "fye": "0627",
-"v": 10
+"v": 11
 },
 "0001628280-25-022709": {
 "ticker": "LITE",
@@ -6665,7 +6788,7 @@
 "basis": "non-GAAP"
 },
 "fye": "0627",
-"v": 10
+"v": 11
 },
 "0001628280-25-039896": {
 "ticker": "LITE",
@@ -6693,7 +6816,7 @@
 "basis": "non-GAAP"
 },
 "fye": "0627",
-"v": 10
+"v": 11
 },
 "0001628280-25-048860": {
 "ticker": "LITE",
@@ -6721,7 +6844,7 @@
 "basis": "non-GAAP"
 },
 "fye": "0627",
-"v": 10
+"v": 11
 },
 "0001628280-26-005005": {
 "ticker": "LITE",
@@ -6749,7 +6872,7 @@
 "basis": "non-GAAP"
 },
 "fye": "0627",
-"v": 10
+"v": 11
 },
 "0001628280-26-030530": {
 "ticker": "LITE",
@@ -6777,7 +6900,7 @@
 "basis": "non-GAAP"
 },
 "fye": "0627",
-"v": 10
+"v": 11
 },
 "0001628280-26-055726": {
 "ticker": "LITE",
@@ -6805,7 +6928,7 @@
 "basis": "non-GAAP"
 },
 "fye": "0627",
-"v": 10
+"v": 11
 },
 "0001628280-26-068655": {
 "ticker": "LITE",
@@ -6833,7 +6956,7 @@
 "basis": "non-GAAP"
 },
 "fye": "0627",
-"v": 10
+"v": 11
 },
 "0001326801-24-000065": {
 "ticker": "META",
@@ -6854,7 +6977,7 @@
 "ctx": "Total revenue was $39.07 billion"
 },
 "fye": "1231",
-"v": 10
+"v": 11
 },
 "0001326801-24-000077": {
 "ticker": "META",
@@ -6875,7 +6998,7 @@
 "ctx": "Total revenue was $40.59 billion"
 },
 "fye": "1231",
-"v": 10
+"v": 11
 },
 "0001326801-25-000014": {
 "ticker": "META",
@@ -6892,7 +7015,7 @@
 "annual": [],
 "actual": null,
 "fye": "1231",
-"v": 10
+"v": 11
 },
 "0001326801-25-000050": {
 "ticker": "META",
@@ -6913,7 +7036,7 @@
 "ctx": "Revenue was $42.31 billion"
 },
 "fye": "1231",
-"v": 10
+"v": 11
 },
 "0001628280-25-036719": {
 "ticker": "META",
@@ -6934,7 +7057,7 @@
 "ctx": "Revenue was $47.52 billion"
 },
 "fye": "1231",
-"v": 10
+"v": 11
 },
 "0001628280-25-047114": {
 "ticker": "META",
@@ -6955,7 +7078,7 @@
 "ctx": "Revenue was $51.24 billion"
 },
 "fye": "1231",
-"v": 10
+"v": 11
 },
 "0001628280-26-003832": {
 "ticker": "META",
@@ -6972,7 +7095,7 @@
 "annual": [],
 "actual": null,
 "fye": "1231",
-"v": 10
+"v": 11
 },
 "0001628280-26-028364": {
 "ticker": "META",
@@ -6993,7 +7116,7 @@
 "ctx": "Revenue was $56.31 billion"
 },
 "fye": "1231",
-"v": 10
+"v": 11
 },
 "0001628280-26-050596": {
 "ticker": "META",
@@ -7014,7 +7137,7 @@
 "ctx": "Revenue was $60.80 billion"
 },
 "fye": "1231",
-"v": 10
+"v": 11
 },
 "0001628280-26-066700": {
 "ticker": "META",
@@ -7035,7 +7158,7 @@
 "ctx": "Revenue was $64.60 billion"
 },
 "fye": "1231",
-"v": 10
+"v": 11
 },
 "0001835632-21-000005": {
 "ticker": "MRVL",
@@ -7069,7 +7192,7 @@
 "basis": "non-GAAP"
 },
 "fye": "0130",
-"v": 10
+"v": 11
 },
 "0001193125-21-234006": {
 "ticker": "MRVL",
@@ -7086,7 +7209,7 @@
 "annual": [],
 "actual": null,
 "fye": "0130",
-"v": 10
+"v": 11
 },
 "0001835632-21-000018": {
 "ticker": "MRVL",
@@ -7120,7 +7243,7 @@
 "basis": "non-GAAP"
 },
 "fye": "0130",
-"v": 10
+"v": 11
 },
 "0001835632-21-000026": {
 "ticker": "MRVL",
@@ -7154,7 +7277,7 @@
 "basis": "non-GAAP"
 },
 "fye": "0130",
-"v": 10
+"v": 11
 },
 "0001835632-22-000006": {
 "ticker": "MRVL",
@@ -7188,7 +7311,7 @@
 "basis": "non-GAAP"
 },
 "fye": "0130",
-"v": 10
+"v": 11
 },
 "0001835632-22-000021": {
 "ticker": "MRVL",
@@ -7222,7 +7345,7 @@
 "basis": "non-GAAP"
 },
 "fye": "0130",
-"v": 10
+"v": 11
 },
 "0001835632-22-000038": {
 "ticker": "MRVL",
@@ -7256,7 +7379,7 @@
 "basis": "non-GAAP"
 },
 "fye": "0130",
-"v": 10
+"v": 11
 },
 "0001835632-22-000050": {
 "ticker": "MRVL",
@@ -7290,7 +7413,7 @@
 "basis": "non-GAAP"
 },
 "fye": "0130",
-"v": 10
+"v": 11
 },
 "0001835632-23-000007": {
 "ticker": "MRVL",
@@ -7324,7 +7447,7 @@
 "basis": "non-GAAP"
 },
 "fye": "0130",
-"v": 10
+"v": 11
 },
 "0001835632-23-000022": {
 "ticker": "MRVL",
@@ -7358,7 +7481,7 @@
 "basis": "non-GAAP"
 },
 "fye": "0130",
-"v": 10
+"v": 11
 },
 "0001835632-23-000036": {
 "ticker": "MRVL",
@@ -7392,7 +7515,7 @@
 "basis": "non-GAAP"
 },
 "fye": "0130",
-"v": 10
+"v": 11
 },
 "0001835632-23-000044": {
 "ticker": "MRVL",
@@ -7426,7 +7549,7 @@
 "basis": "non-GAAP"
 },
 "fye": "0130",
-"v": 10
+"v": 11
 },
 "0001835632-24-000004": {
 "ticker": "MRVL",
@@ -7460,7 +7583,7 @@
 "basis": "non-GAAP"
 },
 "fye": "0130",
-"v": 10
+"v": 11
 },
 "0001835632-24-000060": {
 "ticker": "MRVL",
@@ -7494,7 +7617,7 @@
 "basis": "non-GAAP"
 },
 "fye": "0130",
-"v": 10
+"v": 11
 },
 "0001835632-24-000140": {
 "ticker": "MRVL",
@@ -7528,7 +7651,7 @@
 "basis": "non-GAAP"
 },
 "fye": "0130",
-"v": 10
+"v": 11
 },
 "0001835632-24-000197": {
 "ticker": "MRVL",
@@ -7562,7 +7685,7 @@
 "basis": "non-GAAP"
 },
 "fye": "0130",
-"v": 10
+"v": 11
 },
 "0001835632-25-000051": {
 "ticker": "MRVL",
@@ -7596,7 +7719,7 @@
 "basis": "non-GAAP"
 },
 "fye": "0130",
-"v": 10
+"v": 11
 },
 "0001193125-25-113881": {
 "ticker": "MRVL",
@@ -7613,7 +7736,7 @@
 "annual": [],
 "actual": null,
 "fye": "0130",
-"v": 10
+"v": 11
 },
 "0001835632-25-000115": {
 "ticker": "MRVL",
@@ -7647,7 +7770,7 @@
 "basis": "non-GAAP"
 },
 "fye": "0130",
-"v": 10
+"v": 11
 },
 "0001835632-25-000187": {
 "ticker": "MRVL",
@@ -7681,7 +7804,7 @@
 "basis": "non-GAAP"
 },
 "fye": "0130",
-"v": 10
+"v": 11
 },
 "0001835632-25-000193": {
 "ticker": "MRVL",
@@ -7715,7 +7838,7 @@
 "basis": "non-GAAP"
 },
 "fye": "0130",
-"v": 10
+"v": 11
 },
 "0001835632-26-000006": {
 "ticker": "MRVL",
@@ -7749,7 +7872,7 @@
 "basis": "non-GAAP"
 },
 "fye": "0130",
-"v": 10
+"v": 11
 },
 "0001835632-26-000014": {
 "ticker": "MRVL",
@@ -7783,7 +7906,7 @@
 "basis": "non-GAAP"
 },
 "fye": "0130",
-"v": 10
+"v": 11
 },
 "0001835632-26-000022": {
 "ticker": "MRVL",
@@ -7817,7 +7940,7 @@
 "basis": "non-GAAP"
 },
 "fye": "0130",
-"v": 10
+"v": 11
 },
 "0001193125-26-442714": {
 "ticker": "MRVL",
@@ -7826,7 +7949,7 @@
 "annual": [],
 "actual": null,
 "fye": "0130",
-"v": 10
+"v": 11
 },
 "0000723125-21-000049": {
 "ticker": "MU",
@@ -7859,8 +7982,8 @@
 },
 "basis": "GAAP"
 },
-"fye": "0903",
-"v": 10
+"fye": "0902",
+"v": 11
 },
 "0000723125-21-000060": {
 "ticker": "MU",
@@ -7893,8 +8016,8 @@
 },
 "basis": "GAAP"
 },
-"fye": "0903",
-"v": 10
+"fye": "0902",
+"v": 11
 },
 "0000723125-21-000086": {
 "ticker": "MU",
@@ -7927,8 +8050,8 @@
 },
 "basis": "GAAP"
 },
-"fye": "0903",
-"v": 10
+"fye": "0902",
+"v": 11
 },
 "0000723125-22-000012": {
 "ticker": "MU",
@@ -7961,8 +8084,8 @@
 },
 "basis": "GAAP"
 },
-"fye": "0903",
-"v": 10
+"fye": "0902",
+"v": 11
 },
 "0000723125-22-000034": {
 "ticker": "MU",
@@ -7995,8 +8118,8 @@
 },
 "basis": "GAAP"
 },
-"fye": "0903",
-"v": 10
+"fye": "0902",
+"v": 11
 },
 "0000723125-22-000044": {
 "ticker": "MU",
@@ -8029,8 +8152,8 @@
 },
 "basis": "GAAP"
 },
-"fye": "0903",
-"v": 10
+"fye": "0902",
+"v": 11
 },
 "0000723125-22-000070": {
 "ticker": "MU",
@@ -8063,8 +8186,8 @@
 },
 "basis": "GAAP"
 },
-"fye": "0903",
-"v": 10
+"fye": "0902",
+"v": 11
 },
 "0000723125-23-000018": {
 "ticker": "MU",
@@ -8097,8 +8220,8 @@
 },
 "basis": "GAAP"
 },
-"fye": "0903",
-"v": 10
+"fye": "0902",
+"v": 11
 },
 "0000723125-23-000038": {
 "ticker": "MU",
@@ -8131,8 +8254,8 @@
 },
 "basis": "GAAP"
 },
-"fye": "0903",
-"v": 10
+"fye": "0902",
+"v": 11
 },
 "0000723125-23-000051": {
 "ticker": "MU",
@@ -8165,8 +8288,8 @@
 },
 "basis": "GAAP"
 },
-"fye": "0903",
-"v": 10
+"fye": "0902",
+"v": 11
 },
 "0000723125-23-000071": {
 "ticker": "MU",
@@ -8199,8 +8322,8 @@
 },
 "basis": "GAAP"
 },
-"fye": "0903",
-"v": 10
+"fye": "0902",
+"v": 11
 },
 "0000723125-24-000004": {
 "ticker": "MU",
@@ -8233,8 +8356,8 @@
 },
 "basis": "GAAP"
 },
-"fye": "0903",
-"v": 10
+"fye": "0902",
+"v": 11
 },
 "0000723125-24-000016": {
 "ticker": "MU",
@@ -8267,8 +8390,8 @@
 },
 "basis": "GAAP"
 },
-"fye": "0903",
-"v": 10
+"fye": "0902",
+"v": 11
 },
 "0000723125-24-000023": {
 "ticker": "MU",
@@ -8301,8 +8424,8 @@
 },
 "basis": "GAAP"
 },
-"fye": "0903",
-"v": 10
+"fye": "0902",
+"v": 11
 },
 "0000723125-24-000046": {
 "ticker": "MU",
@@ -8335,8 +8458,8 @@
 },
 "basis": "GAAP"
 },
-"fye": "0903",
-"v": 10
+"fye": "0902",
+"v": 11
 },
 "0000723125-25-000006": {
 "ticker": "MU",
@@ -8369,8 +8492,8 @@
 },
 "basis": "GAAP"
 },
-"fye": "0903",
-"v": 10
+"fye": "0902",
+"v": 11
 },
 "0000723125-25-000019": {
 "ticker": "MU",
@@ -8403,8 +8526,8 @@
 },
 "basis": "GAAP"
 },
-"fye": "0903",
-"v": 10
+"fye": "0902",
+"v": 11
 },
 "0000723125-25-000024": {
 "ticker": "MU",
@@ -8437,8 +8560,8 @@
 },
 "basis": "GAAP"
 },
-"fye": "0903",
-"v": 10
+"fye": "0902",
+"v": 11
 },
 "0000723125-25-000044": {
 "ticker": "MU",
@@ -8471,8 +8594,8 @@
 },
 "basis": "GAAP"
 },
-"fye": "0903",
-"v": 10
+"fye": "0902",
+"v": 11
 },
 "0000723125-26-000004": {
 "ticker": "MU",
@@ -8505,8 +8628,8 @@
 },
 "basis": "GAAP"
 },
-"fye": "0903",
-"v": 10
+"fye": "0902",
+"v": 11
 },
 "0000723125-26-000013": {
 "ticker": "MU",
@@ -8539,8 +8662,8 @@
 },
 "basis": "GAAP"
 },
-"fye": "0903",
-"v": 10
+"fye": "0902",
+"v": 11
 },
 "0000723125-26-000018": {
 "ticker": "MU",
@@ -8573,15 +8696,15 @@
 },
 "basis": "GAAP"
 },
-"fye": "0903",
-"v": 10
+"fye": "0902",
+"v": 11
 },
 "0001513845-21-000026": {
 "ticker": "NBIS",
 "filed": "2021-07-01",
 "cands": [],
 "skip": true,
-"v": 10
+"v": 11
 },
 "0001513845-21-000028": {
 "ticker": "NBIS",
@@ -8590,21 +8713,21 @@
 "annual": [],
 "actual": null,
 "fye": null,
-"v": 10
+"v": 11
 },
 "0001513845-21-000030": {
 "ticker": "NBIS",
 "filed": "2021-08-24",
 "cands": [],
 "skip": true,
-"v": 10
+"v": 11
 },
 "0001513845-21-000032": {
 "ticker": "NBIS",
 "filed": "2021-08-31",
 "cands": [],
 "skip": true,
-"v": 10
+"v": 11
 },
 "0001513845-21-000034": {
 "ticker": "NBIS",
@@ -8613,21 +8736,21 @@
 "annual": [],
 "actual": null,
 "fye": null,
-"v": 10
+"v": 11
 },
 "0001513845-21-000036": {
 "ticker": "NBIS",
 "filed": "2021-11-23",
 "cands": [],
 "skip": true,
-"v": 10
+"v": 11
 },
 "0001513845-22-000002": {
 "ticker": "NBIS",
 "filed": "2022-01-20",
 "cands": [],
 "skip": true,
-"v": 10
+"v": 11
 },
 "0001513845-22-000004": {
 "ticker": "NBIS",
@@ -8636,7 +8759,7 @@
 "annual": [],
 "actual": null,
 "fye": null,
-"v": 10
+"v": 11
 },
 "0001513845-22-000016": {
 "ticker": "NBIS",
@@ -8645,28 +8768,28 @@
 "annual": [],
 "actual": null,
 "fye": null,
-"v": 10
+"v": 11
 },
 "0001513845-22-000018": {
 "ticker": "NBIS",
 "filed": "2022-04-28",
 "cands": [],
 "skip": true,
-"v": 10
+"v": 11
 },
 "0001513845-22-000020": {
 "ticker": "NBIS",
 "filed": "2022-04-29",
 "cands": [],
 "skip": true,
-"v": 10
+"v": 11
 },
 "0001513845-22-000022": {
 "ticker": "NBIS",
 "filed": "2022-05-26",
 "cands": [],
 "skip": true,
-"v": 10
+"v": 11
 },
 "0001513845-22-000040": {
 "ticker": "NBIS",
@@ -8675,28 +8798,28 @@
 "annual": [],
 "actual": null,
 "fye": null,
-"v": 10
+"v": 11
 },
 "0001513845-22-000043": {
 "ticker": "NBIS",
 "filed": "2022-08-15",
 "cands": [],
 "skip": true,
-"v": 10
+"v": 11
 },
 "0001513845-22-000045": {
 "ticker": "NBIS",
 "filed": "2022-08-23",
 "cands": [],
 "skip": true,
-"v": 10
+"v": 11
 },
 "0001513845-22-000047": {
 "ticker": "NBIS",
 "filed": "2022-08-24",
 "cands": [],
 "skip": true,
-"v": 10
+"v": 11
 },
 "0001513845-22-000053": {
 "ticker": "NBIS",
@@ -8705,28 +8828,28 @@
 "annual": [],
 "actual": null,
 "fye": null,
-"v": 10
+"v": 11
 },
 "0001513845-22-000055": {
 "ticker": "NBIS",
 "filed": "2022-11-23",
 "cands": [],
 "skip": true,
-"v": 10
+"v": 11
 },
 "0001513845-22-000057": {
 "ticker": "NBIS",
 "filed": "2022-11-25",
 "cands": [],
 "skip": true,
-"v": 10
+"v": 11
 },
 "0001513845-23-000002": {
 "ticker": "NBIS",
 "filed": "2023-01-31",
 "cands": [],
 "skip": true,
-"v": 10
+"v": 11
 },
 "0001513845-23-000005": {
 "ticker": "NBIS",
@@ -8735,14 +8858,14 @@
 "annual": [],
 "actual": null,
 "fye": null,
-"v": 10
+"v": 11
 },
 "0001513845-23-000013": {
 "ticker": "NBIS",
 "filed": "2023-04-21",
 "cands": [],
 "skip": true,
-"v": 10
+"v": 11
 },
 "0001513845-23-000015": {
 "ticker": "NBIS",
@@ -8751,35 +8874,35 @@
 "annual": [],
 "actual": null,
 "fye": null,
-"v": 10
+"v": 11
 },
 "0001513845-23-000017": {
 "ticker": "NBIS",
 "filed": "2023-04-28",
 "cands": [],
 "skip": true,
-"v": 10
+"v": 11
 },
 "0001513845-23-000019": {
 "ticker": "NBIS",
 "filed": "2023-05-16",
 "cands": [],
 "skip": true,
-"v": 10
+"v": 11
 },
 "0001513845-23-000021": {
 "ticker": "NBIS",
 "filed": "2023-05-23",
 "cands": [],
 "skip": true,
-"v": 10
+"v": 11
 },
 "0001513845-23-000023": {
 "ticker": "NBIS",
 "filed": "2023-05-25",
 "cands": [],
 "skip": true,
-"v": 10
+"v": 11
 },
 "0001513845-23-000035": {
 "ticker": "NBIS",
@@ -8788,14 +8911,14 @@
 "annual": [],
 "actual": null,
 "fye": null,
-"v": 10
+"v": 11
 },
 "0001513845-23-000038": {
 "ticker": "NBIS",
 "filed": "2023-08-17",
 "cands": [],
 "skip": true,
-"v": 10
+"v": 11
 },
 "0001513845-23-000041": {
 "ticker": "NBIS",
@@ -8804,28 +8927,28 @@
 "annual": [],
 "actual": null,
 "fye": null,
-"v": 10
+"v": 11
 },
 "0001513845-23-000044": {
 "ticker": "NBIS",
 "filed": "2023-11-17",
 "cands": [],
 "skip": true,
-"v": 10
+"v": 11
 },
 "0001513845-24-000002": {
 "ticker": "NBIS",
 "filed": "2024-02-05",
 "cands": [],
 "skip": true,
-"v": 10
+"v": 11
 },
 "0001104659-24-011955": {
 "ticker": "NBIS",
 "filed": "2024-02-08",
 "cands": [],
 "skip": true,
-"v": 10
+"v": 11
 },
 "0001513845-24-000004": {
 "ticker": "NBIS",
@@ -8834,7 +8957,7 @@
 "annual": [],
 "actual": null,
 "fye": null,
-"v": 10
+"v": 11
 },
 "0001513845-24-000012": {
 "ticker": "NBIS",
@@ -8843,42 +8966,42 @@
 "annual": [],
 "actual": null,
 "fye": null,
-"v": 10
+"v": 11
 },
 "0001513845-24-000014": {
 "ticker": "NBIS",
 "filed": "2024-05-17",
 "cands": [],
 "skip": true,
-"v": 10
+"v": 11
 },
 "0001513845-24-000016": {
 "ticker": "NBIS",
 "filed": "2024-05-23",
 "cands": [],
 "skip": true,
-"v": 10
+"v": 11
 },
 "0001513845-24-000018": {
 "ticker": "NBIS",
 "filed": "2024-07-15",
 "cands": [],
 "skip": true,
-"v": 10
+"v": 11
 },
 "0001513845-24-000020": {
 "ticker": "NBIS",
 "filed": "2024-07-16",
 "cands": [],
 "skip": true,
-"v": 10
+"v": 11
 },
 "0001513845-24-000022": {
 "ticker": "NBIS",
 "filed": "2024-07-18",
 "cands": [],
 "skip": true,
-"v": 10
+"v": 11
 },
 "0001513845-24-000024": {
 "ticker": "NBIS",
@@ -8887,70 +9010,70 @@
 "annual": [],
 "actual": null,
 "fye": null,
-"v": 10
+"v": 11
 },
 "0001513845-24-000026": {
 "ticker": "NBIS",
 "filed": "2024-08-07",
 "cands": [],
 "skip": true,
-"v": 10
+"v": 11
 },
 "0001104659-24-090313": {
 "ticker": "NBIS",
 "filed": "2024-08-16",
 "cands": [],
 "skip": true,
-"v": 10
+"v": 11
 },
 "0001104659-24-091086": {
 "ticker": "NBIS",
 "filed": "2024-08-20",
 "cands": [],
 "skip": true,
-"v": 10
+"v": 11
 },
 "0001104659-24-105281": {
 "ticker": "NBIS",
 "filed": "2024-10-02",
 "cands": [],
 "skip": true,
-"v": 10
+"v": 11
 },
 "0001104659-24-106931": {
 "ticker": "NBIS",
 "filed": "2024-10-08",
 "cands": [],
 "skip": true,
-"v": 10
+"v": 11
 },
 "0001104659-24-108214": {
 "ticker": "NBIS",
 "filed": "2024-10-15",
 "cands": [],
 "skip": true,
-"v": 10
+"v": 11
 },
 "0001104659-24-109545": {
 "ticker": "NBIS",
 "filed": "2024-10-17",
 "cands": [],
 "skip": true,
-"v": 10
+"v": 11
 },
 "0001104659-24-109850": {
 "ticker": "NBIS",
 "filed": "2024-10-18",
 "cands": [],
 "skip": true,
-"v": 10
+"v": 11
 },
 "0001104659-24-110042": {
 "ticker": "NBIS",
 "filed": "2024-10-21",
 "cands": [],
 "skip": true,
-"v": 10
+"v": 11
 },
 "0001104659-24-112875": {
 "ticker": "NBIS",
@@ -8959,14 +9082,14 @@
 "annual": [],
 "actual": null,
 "fye": null,
-"v": 10
+"v": 11
 },
 "0001104659-24-120402": {
 "ticker": "NBIS",
 "filed": "2024-11-19",
 "cands": [],
 "skip": true,
-"v": 10
+"v": 11
 },
 "0001104659-25-015480": {
 "ticker": "NBIS",
@@ -8975,7 +9098,7 @@
 "annual": [],
 "actual": null,
 "fye": null,
-"v": 10
+"v": 11
 },
 "0001104659-25-042228": {
 "ticker": "NBIS",
@@ -8984,14 +9107,14 @@
 "annual": [],
 "actual": null,
 "fye": null,
-"v": 10
+"v": 11
 },
 "0001104659-25-045373": {
 "ticker": "NBIS",
 "filed": "2025-05-07",
 "cands": [],
 "skip": true,
-"v": 10
+"v": 11
 },
 "0001104659-25-050975": {
 "ticker": "NBIS",
@@ -9004,35 +9127,35 @@
 "ctx": "revenue of $55.3 million"
 },
 "fye": null,
-"v": 10
+"v": 11
 },
 "0001104659-25-053454": {
 "ticker": "NBIS",
 "filed": "2025-05-28",
 "cands": [],
 "skip": true,
-"v": 10
+"v": 11
 },
 "0001104659-25-054826": {
 "ticker": "NBIS",
 "filed": "2025-05-30",
 "cands": [],
 "skip": true,
-"v": 10
+"v": 11
 },
 "0001104659-25-066935": {
 "ticker": "NBIS",
 "filed": "2025-07-10",
 "cands": [],
 "skip": true,
-"v": 10
+"v": 11
 },
 "0001104659-25-070330": {
 "ticker": "NBIS",
 "filed": "2025-07-24",
 "cands": [],
 "skip": true,
-"v": 10
+"v": 11
 },
 "0001104659-25-075028": {
 "ticker": "NBIS",
@@ -9056,28 +9179,28 @@
 ],
 "actual": null,
 "fye": null,
-"v": 10
+"v": 11
 },
 "0001104659-25-081649": {
 "ticker": "NBIS",
 "filed": "2025-08-22",
 "cands": [],
 "skip": true,
-"v": 10
+"v": 11
 },
 "0001104659-25-101520": {
 "ticker": "NBIS",
 "filed": "2025-10-22",
 "cands": [],
 "skip": true,
-"v": 10
+"v": 11
 },
 "0001104659-25-110028": {
 "ticker": "NBIS",
 "filed": "2025-11-12",
 "cands": [],
 "skip": true,
-"v": 10
+"v": 11
 },
 "0001104659-25-109806": {
 "ticker": "NBIS",
@@ -9086,35 +9209,35 @@
 "annual": [],
 "actual": null,
 "fye": null,
-"v": 10
+"v": 11
 },
 "0001104659-25-109803": {
 "ticker": "NBIS",
 "filed": "2025-11-12",
 "cands": [],
 "skip": true,
-"v": 10
+"v": 11
 },
 "0001104659-25-110831": {
 "ticker": "NBIS",
 "filed": "2025-11-13",
 "cands": [],
 "skip": true,
-"v": 10
+"v": 11
 },
 "0001104659-26-012492": {
 "ticker": "NBIS",
 "filed": "2026-02-10",
 "cands": [],
 "skip": true,
-"v": 10
+"v": 11
 },
 "0001104659-26-013947": {
 "ticker": "NBIS",
 "filed": "2026-02-12",
 "cands": [],
 "skip": true,
-"v": 10
+"v": 11
 },
 "0001104659-26-013946": {
 "ticker": "NBIS",
@@ -9123,14 +9246,14 @@
 "annual": [],
 "actual": null,
 "fye": null,
-"v": 10
+"v": 11
 },
 "0001104659-26-053464": {
 "ticker": "NBIS",
 "filed": "2026-05-01",
 "cands": [],
 "skip": true,
-"v": 10
+"v": 11
 },
 "0001104659-26-059872": {
 "ticker": "NBIS",
@@ -9139,35 +9262,35 @@
 "annual": [],
 "actual": null,
 "fye": null,
-"v": 10
+"v": 11
 },
 "0001104659-26-064092": {
 "ticker": "NBIS",
 "filed": "2026-05-20",
 "cands": [],
 "skip": true,
-"v": 10
+"v": 11
 },
 "0001104659-26-084452": {
 "ticker": "NBIS",
 "filed": "2026-07-17",
 "cands": [],
 "skip": true,
-"v": 10
+"v": 11
 },
 "0001104659-26-087080": {
 "ticker": "NBIS",
 "filed": "2026-07-27",
 "cands": [],
 "skip": true,
-"v": 10
+"v": 11
 },
 "0001104659-26-094844": {
 "ticker": "NBIS",
 "filed": "2026-08-12",
 "cands": [],
 "skip": true,
-"v": 10
+"v": 11
 },
 "0001104659-26-094568": {
 "ticker": "NBIS",
@@ -9176,49 +9299,49 @@
 "annual": [],
 "actual": null,
 "fye": null,
-"v": 10
+"v": 11
 },
 "0001104659-26-098590": {
 "ticker": "NBIS",
 "filed": "2026-08-19",
 "cands": [],
 "skip": true,
-"v": 10
+"v": 11
 },
 "0001104659-26-098924": {
 "ticker": "NBIS",
 "filed": "2026-08-20",
 "cands": [],
 "skip": true,
-"v": 10
+"v": 11
 },
 "0001104659-26-100347": {
 "ticker": "NBIS",
 "filed": "2026-08-24",
 "cands": [],
 "skip": true,
-"v": 10
+"v": 11
 },
 "0001104659-26-101076": {
 "ticker": "NBIS",
 "filed": "2026-08-26",
 "cands": [],
 "skip": true,
-"v": 10
+"v": 11
 },
 "0001104659-26-112824": {
 "ticker": "NBIS",
 "filed": "2026-10-01",
 "cands": [],
 "skip": true,
-"v": 10
+"v": 11
 },
 "0001104659-26-117978": {
 "ticker": "NBIS",
 "filed": "2026-10-22",
 "cands": [],
 "skip": true,
-"v": 10
+"v": 11
 },
 "0001477333-21-000033": {
 "ticker": "NET",
@@ -9247,7 +9370,7 @@
 "ctx": "total revenue totaled $152.4 million"
 },
 "fye": "1231",
-"v": 10
+"v": 11
 },
 "0001477333-21-000042": {
 "ticker": "NET",
@@ -9276,7 +9399,7 @@
 "ctx": "total revenue totaled $172.3 million"
 },
 "fye": "1231",
-"v": 10
+"v": 11
 },
 "0001193125-22-034540": {
 "ticker": "NET",
@@ -9314,7 +9437,7 @@
 "basis": "non-GAAP"
 },
 "fye": "1231",
-"v": 10
+"v": 11
 },
 "0001477333-22-000029": {
 "ticker": "NET",
@@ -9343,7 +9466,7 @@
 "ctx": "total revenue totaled $212.2 million"
 },
 "fye": "1231",
-"v": 10
+"v": 11
 },
 "0001477333-22-000047": {
 "ticker": "NET",
@@ -9381,7 +9504,7 @@
 "basis": "non-GAAP"
 },
 "fye": "1231",
-"v": 10
+"v": 11
 },
 "0001477333-22-000059": {
 "ticker": "NET",
@@ -9419,7 +9542,7 @@
 "basis": "non-GAAP"
 },
 "fye": "1231",
-"v": 10
+"v": 11
 },
 "0001477333-23-000008": {
 "ticker": "NET",
@@ -9457,7 +9580,7 @@
 "basis": "non-GAAP"
 },
 "fye": "1231",
-"v": 10
+"v": 11
 },
 "0001477333-23-000041": {
 "ticker": "NET",
@@ -9495,7 +9618,7 @@
 "basis": "non-GAAP"
 },
 "fye": "1231",
-"v": 10
+"v": 11
 },
 "0001477333-23-000055": {
 "ticker": "NET",
@@ -9533,7 +9656,7 @@
 "basis": "non-GAAP"
 },
 "fye": "1231",
-"v": 10
+"v": 11
 },
 "0001477333-23-000062": {
 "ticker": "NET",
@@ -9571,7 +9694,7 @@
 "basis": "non-GAAP"
 },
 "fye": "1231",
-"v": 10
+"v": 11
 },
 "0001477333-24-000004": {
 "ticker": "NET",
@@ -9609,7 +9732,7 @@
 "basis": "non-GAAP"
 },
 "fye": "1231",
-"v": 10
+"v": 11
 },
 "0001477333-24-000048": {
 "ticker": "NET",
@@ -9647,7 +9770,7 @@
 "basis": "non-GAAP"
 },
 "fye": "1231",
-"v": 10
+"v": 11
 },
 "0001477333-24-000069": {
 "ticker": "NET",
@@ -9685,7 +9808,7 @@
 "basis": "non-GAAP"
 },
 "fye": "1231",
-"v": 10
+"v": 11
 },
 "0001477333-24-000083": {
 "ticker": "NET",
@@ -9723,7 +9846,7 @@
 "basis": "non-GAAP"
 },
 "fye": "1231",
-"v": 10
+"v": 11
 },
 "0001477333-25-000017": {
 "ticker": "NET",
@@ -9761,7 +9884,7 @@
 "basis": "non-GAAP"
 },
 "fye": "1231",
-"v": 10
+"v": 11
 },
 "0001477333-25-000081": {
 "ticker": "NET",
@@ -9799,7 +9922,7 @@
 "basis": "non-GAAP"
 },
 "fye": "1231",
-"v": 10
+"v": 11
 },
 "0001477333-25-000136": {
 "ticker": "NET",
@@ -9837,7 +9960,7 @@
 "basis": "non-GAAP"
 },
 "fye": "1231",
-"v": 10
+"v": 11
 },
 "0001477333-25-000140": {
 "ticker": "NET",
@@ -9875,7 +9998,7 @@
 "basis": "non-GAAP"
 },
 "fye": "1231",
-"v": 10
+"v": 11
 },
 "0001477333-26-000008": {
 "ticker": "NET",
@@ -9913,7 +10036,7 @@
 "basis": "non-GAAP"
 },
 "fye": "1231",
-"v": 10
+"v": 11
 },
 "0001477333-26-000033": {
 "ticker": "NET",
@@ -9951,7 +10074,7 @@
 "basis": "non-GAAP"
 },
 "fye": "1231",
-"v": 10
+"v": 11
 },
 "0001477333-26-000053": {
 "ticker": "NET",
@@ -9989,7 +10112,7 @@
 "basis": "non-GAAP"
 },
 "fye": "1231",
-"v": 10
+"v": 11
 },
 "0001477333-26-000060": {
 "ticker": "NET",
@@ -10027,7 +10150,7 @@
 "basis": "non-GAAP"
 },
 "fye": "1231",
-"v": 10
+"v": 11
 },
 "0001564590-21-031393": {
 "ticker": "NTAP",
@@ -10045,10 +10168,10 @@
 "actual": {
 "value": 1.56,
 "unit": 1000000000.0,
-"ctx": "Net revenues: $1.56 billion"
+"ctx": "Net revenues for the fourth quarter grew 11% year-over-year to $1.56 billion"
 },
 "fye": "0424",
-"v": 10
+"v": 11
 },
 "0001564590-21-045712": {
 "ticker": "NTAP",
@@ -10066,10 +10189,10 @@
 "actual": {
 "value": 1.46,
 "unit": 1000000000.0,
-"ctx": "Net revenues: $1.46 billion"
+"ctx": "Net revenues for the first quarter grew 12% year-over-year to $1.46 billion"
 },
 "fye": "0424",
-"v": 10
+"v": 11
 },
 "0000950170-21-004947": {
 "ticker": "NTAP",
@@ -10087,10 +10210,10 @@
 "actual": {
 "value": 1.57,
 "unit": 1000000000.0,
-"ctx": "Net revenues: $1.57 billion"
+"ctx": "Net revenues for the second quarter grew 11% year-over-year to $1.57 billion"
 },
 "fye": "0424",
-"v": 10
+"v": 11
 },
 "0000950170-22-001772": {
 "ticker": "NTAP",
@@ -10108,10 +10231,10 @@
 "actual": {
 "value": 1.61,
 "unit": 1000000000.0,
-"ctx": "Net revenues: $1.61 billion"
+"ctx": "Net revenues for the third quarter grew 10% year-over-year to $1.61 billion"
 },
 "fye": "0424",
-"v": 10
+"v": 11
 },
 "0000950170-22-011019": {
 "ticker": "NTAP",
@@ -10129,10 +10252,10 @@
 "actual": {
 "value": 1.68,
 "unit": 1000000000.0,
-"ctx": "Net revenues: $1.68 billion"
+"ctx": "Net revenues for the fourth quarter grew 8% year-over-year to $1.68 billion"
 },
 "fye": "0424",
-"v": 10
+"v": 11
 },
 "0000950170-22-017731": {
 "ticker": "NTAP",
@@ -10150,10 +10273,10 @@
 "actual": {
 "value": 1.59,
 "unit": 1000000000.0,
-"ctx": "Net revenues: $1.59 billion"
+"ctx": "Net revenues for the first quarter grew 9% year-over-year to $1.59 billion"
 },
 "fye": "0424",
-"v": 10
+"v": 11
 },
 "0000950170-22-025793": {
 "ticker": "NTAP",
@@ -10171,10 +10294,10 @@
 "actual": {
 "value": 1.66,
 "unit": 1000000000.0,
-"ctx": "Net revenues: $1.66 billion"
+"ctx": "Net revenues for the second quarter grew 6% year-over-year to $1.66 billion"
 },
 "fye": "0424",
-"v": 10
+"v": 11
 },
 "0000950170-23-003745": {
 "ticker": "NTAP",
@@ -10195,7 +10318,7 @@
 "ctx": "Net revenues of $1.53 billion"
 },
 "fye": "0424",
-"v": 10
+"v": 11
 },
 "0000950170-23-025324": {
 "ticker": "NTAP",
@@ -10216,7 +10339,7 @@
 "ctx": "Net revenues of $1.58 billion"
 },
 "fye": "0424",
-"v": 10
+"v": 11
 },
 "0000950170-23-044130": {
 "ticker": "NTAP",
@@ -10237,7 +10360,7 @@
 "ctx": "Net revenues of $1.43 billion"
 },
 "fye": "0424",
-"v": 10
+"v": 11
 },
 "0000950170-23-066400": {
 "ticker": "NTAP",
@@ -10258,7 +10381,7 @@
 "ctx": "Net revenues of $1.56 billion"
 },
 "fye": "0424",
-"v": 10
+"v": 11
 },
 "0000950170-24-023060": {
 "ticker": "NTAP",
@@ -10287,7 +10410,7 @@
 "ctx": "Net revenues of $1.61 billion"
 },
 "fye": "0424",
-"v": 10
+"v": 11
 },
 "0000950170-24-066567": {
 "ticker": "NTAP",
@@ -10316,7 +10439,7 @@
 "ctx": "Net revenues of $1.67 billion"
 },
 "fye": "0424",
-"v": 10
+"v": 11
 },
 "0000950170-24-101383": {
 "ticker": "NTAP",
@@ -10345,7 +10468,7 @@
 "ctx": "Net revenues of $1.54 billion"
 },
 "fye": "0424",
-"v": 10
+"v": 11
 },
 "0000950170-24-129714": {
 "ticker": "NTAP",
@@ -10374,7 +10497,7 @@
 "ctx": "Net revenues of $1.66 billion"
 },
 "fye": "0424",
-"v": 10
+"v": 11
 },
 "0000950170-25-029022": {
 "ticker": "NTAP",
@@ -10403,7 +10526,7 @@
 "ctx": "Net revenues of $1.64 billion"
 },
 "fye": "0424",
-"v": 10
+"v": 11
 },
 "0000950170-25-078936": {
 "ticker": "NTAP",
@@ -10443,7 +10566,7 @@
 "basis": "non-GAAP"
 },
 "fye": "0424",
-"v": 10
+"v": 11
 },
 "0000950170-25-111700": {
 "ticker": "NTAP",
@@ -10483,7 +10606,7 @@
 "basis": "non-GAAP"
 },
 "fye": "0424",
-"v": 10
+"v": 11
 },
 "0001193125-25-297164": {
 "ticker": "NTAP",
@@ -10523,7 +10646,7 @@
 "basis": "non-GAAP"
 },
 "fye": "0424",
-"v": 10
+"v": 11
 },
 "0001193125-26-076545": {
 "ticker": "NTAP",
@@ -10563,7 +10686,7 @@
 "basis": "non-GAAP"
 },
 "fye": "0424",
-"v": 10
+"v": 11
 },
 "0001193125-26-245196": {
 "ticker": "NTAP",
@@ -10603,7 +10726,7 @@
 "basis": "non-GAAP"
 },
 "fye": "0424",
-"v": 10
+"v": 11
 },
 "0001002047-26-000003": {
 "ticker": "NTAP",
@@ -10643,7 +10766,7 @@
 "basis": "non-GAAP"
 },
 "fye": "0424",
-"v": 10
+"v": 11
 },
 "0001660134-21-000019": {
 "ticker": "OKTA",
@@ -10672,7 +10795,7 @@
 "ctx": "Total revenue was $316 million"
 },
 "fye": "0131",
-"v": 10
+"v": 11
 },
 "0001660134-21-000025": {
 "ticker": "OKTA",
@@ -10701,7 +10824,7 @@
 "ctx": "Total revenue was $351 million"
 },
 "fye": "0131",
-"v": 10
+"v": 11
 },
 "0001660134-22-000005": {
 "ticker": "OKTA",
@@ -10730,7 +10853,7 @@
 "ctx": "Total revenue was $383 million"
 },
 "fye": "0131",
-"v": 10
+"v": 11
 },
 "0001660134-22-000025": {
 "ticker": "OKTA",
@@ -10759,7 +10882,7 @@
 "ctx": "Total revenue was $415 million"
 },
 "fye": "0131",
-"v": 10
+"v": 11
 },
 "0001660134-22-000041": {
 "ticker": "OKTA",
@@ -10788,7 +10911,7 @@
 "ctx": "Total revenue was $452 million"
 },
 "fye": "0131",
-"v": 10
+"v": 11
 },
 "0001660134-22-000055": {
 "ticker": "OKTA",
@@ -10826,7 +10949,7 @@
 "basis": "non-GAAP"
 },
 "fye": "0131",
-"v": 10
+"v": 11
 },
 "0001660134-23-000009": {
 "ticker": "OKTA",
@@ -10864,7 +10987,7 @@
 "basis": "non-GAAP"
 },
 "fye": "0131",
-"v": 10
+"v": 11
 },
 "0001660134-23-000032": {
 "ticker": "OKTA",
@@ -10902,7 +11025,7 @@
 "basis": "non-GAAP"
 },
 "fye": "0131",
-"v": 10
+"v": 11
 },
 "0001660134-23-000044": {
 "ticker": "OKTA",
@@ -10940,7 +11063,7 @@
 "basis": "non-GAAP"
 },
 "fye": "0131",
-"v": 10
+"v": 11
 },
 "0001660134-23-000065": {
 "ticker": "OKTA",
@@ -10989,7 +11112,7 @@
 "basis": "non-GAAP"
 },
 "fye": "0131",
-"v": 10
+"v": 11
 },
 "0001660134-24-000005": {
 "ticker": "OKTA",
@@ -10998,7 +11121,7 @@
 "annual": [],
 "actual": null,
 "fye": "0131",
-"v": 10
+"v": 11
 },
 "0001660134-24-000019": {
 "ticker": "OKTA",
@@ -11040,7 +11163,7 @@
 "basis": "non-GAAP"
 },
 "fye": "0131",
-"v": 10
+"v": 11
 },
 "0001660134-24-000085": {
 "ticker": "OKTA",
@@ -11082,7 +11205,7 @@
 "basis": "non-GAAP"
 },
 "fye": "0131",
-"v": 10
+"v": 11
 },
 "0001660134-24-000134": {
 "ticker": "OKTA",
@@ -11124,7 +11247,7 @@
 "basis": "non-GAAP"
 },
 "fye": "0131",
-"v": 10
+"v": 11
 },
 "0001660134-24-000165": {
 "ticker": "OKTA",
@@ -11166,7 +11289,7 @@
 "basis": "non-GAAP"
 },
 "fye": "0131",
-"v": 10
+"v": 11
 },
 "0001660134-25-000015": {
 "ticker": "OKTA",
@@ -11175,7 +11298,7 @@
 "annual": [],
 "actual": null,
 "fye": "0131",
-"v": 10
+"v": 11
 },
 "0001660134-25-000043": {
 "ticker": "OKTA",
@@ -11217,7 +11340,7 @@
 "basis": "non-GAAP"
 },
 "fye": "0131",
-"v": 10
+"v": 11
 },
 "0001660134-25-000091": {
 "ticker": "OKTA",
@@ -11259,16 +11382,49 @@
 "basis": "non-GAAP"
 },
 "fye": "0131",
-"v": 10
+"v": 11
 },
 "0001660134-25-000156": {
 "ticker": "OKTA",
 "filed": "2025-08-26",
-"cands": [],
-"annual": [],
-"actual": null,
+"cands": [
+{
+"low": 728.0,
+"high": 730.0,
+"unit_low": 1000000.0,
+"unit_high": 1000000.0,
+"ctx": "Total revenue of $728 million to $730 million"
+}
+],
+"annual": [
+{
+"low": 2.875,
+"high": 2.885,
+"unit_low": 1000000000.0,
+"unit_high": 1000000000.0,
+"ctx": "Total revenue of $2.875 billion to $2.885 billion"
+}
+],
+"actual": {
+"value": 728.0,
+"unit": 1000000.0,
+"ctx": "Total revenue was $728 million"
+},
+"margin": {
+"om": [
+0.22,
+0.22
+],
+"oi": {
+"low": 160.0,
+"high": 162.0,
+"unit_low": 1000000.0,
+"unit_high": 1000000.0
+},
+"basis": "non-GAAP"
+},
 "fye": "0131",
-"v": 10
+"v": 11
 },
 "0001660134-25-000170": {
 "ticker": "OKTA",
@@ -11310,7 +11466,7 @@
 "basis": "non-GAAP"
 },
 "fye": "0131",
-"v": 10
+"v": 11
 },
 "0001660134-26-000016": {
 "ticker": "OKTA",
@@ -11352,7 +11508,7 @@
 "basis": "non-GAAP"
 },
 "fye": "0131",
-"v": 10
+"v": 11
 },
 "0001660134-26-000050": {
 "ticker": "OKTA",
@@ -11394,7 +11550,7 @@
 "basis": "non-GAAP"
 },
 "fye": "0131",
-"v": 10
+"v": 11
 },
 "0001660134-26-000068": {
 "ticker": "OKTA",
@@ -11436,7 +11592,7 @@
 "basis": "non-GAAP"
 },
 "fye": "0131",
-"v": 10
+"v": 11
 },
 "0001564590-21-032994": {
 "ticker": "ORCL",
@@ -11445,7 +11601,7 @@
 "annual": [],
 "actual": null,
 "fye": "0531",
-"v": 10
+"v": 11
 },
 "0001564590-21-047736": {
 "ticker": "ORCL",
@@ -11458,7 +11614,7 @@
 "ctx": "revenue totaled $2.5 billion"
 },
 "fye": "0531",
-"v": 10
+"v": 11
 },
 "0001564590-21-059893": {
 "ticker": "ORCL",
@@ -11471,7 +11627,7 @@
 "ctx": "revenues were $7.9 billion"
 },
 "fye": "0531",
-"v": 10
+"v": 11
 },
 "0001564590-22-009640": {
 "ticker": "ORCL",
@@ -11484,7 +11640,7 @@
 "ctx": "revenues were $7.9 billion"
 },
 "fye": "0531",
-"v": 10
+"v": 11
 },
 "0001564590-22-023099": {
 "ticker": "ORCL",
@@ -11497,7 +11653,7 @@
 "ctx": "revenues were $8.4 billion"
 },
 "fye": "0531",
-"v": 10
+"v": 11
 },
 "0001193125-22-191296": {
 "ticker": "ORCL",
@@ -11510,7 +11666,7 @@
 "ctx": "revenues were $792 million"
 },
 "fye": "0531",
-"v": 10
+"v": 11
 },
 "0001564590-22-031466": {
 "ticker": "ORCL",
@@ -11523,7 +11679,7 @@
 "ctx": "revenues were $10.5 billion"
 },
 "fye": "0531",
-"v": 10
+"v": 11
 },
 "0001564590-22-039236": {
 "ticker": "ORCL",
@@ -11536,7 +11692,7 @@
 "ctx": "revenues were $8.7 billion"
 },
 "fye": "0531",
-"v": 10
+"v": 11
 },
 "0001564590-23-003362": {
 "ticker": "ORCL",
@@ -11549,7 +11705,7 @@
 "ctx": "revenues were $8.6 billion"
 },
 "fye": "0531",
-"v": 10
+"v": 11
 },
 "0000950170-23-027490": {
 "ticker": "ORCL",
@@ -11562,7 +11718,7 @@
 "ctx": "revenues were $9.0 billion"
 },
 "fye": "0531",
-"v": 10
+"v": 11
 },
 "0000950170-23-047471": {
 "ticker": "ORCL",
@@ -11575,7 +11731,7 @@
 "ctx": "revenues were $11.1 billion"
 },
 "fye": "0531",
-"v": 10
+"v": 11
 },
 "0000950170-23-069410": {
 "ticker": "ORCL",
@@ -11588,7 +11744,7 @@
 "ctx": "revenues were $8.9 billion"
 },
 "fye": "0531",
-"v": 10
+"v": 11
 },
 "0000950170-24-029250": {
 "ticker": "ORCL",
@@ -11601,7 +11757,7 @@
 "ctx": "revenues were $8.9 billion"
 },
 "fye": "0531",
-"v": 10
+"v": 11
 },
 "0000950170-24-071916": {
 "ticker": "ORCL",
@@ -11614,7 +11770,7 @@
 "ctx": "revenues were $9.3 billion"
 },
 "fye": "0531",
-"v": 10
+"v": 11
 },
 "0000950170-24-104753": {
 "ticker": "ORCL",
@@ -11627,7 +11783,7 @@
 "ctx": "revenues were $11.5 billion"
 },
 "fye": "0531",
-"v": 10
+"v": 11
 },
 "0000950170-24-134537": {
 "ticker": "ORCL",
@@ -11640,7 +11796,7 @@
 "ctx": "revenues were $9.4 billion"
 },
 "fye": "0531",
-"v": 10
+"v": 11
 },
 "0000950170-25-036295": {
 "ticker": "ORCL",
@@ -11653,7 +11809,7 @@
 "ctx": "revenues were $9.0 billion"
 },
 "fye": "0531",
-"v": 10
+"v": 11
 },
 "0000950170-25-084831": {
 "ticker": "ORCL",
@@ -11666,7 +11822,7 @@
 "ctx": "revenues were $9.4 billion"
 },
 "fye": "0531",
-"v": 10
+"v": 11
 },
 "0001193125-25-199175": {
 "ticker": "ORCL",
@@ -11679,7 +11835,7 @@
 "ctx": "revenues were $12.1 billion"
 },
 "fye": "0531",
-"v": 10
+"v": 11
 },
 "0001193125-25-314207": {
 "ticker": "ORCL",
@@ -11692,7 +11848,7 @@
 "ctx": "revenues were $9.9 billion"
 },
 "fye": "0531",
-"v": 10
+"v": 11
 },
 "0001193125-26-100148": {
 "ticker": "ORCL",
@@ -11709,7 +11865,7 @@
 "ctx": "revenues were $9.9 billion"
 },
 "fye": "0531",
-"v": 10
+"v": 11
 },
 "0001193125-26-265848": {
 "ticker": "ORCL",
@@ -11726,7 +11882,7 @@
 "ctx": "revenues increased 21% to $19.2 billion"
 },
 "fye": "0531",
-"v": 10
+"v": 11
 },
 "0001193125-26-387905": {
 "ticker": "ORCL",
@@ -11743,7 +11899,7 @@
 "ctx": "revenues increased 30% to $19.3 billion"
 },
 "fye": "0531",
-"v": 10
+"v": 11
 },
 "0001327567-21-000020": {
 "ticker": "PANW",
@@ -11759,12 +11915,12 @@
 ],
 "annual": [],
 "actual": {
-"value": 950.4,
-"unit": 1000000.0,
-"ctx": "total revenue of $950.4 million"
+"value": 1.2,
+"unit": 1000000000.0,
+"ctx": "revenue grew 28% year over year to $1.2 billion"
 },
 "fye": "0731",
-"v": 10
+"v": 11
 },
 "0001327567-21-000037": {
 "ticker": "PANW",
@@ -11780,12 +11936,12 @@
 ],
 "annual": [],
 "actual": {
-"value": 946.0,
-"unit": 1000000.0,
-"ctx": "total revenue of $946.0 million"
+"value": 1.2,
+"unit": 1000000000.0,
+"ctx": "revenue grew 32% year over year to $1.2 billion"
 },
 "fye": "0731",
-"v": 10
+"v": 11
 },
 "0001327567-22-000006": {
 "ticker": "PANW",
@@ -11801,12 +11957,12 @@
 ],
 "annual": [],
 "actual": {
-"value": 1.0,
+"value": 1.3,
 "unit": 1000000000.0,
-"ctx": "total revenue of $1.0 billion"
+"ctx": "revenue grew 30% year over year to $1.3 billion"
 },
 "fye": "0731",
-"v": 10
+"v": 11
 },
 "0001327567-22-000014": {
 "ticker": "PANW",
@@ -11822,12 +11978,12 @@
 ],
 "annual": [],
 "actual": {
-"value": 1.1,
+"value": 1.4,
 "unit": 1000000000.0,
-"ctx": "total revenue of $1.1 billion"
+"ctx": "revenue grew 29% year over year to $1.4 billion"
 },
 "fye": "0731",
-"v": 10
+"v": 11
 },
 "0001327567-22-000020": {
 "ticker": "PANW",
@@ -11843,12 +11999,12 @@
 ],
 "annual": [],
 "actual": {
-"value": 1.2,
+"value": 1.6,
 "unit": 1000000000.0,
-"ctx": "total revenue of $1.2 billion"
+"ctx": "revenue grew 27% year over year to $1.6 billion"
 },
 "fye": "0731",
-"v": 10
+"v": 11
 },
 "0001327567-22-000035": {
 "ticker": "PANW",
@@ -11864,12 +12020,12 @@
 ],
 "annual": [],
 "actual": {
-"value": 1.2,
+"value": 1.6,
 "unit": 1000000000.0,
-"ctx": "total revenue of $1.2 billion"
+"ctx": "revenue grew 25% year over year to $1.6 billion"
 },
 "fye": "0731",
-"v": 10
+"v": 11
 },
 "0001327567-23-000005": {
 "ticker": "PANW",
@@ -11890,7 +12046,7 @@
 "ctx": "total revenue of $1.3 billion"
 },
 "fye": "0731",
-"v": 10
+"v": 11
 },
 "0001327567-23-000012": {
 "ticker": "PANW",
@@ -11906,12 +12062,12 @@
 ],
 "annual": [],
 "actual": {
-"value": 1.4,
+"value": 1.7,
 "unit": 1000000000.0,
-"ctx": "total revenue of $1.4 billion"
+"ctx": "revenue grew 24% year over year to $1.7 billion"
 },
 "fye": "0731",
-"v": 10
+"v": 11
 },
 "0001327567-23-000020": {
 "ticker": "PANW",
@@ -11927,12 +12083,12 @@
 ],
 "annual": [],
 "actual": {
-"value": 1.6,
+"value": 2.0,
 "unit": 1000000000.0,
-"ctx": "total revenue of $1.6 billion"
+"ctx": "revenue grew 26% year over year to $2.0 billion"
 },
 "fye": "0731",
-"v": 10
+"v": 11
 },
 "0001327567-23-000030": {
 "ticker": "PANW",
@@ -11948,9 +12104,9 @@
 ],
 "annual": [],
 "actual": {
-"value": 1.6,
+"value": 1.9,
 "unit": 1000000000.0,
-"ctx": "total revenue of $1.6 billion"
+"ctx": "revenue grew 20% year over year to $1.9 billion"
 },
 "margin": {
 "om": [
@@ -11960,7 +12116,7 @@
 "basis": "non-GAAP"
 },
 "fye": "0731",
-"v": 10
+"v": 11
 },
 "0001327567-24-000003": {
 "ticker": "PANW",
@@ -11976,9 +12132,9 @@
 ],
 "annual": [],
 "actual": {
-"value": 1.7,
+"value": 2.0,
 "unit": 1000000000.0,
-"ctx": "total revenue of $1.7 billion"
+"ctx": "revenue grew 19% year over year to $2.0 billion"
 },
 "margin": {
 "om": [
@@ -11988,7 +12144,7 @@
 "basis": "non-GAAP"
 },
 "fye": "0731",
-"v": 10
+"v": 11
 },
 "0001327567-24-000015": {
 "ticker": "PANW",
@@ -12004,9 +12160,9 @@
 ],
 "annual": [],
 "actual": {
-"value": 1.7,
+"value": 2.0,
 "unit": 1000000000.0,
-"ctx": "total revenue of $1.7 billion"
+"ctx": "revenue grew 15% year over year to $2.0 billion"
 },
 "margin": {
 "om": [
@@ -12016,7 +12172,7 @@
 "basis": "non-GAAP"
 },
 "fye": "0731",
-"v": 10
+"v": 11
 },
 "0001327567-24-000023": {
 "ticker": "PANW",
@@ -12039,9 +12195,9 @@
 ],
 "annual": [],
 "actual": {
-"value": 2.0,
+"value": 2.2,
 "unit": 1000000000.0,
-"ctx": "total revenue of $2.0 billion"
+"ctx": "revenue grew 12% year over year to $2.2 billion"
 },
 "margin": {
 "om": [
@@ -12051,7 +12207,7 @@
 "basis": "non-GAAP"
 },
 "fye": "0731",
-"v": 10
+"v": 11
 },
 "0001327567-24-000036": {
 "ticker": "PANW",
@@ -12067,9 +12223,9 @@
 ],
 "annual": [],
 "actual": {
-"value": 1.9,
+"value": 2.1,
 "unit": 1000000000.0,
-"ctx": "total revenue of $1.9 billion"
+"ctx": "revenue grew 14% year over year to $2.1 billion"
 },
 "margin": {
 "om": [
@@ -12079,7 +12235,7 @@
 "basis": "non-GAAP"
 },
 "fye": "0731",
-"v": 10
+"v": 11
 },
 "0001327567-25-000006": {
 "ticker": "PANW",
@@ -12095,9 +12251,9 @@
 ],
 "annual": [],
 "actual": {
-"value": 2.0,
+"value": 2.3,
 "unit": 1000000000.0,
-"ctx": "total revenue of $2.0 billion"
+"ctx": "revenue grew 14% year over year to $2.3 billion"
 },
 "margin": {
 "om": [
@@ -12107,7 +12263,7 @@
 "basis": "non-GAAP"
 },
 "fye": "0731",
-"v": 10
+"v": 11
 },
 "0001327567-25-000015": {
 "ticker": "PANW",
@@ -12123,9 +12279,9 @@
 ],
 "annual": [],
 "actual": {
-"value": 2.0,
+"value": 2.3,
 "unit": 1000000000.0,
-"ctx": "total revenue of $2.0 billion"
+"ctx": "revenue grew 15% year over year to $2.3 billion"
 },
 "margin": {
 "om": [
@@ -12135,7 +12291,7 @@
 "basis": "non-GAAP"
 },
 "fye": "0731",
-"v": 10
+"v": 11
 },
 "0001327567-25-000024": {
 "ticker": "PANW",
@@ -12151,9 +12307,9 @@
 ],
 "annual": [],
 "actual": {
-"value": 2.2,
+"value": 2.5,
 "unit": 1000000000.0,
-"ctx": "total revenue of $2.2 billion"
+"ctx": "revenue grew 16% year over year to $2.5 billion"
 },
 "margin": {
 "om": [
@@ -12163,7 +12319,7 @@
 "basis": "non-GAAP"
 },
 "fye": "0731",
-"v": 10
+"v": 11
 },
 "0001327567-25-000032": {
 "ticker": "PANW",
@@ -12179,9 +12335,9 @@
 ],
 "annual": [],
 "actual": {
-"value": 2.1,
+"value": 2.5,
 "unit": 1000000000.0,
-"ctx": "total revenue of $2.1 billion"
+"ctx": "revenue grew 16% year over year to $2.5 billion"
 },
 "margin": {
 "om": [
@@ -12191,7 +12347,7 @@
 "basis": "non-GAAP"
 },
 "fye": "0731",
-"v": 10
+"v": 11
 },
 "0001327567-26-000003": {
 "ticker": "PANW",
@@ -12207,9 +12363,9 @@
 ],
 "annual": [],
 "actual": {
-"value": 2.3,
+"value": 2.6,
 "unit": 1000000000.0,
-"ctx": "total revenue of $2.3 billion"
+"ctx": "revenue grew 15% year over year to $2.6 billion"
 },
 "margin": {
 "om": [
@@ -12219,7 +12375,7 @@
 "basis": "non-GAAP"
 },
 "fye": "0731",
-"v": 10
+"v": 11
 },
 "0001327567-26-000012": {
 "ticker": "PANW",
@@ -12243,7 +12399,7 @@
 "basis": "non-GAAP"
 },
 "fye": "0731",
-"v": 10
+"v": 11
 },
 "0001327567-26-000019": {
 "ticker": "PANW",
@@ -12267,7 +12423,7 @@
 "basis": "non-GAAP"
 },
 "fye": "0731",
-"v": 10
+"v": 11
 },
 "0001943896-24-000005": {
 "ticker": "RBRK",
@@ -12303,7 +12459,7 @@
 "ctx": "Revenue of $187.3 million"
 },
 "fye": "0131",
-"v": 10
+"v": 11
 },
 "0001943896-24-000014": {
 "ticker": "RBRK",
@@ -12334,12 +12490,12 @@
 }
 ],
 "actual": {
-"value": 191.3,
+"value": 205.0,
 "unit": 1000000.0,
-"ctx": "revenue was $191.3 million"
+"ctx": "Revenue grew 35% year-over-year to $205.0 million"
 },
 "fye": "0131",
-"v": 10
+"v": 11
 },
 "0001943896-24-000025": {
 "ticker": "RBRK",
@@ -12370,12 +12526,12 @@
 }
 ],
 "actual": {
-"value": 221.5,
+"value": 236.2,
 "unit": 1000000.0,
-"ctx": "revenue was $221.5 million"
+"ctx": "Revenue grew 43% year-over-year to $236.2 million"
 },
 "fye": "0131",
-"v": 10
+"v": 11
 },
 "0001943896-25-000006": {
 "ticker": "RBRK",
@@ -12406,12 +12562,12 @@
 }
 ],
 "actual": {
-"value": 243.7,
+"value": 258.1,
 "unit": 1000000.0,
-"ctx": "revenue was $243.7 million"
+"ctx": "revenue grew 47% year-over-year to $258.1 million"
 },
 "fye": "0131",
-"v": 10
+"v": 11
 },
 "0001943896-25-000027": {
 "ticker": "RBRK",
@@ -12442,12 +12598,12 @@
 }
 ],
 "actual": {
-"value": 265.7,
+"value": 278.5,
 "unit": 1000000.0,
-"ctx": "revenue was $265.7 million"
+"ctx": "revenue grew 49% year-over-year to $278.5 million"
 },
 "fye": "0131",
-"v": 10
+"v": 11
 },
 "0001943896-25-000039": {
 "ticker": "RBRK",
@@ -12478,12 +12634,12 @@
 }
 ],
 "actual": {
-"value": 297.0,
+"value": 309.9,
 "unit": 1000000.0,
-"ctx": "revenue was $297.0 million"
+"ctx": "revenue grew 51% year-over-year to $309.9 million"
 },
 "fye": "0131",
-"v": 10
+"v": 11
 },
 "0001943896-25-000050": {
 "ticker": "RBRK",
@@ -12514,12 +12670,12 @@
 }
 ],
 "actual": {
-"value": 336.4,
+"value": 350.2,
 "unit": 1000000.0,
-"ctx": "revenue was $336.4 million"
+"ctx": "revenue grew 48% year-over-year to $350.2 million"
 },
 "fye": "0131",
-"v": 10
+"v": 11
 },
 "0001193125-26-037791": {
 "ticker": "RBRK",
@@ -12529,7 +12685,7 @@
 "actual": null,
 "fye": "0131",
 "prelim": true,
-"v": 10
+"v": 11
 },
 "0001943896-26-000004": {
 "ticker": "RBRK",
@@ -12560,12 +12716,12 @@
 }
 ],
 "actual": {
-"value": 364.9,
+"value": 377.7,
 "unit": 1000000.0,
-"ctx": "revenue was $364.9 million"
+"ctx": "revenue grew 46% year-over-year to $377.7 million"
 },
 "fye": "0131",
-"v": 10
+"v": 11
 },
 "0001943896-26-000041": {
 "ticker": "RBRK",
@@ -12596,12 +12752,12 @@
 }
 ],
 "actual": {
-"value": 374.2,
+"value": 387.1,
 "unit": 1000000.0,
-"ctx": "revenue was $374.2 million"
+"ctx": "revenue grew 39% year-over-year to $387.1 million"
 },
 "fye": "0131",
-"v": 10
+"v": 11
 },
 "0001943896-26-000055": {
 "ticker": "RBRK",
@@ -12632,12 +12788,12 @@
 }
 ],
 "actual": {
-"value": 407.2,
+"value": 427.3,
 "unit": 1000000.0,
-"ctx": "revenue was $407.2 million"
+"ctx": "revenue grew 38% year-over-year to $427.3 million"
 },
 "fye": "0131",
-"v": 10
+"v": 11
 },
 "0001601830-21-000016": {
 "ticker": "RXRX",
@@ -12646,7 +12802,7 @@
 "annual": [],
 "actual": null,
 "fye": "1231",
-"v": 10
+"v": 11
 },
 "0001601830-21-000022": {
 "ticker": "RXRX",
@@ -12655,7 +12811,7 @@
 "annual": [],
 "actual": null,
 "fye": "1231",
-"v": 10
+"v": 11
 },
 "0001601830-22-000011": {
 "ticker": "RXRX",
@@ -12664,7 +12820,7 @@
 "annual": [],
 "actual": null,
 "fye": "1231",
-"v": 10
+"v": 11
 },
 "0001601830-22-000023": {
 "ticker": "RXRX",
@@ -12673,7 +12829,7 @@
 "annual": [],
 "actual": null,
 "fye": "1231",
-"v": 10
+"v": 11
 },
 "0001601830-22-000029": {
 "ticker": "RXRX",
@@ -12682,7 +12838,7 @@
 "annual": [],
 "actual": null,
 "fye": "1231",
-"v": 10
+"v": 11
 },
 "0001601830-22-000034": {
 "ticker": "RXRX",
@@ -12691,7 +12847,7 @@
 "annual": [],
 "actual": null,
 "fye": "1231",
-"v": 10
+"v": 11
 },
 "0001601830-23-000009": {
 "ticker": "RXRX",
@@ -12700,7 +12856,7 @@
 "annual": [],
 "actual": null,
 "fye": "1231",
-"v": 10
+"v": 11
 },
 "0001601830-23-000022": {
 "ticker": "RXRX",
@@ -12709,7 +12865,7 @@
 "annual": [],
 "actual": null,
 "fye": "1231",
-"v": 10
+"v": 11
 },
 "0001601830-23-000056": {
 "ticker": "RXRX",
@@ -12718,7 +12874,7 @@
 "annual": [],
 "actual": null,
 "fye": "1231",
-"v": 10
+"v": 11
 },
 "0001601830-23-000068": {
 "ticker": "RXRX",
@@ -12727,7 +12883,7 @@
 "annual": [],
 "actual": null,
 "fye": "1231",
-"v": 10
+"v": 11
 },
 "0001601830-24-000018": {
 "ticker": "RXRX",
@@ -12736,7 +12892,7 @@
 "annual": [],
 "actual": null,
 "fye": "1231",
-"v": 10
+"v": 11
 },
 "0001601830-24-000051": {
 "ticker": "RXRX",
@@ -12745,7 +12901,7 @@
 "annual": [],
 "actual": null,
 "fye": "1231",
-"v": 10
+"v": 11
 },
 "0001193125-24-196505": {
 "ticker": "RXRX",
@@ -12754,7 +12910,7 @@
 "annual": [],
 "actual": null,
 "fye": "1231",
-"v": 10
+"v": 11
 },
 "0001601830-24-000195": {
 "ticker": "RXRX",
@@ -12763,7 +12919,7 @@
 "annual": [],
 "actual": null,
 "fye": "1231",
-"v": 10
+"v": 11
 },
 "0001601830-25-000034": {
 "ticker": "RXRX",
@@ -12772,7 +12928,7 @@
 "annual": [],
 "actual": null,
 "fye": "1231",
-"v": 10
+"v": 11
 },
 "0001601830-25-000074": {
 "ticker": "RXRX",
@@ -12781,7 +12937,7 @@
 "annual": [],
 "actual": null,
 "fye": "1231",
-"v": 10
+"v": 11
 },
 "0001601830-25-000126": {
 "ticker": "RXRX",
@@ -12790,7 +12946,7 @@
 "annual": [],
 "actual": null,
 "fye": "1231",
-"v": 10
+"v": 11
 },
 "0001601830-25-000164": {
 "ticker": "RXRX",
@@ -12799,7 +12955,7 @@
 "annual": [],
 "actual": null,
 "fye": "1231",
-"v": 10
+"v": 11
 },
 "0001601830-26-000038": {
 "ticker": "RXRX",
@@ -12808,7 +12964,7 @@
 "annual": [],
 "actual": null,
 "fye": "1231",
-"v": 10
+"v": 11
 },
 "0001601830-26-000077": {
 "ticker": "RXRX",
@@ -12817,7 +12973,7 @@
 "annual": [],
 "actual": null,
 "fye": "1231",
-"v": 10
+"v": 11
 },
 "0001601830-26-000097": {
 "ticker": "RXRX",
@@ -12826,7 +12982,7 @@
 "annual": [],
 "actual": null,
 "fye": "1231",
-"v": 10
+"v": 11
 },
 "0001601830-26-000128": {
 "ticker": "RXRX",
@@ -12835,7 +12991,7 @@
 "annual": [],
 "actual": null,
 "fye": "1231",
-"v": 10
+"v": 11
 },
 "0001601830-26-000144": {
 "ticker": "RXRX",
@@ -12844,7 +13000,7 @@
 "annual": [],
 "actual": null,
 "fye": "1231",
-"v": 10
+"v": 11
 },
 "0001583708-21-000012": {
 "ticker": "S",
@@ -12876,7 +13032,7 @@
 "basis": "non-GAAP"
 },
 "fye": "0131",
-"v": 10
+"v": 11
 },
 "0001583708-21-000018": {
 "ticker": "S",
@@ -12908,7 +13064,7 @@
 "basis": "non-GAAP"
 },
 "fye": "0131",
-"v": 10
+"v": 11
 },
 "0001583708-22-000007": {
 "ticker": "S",
@@ -12940,7 +13096,7 @@
 "basis": "non-GAAP"
 },
 "fye": "0131",
-"v": 10
+"v": 11
 },
 "0001583708-22-000041": {
 "ticker": "S",
@@ -12968,7 +13124,7 @@
 "basis": "non-GAAP"
 },
 "fye": "0131",
-"v": 10
+"v": 11
 },
 "0001583708-22-000060": {
 "ticker": "S",
@@ -12996,7 +13152,7 @@
 "basis": "non-GAAP"
 },
 "fye": "0131",
-"v": 10
+"v": 11
 },
 "0001583708-22-000071": {
 "ticker": "S",
@@ -13024,7 +13180,7 @@
 "basis": "non-GAAP"
 },
 "fye": "0131",
-"v": 10
+"v": 11
 },
 "0001583708-23-000007": {
 "ticker": "S",
@@ -13052,7 +13208,7 @@
 "basis": "non-GAAP"
 },
 "fye": "0131",
-"v": 10
+"v": 11
 },
 "0001583708-23-000034": {
 "ticker": "S",
@@ -13080,7 +13236,7 @@
 "basis": "non-GAAP"
 },
 "fye": "0131",
-"v": 10
+"v": 11
 },
 "0001583708-23-000046": {
 "ticker": "S",
@@ -13108,7 +13264,7 @@
 "basis": "non-GAAP"
 },
 "fye": "0131",
-"v": 10
+"v": 11
 },
 "0001583708-23-000053": {
 "ticker": "S",
@@ -13136,7 +13292,7 @@
 "basis": "non-GAAP"
 },
 "fye": "0131",
-"v": 10
+"v": 11
 },
 "0001583708-24-000003": {
 "ticker": "S",
@@ -13164,7 +13320,7 @@
 "basis": "non-GAAP"
 },
 "fye": "0131",
-"v": 10
+"v": 11
 },
 "0001583708-24-000041": {
 "ticker": "S",
@@ -13192,7 +13348,7 @@
 "basis": "non-GAAP"
 },
 "fye": "0131",
-"v": 10
+"v": 11
 },
 "0001583708-24-000076": {
 "ticker": "S",
@@ -13220,7 +13376,7 @@
 "basis": "non-GAAP"
 },
 "fye": "0131",
-"v": 10
+"v": 11
 },
 "0001583708-24-000123": {
 "ticker": "S",
@@ -13248,7 +13404,7 @@
 "basis": "non-GAAP"
 },
 "fye": "0131",
-"v": 10
+"v": 11
 },
 "0001583708-25-000031": {
 "ticker": "S",
@@ -13276,7 +13432,7 @@
 "basis": "non-GAAP"
 },
 "fye": "0131",
-"v": 10
+"v": 11
 },
 "0001583708-25-000104": {
 "ticker": "S",
@@ -13304,7 +13460,7 @@
 "basis": "non-GAAP"
 },
 "fye": "0131",
-"v": 10
+"v": 11
 },
 "0001583708-25-000146": {
 "ticker": "S",
@@ -13336,7 +13492,7 @@
 "basis": "non-GAAP"
 },
 "fye": "0131",
-"v": 10
+"v": 11
 },
 "0001583708-25-000157": {
 "ticker": "S",
@@ -13368,7 +13524,7 @@
 "basis": "non-GAAP"
 },
 "fye": "0131",
-"v": 10
+"v": 11
 },
 "0001583708-26-000014": {
 "ticker": "S",
@@ -13406,7 +13562,7 @@
 "basis": "non-GAAP"
 },
 "fye": "0131",
-"v": 10
+"v": 11
 },
 "0001583708-26-000039": {
 "ticker": "S",
@@ -13444,7 +13600,7 @@
 "basis": "non-GAAP"
 },
 "fye": "0131",
-"v": 10
+"v": 11
 },
 "0001583708-26-000052": {
 "ticker": "S",
@@ -13470,7 +13626,7 @@
 "actual": {
 "value": 292.0,
 "unit": 1000000.0,
-"ctx": "Total revenue grew 21% to $292 million"
+"ctx": "Revenue grew 21% year-over-year to $292 million"
 },
 "margin": {
 "oi": {
@@ -13482,7 +13638,7 @@
 "basis": "non-GAAP"
 },
 "fye": "0131",
-"v": 10
+"v": 11
 },
 "0001375365-21-000055": {
 "ticker": "SMCI",
@@ -13503,7 +13659,7 @@
 "ctx": "Net sales of $1.07 billion"
 },
 "fye": "0630",
-"v": 10
+"v": 11
 },
 "0001375365-21-000078": {
 "ticker": "SMCI",
@@ -13532,7 +13688,7 @@
 "ctx": "Net sales of $1.03 billion"
 },
 "fye": "0630",
-"v": 10
+"v": 11
 },
 "0001375365-22-000008": {
 "ticker": "SMCI",
@@ -13561,7 +13717,7 @@
 "ctx": "Net sales of $1.17 billion"
 },
 "fye": "0630",
-"v": 10
+"v": 11
 },
 "0001375365-22-000046": {
 "ticker": "SMCI",
@@ -13579,7 +13735,7 @@
 "actual": null,
 "fye": "0630",
 "prelim": true,
-"v": 10
+"v": 11
 },
 "0001375365-22-000053": {
 "ticker": "SMCI",
@@ -13608,7 +13764,7 @@
 "ctx": "Net sales of $1.36 billion"
 },
 "fye": "0630",
-"v": 10
+"v": 11
 },
 "0001375365-22-000086": {
 "ticker": "SMCI",
@@ -13626,7 +13782,7 @@
 "actual": null,
 "fye": "0630",
 "prelim": true,
-"v": 10
+"v": 11
 },
 "0001375365-22-000092": {
 "ticker": "SMCI",
@@ -13655,7 +13811,7 @@
 "ctx": "Net sales of $1.64 billion"
 },
 "fye": "0630",
-"v": 10
+"v": 11
 },
 "0001375365-22-000109": {
 "ticker": "SMCI",
@@ -13673,7 +13829,7 @@
 "actual": null,
 "fye": "0630",
 "prelim": true,
-"v": 10
+"v": 11
 },
 "0001375365-22-000115": {
 "ticker": "SMCI",
@@ -13702,7 +13858,7 @@
 "ctx": "Net sales of $1.85 billion"
 },
 "fye": "0630",
-"v": 10
+"v": 11
 },
 "0001375365-23-000004": {
 "ticker": "SMCI",
@@ -13720,7 +13876,7 @@
 "actual": null,
 "fye": "0630",
 "prelim": true,
-"v": 10
+"v": 11
 },
 "0001375365-23-000009": {
 "ticker": "SMCI",
@@ -13749,7 +13905,7 @@
 "ctx": "Net sales of $1.80 billion"
 },
 "fye": "0630",
-"v": 10
+"v": 11
 },
 "0001375365-23-000026": {
 "ticker": "SMCI",
@@ -13759,7 +13915,7 @@
 "actual": null,
 "fye": "0630",
 "prelim": true,
-"v": 10
+"v": 11
 },
 "0001375365-23-000027": {
 "ticker": "SMCI",
@@ -13788,7 +13944,7 @@
 "ctx": "Net sales of $1.28 billion"
 },
 "fye": "0630",
-"v": 10
+"v": 11
 },
 "0001375365-23-000033": {
 "ticker": "SMCI",
@@ -13806,7 +13962,7 @@
 "actual": null,
 "fye": "0630",
 "prelim": true,
-"v": 10
+"v": 11
 },
 "0001375365-23-000034": {
 "ticker": "SMCI",
@@ -13835,7 +13991,7 @@
 "ctx": "Net sales of $2.18 billion"
 },
 "fye": "0630",
-"v": 10
+"v": 11
 },
 "0001375365-23-000040": {
 "ticker": "SMCI",
@@ -13864,7 +14020,7 @@
 "ctx": "Net sales of $2.12 billion"
 },
 "fye": "0630",
-"v": 10
+"v": 11
 },
 "0001375365-24-000002": {
 "ticker": "SMCI",
@@ -13882,7 +14038,7 @@
 "actual": null,
 "fye": "0630",
 "prelim": true,
-"v": 10
+"v": 11
 },
 "0001375365-24-000008": {
 "ticker": "SMCI",
@@ -13911,7 +14067,7 @@
 "ctx": "Net sales of $3.66 billion"
 },
 "fye": "0630",
-"v": 10
+"v": 11
 },
 "0001375365-24-000021": {
 "ticker": "SMCI",
@@ -13940,7 +14096,7 @@
 "ctx": "Net sales of $3.85 billion"
 },
 "fye": "0630",
-"v": 10
+"v": 11
 },
 "0001375365-24-000028": {
 "ticker": "SMCI",
@@ -13969,16 +14125,39 @@
 "ctx": "Net sales of $5.31 billion"
 },
 "fye": "0630",
-"v": 10
+"v": 11
 },
 "0001375365-24-000038": {
 "ticker": "SMCI",
 "filed": "2024-11-05",
-"cands": [],
-"annual": [],
+"cands": [
+{
+"low": 5.9,
+"high": 6.0,
+"unit_low": 1000000000.0,
+"unit_high": 1000000000.0,
+"ctx": "Net sales in a range of $5.9 billion to $6.0 billion"
+}
+],
+"annual": [
+{
+"low": 5.5,
+"high": 6.1,
+"unit_low": 1000000000.0,
+"unit_high": 1000000000.0,
+"ctx": "net sales in a range of $5.5 billion to $6.1 billion"
+}
+],
 "actual": null,
+"margin": {
+"gm": [
+0.133,
+0.133
+],
+"basis": "non-GAAP"
+},
 "fye": "0630",
-"v": 10
+"v": 11
 },
 "0001375365-25-000001": {
 "ticker": "SMCI",
@@ -14010,7 +14189,7 @@
 "basis": "non-GAAP"
 },
 "fye": "0630",
-"v": 10
+"v": 11
 },
 "0001375365-25-000012": {
 "ticker": "SMCI",
@@ -14028,7 +14207,7 @@
 "actual": null,
 "fye": "0630",
 "prelim": true,
-"v": 10
+"v": 11
 },
 "0001375365-25-000013": {
 "ticker": "SMCI",
@@ -14057,7 +14236,7 @@
 "ctx": "Net sales of $4.60 billion"
 },
 "fye": "0630",
-"v": 10
+"v": 11
 },
 "0001375365-25-000023": {
 "ticker": "SMCI",
@@ -14086,7 +14265,7 @@
 "ctx": "Net sales of $5.8 billion"
 },
 "fye": "0630",
-"v": 10
+"v": 11
 },
 "0001628280-25-045989": {
 "ticker": "SMCI",
@@ -14095,7 +14274,7 @@
 "annual": [],
 "actual": null,
 "fye": "0630",
-"v": 10
+"v": 11
 },
 "0001375365-25-000029": {
 "ticker": "SMCI",
@@ -14116,7 +14295,7 @@
 "ctx": "Net sales of $5.0 billion"
 },
 "fye": "0630",
-"v": 10
+"v": 11
 },
 "0001375365-26-000006": {
 "ticker": "SMCI",
@@ -14129,7 +14308,7 @@
 "ctx": "Net sales of $12.7 billion"
 },
 "fye": "0630",
-"v": 10
+"v": 11
 },
 "0001375365-26-000013": {
 "ticker": "SMCI",
@@ -14158,7 +14337,7 @@
 "ctx": "Net sales of $10.2 billion"
 },
 "fye": "0630",
-"v": 10
+"v": 11
 },
 "0001375365-26-000019": {
 "ticker": "SMCI",
@@ -14167,7 +14346,7 @@
 "annual": [],
 "actual": null,
 "fye": "0630",
-"v": 10
+"v": 11
 },
 "0001375365-26-000021": {
 "ticker": "SMCI",
@@ -14203,7 +14382,7 @@
 "ctx": "Net sales of $11.1 billion"
 },
 "fye": "0630",
-"v": 10
+"v": 11
 },
 "0001375365-26-000025": {
 "ticker": "SMCI",
@@ -14212,7 +14391,7 @@
 "annual": [],
 "actual": null,
 "fye": "0630",
-"v": 10
+"v": 11
 },
 "0001375365-26-000026": {
 "ticker": "SMCI",
@@ -14241,7 +14420,7 @@
 "ctx": "Net sales of $19.9 billion"
 },
 "fye": "0630",
-"v": 10
+"v": 11
 },
 "0002023554-25-000021": {
 "ticker": "SNDK",
@@ -14262,7 +14441,7 @@
 "ctx": "revenue was $1.70 billion"
 },
 "fye": "0628",
-"v": 10
+"v": 11
 },
 "0001193125-25-180782": {
 "ticker": "SNDK",
@@ -14283,7 +14462,7 @@
 "ctx": "revenue was $1.90 billion"
 },
 "fye": "0628",
-"v": 10
+"v": 11
 },
 "0001628280-25-050180": {
 "ticker": "SNDK",
@@ -14304,7 +14483,7 @@
 "ctx": "revenue was $2.31 billion"
 },
 "fye": "0628",
-"v": 10
+"v": 11
 },
 "0001628280-26-004121": {
 "ticker": "SNDK",
@@ -14325,7 +14504,7 @@
 "ctx": "revenue was $3.03 billion"
 },
 "fye": "0628",
-"v": 10
+"v": 11
 },
 "0001628280-26-028879": {
 "ticker": "SNDK",
@@ -14346,7 +14525,7 @@
 "ctx": "revenue was $5.95 billion"
 },
 "fye": "0628",
-"v": 10
+"v": 11
 },
 "0001628280-26-053346": {
 "ticker": "SNDK",
@@ -14367,7 +14546,7 @@
 "ctx": "revenue was $8.97 billion"
 },
 "fye": "0628",
-"v": 10
+"v": 11
 },
 "0001628280-26-068243": {
 "ticker": "SNDK",
@@ -14388,7 +14567,7 @@
 "ctx": "revenue was $11.0 billion"
 },
 "fye": "0628",
-"v": 10
+"v": 11
 },
 "0000950170-21-000423": {
 "ticker": "TSLA",
@@ -14397,7 +14576,7 @@
 "annual": [],
 "actual": null,
 "fye": "1231",
-"v": 10
+"v": 11
 },
 "0001564590-21-037953": {
 "ticker": "TSLA",
@@ -14406,7 +14585,7 @@
 "annual": [],
 "actual": null,
 "fye": "1231",
-"v": 10
+"v": 11
 },
 "0001564590-21-049874": {
 "ticker": "TSLA",
@@ -14415,7 +14594,7 @@
 "annual": [],
 "actual": null,
 "fye": "1231",
-"v": 10
+"v": 11
 },
 "0001564590-21-051307": {
 "ticker": "TSLA",
@@ -14424,7 +14603,7 @@
 "annual": [],
 "actual": null,
 "fye": "1231",
-"v": 10
+"v": 11
 },
 "0001564590-22-000009": {
 "ticker": "TSLA",
@@ -14433,7 +14612,7 @@
 "annual": [],
 "actual": null,
 "fye": "1231",
-"v": 10
+"v": 11
 },
 "0001564590-22-002476": {
 "ticker": "TSLA",
@@ -14442,7 +14621,7 @@
 "annual": [],
 "actual": null,
 "fye": "1231",
-"v": 10
+"v": 11
 },
 "0001564590-22-013264": {
 "ticker": "TSLA",
@@ -14451,7 +14630,7 @@
 "annual": [],
 "actual": null,
 "fye": "1231",
-"v": 10
+"v": 11
 },
 "0001564590-22-014917": {
 "ticker": "TSLA",
@@ -14460,7 +14639,7 @@
 "annual": [],
 "actual": null,
 "fye": "1231",
-"v": 10
+"v": 11
 },
 "0001564590-22-025153": {
 "ticker": "TSLA",
@@ -14469,7 +14648,7 @@
 "annual": [],
 "actual": null,
 "fye": "1231",
-"v": 10
+"v": 11
 },
 "0001564590-22-026048": {
 "ticker": "TSLA",
@@ -14478,7 +14657,7 @@
 "annual": [],
 "actual": null,
 "fye": "1231",
-"v": 10
+"v": 11
 },
 "0001564590-22-033053": {
 "ticker": "TSLA",
@@ -14487,7 +14666,7 @@
 "annual": [],
 "actual": null,
 "fye": "1231",
-"v": 10
+"v": 11
 },
 "0001564590-22-034639": {
 "ticker": "TSLA",
@@ -14496,7 +14675,7 @@
 "annual": [],
 "actual": null,
 "fye": "1231",
-"v": 10
+"v": 11
 },
 "0001564590-23-000002": {
 "ticker": "TSLA",
@@ -14505,7 +14684,7 @@
 "annual": [],
 "actual": null,
 "fye": "1231",
-"v": 10
+"v": 11
 },
 "0001564590-23-000799": {
 "ticker": "TSLA",
@@ -14514,7 +14693,7 @@
 "annual": [],
 "actual": null,
 "fye": "1231",
-"v": 10
+"v": 11
 },
 "0001564590-23-005126": {
 "ticker": "TSLA",
@@ -14523,7 +14702,7 @@
 "annual": [],
 "actual": null,
 "fye": "1231",
-"v": 10
+"v": 11
 },
 "0001564590-23-005959": {
 "ticker": "TSLA",
@@ -14532,7 +14711,7 @@
 "annual": [],
 "actual": null,
 "fye": "1231",
-"v": 10
+"v": 11
 },
 "0000950170-23-031241": {
 "ticker": "TSLA",
@@ -14541,7 +14720,7 @@
 "annual": [],
 "actual": null,
 "fye": "1231",
-"v": 10
+"v": 11
 },
 "0000950170-23-033544": {
 "ticker": "TSLA",
@@ -14550,7 +14729,7 @@
 "annual": [],
 "actual": null,
 "fye": "1231",
-"v": 10
+"v": 11
 },
 "0000950170-23-050938": {
 "ticker": "TSLA",
@@ -14559,7 +14738,7 @@
 "annual": [],
 "actual": null,
 "fye": "1231",
-"v": 10
+"v": 11
 },
 "0001628280-23-034588": {
 "ticker": "TSLA",
@@ -14568,7 +14747,7 @@
 "annual": [],
 "actual": null,
 "fye": "1231",
-"v": 10
+"v": 11
 },
 "0000950170-24-000282": {
 "ticker": "TSLA",
@@ -14577,7 +14756,7 @@
 "annual": [],
 "actual": null,
 "fye": "1231",
-"v": 10
+"v": 11
 },
 "0000950170-24-007073": {
 "ticker": "TSLA",
@@ -14586,7 +14765,7 @@
 "annual": [],
 "actual": null,
 "fye": "1231",
-"v": 10
+"v": 11
 },
 "0000950170-24-040274": {
 "ticker": "TSLA",
@@ -14595,7 +14774,7 @@
 "annual": [],
 "actual": null,
 "fye": "1231",
-"v": 10
+"v": 11
 },
 "0000950170-24-046895": {
 "ticker": "TSLA",
@@ -14604,7 +14783,7 @@
 "annual": [],
 "actual": null,
 "fye": "1231",
-"v": 10
+"v": 11
 },
 "0001628280-24-030714": {
 "ticker": "TSLA",
@@ -14613,7 +14792,7 @@
 "annual": [],
 "actual": null,
 "fye": "1231",
-"v": 10
+"v": 11
 },
 "0001628280-24-032603": {
 "ticker": "TSLA",
@@ -14622,7 +14801,7 @@
 "annual": [],
 "actual": null,
 "fye": "1231",
-"v": 10
+"v": 11
 },
 "0001628280-24-041816": {
 "ticker": "TSLA",
@@ -14631,7 +14810,7 @@
 "annual": [],
 "actual": null,
 "fye": "1231",
-"v": 10
+"v": 11
 },
 "0001628280-24-043432": {
 "ticker": "TSLA",
@@ -14640,7 +14819,7 @@
 "annual": [],
 "actual": null,
 "fye": "1231",
-"v": 10
+"v": 11
 },
 "0001628280-25-000007": {
 "ticker": "TSLA",
@@ -14649,7 +14828,7 @@
 "annual": [],
 "actual": null,
 "fye": "1231",
-"v": 10
+"v": 11
 },
 "0001628280-25-002993": {
 "ticker": "TSLA",
@@ -14658,7 +14837,7 @@
 "annual": [],
 "actual": null,
 "fye": "1231",
-"v": 10
+"v": 11
 },
 "0001628280-25-016070": {
 "ticker": "TSLA",
@@ -14667,7 +14846,7 @@
 "annual": [],
 "actual": null,
 "fye": "1231",
-"v": 10
+"v": 11
 },
 "0001628280-25-018851": {
 "ticker": "TSLA",
@@ -14676,7 +14855,7 @@
 "annual": [],
 "actual": null,
 "fye": "1231",
-"v": 10
+"v": 11
 },
 "0001628280-25-033842": {
 "ticker": "TSLA",
@@ -14685,7 +14864,7 @@
 "annual": [],
 "actual": null,
 "fye": "1231",
-"v": 10
+"v": 11
 },
 "0001628280-25-035738": {
 "ticker": "TSLA",
@@ -14694,7 +14873,7 @@
 "annual": [],
 "actual": null,
 "fye": "1231",
-"v": 10
+"v": 11
 },
 "0001628280-25-043530": {
 "ticker": "TSLA",
@@ -14703,7 +14882,7 @@
 "annual": [],
 "actual": null,
 "fye": "1231",
-"v": 10
+"v": 11
 },
 "0001628280-25-045861": {
 "ticker": "TSLA",
@@ -14712,7 +14891,7 @@
 "annual": [],
 "actual": null,
 "fye": "1231",
-"v": 10
+"v": 11
 },
 "0001628280-26-000016": {
 "ticker": "TSLA",
@@ -14721,7 +14900,7 @@
 "annual": [],
 "actual": null,
 "fye": "1231",
-"v": 10
+"v": 11
 },
 "0001628280-26-003837": {
 "ticker": "TSLA",
@@ -14730,7 +14909,7 @@
 "annual": [],
 "actual": null,
 "fye": "1231",
-"v": 10
+"v": 11
 },
 "0001628280-26-022956": {
 "ticker": "TSLA",
@@ -14739,7 +14918,7 @@
 "annual": [],
 "actual": null,
 "fye": "1231",
-"v": 10
+"v": 11
 },
 "0001628280-26-026551": {
 "ticker": "TSLA",
@@ -14748,7 +14927,7 @@
 "annual": [],
 "actual": null,
 "fye": "1231",
-"v": 10
+"v": 11
 },
 "0001628280-26-046717": {
 "ticker": "TSLA",
@@ -14757,7 +14936,7 @@
 "annual": [],
 "actual": null,
 "fye": "1231",
-"v": 10
+"v": 11
 },
 "0001628280-26-049213": {
 "ticker": "TSLA",
@@ -14766,7 +14945,7 @@
 "annual": [],
 "actual": null,
 "fye": "1231",
-"v": 10
+"v": 11
 },
 "0001628280-26-064366": {
 "ticker": "TSLA",
@@ -14775,7 +14954,7 @@
 "annual": [],
 "actual": null,
 "fye": "1231",
-"v": 10
+"v": 11
 },
 "0001628280-26-066738": {
 "ticker": "TSLA",
@@ -14784,7 +14963,7 @@
 "annual": [],
 "actual": null,
 "fye": "1231",
-"v": 10
+"v": 11
 },
 "0001770787-21-000041": {
 "ticker": "TXG",
@@ -14805,7 +14984,7 @@
 "ctx": "Revenue was $115.8 million"
 },
 "fye": "1231",
-"v": 10
+"v": 11
 },
 "0001770787-21-000048": {
 "ticker": "TXG",
@@ -14826,7 +15005,7 @@
 "ctx": "Revenue was $125.3 million"
 },
 "fye": "1231",
-"v": 10
+"v": 11
 },
 "0001770787-22-000004": {
 "ticker": "TXG",
@@ -14847,7 +15026,7 @@
 "ctx": "Revenue was $143.5 million"
 },
 "fye": "1231",
-"v": 10
+"v": 11
 },
 "0001770787-22-000026": {
 "ticker": "TXG",
@@ -14868,7 +15047,7 @@
 "ctx": "Revenue was $114.5 million"
 },
 "fye": "1231",
-"v": 10
+"v": 11
 },
 "0001770787-22-000036": {
 "ticker": "TXG",
@@ -14900,7 +15079,7 @@
 "actual": null,
 "fye": "1231",
 "prelim": true,
-"v": 10
+"v": 11
 },
 "0001770787-22-000047": {
 "ticker": "TXG",
@@ -14921,7 +15100,7 @@
 "ctx": "Revenue was $114.6 million"
 },
 "fye": "1231",
-"v": 10
+"v": 11
 },
 "0001770787-22-000053": {
 "ticker": "TXG",
@@ -14942,7 +15121,7 @@
 "ctx": "Revenue was $131.1 million"
 },
 "fye": "1231",
-"v": 10
+"v": 11
 },
 "0001770787-23-000006": {
 "ticker": "TXG",
@@ -14963,7 +15142,7 @@
 "ctx": "Revenue was $156.2 million"
 },
 "fye": "1231",
-"v": 10
+"v": 11
 },
 "0001770787-23-000026": {
 "ticker": "TXG",
@@ -14991,7 +15170,7 @@
 "ctx": "Revenue was $134.3 million"
 },
 "fye": "1231",
-"v": 10
+"v": 11
 },
 "0001770787-23-000045": {
 "ticker": "TXG",
@@ -15019,7 +15198,7 @@
 "ctx": "Revenue was $146.8 million"
 },
 "fye": "1231",
-"v": 10
+"v": 11
 },
 "0001770787-23-000051": {
 "ticker": "TXG",
@@ -15040,7 +15219,7 @@
 "ctx": "Revenue was $153.6 million"
 },
 "fye": "1231",
-"v": 10
+"v": 11
 },
 "0001770787-24-000004": {
 "ticker": "TXG",
@@ -15050,7 +15229,7 @@
 "actual": null,
 "fye": "1231",
 "prelim": true,
-"v": 10
+"v": 11
 },
 "0001770787-24-000015": {
 "ticker": "TXG",
@@ -15071,7 +15250,7 @@
 "ctx": "Revenue was $184.0 million"
 },
 "fye": "1231",
-"v": 10
+"v": 11
 },
 "0001770787-24-000035": {
 "ticker": "TXG",
@@ -15092,16 +15271,28 @@
 "ctx": "Revenue was $141.0 million"
 },
 "fye": "1231",
-"v": 10
+"v": 11
 },
 "0001770787-24-000058": {
 "ticker": "TXG",
 "filed": "2024-08-08",
 "cands": [],
-"annual": [],
-"actual": null,
+"annual": [
+{
+"low": 640.0,
+"high": 660.0,
+"unit_low": 1000000.0,
+"unit_high": 1000000.0,
+"ctx": "revenue to be in the range of $640 million to $660 million"
+}
+],
+"actual": {
+"value": 153.1,
+"unit": 1000000.0,
+"ctx": "Revenue was $153.1 million"
+},
 "fye": "1231",
-"v": 10
+"v": 11
 },
 "0001770787-24-000064": {
 "ticker": "TXG",
@@ -15140,7 +15331,7 @@
 "actual": null,
 "fye": "1231",
 "prelim": true,
-"v": 10
+"v": 11
 },
 "0001770787-24-000071": {
 "ticker": "TXG",
@@ -15161,7 +15352,7 @@
 "ctx": "Revenue was $151.7 million"
 },
 "fye": "1231",
-"v": 10
+"v": 11
 },
 "0001770787-25-000003": {
 "ticker": "TXG",
@@ -15171,7 +15362,7 @@
 "actual": null,
 "fye": "1231",
 "prelim": true,
-"v": 10
+"v": 11
 },
 "0001770787-25-000011": {
 "ticker": "TXG",
@@ -15192,7 +15383,7 @@
 "ctx": "Revenue was $165.0 million"
 },
 "fye": "1231",
-"v": 10
+"v": 11
 },
 "0001770787-25-000031": {
 "ticker": "TXG",
@@ -15213,7 +15404,7 @@
 "ctx": "Revenue was $154.9 million"
 },
 "fye": "1231",
-"v": 10
+"v": 11
 },
 "0001770787-25-000048": {
 "ticker": "TXG",
@@ -15234,7 +15425,7 @@
 "ctx": "Revenue was $172.9 million"
 },
 "fye": "1231",
-"v": 10
+"v": 11
 },
 "0001770787-25-000058": {
 "ticker": "TXG",
@@ -15255,7 +15446,7 @@
 "ctx": "Revenue was $149.0 million"
 },
 "fye": "1231",
-"v": 10
+"v": 11
 },
 "0001628280-26-001808": {
 "ticker": "TXG",
@@ -15265,7 +15456,7 @@
 "actual": null,
 "fye": "1231",
 "prelim": true,
-"v": 10
+"v": 11
 },
 "0001628280-26-007673": {
 "ticker": "TXG",
@@ -15286,7 +15477,7 @@
 "ctx": "Revenue was $642.8 million"
 },
 "fye": "1231",
-"v": 10
+"v": 11
 },
 "0001628280-26-032073": {
 "ticker": "TXG",
@@ -15307,7 +15498,7 @@
 "ctx": "Revenue was $150.8 million"
 },
 "fye": "1231",
-"v": 10
+"v": 11
 },
 "0001628280-26-054273": {
 "ticker": "TXG",
@@ -15328,7 +15519,7 @@
 "ctx": "Revenue was $151.0 million"
 },
 "fye": "1231",
-"v": 10
+"v": 11
 },
 "0001628280-26-071025": {
 "ticker": "TXG",
@@ -15349,7 +15540,7 @@
 "ctx": "Revenue was $150.7 million"
 },
 "fye": "1231",
-"v": 10
+"v": 11
 },
 "0001628280-21-014613": {
 "ticker": "VRT",
@@ -15377,7 +15568,7 @@
 "basis": "non-GAAP"
 },
 "fye": "1231",
-"v": 10
+"v": 11
 },
 "0001193125-21-308643": {
 "ticker": "VRT",
@@ -15405,7 +15596,7 @@
 "basis": "non-GAAP"
 },
 "fye": "1231",
-"v": 10
+"v": 11
 },
 "0001628280-22-003424": {
 "ticker": "VRT",
@@ -15437,7 +15628,7 @@
 "basis": "non-GAAP"
 },
 "fye": "1231",
-"v": 10
+"v": 11
 },
 "0001628280-22-010664": {
 "ticker": "VRT",
@@ -15473,7 +15664,7 @@
 "basis": "non-GAAP"
 },
 "fye": "1231",
-"v": 10
+"v": 11
 },
 "0001628280-22-020319": {
 "ticker": "VRT",
@@ -15502,7 +15693,7 @@
 "ctx": "net sales of $1,399 million"
 },
 "fye": "1231",
-"v": 10
+"v": 11
 },
 "0001193125-22-256141": {
 "ticker": "VRT",
@@ -15511,7 +15702,7 @@
 "annual": [],
 "actual": null,
 "fye": "1231",
-"v": 10
+"v": 11
 },
 "0001628280-22-027015": {
 "ticker": "VRT",
@@ -15540,7 +15731,7 @@
 "ctx": "net sales of $1,481 million"
 },
 "fye": "1231",
-"v": 10
+"v": 11
 },
 "0001628280-23-004432": {
 "ticker": "VRT",
@@ -15569,7 +15760,7 @@
 "ctx": "net sales of $1,655 million"
 },
 "fye": "1231",
-"v": 10
+"v": 11
 },
 "0001628280-23-013042": {
 "ticker": "VRT",
@@ -15598,7 +15789,7 @@
 "ctx": "net sales of $1,521 million"
 },
 "fye": "1231",
-"v": 10
+"v": 11
 },
 "0001628280-23-026549": {
 "ticker": "VRT",
@@ -15627,7 +15818,7 @@
 "ctx": "net sales of $1,734 million"
 },
 "fye": "1231",
-"v": 10
+"v": 11
 },
 "0001628280-23-035032": {
 "ticker": "VRT",
@@ -15656,7 +15847,7 @@
 "ctx": "net sales of $1,743 million"
 },
 "fye": "1231",
-"v": 10
+"v": 11
 },
 "0001628280-24-005765": {
 "ticker": "VRT",
@@ -15688,7 +15879,7 @@
 "basis": "non-GAAP"
 },
 "fye": "1231",
-"v": 10
+"v": 11
 },
 "0001628280-24-017513": {
 "ticker": "VRT",
@@ -15724,7 +15915,7 @@
 "basis": "non-GAAP"
 },
 "fye": "1231",
-"v": 10
+"v": 11
 },
 "0001628280-24-032675": {
 "ticker": "VRT",
@@ -15760,7 +15951,7 @@
 "basis": "non-GAAP"
 },
 "fye": "1231",
-"v": 10
+"v": 11
 },
 "0001628280-24-043343": {
 "ticker": "VRT",
@@ -15796,7 +15987,7 @@
 "basis": "non-GAAP"
 },
 "fye": "1231",
-"v": 10
+"v": 11
 },
 "0001628280-25-005006": {
 "ticker": "VRT",
@@ -15846,7 +16037,7 @@
 "basis": "non-GAAP"
 },
 "fye": "1231",
-"v": 10
+"v": 11
 },
 "0001628280-25-018915": {
 "ticker": "VRT",
@@ -15882,7 +16073,7 @@
 "basis": "non-GAAP"
 },
 "fye": "1231",
-"v": 10
+"v": 11
 },
 "0001674101-25-000006": {
 "ticker": "VRT",
@@ -15918,7 +16109,7 @@
 "basis": "non-GAAP"
 },
 "fye": "1231",
-"v": 10
+"v": 11
 },
 "0001674101-25-000020": {
 "ticker": "VRT",
@@ -15954,7 +16145,7 @@
 "basis": "non-GAAP"
 },
 "fye": "1231",
-"v": 10
+"v": 11
 },
 "0001674101-26-000006": {
 "ticker": "VRT",
@@ -16002,7 +16193,7 @@
 "basis": "non-GAAP"
 },
 "fye": "1231",
-"v": 10
+"v": 11
 },
 "0001628280-26-026379": {
 "ticker": "VRT",
@@ -16043,7 +16234,7 @@
 "ctx": "net sales of $2,650 million"
 },
 "fye": "1231",
-"v": 10
+"v": 11
 },
 "0001628280-26-050323": {
 "ticker": "VRT",
@@ -16079,7 +16270,7 @@
 "basis": "non-GAAP"
 },
 "fye": "1231",
-"v": 10
+"v": 11
 },
 "0001628280-26-067707": {
 "ticker": "VRT",
@@ -16115,7 +16306,7 @@
 "basis": "non-GAAP"
 },
 "fye": "1231",
-"v": 10
+"v": 11
 },
 "0001713683-21-000160": {
 "ticker": "ZS",
@@ -16153,7 +16344,7 @@
 "basis": "non-GAAP"
 },
 "fye": "0731",
-"v": 10
+"v": 11
 },
 "0001713683-21-000229": {
 "ticker": "ZS",
@@ -16191,7 +16382,7 @@
 "basis": "non-GAAP"
 },
 "fye": "0731",
-"v": 10
+"v": 11
 },
 "0001713683-22-000025": {
 "ticker": "ZS",
@@ -16229,7 +16420,7 @@
 "basis": "non-GAAP"
 },
 "fye": "0731",
-"v": 10
+"v": 11
 },
 "0001713683-22-000048": {
 "ticker": "ZS",
@@ -16259,7 +16450,7 @@
 "basis": "non-GAAP"
 },
 "fye": "0731",
-"v": 10
+"v": 11
 },
 "0001713683-22-000073": {
 "ticker": "ZS",
@@ -16297,7 +16488,7 @@
 "basis": "non-GAAP"
 },
 "fye": "0731",
-"v": 10
+"v": 11
 },
 "0001713683-22-000119": {
 "ticker": "ZS",
@@ -16335,16 +16526,45 @@
 "basis": "non-GAAP"
 },
 "fye": "0731",
-"v": 10
+"v": 11
 },
 "0001713683-23-000026": {
 "ticker": "ZS",
 "filed": "2023-03-02",
-"cands": [],
-"annual": [],
-"actual": null,
+"cands": [
+{
+"low": 396.0,
+"high": 398.0,
+"unit_low": 1000000.0,
+"unit_high": 1000000.0,
+"ctx": "Total revenue of $396 million to $398 million"
+}
+],
+"annual": [
+{
+"low": 1.558,
+"high": 1.563,
+"unit_low": 1000000000.0,
+"unit_high": 1000000000.0,
+"ctx": "Total revenue of approximately $1.558 billion to $1.563 billion"
+}
+],
+"actual": {
+"value": 1111.9,
+"unit": 1000000.0,
+"ctx": "revenue: $1,111.9 million"
+},
+"margin": {
+"oi": {
+"low": 55.0,
+"high": 56.0,
+"unit_low": 1000000.0,
+"unit_high": 1000000.0
+},
+"basis": "non-GAAP"
+},
 "fye": "0731",
-"v": 10
+"v": 11
 },
 "0001713683-23-000049": {
 "ticker": "ZS",
@@ -16370,7 +16590,7 @@
 "actual": null,
 "fye": "0731",
 "prelim": true,
-"v": 10
+"v": 11
 },
 "0001713683-23-000054": {
 "ticker": "ZS",
@@ -16408,7 +16628,7 @@
 "basis": "non-GAAP"
 },
 "fye": "0731",
-"v": 10
+"v": 11
 },
 "0001713683-23-000099": {
 "ticker": "ZS",
@@ -16446,7 +16666,7 @@
 "basis": "non-GAAP"
 },
 "fye": "0731",
-"v": 10
+"v": 11
 },
 "0001713683-23-000156": {
 "ticker": "ZS",
@@ -16484,7 +16704,7 @@
 "basis": "non-GAAP"
 },
 "fye": "0731",
-"v": 10
+"v": 11
 },
 "0001713683-24-000036": {
 "ticker": "ZS",
@@ -16522,7 +16742,7 @@
 "basis": "non-GAAP"
 },
 "fye": "0731",
-"v": 10
+"v": 11
 },
 "0001713683-24-000072": {
 "ticker": "ZS",
@@ -16560,7 +16780,7 @@
 "basis": "non-GAAP"
 },
 "fye": "0731",
-"v": 10
+"v": 11
 },
 "0001713683-24-000097": {
 "ticker": "ZS",
@@ -16598,7 +16818,7 @@
 "basis": "non-GAAP"
 },
 "fye": "0731",
-"v": 10
+"v": 11
 },
 "0001713683-24-000143": {
 "ticker": "ZS",
@@ -16636,7 +16856,7 @@
 "basis": "non-GAAP"
 },
 "fye": "0731",
-"v": 10
+"v": 11
 },
 "0001713683-25-000025": {
 "ticker": "ZS",
@@ -16674,7 +16894,7 @@
 "basis": "non-GAAP"
 },
 "fye": "0731",
-"v": 10
+"v": 11
 },
 "0001713683-25-000078": {
 "ticker": "ZS",
@@ -16712,7 +16932,7 @@
 "basis": "non-GAAP"
 },
 "fye": "0731",
-"v": 10
+"v": 11
 },
 "0001713683-25-000138": {
 "ticker": "ZS",
@@ -16750,7 +16970,7 @@
 "basis": "non-GAAP"
 },
 "fye": "0731",
-"v": 10
+"v": 11
 },
 "0001713683-25-000203": {
 "ticker": "ZS",
@@ -16788,7 +17008,7 @@
 "basis": "non-GAAP"
 },
 "fye": "0731",
-"v": 10
+"v": 11
 },
 "0001713683-26-000047": {
 "ticker": "ZS",
@@ -16826,7 +17046,7 @@
 "basis": "non-GAAP"
 },
 "fye": "0731",
-"v": 10
+"v": 11
 },
 "0001713683-26-000095": {
 "ticker": "ZS",
@@ -16850,9 +17070,9 @@
 }
 ],
 "actual": {
-"value": 2477.2,
+"value": 850.5,
 "unit": 1000000.0,
-"ctx": "revenue: $2,477.2 million"
+"ctx": "Revenue grew 25% year-over-year to $850.5 million"
 },
 "margin": {
 "gm": [
@@ -16868,7 +17088,7 @@
 "basis": "non-GAAP"
 },
 "fye": "0731",
-"v": 10
+"v": 11
 },
 "0001713683-26-000156": {
 "ticker": "ZS",
@@ -16910,6 +17130,6 @@
 "basis": "non-GAAP"
 },
 "fye": "0731",
-"v": 10
+"v": 11
 }
 }
