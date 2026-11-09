@@ -56,7 +56,7 @@ export function EstimateCard({ hist, labels, nextEarn, lastReported, skip }: { h
         title={rep ? "직전 분기 매출 추정" : "진행 분기 매출 추정"} sub={`${e.q_start.slice(0, 7)} ~ ${e.q_end.slice(0, 7)}${nextEarn && !rep ? ` · 실적 발표 ${nextEarn} (D-${d})` : rep ? " · 실적은 나왔고 공시 반영 대기" : ""}`} info={METHOD_INFO}
         right={<span className="flex flex-wrap justify-end gap-1">
           {watch && <Badge tone="accent" title="신뢰 추정 · 컨센 괴리 10% 이상 · 실적 발표 30일 이내">주목</Badge>}
-          <span className={`rounded px-2 py-0.5 text-xs ${TIER_STYLE[tr]}`} title={confNote(e)}>{tr}{e.conf != null ? ` ${(e.conf * 100).toFixed(0)}%` : ""}</span>
+          <span className={`rounded px-2 py-0.5 text-xs ${TIER_STYLE[tr]}`} title={confNote(e)}>{tr}{e.conf != null && !rep ? ` · 신뢰 ${(e.conf * 100).toFixed(0)}%` : ""}</span>
         </span>}
       />
       {tr === "보류" && <div className="rounded border border-red-900 bg-red-950/40 px-3 py-2 text-xs text-red-200">추정 보류 — {why[0]}. 아래 숫자는 모델 원값으로, 투자 판단 근거로 쓰지 마세요.</div>}
