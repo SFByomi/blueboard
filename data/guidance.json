@@ -778,6 +778,34 @@
 "fye": "1231",
 "v": 10
 },
+"0001596532-26-000252": {
+"ticker": "ANET",
+"filed": "2026-11-03",
+"cands": [
+{
+"low": 3.9,
+"high": 4.0,
+"unit_low": 1000000000.0,
+"unit_high": 1000000000.0,
+"ctx": "Revenue of $3.9 - $4.0 billion"
+}
+],
+"annual": [],
+"actual": {
+"value": 3.66,
+"unit": 1000000000.0,
+"ctx": "Revenue of $3.66 billion"
+},
+"margin": {
+"om": [
+0.48,
+0.49
+],
+"basis": "non-GAAP"
+},
+"fye": "1231",
+"v": 10
+},
 "0000937966-21-000016": {
 "ticker": "ASML",
 "filed": "2021-07-21",
@@ -1974,6 +2002,34 @@
 "fye": "1231",
 "v": 10
 },
+"0001628280-26-066890": {
+"ticker": "BE",
+"filed": "2026-10-22",
+"cands": [],
+"annual": [
+{
+"low": 4.4,
+"high": 4.6,
+"unit_low": 1000000000.0,
+"unit_high": 1000000000.0,
+"ctx": "revenue guidance to $4.4 billion - $4.6 billion"
+},
+{
+"low": 4.4,
+"high": 4.6,
+"unit_low": 1000000000.0,
+"unit_high": 1000000000.0,
+"ctx": "Revenue: $4.4B - $4.6B"
+}
+],
+"actual": {
+"value": 1235.8,
+"unit": 1000000.0,
+"ctx": "Revenue of $1,235.8 million"
+},
+"fye": "1231",
+"v": 10
+},
 "0001193125-21-241180": {
 "ticker": "COHR",
 "filed": "2021-08-10",
@@ -2484,6 +2540,40 @@
 "opex": {
 "low": 400.0,
 "high": 420.0,
+"unit_low": 1000000.0,
+"unit_high": 1000000.0
+},
+"basis": "non-GAAP"
+},
+"fye": "0630",
+"v": 10
+},
+"0001193125-26-447200": {
+"ticker": "COHR",
+"filed": "2026-11-04",
+"cands": [
+{
+"low": 2.55,
+"high": 2.75,
+"unit_low": 1000000000.0,
+"unit_high": 1000000000.0,
+"ctx": "Revenue for the second quarter of fiscal 2027 is expected to be between $2.55 billion and $2.75 billion"
+}
+],
+"annual": [],
+"actual": {
+"value": 2.37,
+"unit": 1000000000.0,
+"ctx": "REVENUE OF $2.37B"
+},
+"margin": {
+"gm": [
+0.4,
+0.42
+],
+"opex": {
+"low": 430.0,
+"high": 450.0,
 "unit_low": 1000000.0,
 "unit_high": 1000000.0
 },
@@ -4480,6 +4570,27 @@
 "fye": "0627",
 "v": 10
 },
+"0001408710-26-000034": {
+"ticker": "FN",
+"filed": "2026-11-02",
+"cands": [
+{
+"low": 1.6,
+"high": 1.65,
+"unit_low": 1000000000.0,
+"unit_high": 1000000000.0,
+"ctx": "revenue to be in the range of $1.6 billion to $1.65 billion"
+}
+],
+"annual": [],
+"actual": {
+"value": 1474.5,
+"unit": 1000000.0,
+"ctx": "Revenue for the first quarter of fiscal year 2027 was $1,474.5 million"
+},
+"fye": "0627",
+"v": 10
+},
 "0001262039-21-000019": {
 "ticker": "FTNT",
 "filed": "2021-07-29",
@@ -5126,6 +5237,34 @@
 "gm": [
 0.79,
 0.81
+],
+"basis": "non-GAAP"
+},
+"fye": "1231",
+"v": 10
+},
+"0001262039-26-000024": {
+"ticker": "FTNT",
+"filed": "2026-10-28",
+"cands": [
+{
+"low": 2.155,
+"high": 2.245,
+"unit_low": 1000000000.0,
+"unit_high": 1000000000.0,
+"ctx": "Revenue in the range of $2.155 billion to $2.245 billion"
+}
+],
+"annual": [],
+"actual": null,
+"margin": {
+"om": [
+0.355,
+0.375
+],
+"gm": [
+0.78,
+0.8
 ],
 "basis": "non-GAAP"
 },
@@ -5944,6 +6083,27 @@
 "fye": "1231",
 "v": 10
 },
+"0001140361-26-041097": {
+"ticker": "INSM",
+"filed": "2026-10-29",
+"cands": [
+{
+"low": 460.0,
+"high": 470.0,
+"unit_low": 1000000.0,
+"unit_high": 1000000.0,
+"ctx": "Revenue Guidance to $460 Million to $470 Million"
+}
+],
+"annual": [],
+"actual": {
+"value": 524.4,
+"unit": 1000000.0,
+"ctx": "Revenues of $524.4 Million"
+},
+"fye": "1231",
+"v": 10
+},
 "0001878848-25-000062": {
 "ticker": "IREN",
 "filed": "2025-08-28",
@@ -6001,6 +6161,15 @@
 "0001878848-26-000051": {
 "ticker": "IREN",
 "filed": "2026-08-27",
+"cands": [],
+"annual": [],
+"actual": null,
+"fye": "0630",
+"v": 10
+},
+"0001878848-26-000065": {
+"ticker": "IREN",
+"filed": "2026-11-05",
 "cands": [],
 "annual": [],
 "actual": null,
@@ -6638,6 +6807,34 @@
 "fye": "0627",
 "v": 10
 },
+"0001628280-26-068655": {
+"ticker": "LITE",
+"filed": "2026-11-02",
+"cands": [
+{
+"low": 1.575,
+"high": 1.625,
+"unit_low": 1000000000.0,
+"unit_high": 1000000000.0,
+"ctx": "revenue of $1.575 billion to $1.625 billion"
+}
+],
+"annual": [],
+"actual": {
+"value": 1.26,
+"unit": 1000000000.0,
+"ctx": "Net revenue of $1.26 billion"
+},
+"margin": {
+"om": [
+0.45,
+0.46
+],
+"basis": "non-GAAP"
+},
+"fye": "0627",
+"v": 10
+},
 "0001326801-24-000065": {
 "ticker": "META",
 "filed": "2024-07-31",
@@ -6815,6 +7012,27 @@
 "value": 60.8,
 "unit": 1000000000.0,
 "ctx": "Revenue was $60.80 billion"
+},
+"fye": "1231",
+"v": 10
+},
+"0001628280-26-066700": {
+"ticker": "META",
+"filed": "2026-10-21",
+"cands": [
+{
+"low": 73.0,
+"high": 76.0,
+"unit_low": 1000000000.0,
+"unit_high": 1000000000.0,
+"ctx": "total revenue to be in the range of $73-76 billion"
+}
+],
+"annual": [],
+"actual": {
+"value": 64.6,
+"unit": 1000000000.0,
+"ctx": "Revenue was $64.60 billion"
 },
 "fye": "1231",
 "v": 10
@@ -7598,6 +7816,15 @@
 },
 "basis": "non-GAAP"
 },
+"fye": "0130",
+"v": 10
+},
+"0001193125-26-442714": {
+"ticker": "MRVL",
+"filed": "2026-11-02",
+"cands": [],
+"annual": [],
+"actual": null,
 "fye": "0130",
 "v": 10
 },
@@ -8986,6 +9213,13 @@
 "skip": true,
 "v": 10
 },
+"0001104659-26-117978": {
+"ticker": "NBIS",
+"filed": "2026-10-22",
+"cands": [],
+"skip": true,
+"v": 10
+},
 "0001477333-21-000033": {
 "ticker": "NET",
 "filed": "2021-08-05",
@@ -9749,6 +9983,44 @@
 "oi": {
 "low": 129.0,
 "high": 130.0,
+"unit_low": 1000000.0,
+"unit_high": 1000000.0
+},
+"basis": "non-GAAP"
+},
+"fye": "1231",
+"v": 10
+},
+"0001477333-26-000060": {
+"ticker": "NET",
+"filed": "2026-11-05",
+"cands": [
+{
+"low": 845.0,
+"high": 846.0,
+"unit_low": 1000000.0,
+"unit_high": 1000000.0,
+"ctx": "Total revenue of $845.0 to $846.0 million"
+}
+],
+"annual": [
+{
+"low": 2963.0,
+"high": 2964.0,
+"unit_low": 1000000.0,
+"unit_high": 1000000.0,
+"ctx": "Total revenue of $2,963.0 to $2,964.0 million"
+}
+],
+"actual": {
+"value": 782.5,
+"unit": 1000000.0,
+"ctx": "revenue totaled $782.5 million"
+},
+"margin": {
+"oi": {
+"low": 156.0,
+"high": 157.0,
 "unit_low": 1000000.0,
 "unit_high": 1000000.0
 },
@@ -12556,6 +12828,24 @@
 "fye": "1231",
 "v": 10
 },
+"0001601830-26-000128": {
+"ticker": "RXRX",
+"filed": "2026-10-15",
+"cands": [],
+"annual": [],
+"actual": null,
+"fye": "1231",
+"v": 10
+},
+"0001601830-26-000144": {
+"ticker": "RXRX",
+"filed": "2026-11-02",
+"cands": [],
+"annual": [],
+"actual": null,
+"fye": "1231",
+"v": 10
+},
 "0001583708-21-000012": {
 "ticker": "S",
 "filed": "2021-09-08",
@@ -13915,6 +14205,44 @@
 "fye": "0630",
 "v": 10
 },
+"0001375365-26-000025": {
+"ticker": "SMCI",
+"filed": "2026-10-20",
+"cands": [],
+"annual": [],
+"actual": null,
+"fye": "0630",
+"v": 10
+},
+"0001375365-26-000026": {
+"ticker": "SMCI",
+"filed": "2026-11-03",
+"cands": [
+{
+"low": 19.5,
+"high": 21.5,
+"unit_low": 1000000000.0,
+"unit_high": 1000000000.0,
+"ctx": "net sales in the range of $19.5 billion and $21.5 billion"
+}
+],
+"annual": [
+{
+"low": 72.0,
+"high": 82.0,
+"unit_low": 1000000000.0,
+"unit_high": 1000000000.0,
+"ctx": "net sales in the range of $72.0 billion to $82.0 billion"
+}
+],
+"actual": {
+"value": 19.9,
+"unit": 1000000000.0,
+"ctx": "Net sales of $19.9 billion"
+},
+"fye": "0630",
+"v": 10
+},
 "0002023554-25-000021": {
 "ticker": "SNDK",
 "filed": "2025-05-07",
@@ -14037,6 +14365,27 @@
 "value": 8.97,
 "unit": 1000000000.0,
 "ctx": "revenue was $8.97 billion"
+},
+"fye": "0628",
+"v": 10
+},
+"0001628280-26-068243": {
+"ticker": "SNDK",
+"filed": "2026-10-29",
+"cands": [
+{
+"low": 12.2,
+"high": 12.6,
+"unit_low": 1000000000.0,
+"unit_high": 1000000000.0,
+"ctx": "revenue to be in the range of $12.2 billion to $12.6 billion"
+}
+],
+"annual": [],
+"actual": {
+"value": 11.0,
+"unit": 1000000000.0,
+"ctx": "revenue was $11.0 billion"
 },
 "fye": "0628",
 "v": 10
@@ -14422,6 +14771,15 @@
 "0001628280-26-064366": {
 "ticker": "TSLA",
 "filed": "2026-10-02",
+"cands": [],
+"annual": [],
+"actual": null,
+"fye": "1231",
+"v": 10
+},
+"0001628280-26-066738": {
+"ticker": "TSLA",
+"filed": "2026-10-21",
 "cands": [],
 "annual": [],
 "actual": null,
@@ -14968,6 +15326,27 @@
 "value": 151.0,
 "unit": 1000000.0,
 "ctx": "Revenue was $151.0 million"
+},
+"fye": "1231",
+"v": 10
+},
+"0001628280-26-071025": {
+"ticker": "TXG",
+"filed": "2026-11-05",
+"cands": [],
+"annual": [
+{
+"low": 625.0,
+"high": 635.0,
+"unit_low": 1000000.0,
+"unit_high": 1000000.0,
+"ctx": "revenue guidance and now expects revenue in the range of $625 million to $635 million"
+}
+],
+"actual": {
+"value": 150.7,
+"unit": 1000000.0,
+"ctx": "Revenue was $150.7 million"
 },
 "fye": "1231",
 "v": 10
@@ -15696,6 +16075,42 @@
 "om": [
 0.24,
 0.25
+],
+"basis": "non-GAAP"
+},
+"fye": "1231",
+"v": 10
+},
+"0001628280-26-067707": {
+"ticker": "VRT",
+"filed": "2026-10-28",
+"cands": [
+{
+"low": 4313.0,
+"high": 4513.0,
+"unit_low": 1000000.0,
+"unit_high": 1000000.0,
+"ctx": "Net sales $4,313M - $4,513M"
+}
+],
+"annual": [
+{
+"low": 14450.0,
+"high": 14850.0,
+"unit_low": 1000000.0,
+"unit_high": 1000000.0,
+"ctx": "Net sales $14,450M - $14,850M"
+}
+],
+"actual": {
+"value": 4313.0,
+"unit": 1000000.0,
+"ctx": "net sales of $4,313 million"
+},
+"margin": {
+"om": [
+0.253,
+0.263
 ],
 "basis": "non-GAAP"
 },
