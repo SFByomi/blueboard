@@ -20,7 +20,7 @@ const ymd = (d: Date) => `${d.getFullYear()}-${String(d.getMonth() + 1).padStart
 export function EventRow({ e, showDate = false }: { e: EconEvent; showDate?: boolean }) {
   const body = (
     <>
-      <span className="w-12 shrink-0 font-mono text-xs text-muted">{showDate ? e.date.slice(5).replace("-", "/") : e.time_kst ?? "—"}</span>
+      <span className="w-12 shrink-0 font-mono text-xs text-muted">{showDate ? e.date.slice(5).replace("-", "/") : e.time_kst ?? <span title="회사·기관이 발표 시각을 아직 안 냄">미정</span>}</span>
       <span className={`shrink-0 rounded px-1.5 text-[11px] ${CAT_STYLE[e.cat ?? ""] ?? "bg-panel2 text-muted"}`}>{e.cat}</span>
       <span className="min-w-0 flex-1 truncate">{e.approx ? "~ " : ""}{e.title}</span>
       <span className="hidden shrink-0 text-xs text-muted sm:inline">{showDate && e.time_kst ? `${e.time_kst} · ` : ""}{e.country}</span>
@@ -73,11 +73,11 @@ export function EconCalendar({ events, today }: { events: EconEvent[]; today: st
               <button key={k} onClick={() => setSel(k)}
                 className={`flex min-h-[64px] flex-col items-stretch gap-0.5 bg-bg p-1 text-left sm:min-h-[96px] ${sel === k ? "ring-1 ring-inset ring-accent" : ""} ${inMonth ? "" : "opacity-40"}`}>
                 <span className={`text-xs ${k === today ? "rounded bg-accent px-1 font-bold text-white" : d.getDay() === 0 ? "text-down" : "text-muted"} self-start`}>{d.getDate()}</span>
-                {ev.slice(0, 3).map((e, i) => (
-                  <span key={i} className={`truncate rounded px-1 text-[10px] leading-4 sm:text-[11px] ${CAT_STYLE[e.cat ?? ""] ?? ""}`}>
-                    <span className="sm:hidden">{short(e)}</span><span className="hidden sm:inline">{e.title.replace(/^미국 |^한국 /, "")}</span></span>
+                {inMonth && ev.slice(0, 3).map((e, i) => (  // 이웃 달 칸은 날짜만 — 일정은 그 달로 넘기면 보임(흐린 일정이 이번 달 것처럼 보이던 문제)
+                  <span key={i} title={e.title} className={`truncate rounded px-1 text-[10px] leading-4 sm:text-[11px] ${CAT_STYLE[e.cat ?? ""] ?? ""}`}>
+                    <span className="sm:hidden">{short(e)}</span><span className="hidden sm:inline">{e.title.replace(/^미국 |^한국 /, "").replace(/\s*\(.*?\)/g, "")}</span></span>
                 ))}
-                {ev.length > 3 && <span className="px-1 text-[10px] text-muted">+{ev.length - 3}건</span>}
+                {inMonth && ev.length > 3 && <span className="px-1 text-[10px] text-muted">+{ev.length - 3}건</span>}
               </button>
             );
           })}

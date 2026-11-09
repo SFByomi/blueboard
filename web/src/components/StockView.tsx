@@ -123,8 +123,8 @@ export function StockView({ flows, months, quarters, currency, initial = 0 }: { 
       <div className="space-y-4">
         {STAGES.map((st, si) => {
           const idx = flows.map((x, i) => (stageOf(x.role) === st.key ? i : -1)).filter((i) => i >= 0);
-          if (!idx.length) // 앞뒤 단계 사이에 비는 단계는 번호가 건너뛰어 보이지 않게 '추적 흐름 없음'으로 표시
-            return used.length && si > Math.min(...used) && si < Math.max(...used) ? (
+          if (!idx.length) // 마지막으로 쓰인 단계 앞의 빈 단계(① 포함)는 번호가 건너뛰어 보이지 않게 '추적 흐름 없음'으로 표시
+            return used.length && si < Math.max(...used) ? (
               <div key={st.key} className="flex flex-wrap items-baseline gap-2 text-muted"><b className="text-sm">{st.title}</b>
                 <span className="text-xs">공개 통계로 추적할 수 있는 흐름 없음</span></div>
             ) : null;

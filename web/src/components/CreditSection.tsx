@@ -6,7 +6,7 @@ import { axis, baseOption, EChart } from "@/components/EChart";
 import { mini, Mini, refLine } from "@/components/MiniCard";
 import { money } from "@/lib/format";
 import type { CreditRow, FinraRow, MacroObs, MarketCredit } from "@/lib/queries";
-import { cov, de, dueCash, ebitda, lev, pdFmt, pdTone, risk, RISK_STYLE, TINY_CASH_NOTE, tinyCash, x } from "@/lib/credit";
+import { cov, de, dueCash, ebitda, lev, pdFmt, pdTone, risk, RISK_STYLE, TINY_CASH_NOTE, tinyCash, COV_CAP, covTxt, x } from "@/lib/credit";
 import { SectionHead } from "@/components/ui";
 
 export type CreditCo = { ticker: string; name: string; grp: string | null };
@@ -66,7 +66,7 @@ export function CreditSection({ rows, cos, ust, finra, mkt }: { rows: CreditRow[
                       <td className={`text-right ${l != null && l > 4 ? "text-down" : ""}`} title={r.ebitda_ttm == null && r.ebit_ttm != null ? "EBITDA 대신 영업이익 기준" : undefined}>
                         {(ebitda(r) ?? 1) <= 0 && (r.net_debt ?? 0) > 0 ? "적자" : (r.net_debt ?? 0) < 0 ? "순현금" : x(l)}{r.ebitda_ttm == null && r.ebit_ttm != null ? "*" : ""}</td>
                       <td className="text-right text-xs text-muted">{y ? ((y.net_debt ?? 0) < 0 ? "순현금" : x(ly)) : "-"}</td>
-                      <td className={`text-right ${(cov(r) ?? 99) < 2 ? "text-down" : ""}`} title={r.interest_basis ?? undefined}>{x(cov(r))}</td>
+                      <td className={`text-right ${(cov(r) ?? 99) < 2 ? "text-down" : ""}`} title={[r.interest_basis, cov(r) != null ? `실제 ${cov(r)!.toFixed(1)}배` : null].filter(Boolean).join(" · ") || undefined}>{covTxt(cov(r))}</td>
                       <td className="text-right">{money(r.debt, r.currency)}</td><td className="text-right" title={tinyCash(r) ? TINY_CASH_NOTE : undefined}>{money(r.cash, r.currency)}{tinyCash(r) ? "†" : ""}</td>
                       <td className={`text-right ${(dueCash(r) ?? 0) > 1 ? "text-down" : ""}`}>{x(dueCash(r), 2)}</td>
                       <td className={`text-right ${(r.fcf_ttm ?? 0) < 0 ? "text-down" : ""}`}>{money(r.fcf_ttm, r.currency)}</td>
@@ -127,7 +127,7 @@ function Detail({ co, h: all, pd }: { co: CreditCo; h: CreditRow[]; pd: MarketCr
   }) : undefined;
 
   // ④ 이자보상배율 — 너무 큰 값은 ±30에서 자르고 툴팁엔 실제 값
-  const CAP = 30, covs = h.map((z) => cov(z));
+  const CAP = COV_CAP, covs = h.map((z) => cov(z));
   const oCov = covs.some((v) => v != null) ? mini({
     tooltip: { ...baseOption().tooltip, formatter: (ps) => { const p = (Array.isArray(ps) ? ps : [ps])[0] as { name: string; data: { real: number | null } | null };
       return `${p.name}<br/>이자보상 <b>${p.data?.real == null ? "-" : `${p.data.real.toFixed(1)}배`}</b>`; } },
@@ -161,8 +161,8 @@ function Detail({ co, h: all, pd }: { co: CreditCo; h: CreditRow[]; pd: MarketCr
         <Mini title="③ 번 돈으로 빚 갚는 데 몇 년? (순부채/EBITDA)" value={levTxt} tone={nd > 0 && ((l ?? 9) > 4 || (eb ?? 1) <= 0) ? "text-down" : nd > 0 && (l ?? 0) > 2.5 ? "text-amber-300" : "text-up"}
           note="한 해 버는 현금성 이익(EBITDA)으로 순부채를 다 갚는 데 걸리는 햇수. 2.5배 넘으면 관찰, 4배 넘으면 부담." option={oLev}
           empty="계속 순현금(빚보다 현금이 많음)이라 해당 없음" />
-        <Mini title="④ 이자를 벌어서 낼 수 있나? (이자보상배율)" value={x(c)} tone={c == null ? "" : c < 2 ? "text-down" : c < 5 ? "text-amber-300" : "text-up"}
-          note="영업이익이 이자의 몇 배인지. 2배 미만이면 빠듯, 0 아래면 영업 적자로 이자를 못 벎. 30배 넘는 값은 30으로 잘라 표시." option={oCov} empty="이자비용 공시 없음(빚이 거의 없음)" />
+        <Mini title="④ 이자를 벌어서 낼 수 있나? (이자보상배율)" value={covTxt(c)} tone={c == null ? "" : c < 2 ? "text-down" : c < 5 ? "text-amber-300" : "text-up"}
+          note="영업이익이 이자의 몇 배인지. 2배 미만이면 빠듯, 0 아래면 영업 적자로 이자를 못 벎. 30배 넘는 값은 30으로, 영업 적자(음수)는 -30에서 잘라 표시 — 표에도 >30배·영업적자로 씀." option={oCov} empty="이자비용 공시 없음(빚이 거의 없음)" />
         <Mini title="⑤ 현금을 벌고 있나? (잉여현금흐름, 최근 4분기)" value={money(r.fcf_ttm, cur)} tone={(r.fcf_ttm ?? 0) < 0 ? "text-down" : "text-up"}
           note="영업으로 번 현금 − 설비투자. 빨간 막대면 쓰는 돈이 더 많아 빚·증자로 메우는 중(막대에 올리면 내역)." option={oFcf} />
       </div>

@@ -2,7 +2,7 @@ import { T } from "@/components/Names";
 import Link from "next/link";
 import { GradeBadge } from "@/components/FlowScores";
 import { Spark } from "@/components/Spark";
-import { baseEffect, estCaution, GROUPS, pct, tone } from "@/lib/format";
+import { baseEffect, brief, estCaution, GROUPS, pct, tone } from "@/lib/format";
 import { flowScores, unestimated } from "@/lib/queries";
 import { stockSignals } from "@/lib/signals";
 import { TrendCard } from "@/components/TrendCard";
@@ -69,7 +69,7 @@ export default async function Stocks({ searchParams }: PageProps<"/stocks">) {
                       </div>
                     )}
                   </div>
-                  <p className="mt-3 line-clamp-2 text-sm text-muted">{s.c.thesis}</p>
+                  <p className="mt-3 text-sm text-muted" title={s.c.thesis ?? undefined}>{brief(s.c.thesis)}</p>
                   {skipWhy(s.c.ticker) && <p className="mt-2 line-clamp-2 text-xs text-muted" title={skipWhy(s.c.ticker)!}><span className="rounded bg-panel2 px-1">실적 추정 불가</span> {skipWhy(s.c.ticker)}</p>}
                   <div className="mt-3 flex items-center justify-between gap-2">
                     <span className="truncate text-xs text-muted">

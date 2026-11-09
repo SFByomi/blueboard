@@ -69,7 +69,7 @@ export function InflationSection({ rows }: { rows: InflationRow[] }) {
       </div>
       {cur && (
         <div className="font-mono text-sm">
-          <div><span className="font-sans text-muted">{cur.month.replace("-", ".")} · {lab}</span> <b className="text-base">{p(cur.total)}%</b></div>
+          <div><span className="font-sans text-muted">{cur.month.slice(0, 4)}년 {+cur.month.slice(5, 7)}월분 · {lab}</span> <b className="text-base">{p(cur.total)}%</b></div>
           <div className="mt-1 flex flex-wrap gap-x-4 gap-y-1 text-xs">
             {comps.map((c) => <span key={c.key} style={{ color: c.color }} title={c.note}>{c.label} {p(cur[c.key])}</span>)}
             <span className="font-sans text-muted">(%p)</span>
@@ -82,7 +82,7 @@ export function InflationSection({ rows }: { rows: InflationRow[] }) {
       <p className="text-xs leading-relaxed text-muted">
         막대 = 구성요소 기여도(%p, 합계 = 물가 상승률), 선 = 발표된 상승률. 서비스는 에너지 제외 서비스, 공산품은 식품·에너지 제외 상품.
         CPI는 지수에서 해마다 상대 중요도를 역산(전년 12월 기준 고정 가중)하고, PCE는 명목 지출 비중 × 가격 변화로 계산 — 구성요소 합을 발표치에 맞춰 조정(차이 수 bp).
-        전월비는 계절조정. 출처 BLS·BEA (FRED). CPI는 발표 당일 저녁(한국 시간), PCE는 한 달 늦게 반영.
+        전월비는 계절조정. &lsquo;○월분&rsquo;은 물가를 잰 달이고 발표는 그다음 달 중순(CPI)·말(PCE). 출처 BLS·BEA (FRED). CPI는 발표 당일 저녁(한국 시간), PCE는 한 달 늦게 반영.
       </p>
     </div>
   );

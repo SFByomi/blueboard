@@ -68,10 +68,10 @@ export default async function EarningsPage({ searchParams }: PageProps<"/earning
               <div className="flex items-center justify-between gap-2">
                 <div className="flex min-w-0 items-center gap-1.5">
                   <b className="truncate">{names[e.ticker] ?? e.ticker}</b>
-                  <span className={`shrink-0 rounded px-1.5 text-[11px] ${TIER_STYLE[c.tr] ?? ""}`}>{c.tr}{e.conf != null && !c.held ? ` ${(e.conf * 100).toFixed(0)}%` : ""}</span>
+                  <span className={`shrink-0 rounded px-1.5 text-[11px] ${TIER_STYLE[c.tr] ?? ""}`}>{c.tr}{e.conf != null && !c.held && c.tr !== "발표됨" ? ` 신뢰 ${(e.conf * 100).toFixed(0)}%` : ""}</span>
                   {watchFlag(e, c.nx, done[e.ticker]) && <Badge tone="accent">주목</Badge>}
                 </div>
-                <span className="shrink-0 font-mono text-xs text-muted">{c.nx ? `${basis[e.ticker] ? "~" : ""}${c.nx.slice(5).replace("-", "/")} D-${c.d}` : ""}</span>
+                <span className="shrink-0 font-mono text-xs text-muted">{c.nx ? `${c.tr === "발표됨" ? "다음 " : ""}${basis[e.ticker] ? "~" : ""}${c.nx.slice(5).replace("-", "/")} D-${c.d}` : ""}</span>
               </div>
               {c.held ? <p className="mt-1.5 text-xs text-muted">추정 보류 — {estCaution(e)[0]}</p> : (
                 <div className="mt-2 grid grid-cols-3 gap-2 text-xs">
@@ -111,7 +111,7 @@ export default async function EarningsPage({ searchParams }: PageProps<"/earning
                       <span className={`text-xs ${tone(c.s.bull.upside)}`}>{pct(c.s.bull.upside, 0)}</span> / <b className={tone(c.s.base.upside)}>{pct(c.s.base.upside, 0)}</b> / <span className={`text-xs ${tone(c.s.bear.upside)}`}>{pct(c.s.bear.upside, 0)}</span>
                     </> : <span className="text-muted">-</span>}</td>
                   </>)}
-                  <td className="text-right text-xs text-muted" title={basis[e.ticker]}>{c.nx ? `${basis[e.ticker] ? "~" : ""}${c.nx.slice(5)} D-${c.d}` : "-"}</td>
+                  <td className="text-right text-xs text-muted" title={basis[e.ticker]}>{c.nx ? `${c.tr === "발표됨" ? "다음 " : ""}${basis[e.ticker] ? "~" : ""}${c.nx.slice(5)} D-${c.d}` : "-"}</td>
                 </tr>
               );
             })}

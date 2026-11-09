@@ -144,3 +144,16 @@ export function shiftMonth(m: string, n: number): string {
 /** 극단적 증가율(±200% 초과)에 붙일 기저효과 안내 — 없으면 undefined */
 export const baseEffect = (v: number | null | undefined) =>
   v != null && Math.abs(v) > 2 ? "전년 같은 기간 금액이 작아 생긴 기저효과일 수 있음 — 금액 자체도 함께 보세요" : undefined;
+
+/** 카드용 짧은 설명 — 말줄임으로 문장 중간에서 끊지 않고 문장 단위로(60자 넘을 때까지 이어 붙이되 110자 안). 첫 문장이 너무 길면 '—' 앞까지 */
+export function brief(t: string | null | undefined, min = 60, max = 110): string {
+  if (!t) return "";
+  const ss = t.split(/(?<=[.。])\s+/);
+  let out = "";
+  for (const x of ss) {
+    if (out && (out.length >= min || out.length + x.length + 1 > max)) break;
+    out = out ? `${out} ${x}` : x;
+  }
+  if (out.length > max) { const cut = out.split(/\s+[—–]\s+/)[0]; out = cut.length <= max ? cut : `${out.slice(0, max - 1)}…`; }
+  return out;
+}

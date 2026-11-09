@@ -50,6 +50,7 @@ export function PlantMap({ plants, stats, initialQ = "" }: { plants: Plant[]; st
   const [sort, setSort] = useState<"cat" | "hot">("cat");
 
   const [sel, setSel] = useState<number | null>(null);
+  const [ready, setReady] = useState(false);  // 지도 스크립트(echarts·세계지도)가 늦게 붙는 동안 빈 칸 대신 안내
   const countries = useMemo(() => [...new Set(plants.map((p) => p.country ?? ""))].filter(Boolean).sort(), [plants]);
 
   const shown = useMemo(() => {
@@ -66,7 +67,8 @@ export function PlantMap({ plants, stats, initialQ = "" }: { plants: Plant[]; st
     chart.current.on("click", (e) => { const id = (e.data as { id?: number } | undefined)?.id; if (id) setSel(id); });
     const ro = new ResizeObserver(() => chart.current?.resize());
     ro.observe(ref.current!);
-    return () => { ro.disconnect(); chart.current?.dispose(); };
+    const raf = requestAnimationFrame(() => { chart.current?.resize(); setReady(true); });  // 첫 배치 크기가 0으로 잡혀 빈 지도가 되는 경우 대비
+    return () => { cancelAnimationFrame(raf); ro.disconnect(); chart.current?.dispose(); };
   }, []);
 
   useEffect(() => {
@@ -75,8 +77,10 @@ export function PlantMap({ plants, stats, initialQ = "" }: { plants: Plant[]; st
       tooltip: { trigger: "item", backgroundColor: "#1a1f3a", borderColor: "#2c3358", textStyle: { color: "#e6e8f2", fontSize: 12 },
         formatter: (p: { data?: { name?: string; sub?: string } }) => (p.data?.name ? `<b>${p.data.name}</b><br/>${p.data.sub ?? ""}` : "") },
       geo: {
-        map: "world", roam: true, scaleLimit: { min: 1, max: 40 }, zoom: 1.15, center: [60, 25],
-        itemStyle: { areaColor: "#141a33", borderColor: "#2c3358", borderWidth: 0.6 },
+        map: "world", roam: true, scaleLimit: { min: 1, max: 40 }, zoom: 1, center: [5, 14],
+        boundingCoords: [[-170, 78], [180, -50]],  // 남극·북극해를 잘라 지도가 칸을 채우게
+        left: 4, right: 4, top: 8, bottom: 8,
+        itemStyle: { areaColor: "#1f2650", borderColor: "#3a4372", borderWidth: 0.6 },
         emphasis: { disabled: true }, select: { disabled: true }, label: { show: false },
       },
       series: [{
@@ -96,14 +100,15 @@ export function PlantMap({ plants, stats, initialQ = "" }: { plants: Plant[]; st
   }, [cur]);
 
   const toggle = (c: string) => setOn((s) => { const n = new Set(s); if (n.has(c)) n.delete(c); else n.add(c); return n; });
-  const reset = () => { chart.current?.setOption({ geo: { center: [60, 25], zoom: 1.15 } }); setSel(null); };
+  const reset = () => { chart.current?.setOption({ geo: { center: [5, 14], zoom: 1 } }); setSel(null); };
   const flows = cur ? (JSON.parse(cur.flows) as string[]) : [];
 
   return (
     <div className="grid gap-4 lg:grid-cols-[minmax(0,1.4fr)_minmax(0,1fr)]">
-      <div className="card relative min-w-0 p-2">
+      <div className="card relative min-w-0 self-start p-2 lg:sticky lg:top-20">
         <div className="absolute right-4 top-3 z-10 text-right"><div className="font-mono text-2xl font-bold">{shown.length}</div><div className="text-xs text-muted">지도에 표시 중인 공장</div></div>
         <div ref={ref} className="h-[360px] w-full sm:h-[520px]" />
+        {!ready && <div className="absolute inset-0 flex items-center justify-center text-sm text-muted">세계 지도를 불러오는 중…</div>}
         <div className="flex flex-wrap items-center justify-between gap-2 px-2 pb-1 text-xs text-muted">
           <span>드래그 이동 · 휠/핀치 확대 · 점 클릭</span>
           <button onClick={reset} className="rounded border border-line px-2 py-1 hover:text-fg">전체 보기</button>

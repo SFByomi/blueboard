@@ -1,6 +1,7 @@
 import type { Metadata } from "next";
 import { JetBrains_Mono, Noto_Sans_KR } from "next/font/google";
 import Link from "next/link";
+import { HeaderStamp } from "@/components/HeaderStamp";
 import { HtmlLang, OnlyLang } from "@/components/Lang";
 import { NameToggle, NAME_INIT } from "@/components/NameToggle";
 import { BottomNav, NavTabs } from "@/components/NavTabs";
@@ -46,6 +47,7 @@ export default function RootLayout({ children }: LayoutProps<"/">) {
             <nav className="flex min-w-0 flex-1 items-center overflow-x-auto whitespace-nowrap text-sm" aria-label="메뉴">
               <NavTabs admin={ADMIN_ENABLED} />
             </nav>
+            <HeaderStamp />
             <NameToggle />
             <Link href="/en" className="hidden shrink-0 rounded-lg border border-line px-2 py-1 text-xs text-muted hover:text-fg sm:inline" title="English">EN</Link>
           </div>

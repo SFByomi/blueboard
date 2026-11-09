@@ -19,13 +19,17 @@ function Tile({ label, s, fmt, sub, dfmt = bn }: { label: string; s: [string, nu
   if (!last) return null;
   const ago = (days: number) => [...s].reverse().find(([d]) => Date.parse(last[0]) - Date.parse(d) >= days * 864e5)?.[1];
   const chg = (days: number) => { const a = ago(days); return a == null ? null : last[1] - a; };
-  const c4 = chg(28), c52 = chg(365);
+  // 주간·월간·분기 시계열마다 비교 구간과 날짜 표기를 맞춤 (월간 M2를 '4주'·'2026-09-01'로 쓰던 문제)
+  const gap = s.length > 1 ? (Date.parse(last[0]) - Date.parse(s.at(-2)![0])) / 864e5 : 7;
+  const [shortLab, shortDays, when] = gap <= 10 ? ["4주", 28, last[0]] : gap <= 45 ? ["1달", 28, `${last[0].slice(0, 4)}년 ${+last[0].slice(5, 7)}월`]
+    : ["1분기", 85, `${last[0].slice(0, 4)}년 ${Math.floor((+last[0].slice(5, 7) - 1) / 3) + 1}분기`];
+  const c4 = chg(shortDays), c52 = chg(365);
   const f = (v: number | null) => (v == null ? "-" : `${v >= 0 ? "+" : "−"}${dfmt(Math.abs(v))}`);
   return (
     <div className="rounded-lg bg-panel2 p-3">
-      <div className="text-xs text-muted">{label} <span className="text-[10px]">{last[0]}</span></div>
+      <div className="text-xs text-muted">{label} <span className="text-[10px]">{when}</span></div>
       <div className="font-mono text-lg font-bold">{fmt(last[1])}</div>
-      <div className="font-mono text-[11px] text-muted">4주 {f(c4)} · 1년 {f(c52)}</div>
+      <div className="font-mono text-[11px] text-muted">{shortLab} {f(c4)} · 1년 {f(c52)}</div>
       <div className="mt-0.5 text-[11px] text-muted">{sub}</div>
     </div>
   );

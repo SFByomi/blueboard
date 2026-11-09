@@ -140,7 +140,7 @@ export default async function Home() {
         <Card title={<T ko="업황 한눈에" en="Industry at a glance" />} sub="AI 수요 쪽 가격·규모" right={<MoreLink href="/prices">업황 지표</MoreLink>}>
           <div className="grid grid-cols-2 gap-2">
             {gpu.map((r) => <Stat key={r.g} href="/prices#ai" label={`${r.g} 렌탈`} value={<>${r.v.toFixed(2)}<span className="text-xs font-normal text-muted">/h</span></>} sub={r.m == null ? "Vast.ai 중앙값" : <>1달 <span className={tone(r.m)}>{pct(r.m)}</span></>} />)}
-            {arrNow != null && <Stat href="/prices#ai" label="AI 랩 연환산 매출" value={`$${arrNow.toFixed(0)}B`} sub={<>OpenAI+Anthropic{arrYr ? <> · 1년 <span className="text-up">{pct(arrNow / arrYr - 1, 0)}</span></> : null}</>} />}
+            {arrNow != null && <Stat href="/prices#ai" label="AI 랩 연환산 매출" value={`$${arrNow.toFixed(0)}B`} sub={<>OpenAI+Anthropic · {cm.at(-1)} 보간{arrYr ? <> · 1년 <span className="text-up">{pct(arrNow / arrYr - 1, 0)}</span></> : null}</>} />}
           </div>
         </Card>
       </div>
