@@ -143,6 +143,22 @@ export default async function Prices() {
                 </tbody>
               </table>
             </div>
+            {(() => {
+              // 1주 변화가 극단적인 기종은 숫자만 두지 않고 어디서 어디로 움직였는지 한 줄로
+              const jumps = nebGpus.map((g) => {
+                const a = series(neb, g, "avg"), w = change(a, 7);
+                if (w == null || Math.abs(w) < 0.5) return null;
+                const cutoff = new Date(a.at(-1)![0]); cutoff.setDate(cutoff.getDate() - 7);
+                const prev = [...a].reverse().find(([d]) => new Date(d) <= cutoff);
+                return prev ? `${g} ${prev[0].slice(5).replace("-", "/")} $${prev[1].toFixed(2)} → ${a.at(-1)![0].slice(5).replace("-", "/")} $${a.at(-1)![1].toFixed(2)}` : null;
+              }).filter(Boolean);
+              return (
+                <p className="text-xs leading-relaxed text-muted">
+                  {jumps.length > 0 && <><b className="text-amber-300">급변</b> {jumps.join(" · ")} — 스팟(선점형)은 남는 GPU가 갑자기 줄면 몇 배로 뛰었다가 며칠 안에 되돌아오는 일이 잦아, 1주 변화가 수백 %여도 수요 추세라기보다 그 주의 빈 용량 변화입니다. 추세는 1달 변화와 그래프로 보세요. </>}
+                  지역 평균은 그날 지역별 가격의 단순 평균이라, 한 지역만 싸거나 비싸면(예: 파리만 낮을 때) 평균과 &lsquo;가장 싼 지역&rsquo;이 크게 벌어집니다 — 실제로 빌릴 수 있는 최저가는 &lsquo;가장 싼 지역&rsquo;, 지역 간 차이는 그 지역 클러스터의 빈 용량 차이입니다.
+                </p>
+              );
+            })()}
           </div>
         </section>
       )}

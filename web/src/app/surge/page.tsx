@@ -40,7 +40,7 @@ export default async function Surge({ searchParams }: PageProps<"/surge">) {
   return (
     <div className="space-y-5">
       <PageHead title={<T ko="무역 탐색" en="Trade scanner" />}
-        sub={<>미국 무역 통계 전 품목(HS6)에서 급등·급감 찾기 · 기준월 {(kr ? shares[0]?.month : rows[0]?.month) ?? "-"}</>}
+        sub={<>미국 무역 통계 전 품목(HS6)에서 급등·급감 찾기 · 기준월 {(kr ? shares[0]?.month : rows[0]?.month) ?? "-"} <span className="text-xs">(미국 무역 통계는 약 5주 늦게 나옴 — 매달 초 전전월분이 새로 반영)</span></>}
         right={<Link href="/plants" className="text-xs text-muted hover:text-accent">공장 지도 →</Link>}
         info={<>
           <p>{kr ? "비중 = 최근 3개월 미국 수입 중 한국산 금액 비율 · 변화 = 1년 전 같은 3개월 대비(%p) · 한국산 월평균 5백만 달러·미국 전체 2천만 달러 이상 품목. 그래프는 24개월 3개월 이동 비중." : "월 2천만 달러 이상(국가별 5백만 달러) 품목. 200% 넘는 증가율은 전년 같은 기간 금액이 작아 생긴 기저효과일 수 있어 *로 표시 — 금액도 함께 보세요. 3M YoY는 전년 3개월 금액이 충분할 때만."}</p>

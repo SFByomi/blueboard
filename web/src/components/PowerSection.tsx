@@ -129,7 +129,7 @@ export function PowerSection({ obs }: { obs: Obs[] }) {
         <div className="mt-1 flex flex-wrap gap-x-4 text-sm">
           <span>합계 <b>${(ttv[last] / 1e6).toFixed(1)}M</b> <span className="text-xs text-muted">전년비 {fmtPct(yoy(ttv))}</span></span>
           <span>미국 <b>{((usv[last] / ttv[last]) * 100).toFixed(1)}%</b></span>
-          <span>말레이시아 <b>{((myv[last] / ttv[last]) * 100).toFixed(1)}%</b> <span className="text-xs text-muted">${(myv[last] / 1e6).toFixed(1)}M · 전월 ${(myv[last - 1] / 1e6).toFixed(1)}M</span></span>
+          <span>말레이시아 <b>{((myv[last] / ttv[last]) * 100).toFixed(1)}%</b> <span className="text-xs text-muted">{myv[last] ? `$${(myv[last] / 1e6).toFixed(1)}M` : "이번 달 선적 없음"} · 전월 ${(myv[last - 1] / 1e6).toFixed(1)}M</span></span>
           <span>단가 <b>${unit[last]}/kg</b></span>
         </div>
         <StackChart months={km} left="$M" right="USD/kg" height={320} bars={[

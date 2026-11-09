@@ -1,5 +1,5 @@
 import { Stat } from "@/components/ui";
-import { cov, lev, pdFmt, pdTone, risk, RISK_STYLE, TINY_CASH_NOTE, tinyCash, x } from "@/lib/credit";
+import { cov, covTxt, lev, pdFmt, pdTone, risk, RISK_STYLE, TINY_CASH_NOTE, tinyCash, x } from "@/lib/credit";
 import { money } from "@/lib/format";
 import type { CreditRow, MarketCredit } from "@/lib/queries";
 
@@ -17,7 +17,7 @@ export function CreditMini({ rows, mkt }: { rows: CreditRow[]; mkt: MarketCredit
       </div>
       <div className="grid grid-cols-2 gap-2 sm:grid-cols-4">
         <Stat label="순부채/EBITDA" value={(r.net_debt ?? 0) <= 0 ? "순현금" : x(l)} sub={`순부채 ${money(r.net_debt, r.currency)}`} />
-        <Stat label="이자보상" value={x(c)} sub="영업이익 ÷ 이자 (4분기)" />
+        <Stat label="이자보상" value={covTxt(c)} sub="영업이익 ÷ 이자 (4분기)" />
         <Stat label="FCF (4분기)" value={money(r.fcf_ttm, r.currency)} tone={r.fcf_ttm == null ? "" : r.fcf_ttm >= 0 ? "text-up" : "text-down"} sub={tinyCash(r) ? <span title={TINY_CASH_NOTE}>현금 {money(r.cash, r.currency)} — 공시 그대로, 차입 한도로 운영</span> : `현금 ${money(r.cash, r.currency)}`} />
         <Stat label="주가 내재 5년 부도" value={<span className={pdTone(mkt?.pd5)}>{pdFmt(mkt?.pd5)}</span>} sub={mkt ? `${mkt.date} · 머튼 모형` : "부채가 거의 없거나 계산 불가"} />
       </div>

@@ -40,6 +40,11 @@ export function AiLabsSection({ arr }: { arr: AiArr[] }) {
           {o && <span><span className="font-sans text-xs text-muted">OpenAI </span><b>${o.usd_b}B</b> <span className="text-xs text-muted">{o.date.slice(0, 7)} · {o.kind}</span></span>}
           {months.length > 0 && <span><span className="font-sans text-xs text-muted">합산 </span><b>${comb[months.at(-1)!].toFixed(0)}B</b> <span className="text-xs text-muted">{months.at(-1)} (보간)</span></span>}
         </div>
+        {a && o && months.length > 0 && Math.abs(comb[months.at(-1)!] - (a.usd_b + o.usd_b)) >= 1 && (
+          <p className="text-xs text-muted">
+            합산 ${comb[months.at(-1)!].toFixed(0)}B는 두 회사의 마지막 발표값 합(${(a.usd_b + o.usd_b).toFixed(0)}B)과 다릅니다 — 발표 시점이 달라({a.date.slice(0, 7)}·{o.date.slice(0, 7)}) 먼저 발표한 쪽을 {months.at(-1)}까지 최근 성장률로 이어 붙인 값이라서입니다.
+          </p>
+        )}
         <EChart option={opt} height={280} />
         <details className="text-xs text-muted">
           <summary className="cursor-pointer">수치·출처 {arr.length}건</summary>

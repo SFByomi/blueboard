@@ -148,7 +148,7 @@ export default async function StockPage({ params }: PageProps<"/stocks/[ticker]"
       <Card>
         <div className="grid grid-cols-2 gap-2 lg:grid-cols-4">
           {est ? (
-            <Stat href="#earnings" label={<>{rep ? "발표된 분기 추정" : "진행 분기 매출 추정"} <span className={`rounded px-1 text-[10px] ${TIER_STYLE[tier!] ?? ""}`}>{tier}</span></>}
+            <Stat href="#earnings" label={<>{rep ? "직전 분기 추정" : "진행 분기 매출 추정"} <span className={`rounded px-1 text-[10px] ${TIER_STYLE[tier!] ?? ""}`}>{tier}</span></>}
               value={money(est.est, est.currency)} tone={tier === "보류" || weak ? "text-muted" : ""}
               sub={weak ? <>참고용 · 오차 ±{((estRange(est) ?? 0) * 100).toFixed(0)}%</>
                 : <>직전 대비 <span className={tone(est.est / est.last_actual - 1)}>{pct(est.est / est.last_actual - 1)}</span>{est.cons_gap != null && tier !== "보류" ? <> · 컨센 <span className={tone(est.cons_gap)}>{pct(est.cons_gap)}</span></> : null}</>} />
