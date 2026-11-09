@@ -7,6 +7,8 @@ import { FlowScores, GradeBadge } from "@/components/FlowScores";
 import { IndexSection } from "@/components/IndexSection";
 import { CtyName, HsName } from "@/components/Names";
 import { OiCard } from "@/components/OiCard";
+import { mergeReviews, ReviewCard } from "@/components/ReviewCard";
+import { scorecard } from "@/lib/en";
 import { PartnerMix } from "@/components/PartnerMix";
 import { PeerSection } from "@/components/PeerSection";
 import { SectionNav } from "@/components/SectionNav";
@@ -19,7 +21,7 @@ import { risk, RISK_STYLE } from "@/lib/credit";
 import { ADMIN_ENABLED } from "@/lib/db";
 import { yoy3m } from "@/lib/estimate";
 import { INDEX_FOR_GROUP, dday, estCaution, estGuide, estRange, estReported, estTier, estWeak, money, parseSites, pct, TIER_STYLE, tone, usd } from "@/lib/format";
-import { aiArr, aiDeals, alertsFor, company, creditFor, earningsBasis, earningsDates, estimateDate, estimateHistory, financials, flowScores, indicators, mappingsFor, marketCreditLast, multipleHist, multipleNow, observations, oiEstimate, partnersFor, peerRevenue, priceSnapshots, reportedQuarters, surgeForTicker, unestimated, valuations } from "@/lib/queries";
+import { aiArr, aiDeals, alertsFor, company, creditFor, earningsBasis, earningsDates, estimateDate, estimateHistory, estimateReviews, financials, flowScores, indicators, mappingsFor, marketCreditLast, multipleHist, multipleNow, observations, oiEstimate, partnersFor, peerRevenue, priceSnapshots, reportedQuarters, surgeForTicker, unestimated, valuations } from "@/lib/queries";
 import { valuationBrief } from "@/lib/valuation";
 
 // 게시 직후 바로 보이도록 요청마다 렌더 (ISR 캐시가 게시 후에도 이전 데이터로 남던 문제). DB가 작아 부담 없음
@@ -56,6 +58,8 @@ export default async function StockPage({ params }: PageProps<"/stocks/[ticker]"
   const nextEarn = earn[ticker] ?? null, lastReported = done[ticker] ?? null;
   const idxGroups = INDEX_FOR_GROUP[c.grp ?? ""] ?? [];
   const hasPeers = ticker === "000150.KS";  // 대만 CCL 피어·지주사 할인 (etl/peers.py)
+  const [score, revs] = await Promise.all([scorecard(ticker), estimateReviews(ticker)]);
+  const reviewRows = mergeReviews(score, revs, allFin);
   const [prices, defs, peerRev, vals, labArr, deals, pmix] = await Promise.all([
     NEOCLOUD.has(ticker) || idxGroups.length ? priceSnapshots() : Promise.resolve([]),
     idxGroups.length ? indicators() : Promise.resolve([]),
@@ -186,6 +190,7 @@ export default async function StockPage({ params }: PageProps<"/stocks/[ticker]"
       <section id="earnings" className="scroll-mt-28 space-y-4">
         <EstimateCard skip={skip} hist={estHist} nextEarn={nextEarn} lastReported={lastReported} labels={Object.fromEntries(maps.map((mp) => [mp.series_id, mp.label]))} />
         <OiCard o={oi && oi.date >= (estDate ?? "") ? oi : null} />
+        <ReviewCard rows={reviewRows} />
       </section>
 
       <section id="valuation" className="scroll-mt-28">

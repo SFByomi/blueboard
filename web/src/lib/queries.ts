@@ -240,6 +240,13 @@ export type AiDeal = { company: string; counterparty: string; date: string | nul
 export const aiDeals = (company?: string) =>
   (company ? query<AiDeal>("SELECT * FROM ai_deals WHERE company=? ORDER BY sort", [company]) : query<AiDeal>("SELECT * FROM ai_deals ORDER BY sort")).catch(noTable<AiDeal>);
 
+export type EstReview = { ticker: string; q_end: string; announced: string | null; actual: number | null; source: string | null; url: string | null;
+  est: number | null; low: number | null; high: number | null; est_asof: string | null; method: string | null; tier: string | null; cause: string | null; why: string | null; fix: string | null };
+/** 실적 추정 복기 (data/estimate_reviews.json): 발표 전 추정 vs 실제 · 틀린 이유 · 조정 — 최근 분기 먼저 */
+export const estimateReviews = (ticker?: string) =>
+  (ticker ? query<EstReview>("SELECT * FROM estimate_reviews WHERE ticker=? ORDER BY q_end DESC", [ticker])
+    : query<EstReview>("SELECT * FROM estimate_reviews ORDER BY announced DESC, ticker")).catch(noTable<EstReview>);
+
 /** 밸류에이션 밴드·시나리오 (etl/multiples.py) — 종목의 최신 행 */
 export const multipleNow = (ticker: string) =>
   query<MultipleNow>("SELECT * FROM multiple_now WHERE ticker=? ORDER BY date DESC LIMIT 1", [ticker]).then((r) => r[0] ?? null).catch(() => null);

@@ -1,9 +1,11 @@
 import type { Metadata } from "next";
 import Link from "next/link";
 import { T } from "@/components/Names";
+import { errText, mergeReviews } from "@/components/ReviewCard";
 import { Badge, Defs, Fold, PageHead } from "@/components/ui";
+import { scorecard } from "@/lib/en";
 import { confNote, dday, estCaution, estRange, estReported, estTier, money, pct, TIER_STYLE, tone, watchFlag } from "@/lib/format";
-import { companies, earningsBasis, earningsDates, latestEstimates, latestMultiples, reportedQuarters, unestimated, type RevEstimate } from "@/lib/queries";
+import { allFinancials, companies, earningsBasis, earningsDates, estimateReviews, latestEstimates, latestMultiples, reportedQuarters, unestimated, type RevEstimate } from "@/lib/queries";
 import { parseScen, pxLabel } from "@/lib/valuation";
 
 export const dynamic = "force-dynamic";
@@ -20,7 +22,12 @@ const RANK: Record<string, number> = { 신뢰: 0, 보통: 1, 참고: 2, 추세: 
 export default async function EarningsPage({ searchParams }: PageProps<"/earnings">) {
   const sp = await searchParams;
   const f = (FILTERS.find((x) => x.k === sp.f)?.k ?? "all") as (typeof FILTERS)[number]["k"];
-  const [rows, earn, done, skips, basis, cos, mults] = await Promise.all([latestEstimates(), earningsDates(), reportedQuarters(), unestimated(), earningsBasis(), companies(), latestMultiples()]);
+  const [rows, earn, done, skips, basis, cos, mults, score, revs, fins] = await Promise.all([latestEstimates(), earningsDates(), reportedQuarters(), unestimated(), earningsBasis(), companies(), latestMultiples(),
+    scorecard(), estimateReviews(), allFinancials()]);
+  // 최근 60일 안에 나온 실적: 발표 전 추정 vs 실제 + 복기 메모 (종목 화면 '지난 추정 복기'와 같은 데이터)
+  const asof = rows[0]?.date ?? "9999-12-31";  // 데이터 기준일(마지막 추정일)에서 60일 — 시계 대신 데이터 날짜 기준
+  const cut = new Date(Date.parse(asof) - 60 * 864e5).toISOString().slice(0, 10);
+  const recent = mergeReviews(score, revs, fins).filter((r) => (r.announced ?? r.q_end) >= cut).sort((a, b) => (b.announced ?? "").localeCompare(a.announced ?? ""));
   const names = Object.fromEntries(cos.map((c) => [c.ticker, c.name_ko ?? c.name]));
   const mBy = Object.fromEntries(mults.map((m) => [m.ticker, m]));
   const tierOf = (e: RevEstimate) => (estReported(e, done[e.ticker]) ? "발표됨" : estTier(e));
@@ -49,7 +56,7 @@ export default async function EarningsPage({ searchParams }: PageProps<"/earning
           ["신뢰·보통·참고", "신뢰 = 70% 이상 + 단순 추세보다 정확·외삽·단절 없음 / 보통 = 50% 이상 / 참고 = 그 밖"],
           ["추세", "무역 근거가 없거나 무역 모델이 단순 추세보다 부정확해 '직전 분기 전년비 유지'로 추정"],
           ["보류", "회사 가이던스 없이 모델만으로 낸 추정이 컨센서스와 25% 넘게 달라 외삽 가능성이 큼"],
-          ["발표됨", "실적은 나왔지만 SEC 공시 반영 전이라 아직 다음 분기로 안 넘어간 추정"],
+          ["발표됨", "실적은 나왔지만 실적 수치(보도자료·잠정실적 공시·10-Q·분기보고서)가 아직 안 들어와 다음 분기로 안 넘어간 추정"],
           ["주목", "신뢰 추정 + 컨센 차이 10% 이상(오차범위 밖) + 실적 발표 30일 이내"],
           ["밸류 Best·Base·Worst", "추정 실적 × 이 회사가 과거 3년 받은 배수(상위 25%·중앙·하위 25%)로 낸 예상 시가총액이 지금 주가 대비 몇 %인지. 주가는 하루 한 번 데이터 갱신 때 값(실시간 아님) — 종목 화면 '밸류에이션'에 날짜 표시"],
           ["실적 발표 ~", "회사가 아직 일정을 안 내 작년 같은 분기 기준으로 추정한 날짜"],
@@ -118,6 +125,23 @@ export default async function EarningsPage({ searchParams }: PageProps<"/earning
           </tbody>
         </table>
       </div>
+
+      {recent.length > 0 && f === "all" && (
+        <section className="card space-y-2 !py-3">
+          <h2 className="text-sm font-bold">최근 실적 복기 <span className="font-normal text-muted">발표 전 추정 vs 실제 · 이유는 종목 화면에</span></h2>
+          <ul className="space-y-1.5 text-sm">
+            {recent.map((r) => (
+              <li key={r.ticker + r.q_end} className="flex flex-wrap items-baseline gap-x-2 gap-y-0.5">
+                <Link href={`/stocks/${encodeURIComponent(r.ticker)}#earnings`} className="font-bold hover:text-accent">{names[r.ticker] ?? r.ticker}</Link>
+                <span className="text-xs text-muted">{r.q_end.slice(0, 7)} 분기 · 실제 <span className="font-mono text-fg">{money(r.actual, r.currency)}</span></span>
+                <span className={`text-xs ${Math.abs(r.err) >= 0.05 ? "text-amber-300" : "text-muted"}`}>{errText(r.err)}</span>
+                {r.review?.tier === "보류" && <Badge title="외삽·컨센서스와 큰 차이로 보류 — 공개 표엔 숫자 대신 이유만 냈던 추정">보류였음</Badge>}
+                {r.review?.cause && <Badge tone="info">{r.review.cause}</Badge>}
+              </li>
+            ))}
+          </ul>
+        </section>
+      )}
 
       {skips.length > 0 && f === "all" && (
         <Fold summary={`추정하지 않은 종목 ${skips.length}개 — 이유 보기`} className="card !py-3">

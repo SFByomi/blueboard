@@ -45,6 +45,7 @@ TIER_OK, TIER_MID = 0.7, 0.5  # 신뢰도 기준 (신뢰 / 보통)
 SHORT_PAIRS, SHORT_BT = 6, 4  # 매출 이력이 짧은 종목용 완화 기준 (결과는 '참고'로만)
 TREND_SWITCH = 0.01  # 무역 모델 백테스트 오차가 단순 추세보다 1%p 넘게 크면 단순 추세를 대표 추정으로
 TREND_MAX = 0.30     # 단순 추세 오차가 30%를 넘으면(매출이 들쭉날쭉) 추정불가
+SPIKE = 1.5        # 선행 흐름의 근거 분기가 앞뒤 분기보다 이 배수 넘게 크면 일회성 급증 → 보류 (AAON 2026-09 분기 복기)
 CONS_FAR = 0.25      # 가이던스 없는 추정이 컨센서스와 25% 넘게 다르면 '참고' + 경고
 
 
@@ -207,6 +208,27 @@ def tier(conf: float | None, why: list[str]) -> str:
         return "신뢰"
     # 외삽·통계 단절·'직전 성장률 유지'보다 못함은 보통도 아님 — 구독형 소프트웨어처럼 추세만으로 더 잘 맞는 종목에서 모델이 더 나빠 보이는 걸 막음
     return "보통" if conf >= TIER_MID and not any(k in w for w in hard for k in ("외삽", "단절", "단순 추세")) else "참고"
+
+
+def spike(con, f: dict, fin: pd.DataFrame) -> str | None:
+    """선행(lag ≥ 1) 흐름: 추정에 쓴 분기의 무역 합이 앞·뒤 분기보다 SPIKE배 넘게 크면 경고 문구.
+    한두 달 선적이 몰렸다 원래대로 돌아온 걸 모델이 매출 급증으로 옮기는 것 막기 (뒤 분기는 이미 지나 관측됨)."""
+    lag = f.get("lag", 0)
+    if lag < 1 or len(fin) < lag + 1:
+        return None
+    ms = monthly(con, f["sid"]).set_index("month")["value_usd"].sort_index()
+    k = len(fin)
+    q, p = fin.iloc[k - lag], fin.iloc[k - lag - 1]
+    s, _ = trade_sum(ms, q.start, q.end)
+    pv, _ = trade_sum(ms, p.start, p.end)
+    if lag >= 2:
+        n = fin.iloc[k - lag + 1]
+        nv, _ = trade_sum(ms, n.start, n.end)
+    else:  # 다음 분기 = 진행 분기 (일부 달만)
+        nv, _ = trade_sum(ms, q.end + pd.Timedelta(days=1), q.end + pd.DateOffset(months=3), full=False)
+    if s and pv and nv and s > SPIKE * max(pv, nv):
+        return f"근거 흐름 {q.end:%Y-%m} 분기가 앞뒤 분기보다 {s / max(pv, nv):.1f}배 — 일회성 급증일 수 있어 보류"
+    return None
 
 
 def reliability(con, conf, naive, err, bt_n, flows) -> list[str]:
@@ -496,9 +518,13 @@ def _estimate(con, ticker, picks, fin, today, log, guides=None):
                   (["단순 추세보다 정확하지 않음"] if naive is not None and err >= naive else [])
     else:
         caution = reliability(con, conf, naive, err, len(bt), p["flows"])
+        spikes = [w for f in p["flows"] if (w := spike(con, f, fin))]
+        caution = spikes + caution
     if short:
         caution = [f"매출 이력 {len(fin)}분기뿐 — 회귀 {SHORT_PAIRS}분기·백테스트 {SHORT_BT}분기로 완화", *caution]
     grade = "추세" if trend_why else "참고" if short else tier(conf, caution)
+    if not trend_why and any("일회성 급증" in w for w in caution):
+        grade = "보류"
     gap_c = (est / cons[1] - 1) if cons else None
     if gap_c is not None and abs(gap_c) > CONS_FAR and "guide" not in method:  # 회사 가이던스 없이 컨센과 크게 다르면 외삽일 가능성
         caution = [f"컨센서스와 {gap_c:+.0%} 차이 — 회사 가이던스 없이 모델만으로 낸 값이라 외삽 가능성이 커 보류", *caution]

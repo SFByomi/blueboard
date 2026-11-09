@@ -57,7 +57,7 @@ npm --prefix web run dev   # http://localhost:3000
 **https://buywhenitgoesup.vercel.app** (Vercel 프로덕션 — `main` push 시 자동 배포)
 
 ```
-GitHub Actions (매일 03:43 KST 예약)                     Vercel (web/, 서울 리전)
+GitHub Actions (Vercel Cron이 07:10 KST에 시작)          Vercel (web/, 서울 리전)
   etl.build  → data/yomin.db (SQLite, 캐시 유지)       DATABASE_URL 있으면 Postgres 읽기
   etl.publish → Supabase Postgres (전체 교체) ───────→  관리 페이지 404 · 요청마다 렌더
 ```
@@ -74,6 +74,16 @@ GitHub Actions (매일 03:43 KST 예약)                     Vercel (web/, 서�
 4. **Vercel**: Add New Project → `blueboard` 가져오기 → Root Directory `web` → Environment Variables에 `DATABASE_URL` → Deploy
 
 테이블은 `public` 스키마에 만들고 RLS를 켜 둔다(Supabase REST API로는 접근 불가, 웹·ETL은 DB 직접 접속).
+
+### 매일 갱신 시각 (Vercel Cron → GitHub Actions)
+GitHub 예약 실행(schedule)은 붐비는 시간대에 3~5시간씩 늦게 시작해(03:43 예약 → 실제 07:15~08:50) 아침에 갱신이 안 돼 있곤 했다.
+그래서 Vercel Cron(`web/vercel.json`, 매일 07:10 KST — 미국 장 마감 후 실적 보도자료까지 포함)이 `/api/etl/kick`으로 워크플로를 직접 시작하고, GitHub 예약은 예비로만 둔다(이미 돌았거나 도는 중이면 건너뜀).
+1. GitHub → Settings → Developer settings → Personal access tokens → **Fine-grained tokens** → Generate:
+   Repository access = Only select repositories → `SFByomi/blueboard`, Permissions → Repository → **Actions: Read and write** (그 밖은 없음), 만료는 1년
+2. Vercel → blueboard → Settings → Environment Variables (Production): `GH_DISPATCH_TOKEN` = 위 토큰, `CRON_SECRET` = 임의 긴 문자열(아직 없으면 — 자동 게시와 같이 씀)
+3. 재배포 후 확인: 브라우저로 `https://buywhenitgoesup.vercel.app/api/etl/kick?key=<CRON_SECRET>` → `{"dispatched":true}`면 Actions 탭에 실행이 생김
+
+토큰이 없으면 이 경로는 아무것도 안 하고 예전처럼 GitHub 예약에 맡긴다.
 
 ## 영어 페이지
 
