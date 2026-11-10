@@ -45,6 +45,7 @@ TIER_OK, TIER_MID = 0.7, 0.5  # 신뢰도 기준 (신뢰 / 보통)
 SHORT_PAIRS, SHORT_BT = 6, 4  # 매출 이력이 짧은 종목용 완화 기준 (결과는 '참고'로만)
 TREND_SWITCH = 0.01  # 무역 모델 백테스트 오차가 단순 추세보다 1%p 넘게 크면 단순 추세를 대표 추정으로
 TREND_MAX = 0.30     # 단순 추세 오차가 30%를 넘으면(매출이 들쭉날쭉) 추정불가
+XCHECK_GAP = 0.15  # 교차 확인 흐름(2개월 이상)의 전분기비가 추정보다 15%p 넘게 다르면 경고 — 신뢰 등급 안 줌 (SMCI·블룸 2026-09 복기)
 SPIKE = 1.5        # 선행 흐름의 근거 분기가 앞뒤 분기보다 이 배수 넘게 크면 일회성 급증 → 보류 (AAON 2026-09 분기 복기)
 CONS_FAR = 0.25      # 가이던스 없는 추정이 컨센서스와 25% 넘게 다르면 '참고' + 경고
 
@@ -522,6 +523,12 @@ def _estimate(con, ticker, picks, fin, today, log, guides=None):
         caution = spikes + caution
     if short:
         caution = [f"매출 이력 {len(fin)}분기뿐 — 회귀 {SHORT_PAIRS}분기·백테스트 {SHORT_BT}분기로 완화", *caution]
+    xc = (guide_info or {}).get("xcheck") or []
+    if xc and xc[0]["months"] >= 2:  # 같은 분기 매출과 함께 움직이는 흐름이 추정과 크게 다르면 (숫자는 그대로, 경고·등급만)
+        eq, tq = est / last - 1, xc[0]["qoq"]
+        if abs(tq - eq) > XCHECK_GAP:
+            caution = [f"교차 확인 흐름({xc[0]['label']}) 전분기비 {tq:+.0%} vs 추정 {eq:+.0%} — "
+                       f"{'가이던스를 크게 웃돌' if tq > eq else '가이던스를 밑돌'} 수 있음", *caution]
     grade = "추세" if trend_why else "참고" if short else tier(conf, caution)
     if not trend_why and any("일회성 급증" in w for w in caution):
         grade = "보류"
