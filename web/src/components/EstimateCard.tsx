@@ -162,8 +162,12 @@ function GuideWhyNote({ g, w, byGuide }: { g: Guide; w: GuideWhy; byGuide: boole
 }
 
 /** 가이던스 교차 확인: 매출과 같은 분기에 움직이는 무역 흐름의 진행 분기 성장률을 가이던스·추정의 성장률과 나란히 */
+const XCHECK_GAP = 0.15;  // etl/estimates.XCHECK_GAP과 같게
 export function xcheckVerdict(xs: XCheck[], gq: number, eq: number) {
   const top = xs[0];
+  // 추정보다 15%p 넘게 강하거나 약하면 그 자체를 말함 (SMCI 2026-09: 흐름 +76% vs 가이던스·추정 +35% → 실제 +79%)
+  if (top.months >= 2 && top.qoq >= eq + XCHECK_GAP) return "추정보다 훨씬 강함 — 가이던스를 크게 웃돌 수 있음";
+  if (top.months >= 2 && top.qoq <= eq - XCHECK_GAP) return "추정보다 훨씬 약함 — 가이던스를 밑돌 수 있음";
   return top.qoq >= eq - 0.03 ? "추정(가이던스 상회) 쪽을 지지" : top.qoq <= gq + 0.03 ? "가이던스 수준 — 상회 폭은 작을 수 있음" : "가이던스와 추정 사이";
 }
 function XCheckNote({ xs, gq, eq }: { xs: XCheck[]; gq: number; eq: number }) {
