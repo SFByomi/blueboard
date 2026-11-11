@@ -64,7 +64,7 @@ def expected_date(con, ticker: str, sec_ticker: str | None, last_reported: str |
     lo, hi = q_ly + pd.Timedelta(days=1), q_ly + pd.Timedelta(days=100)
     found = None
     if sec_ticker:
-        store = json.loads(guidance.STORE.read_text()) if guidance.STORE.exists() else {}
+        store = guidance.load_store()
         filed = sorted(g["filed"] for g in store.values() if g.get("ticker") == sec_ticker and not g.get("skip")
                        and lo <= pd.Timestamp(g["filed"]) <= hi)
         if filed:

@@ -287,6 +287,19 @@ def collect(tickers: list[str], log=print) -> dict:
     return store
 
 
+MANUAL = ROOT / "data" / "guidance_manual.json"
+
+
+def load_store() -> dict:
+    """guidance.json(보도자료 자동 해석) + guidance_manual.json(콜에서만 가이던스를 내는 회사, 손으로 관리) — 읽기 전용.
+    collect()는 guidance.json만 다루므로 수동 항목이 캐시에 섞여 저장되지 않는다."""
+    store = json.loads(STORE.read_text()) if STORE.exists() else {}
+    if MANUAL.exists():
+        for e in json.loads(MANUAL.read_text(encoding="utf-8")).get("entries", []):
+            store[f"manual:{e['ticker']}:{e['filed']}"] = {**e, "manual": True, "v": VERSION}
+    return store
+
+
 def _save(store: dict) -> None:
     STORE.write_text(json.dumps(dict(sorted(store.items(), key=lambda kv: (kv[1]["ticker"], kv[1]["filed"]))), ensure_ascii=False, indent=0) + "\n")
 

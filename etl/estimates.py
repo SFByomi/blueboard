@@ -313,7 +313,7 @@ def estimate_all(con, log=print) -> int:
     for t, sid, lag, grade in sel:  # A·B는 전부, C는 단독 예측이 단순 추세보다 나을 때만 후보 → 아래에서 예측 오차로 고름
         by.setdefault(t, []).append((sid, int(lag or 0), grade))
     n = 0
-    store = json.loads(guidance.STORE.read_text()) if guidance.STORE.exists() else {}
+    store = guidance.load_store()
     tickers = con.execute("SELECT ticker, sec_ticker FROM companies ORDER BY ticker").fetchall()
     for ticker, sec in tickers:  # 모든 종목에 한 줄씩: 가이던스·무역 모델 → 안 되면 단순 추세 → 그것도 안 되면 '추정불가'(이유)
         picks = by.get(ticker, [])

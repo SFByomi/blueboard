@@ -108,7 +108,7 @@ def apply_hs_names_ko(con):
 def fetch_financials(con):
     targets = con.execute("SELECT ticker, sec_ticker, dart_fs, dart_segment FROM companies "
                           "WHERE sec_ticker IS NOT NULL OR dart_fs IS NOT NULL OR dart_segment IS NOT NULL").fetchall()
-    store = json.loads(guidance.STORE.read_text()) if guidance.STORE.exists() else {}
+    store = guidance.load_store()
     for ticker, sec_ticker, dart_fs, dart_seg in targets:
         basis = None
         try:

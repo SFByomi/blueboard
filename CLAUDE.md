@@ -14,6 +14,7 @@
 - 관리 페이지에서 수정 → 웹이 curation.json 자동 저장 → **작업 끝나면 commit·push** (다른 환경에서 pull 후 `etl.build`로 반영).
 - 코드로 큐레이션을 바꿀 때도 DB 수정 후 `etl.curation.export` 또는 json 직접 수정 → commit.
 - **실적 추정 복기 = `data/estimate_reviews.json` (Claude가 계속 관리 — 사용자 요청)**: 종목 실적이 나올 때마다 한 줄 추가 — 발표 전 마지막 추정(est·low·high·est_asof·method), 실제(actual: 부문 매출처럼 자동 수집 안 되는 것만 — 분기보고서·10-Q 전에 basis='발표'로 먼저 반영), 틀린 이유(cause는 파일의 causes 중 하나 + why에 흐름 숫자로), 조정(fix: 모델을 무엇을 바꿨나/다음에 볼 것). 같은 원인이 반복되면 메모로 끝내지 말고 모델·매핑을 고친다(예: AAON 일회성 급증 → estimates.spike 보류). 실적 시즌엔 /earnings '최근 실적 복기'와 일정 탭으로 발표된 종목을 확인해 빠짐없이 채울 것. 웹: 종목 화면 '지난 추정 복기'(발표 전 고정 추정 = earnings_reports 기준 실적 검증 + 메모), /earnings '최근 실적 복기'
+- **콜에서만 내는 가이던스 = `data/guidance_manual.json`** (손으로 관리): 보도자료에 숫자 없이 콜·발표 자료로만 가이던스를 내는 회사(코어위브 등) — 분기 범위(cands)·연간 범위(annual)를 guidance.json과 같은 형식으로. `guidance.load_store()`가 합쳐 읽음(자동 수집 캐시엔 안 섞임). 가이던스 모델은 과거 3분기 이상 백테스트가 있어야 쓰므로 과거 분기도 같이 채움. 실적 발표 때마다 한 줄 추가
 - AI 랩 ARR·네오클라우드 계약 = `data/ai_labs.json` (OpenAI·Anthropic 연환산 매출 공개 수치 + IREN·NBIS·CRWV 계약 관계, 출처·상태(회사 발표/보도/추정) 포함). 빌드마다 ai_arr·ai_deals로 다시 읽음 → 업황 탭 'AI 랩 매출 규모', 네오클라우드 종목 'AI 랩 수요와의 연결'. 새 발표가 나오면 한 줄 추가.
 - 영어 이름 = curation.json의 `series.label_en`·`companies.thesis_en` (영어 페이지·X 게시용). 새 종목·시리즈를 추가하면 같이 채운다 — 비면 한국어 label로 대체됨
 - 공장 지도 = `data/plants.json` (회사·분야·좌표·상태·제품·연결 시리즈 id). 빌드마다 plants 테이블로 다시 읽음 → 웹 /plants. 좌표는 산업단지·도시 수준, 상태는 `asof` 월 기준으로 갱신.
