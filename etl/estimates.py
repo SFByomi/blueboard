@@ -295,12 +295,27 @@ def best_model(flows, fin: pd.DataFrame, t_start=None, t_end=None):
     return min(cands, key=lambda c: c[0]) if cands else None
 
 
-def match_consensus(con, sec_ticker: str | None, t_end: pd.Timestamp):
+LABEL_SHIFT = 0.10  # 야후 '0q'가 이미 발표된 분기 날짜인데 값이 그 실적과 10% 넘게 다르면 → 값은 다음 분기로 넘어갔고 날짜만 안 바뀐 것
+
+
+def match_consensus(con, sec_ticker: str | None, t_end: pd.Timestamp, fin: pd.DataFrame | None = None):
+    """진행 분기(t_end)에 맞는 야후 매출 컨센서스 (end_date, avg).
+    야후 earningsTrend는 실적 발표 뒤 값은 다음 분기로 넘기면서 endDate는 그대로 두는 경우가 있음
+    (루멘텀 2026-11: '0q' 2026-09-30 = $1.59B인데 9월 분기 실제는 $1.26B, 회사 12월 분기 가이던스 $1.58~1.63B)
+    → 그런 종목은 기간을 한 분기씩 밀어서 맞춤. 값이 실제와 비슷하면(아직 안 넘어간 것, 예: 패브리넷) 그대로."""
     if not sec_ticker:
         return None
-    rows = con.execute("SELECT end_date, avg FROM consensus WHERE ticker=? AND date=(SELECT max(date) FROM consensus WHERE ticker=?)",
+    rows = con.execute("SELECT period, end_date, avg FROM consensus WHERE ticker=? AND date=(SELECT max(date) FROM consensus WHERE ticker=?)",
                        (sec_ticker, sec_ticker)).fetchall()
-    best = min(((abs((pd.Timestamp(e) - t_end).days), e, v) for e, v in rows if e), default=None)
+    q0 = next((r for r in rows if r[0] == "0q" and r[1] and r[2]), None)
+    lr = con.execute("SELECT e.last_reported FROM earnings_calendar e JOIN companies c ON c.ticker = e.ticker WHERE c.sec_ticker=?", (sec_ticker,)).fetchone()
+    reported = bool(lr and lr[0] and q0 and abs((pd.Timestamp(lr[0]) - pd.Timestamp(q0[1])).days) <= 15)  # 야후 스스로 그 분기를 '발표됨'으로 봄
+    if q0 is not None and reported and fin is not None and not fin.empty:  # (발표 전 스냅샷이면 실적과 달라도 그냥 서프라이즈 — AAON)
+        e0 = pd.Timestamp(q0[1])
+        done = [(e, v) for e, v in zip(fin.end, fin.revenue) if abs((e - e0).days) <= 15]
+        if done and abs(q0[2] / float(done[-1][1]) - 1) > LABEL_SHIFT:
+            rows = [(p, (pd.Timestamp(e) + pd.DateOffset(months=3)).strftime("%Y-%m-%d"), v) for p, e, v in rows if e]
+    best = min(((abs((pd.Timestamp(e) - t_end).days), e, v) for _, e, v in rows if e), default=None)
     return best[1:] if best and best[0] <= 25 else None
 
 
@@ -508,7 +523,7 @@ def _estimate(con, ticker, picks, fin, today, log, guides=None):
         trend_why = None
     err, method, p, bt = best
     est, last = p["rev"], float(fin.revenue.iloc[-1])
-    cons = match_consensus(con, sec, t_end)
+    cons = match_consensus(con, sec, t_end, fin)
     naive = mape(bt, "naive")
     conf, band, hits = confidence(bt)
     if trend_why:

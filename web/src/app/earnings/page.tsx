@@ -4,7 +4,7 @@ import { T } from "@/components/Names";
 import { errText, mergeReviews } from "@/components/ReviewCard";
 import { Badge, Defs, Fold, PageHead } from "@/components/ui";
 import { scorecard } from "@/lib/en";
-import { confNote, dday, estCaution, estRange, estReported, estTier, money, pct, TIER_STYLE, tone, watchFlag } from "@/lib/format";
+import { confNote, dday, tierText, estCaution, estRange, estReported, estTier, money, pct, TIER_STYLE, tone, watchFlag } from "@/lib/format";
 import { allFinancials, companies, earningsBasis, earningsDates, estimateReviews, latestEstimates, latestMultiples, reportedQuarters, unestimated, type RevEstimate } from "@/lib/queries";
 import { parseScen, pxLabel } from "@/lib/valuation";
 
@@ -14,7 +14,7 @@ export const metadata: Metadata = { title: "실적 추정", description: "진행
 const FILTERS = [
   { k: "all", label: "전체" },
   { k: "soon", label: "30일 안 발표" },
-  { k: "good", label: "신뢰·보통만" },
+  { k: "good", label: "신뢰도 높은 추정만" },
   { k: "gap", label: "컨센 차이 큰 순" },
 ] as const;
 const RANK: Record<string, number> = { 신뢰: 0, 보통: 1, 참고: 2, 추세: 2, 발표됨: 4, 보류: 5 };
@@ -31,7 +31,9 @@ export default async function EarningsPage({ searchParams }: PageProps<"/earning
   const names = Object.fromEntries(cos.map((c) => [c.ticker, c.name_ko ?? c.name]));
   const mBy = Object.fromEntries(mults.map((m) => [m.ticker, m]));
   const tierOf = (e: RevEstimate) => (estReported(e, done[e.ticker]) ? "발표됨" : estTier(e));
-  let list = [...rows].sort((a, b) => RANK[tierOf(a)] - RANK[tierOf(b)] || (b.conf ?? 0) - (a.conf ?? 0) || Math.abs(b.cons_gap ?? 0) - Math.abs(a.cons_gap ?? 0));
+  // 기본: 다음 실적 발표가 가까운 순 — 날짜가 없거나 이미 지난(발표됨) 종목은 뒤로, 같은 날이면 등급·신뢰도 순
+  const due = (e: RevEstimate) => { const d = dday(earn[e.ticker]); return d == null || d < 0 || tierOf(e) === "발표됨" ? 1e4 : d; };
+  let list = [...rows].sort((a, b) => due(a) - due(b) || RANK[tierOf(a)] - RANK[tierOf(b)] || (b.conf ?? 0) - (a.conf ?? 0));
   if (f === "soon") list = list.filter((e) => { const d = dday(earn[e.ticker]); return d != null && d >= 0 && d <= 30; }).sort((a, b) => dday(earn[a.ticker])! - dday(earn[b.ticker])!);
   if (f === "good") list = list.filter((e) => ["신뢰", "보통"].includes(tierOf(e)));
   if (f === "gap") list = list.filter((e) => e.cons_gap != null && !["보류", "발표됨"].includes(tierOf(e))).sort((a, b) => Math.abs(b.cons_gap!) - Math.abs(a.cons_gap!));
@@ -75,7 +77,7 @@ export default async function EarningsPage({ searchParams }: PageProps<"/earning
               <div className="flex items-center justify-between gap-2">
                 <div className="flex min-w-0 items-center gap-1.5">
                   <b className="truncate">{names[e.ticker] ?? e.ticker}</b>
-                  <span className={`shrink-0 rounded px-1.5 text-[11px] ${TIER_STYLE[c.tr] ?? ""}`}>{c.tr}{e.conf != null && !c.held && c.tr !== "발표됨" ? ` 신뢰 ${(e.conf * 100).toFixed(0)}%` : ""}</span>
+                  <span className={`shrink-0 rounded px-1.5 text-[11px] ${TIER_STYLE[c.tr] ?? ""}`}>{c.held ? c.tr : tierText(c.tr, e.conf)}</span>
                   {watchFlag(e, c.nx, done[e.ticker]) && <Badge tone="accent">주목</Badge>}
                 </div>
                 <span className="shrink-0 font-mono text-xs text-muted">{c.nx ? `${c.tr === "발표됨" ? "다음 " : ""}${basis[e.ticker] ? "~" : ""}${c.nx.slice(5).replace("-", "/")} D-${c.d}` : ""}</span>
@@ -113,7 +115,7 @@ export default async function EarningsPage({ searchParams }: PageProps<"/earning
                     <td className={`text-right ${tone(e.est / e.last_actual - 1)}`}>{pct(e.est / e.last_actual - 1)}</td>
                     <td className={`text-right font-bold ${e.cons_gap == null || c.inRange ? "text-muted" : tone(e.cons_gap)}`} title={c.inRange ? "차이가 오차범위 안 — 의미 있는 차이로 보기 어려움" : undefined}>{e.cons_gap == null ? "-" : pct(e.cons_gap)}</td>
                     <td className="text-right text-xs text-muted">{c.r == null ? "-" : `±${(c.r * 100).toFixed(0)}%`}</td>
-                    <td className="text-right text-xs" title={confNote(e)}><span className={`mr-1 rounded px-1.5 py-0.5 font-sans ${TIER_STYLE[c.tr]}`}>{c.tr}</span>{e.conf == null ? "-" : `${(e.conf * 100).toFixed(0)}%`}</td>
+                    <td className="text-right text-xs" title={`등급 ${c.tr} — ${confNote(e)}`}><span className={`rounded px-1.5 py-0.5 font-sans ${TIER_STYLE[c.tr]}`}>{e.conf != null && ["신뢰", "보통", "참고"].includes(c.tr) ? `${(e.conf * 100).toFixed(0)}%` : c.tr}</span></td>
                     <td className="text-right" title={c.s ? `추정 × 3년 배수 시나리오 · ${pxLabel(mBy[e.ticker]) ?? ""} 주가 대비` : mBy[e.ticker]?.reason ?? undefined}>{c.s ? <>
                       <span className={`text-xs ${tone(c.s.bull.upside)}`}>{pct(c.s.bull.upside, 0)}</span> / <b className={tone(c.s.base.upside)}>{pct(c.s.base.upside, 0)}</b> / <span className={`text-xs ${tone(c.s.bear.upside)}`}>{pct(c.s.bear.upside, 0)}</span>
                     </> : <span className="text-muted">-</span>}</td>
