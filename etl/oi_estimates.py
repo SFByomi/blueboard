@@ -72,7 +72,7 @@ def _row(con, today, ticker, q_end, cur, why, **kw):
 
 def estimate_all(con, log=print, today: str | None = None) -> None:
     today = today or pd.Timestamp.now().strftime("%Y-%m-%d")
-    store = json.loads(guidance.STORE.read_text()) if guidance.STORE.exists() else {}
+    store = guidance.load_store()
     con.execute("DELETE FROM oi_estimates WHERE date=?", (today,))
     rows = con.execute("SELECT c.ticker, c.sec_ticker, c.dart_fs, c.dart_segment, e.q_end, e.est, e.backtest, e.currency, e.tier "
                        "FROM companies c LEFT JOIN revenue_estimates e ON e.ticker=c.ticker AND e.date=(SELECT max(date) FROM revenue_estimates WHERE ticker=c.ticker) "

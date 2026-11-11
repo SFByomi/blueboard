@@ -1,0 +1,139 @@
+{
+ "_doc": "실적 보도자료에 가이던스를 안 쓰고 실적 발표 콜·발표 자료에서만 내는 회사(코어위브 등)의 매출 가이던스 — 손으로 관리(git 원본). guidance.json(보도자료 자동 해석)과 같은 형식으로 합쳐 씀(guidance.load_store). cands = 다음 분기 매출 범위, annual = 회계연도 매출 범위. 실적 발표 콜이 끝나면 한 줄 추가.",
+ "entries": [
+  {
+   "ticker": "CRWV",
+   "filed": "2025-08-12",
+   "fye": "1231",
+   "cands": [
+    {
+     "low": 1.26,
+     "high": 1.3,
+     "unit_low": 1000000000.0,
+     "unit_high": 1000000000.0,
+     "ctx": "Q3 2025 revenue $1.26B–$1.30B (2Q25 실적 발표 콜)"
+    }
+   ],
+   "annual": [
+    {
+     "low": 5.15,
+     "high": 5.35,
+     "unit_low": 1000000000.0,
+     "unit_high": 1000000000.0,
+     "ctx": "FY2025 revenue $5.15B–$5.35B (상향)"
+    }
+   ],
+   "source": "Motley Fool 2025-08-12",
+   "url": "https://www.fool.com/data-news/2025/08/12/coreweave-reports-record-q2-revenue"
+  },
+  {
+   "ticker": "CRWV",
+   "filed": "2025-11-10",
+   "fye": "1231",
+   "cands": [],
+   "annual": [
+    {
+     "low": 5.05,
+     "high": 5.15,
+     "unit_low": 1000000000.0,
+     "unit_high": 1000000000.0,
+     "ctx": "FY2025 revenue $5.05B–$5.15B (3Q25 실적 발표, 하향)"
+    }
+   ],
+   "source": "CNBC 2025-11-10",
+   "url": "https://www.cnbc.com/2025/11/10/coreweave-crwv-q3-earnings-report-2025.html"
+  },
+  {
+   "ticker": "CRWV",
+   "filed": "2026-02-26",
+   "fye": "1231",
+   "cands": [
+    {
+     "low": 1.9,
+     "high": 2.0,
+     "unit_low": 1000000000.0,
+     "unit_high": 1000000000.0,
+     "ctx": "Q1 2026 revenue $1.9B–$2.0B (4Q25 실적 발표 콜)"
+    }
+   ],
+   "annual": [
+    {
+     "low": 12.0,
+     "high": 13.0,
+     "unit_low": 1000000000.0,
+     "unit_high": 1000000000.0,
+     "ctx": "FY2026 revenue $12B–$13B"
+    }
+   ],
+   "source": "CNBC 2026-02-26",
+   "url": "https://www.cnbc.com/2026/02/26/coreweave-crwv-q4-earnings-report-2025.html"
+  },
+  {
+   "ticker": "CRWV",
+   "filed": "2026-05-07",
+   "fye": "1231",
+   "cands": [
+    {
+     "low": 2.45,
+     "high": 2.6,
+     "unit_low": 1000000000.0,
+     "unit_high": 1000000000.0,
+     "ctx": "Q2 2026 revenue $2.45B–$2.60B (1Q26 실적 발표 콜)"
+    }
+   ],
+   "annual": [
+    {
+     "low": 12.0,
+     "high": 13.0,
+     "unit_low": 1000000000.0,
+     "unit_high": 1000000000.0,
+     "ctx": "FY2026 revenue $12B–$13B 유지"
+    }
+   ],
+   "source": "CNBC 2026-05-07",
+   "url": "https://www.cnbc.com/2026/05/07/coreweave-crwv-q1-earnings-report-2026.html"
+  },
+  {
+   "ticker": "CRWV",
+   "filed": "2026-08-11",
+   "fye": "1231",
+   "cands": [
+    {
+     "low": 3.45,
+     "high": 3.6,
+     "unit_low": 1000000000.0,
+     "unit_high": 1000000000.0,
+     "ctx": "Q3 2026 revenue $3.45B–$3.60B (2Q26 실적 발표 콜)"
+    }
+   ],
+   "annual": [
+    {
+     "low": 12.4,
+     "high": 13.2,
+     "unit_low": 1000000000.0,
+     "unit_high": 1000000000.0,
+     "ctx": "FY2026 revenue $12.4B–$13.2B (상향)"
+    }
+   ],
+   "source": "Crypto Briefing (FY 상향), 회사 3분기 가이드는 실적 프리뷰 글 인용",
+   "url": "https://cryptobriefing.com/coreweave-raises-fy2026-revenue-guidance/"
+  },
+  {
+   "ticker": "CRWV",
+   "filed": "2026-11-10",
+   "fye": "1231",
+   "cands": [],
+   "annual": [
+    {
+     "low": 13.0,
+     "high": 13.3,
+     "unit_low": 1000000000.0,
+     "unit_high": 1000000000.0,
+     "ctx": "FY2026 revenue $13.0B–$13.3B (3Q26 보도자료, 상향)"
+    }
+   ],
+   "source": "CoreWeave 3Q26 보도자료",
+   "url": "https://www.sec.gov/Archives/edgar/data/0001769628/000176962826000461/coreweave3q26earningspress.htm"
+  }
+ ]
+}
