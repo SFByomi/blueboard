@@ -153,6 +153,10 @@ CREATE TABLE IF NOT EXISTS finra_market ( -- FINRA 회사채 시장 집계 (etl/
   dataset TEXT NOT NULL, date TEXT NOT NULL, category TEXT NOT NULL, field TEXT NOT NULL, value REAL,
   PRIMARY KEY (dataset, date, category, field)
 );
+CREATE TABLE IF NOT EXISTS housing_obs ( -- 미국 집값·주거비 (etl/housing.py): FHFA 주택가격지수·CPI OER·주거 지수 원값, 30년 주담대 %
+  series TEXT NOT NULL, date TEXT NOT NULL, value REAL,
+  PRIMARY KEY (series, date)
+);
 CREATE TABLE IF NOT EXISTS macro_obs ( -- 거시 유동성 (etl/macro.py): 금액은 십억 달러, DEBT_* 는 배 · DGS*(국채 금리 %, etl/finra.py)
   series TEXT NOT NULL, date TEXT NOT NULL, value REAL,
   PRIMARY KEY (series, date)
