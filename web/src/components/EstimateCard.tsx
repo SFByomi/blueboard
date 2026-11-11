@@ -1,7 +1,7 @@
 import { PriceChart } from "@/components/ComputeCharts";
 import { InfoTip } from "@/components/InfoTip";
 import { Badge, CardHead, Defs, Fold } from "@/components/ui";
-import { type Guide, type GuideWhy, type XCheck, confNote, dday, estGuide, estCaution, estExtrap, estRange, estReported, estTier, estWeak, methodLabel, money, pct, TIER_STYLE, tone, watchFlag } from "@/lib/format";
+import { type Guide, type GuideWhy, type XCheck, confNote, dday, estGuide, estCaution, estExtrap, estRange, estReported, estTier, estWeak, methodLabel, tierText, money, pct, TIER_STYLE, tone, watchFlag } from "@/lib/format";
 import type { EstSkip, RevEstimate } from "@/lib/queries";
 
 type Bt = { q_end: string; actual: number; pred: number; naive: number | null };
@@ -56,7 +56,7 @@ export function EstimateCard({ hist, labels, nextEarn, lastReported, skip }: { h
         title={rep ? "직전 분기 매출 추정" : "진행 분기 매출 추정"} sub={`${e.q_start.slice(0, 7)} ~ ${e.q_end.slice(0, 7)}${nextEarn && !rep ? ` · 실적 발표 ${nextEarn} (D-${d})` : rep ? " · 실적은 나왔고 공시 반영 대기" : ""}`} info={METHOD_INFO}
         right={<span className="flex flex-wrap justify-end gap-1">
           {watch && <Badge tone="accent" title="신뢰 추정 · 컨센 괴리 10% 이상 · 실적 발표 30일 이내">주목</Badge>}
-          <span className={`rounded px-2 py-0.5 text-xs ${TIER_STYLE[tr]}`} title={confNote(e)}>{tr}{e.conf != null && !rep ? ` · 신뢰 ${(e.conf * 100).toFixed(0)}%` : ""}</span>
+          <span className={`rounded px-2 py-0.5 text-xs ${TIER_STYLE[tr]}`} title={`등급 ${tr} — ${confNote(e)}`}>{tierText(tr, e.conf, rep)}</span>
         </span>}
       />
       {tr === "보류" && <div className="rounded border border-red-900 bg-red-950/40 px-3 py-2 text-xs text-red-200">추정 보류 — {why[0]}. 아래 숫자는 모델 원값으로, 투자 판단 근거로 쓰지 마세요.</div>}
@@ -78,7 +78,7 @@ export function EstimateCard({ hist, labels, nextEarn, lastReported, skip }: { h
           <div className="text-xs text-muted">{guide ? `회사 ${guide.prelim ? "잠정 실적" : guide.annual ? "연간 가이던스(환산)" : "가이던스"}` : "모델"}</div>
           {guide ? (<>
             <div className="font-mono text-base font-bold">{money(guide.low, cur)}{guide.high !== guide.low ? `~${money(guide.high, cur).replace(/^[$€]/, "")}` : ""}</div>
-            <div className="text-xs text-muted">{guide.filed} 발표{!guide.prelim && guide.why?.n ? ` · 과거 ${guide.why.n}분기 실적이 중간값보다 ${pct(guide.why.min)}~${pct(guide.why.max)}` : ""}</div>
+            <div className="text-xs text-muted">{guide.filed} 발표{!guide.prelim && guide.why?.n ? ` · 과거 ${guide.why.n}분기 실제 매출은 가이던스 중간값보다 ${pct(guide.why.min)}~${pct(guide.why.max)}` : ""}</div>
           </>) : (<>
             <div className="text-sm">{methodLabel(e.method)}</div>
             <div className="text-xs text-muted">평균 오차 {pct(e.mape, 1).replace("+", "")} · 단순 추세 {e.mape_naive == null ? "-" : pct(e.mape_naive, 1).replace("+", "")}</div>

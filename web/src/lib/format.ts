@@ -88,6 +88,11 @@ export const estTier = (e: { tier?: string | null; mape: number | null; mape_nai
   e.tier ?? (estReliable(e) ? "신뢰" : "참고");
 export const TIER_STYLE: Record<string, string> = { 신뢰: "bg-up/20 text-up", 보통: "bg-amber-950 text-amber-300", 참고: "bg-panel2 text-muted", 발표됨: "bg-panel2 text-muted", 추세: "bg-sky-950 text-sky-300", 추정불가: "bg-panel2 text-muted", 보류: "bg-red-950 text-red-300" };
 /** 신뢰도 설명 (툴팁) */
+/** 등급 배지 글자: 신뢰도 숫자가 있는 등급(신뢰·보통·참고)은 '신뢰도 93%'(색이 등급), 그 밖(보류·추세·발표됨·추정불가)은 등급 이름 */
+export function tierText(tr: string, conf: number | null | undefined, reported = false) {
+  return conf != null && !reported && ["신뢰", "보통", "참고"].includes(tr) ? `신뢰도 ${(conf * 100).toFixed(0)}%` : tr;
+}
+
 export const confNote = (e: { conf?: number | null; hits?: number | null; bt_n: number; mape: number | null }) =>
   e.conf == null ? "" : `최근 ${e.bt_n}분기 백테스트 중 ${e.hits}분기에서 실제 매출이 추정 ±5% 안 (표본 보정 ${(e.conf * 100).toFixed(0)}%) · 평균 오차 ${e.mape == null ? "-" : (e.mape * 100).toFixed(1)}%`;
 /** why = 초과율 보정 근거: 과거 n분기 실적/가이던스 중간값 − 1 의 범위, 같은 백테스트의 보정판·가이던스 그대로 오차 */
