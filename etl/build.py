@@ -9,7 +9,7 @@ import time
 from concurrent.futures import ThreadPoolExecutor, as_completed
 from datetime import datetime, timezone
 
-from etl import breaks, consensus, credit, curation, dart, dart_prelim, dart_segment, econ_calendar, estimates, finra, guidance, indicators, inflation, macro, market_credit, multiples, oi_estimates, partners, peers, prices, reviews, scores, sec, sec6k, seed, sources, surge
+from etl import breaks, consensus, credit, curation, dart, dart_prelim, dart_segment, econ_calendar, estimates, finra, guidance, housing, indicators, inflation, macro, market_credit, multiples, oi_estimates, partners, peers, prices, reviews, scores, sec, sec6k, seed, sources, surge
 from etl.db import connect
 
 
@@ -171,6 +171,7 @@ def main():
     step("6-1) 미국 물가 기여도 (CPI·PCE)"); inflation.collect(con, log)
     step("6-2) 주요 일정"); econ_calendar.collect(con, log)
     step("6-3) 거시 유동성 (연준·TGA·M2)"); macro.collect(con, log)
+    step("6-3b) 집값·주거비 (FHFA·OER·주담대)"); housing.collect(con, log)
     step("6-4) 신용: 기업 재무 지표·회사채 시장·국채 곡선"); credit.collect(con, log); finra.collect(con, log); market_credit.collect(con, log)
     step("6-5) 피어 비교·밸류에이션 (대만 CCL·두산 NAV)"); peers.collect(con, log)
     step("6-6) 밸류에이션 밴드·시나리오 (추정 실적 × 과거 3년 배수)"); multiples.collect(con, log)

@@ -188,6 +188,8 @@ export type MacroObs = { series: string; date: string; value: number };
 /** 거시 유동성 (etl/macro.py) — 금액 십억 달러, DEBT_* 배 */
 export const macroObs = () => query<MacroObs>("SELECT series, date, value FROM macro_obs WHERE series NOT LIKE 'DGS%' ORDER BY date").catch(noTable<MacroObs>);
 /** 미 국채 금리 (DGS*, %) — 신용 탭 */
+/** 미국 집값·주거비 (etl/housing.py): FHFA 지수·CPI OER·주거 지수 원값, 30년 주담대 % */
+export const housingObs = () => query<MacroObs>("SELECT series, date, value FROM housing_obs ORDER BY date").catch(noTable<MacroObs>);
 export const ustCurve = () => query<MacroObs>("SELECT series, date, value FROM macro_obs WHERE series LIKE 'DGS%' ORDER BY date").catch(noTable<MacroObs>);
 
 export type CreditRow = { ticker: string; q_end: string; currency: string; debt: number | null; cash: number | null; net_debt: number | null; equity: number | null; liabilities: number | null;
