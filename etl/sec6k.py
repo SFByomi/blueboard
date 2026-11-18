@@ -28,12 +28,29 @@ RESULTS = CACHE / "results.json"  # 공시번호 → [분기 말일, 값] | null
 QUARTER_END = {1: (-1, 12, 31), 2: (-1, 12, 31), 4: (0, 3, 31), 5: (0, 3, 31), 7: (0, 6, 30), 8: (0, 6, 30), 10: (0, 9, 30), 11: (0, 9, 30)}
 
 
+def _req(url: str) -> requests.Response:
+    """SEC는 순간 호출이 많으면 빈 본문·HTML 안내문을 200으로 돌려줌(11/17 NBIS 'Expecting value') → 잠깐 쉬고 3번까지"""
+    import time
+    for i in range(3):
+        r = requests.get(url, headers=UA, timeout=60)
+        if r.ok and r.text.strip() and not (url.endswith(".json") and r.text.lstrip()[:1] not in "{["):
+            return r
+        if r.status_code == 404:
+            break
+        time.sleep(2 + 4 * i)
+    r.raise_for_status()
+    raise ValueError(f"SEC 빈 응답: {url}")
+
+
+def _json(url: str):
+    return _req(url).json()
+
+
 def _get(url: str) -> str:
     path = CACHE / re.sub(r"[^\w.]+", "_", url.split("/Archives/")[-1])
     if path.exists():
         return path.read_text()
-    r = requests.get(url, headers=UA, timeout=60)
-    r.raise_for_status()
+    r = _req(url)
     path.parent.mkdir(parents=True, exist_ok=True)
     path.write_text(r.text)
     return r.text
@@ -42,7 +59,7 @@ def _get(url: str) -> str:
 def _quarter_value(cik: int, acc: str, f: dict, filed: pd.Timestamp) -> tuple[str | None, float] | None:
     """(제목에서 읽은 분기 말일 | None, 당분기 값). 보도자료가 아니면 None"""
     base = f"https://www.sec.gov/Archives/edgar/data/{cik}/{acc.replace('-', '')}"
-    items = requests.get(f"{base}/index.json", headers=UA, timeout=60).json()["directory"]["item"]
+    items = _json(f"{base}/index.json")["directory"]["item"]
     docs = sorted((i["name"] for i in items if i["name"].endswith(".htm") and "index" not in i["name"]),
                   key=lambda n: ("pressrelease" not in n and "99" not in n, n))  # 보도자료(첨부 99) 먼저
     for name in docs:
@@ -63,7 +80,7 @@ def _quarter_value(cik: int, acc: str, f: dict, filed: pd.Timestamp) -> tuple[st
 
 def quarterly_revenue(ticker: str) -> pd.DataFrame:
     f = FILERS[ticker]
-    sub = requests.get(f"https://data.sec.gov/submissions/CIK{f['cik']:010d}.json", headers=UA, timeout=60).json()["filings"]["recent"]
+    sub = _json(f"https://data.sec.gov/submissions/CIK{f['cik']:010d}.json")["filings"]["recent"]
     done = json.loads(RESULTS.read_text()) if RESULTS.exists() else {}
     rows = []
     for form, date, doc, acc in zip(sub["form"], sub["filingDate"], sub["primaryDocument"], sub["accessionNumber"]):

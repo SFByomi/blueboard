@@ -54,6 +54,9 @@ export function InflationSection({ rows }: { rows: InflationRow[] }) {
   }), [data, comps]);
 
   if (!rows.length) return null;
+  // 전년비 마지막 달이 전월비보다 이르면(2025년 10월 CPI 미발표 → 2026년 10월 전년비 계산 불가) 그 이유를 적어 '정체'로 보이지 않게
+  const lastOf = (k: "yoy" | "mom") => rows.filter((x) => x.measure === measure && x.basis === basis && x.kind === k).at(-1)?.month;
+  const momAhead = kind === "yoy" && (lastOf("mom") ?? "") > (lastOf("yoy") ?? "") ? lastOf("mom") : null;
   const lab = `${measure} ${basis === "core" ? "코어" : "헤드라인"} ${kind === "yoy" ? "전년비" : "전월비"}`;
   return (
     <div className="card min-w-0 space-y-3">
@@ -70,6 +73,12 @@ export function InflationSection({ rows }: { rows: InflationRow[] }) {
       {cur && (
         <div className="font-mono text-sm">
           <div><span className="font-sans text-muted">{cur.month.slice(0, 4)}년 {+cur.month.slice(5, 7)}월분 · {lab}</span> <b className="text-base">{p(cur.total)}%</b></div>
+          {momAhead && (
+            <div className="mt-1 font-sans text-xs text-muted">
+              {+momAhead.slice(5, 7)}월분은 발표됐지만 전년비는 계산할 수 없음 — 1년 전({+momAhead.slice(0, 4) - 1}년 {+momAhead.slice(5, 7)}월) {measure}가 정부 셧다운으로 발표되지 않음.{" "}
+              <button type="button" className="text-accent hover:underline" onClick={() => setKind("mom")}>전월비로 {+momAhead.slice(5, 7)}월분 보기</button>
+            </div>
+          )}
           <div className="mt-1 flex flex-wrap gap-x-4 gap-y-1 text-xs">
             {comps.map((c) => <span key={c.key} style={{ color: c.color }} title={c.note}>{c.label} {p(cur[c.key])}</span>)}
             <span className="font-sans text-muted">(%p)</span>

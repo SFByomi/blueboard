@@ -105,6 +105,9 @@ def apply_hs_names_ko(con):
         log(f"  한국어 품목명 없음 {len(missing)}개: {', '.join(missing[:20])}{' …' if len(missing) > 20 else ''}")
 
 
+SEG_NAME = {"DsDivision": "DS", "ElectroMaterialsBg": "전자BG", "Component": "컴포넌트"}  # DART XBRL 부문 키워드 → 화면 이름 ("DsDivision 부문" 오타처럼 보이던 것)
+
+
 def fetch_financials(con):
     targets = con.execute("SELECT ticker, sec_ticker, dart_fs, dart_segment FROM companies "
                           "WHERE sec_ticker IS NOT NULL OR dart_fs IS NOT NULL OR dart_segment IS NOT NULL").fetchall()
@@ -115,7 +118,7 @@ def fetch_financials(con):
             if dart_seg:
                 kw, _, scope = dart_seg.partition(":")
                 q, cur = dart_segment.quarterly_segment_revenue(ticker.split(".")[0], kw, scope or "Consolidated"), "KRW"
-                basis = f"{kw} 부문{' (별도)' if scope == 'Separate' else ''}"
+                basis = f"{SEG_NAME.get(kw, kw)} 부문{' (별도)' if scope == 'Separate' else ''}"
             elif dart_fs:
                 q, cur = dart.quarterly_revenue(ticker.split(".")[0], dart_fs), "KRW"
                 basis = "별도" if dart_fs == "OFS" else "연결"
