@@ -16,7 +16,8 @@ export function AiLabsSection({ arr }: { arr: AiArr[] }) {
     grid: { left: 48, right: 16, top: 24, bottom: 48 },
     tooltip: { ...baseOption().tooltip, valueFormatter: (v: unknown) => (v == null ? "-" : `$${Number(v).toFixed(1)}B`) },
     xAxis: { type: "time" as const, ...axis, axisLabel: { ...axis.axisLabel, hideOverlap: true } },
-    yAxis: { type: "value" as const, name: "$B", nameTextStyle: { color: "#8a90ad", fontSize: 10 }, ...axis },
+    // 합산선이 축 맨 위에 붙어 잘려 보이던 것 → 최댓값보다 10% 이상 여유를 두고 20 단위로 올림
+    yAxis: { type: "value" as const, name: "$B", nameTextStyle: { color: "#8a90ad", fontSize: 10 }, ...axis, max: (v: { max: number }) => Math.ceil((v.max * 1.1) / 20) * 20 },
     series: [
       ...LABS.map((l) => ({
         name: l.id, type: "line" as const, data: arr.filter((r) => r.lab === l.id).map((r) => ({

@@ -21,7 +21,7 @@ from etl.sec import UA, cik
 ROOT = Path(__file__).resolve().parents[1]
 STORE = ROOT / "data" / "guidance.json"
 TEXT = ROOT / "data" / "raw" / "guidance"  # 보도자료 본문 캐시(git 제외) — 파서를 고치면 다시 받지 않고 재해석
-VERSION = 11  # 파서 버전: 저장된 결과가 이보다 낮으면 본문으로 다시 해석
+VERSION = 13  # 파서 버전: 저장된 결과가 이보다 낮으면 본문으로 다시 해석
 SINCE = "2021-06-01"
 NUM = r"[$€]\s?([\d,]+(?:\.\d+)?)\s*(billion|million|B|M)?"  # ASML은 유로
 SEP = r"\s*(?:to|and|-|–|—)\s*[$€]?\s?([\d,]+(?:\.\d+)?)\s*(billion|million|B|M)?"
@@ -54,7 +54,7 @@ def parse(text: str) -> list[dict]:
     out = []
     for a in re.finditer(r"(?i)outlook|guidance|expects?|expected|anticipates?|forecast", text):
         win = text[a.start(): a.start() + 700]
-        for m in re.finditer(rf"(?i){REV}\b[^$€%]{{0,160}}?{NUM}(?:{SEP}|\s*(?:±|\+/-|plus or minus)\s*[$€]?\s?([\d,]+(?:\.\d+)?)\s*(billion|million|B|M)?)?", win):
+        for m in re.finditer(rf"(?i){REV}\b[^$€%]{{0,160}}?{NUM}(?:{SEP}|,?\s*(?:±|\+/-|plus or minus)\s*(?:(\d+(?:\.\d+)?)\s*(?:%|percent)|[$€]?\s?([\d,]+(?:\.\d+)?)\s*(billion|million|B|M)?))?", win):
             pos = a.start() + m.start()
             pre = text[max(0, pos - 500): pos + 1] + m.group(0)[:200]
             post = text[a.start() + m.end(): a.start() + m.end() + 120]
@@ -78,8 +78,10 @@ def parse(text: str) -> list[dict]:
                 ul = ul or uh
                 uh = uh or ul
                 lo_v, hi_v = lo, hi
-            elif m.group(5):  # ±
-                d, ud = _num(m.group(5), m.group(6))
+            elif m.group(5):  # "$65.0 billion, plus or minus 2%" (엔비디아)
+                lo_v, hi_v, uh = lo * (1 - float(m.group(5)) / 100), lo * (1 + float(m.group(5)) / 100), ul
+            elif m.group(6):  # ±
+                d, ud = _num(m.group(6), m.group(7))
                 ud = ud or ul
                 lo_v, hi_v, uh = lo - d * (ud or 1) / (ul or 1), lo + d * (ud or 1) / (ul or 1), ul
             else:

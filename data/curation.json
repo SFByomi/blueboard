@@ -671,6 +671,22 @@
    "grp": "AI 클라우드",
    "sites": "[{\"name\": \"하이페리온\", \"country\": \"미국 루이지애나\", \"what\": \"AI 데이터센터(SPV 조달)\"}, {\"name\": \"프로메테우스\", \"country\": \"미국 오하이오\", \"what\": \"AI 데이터센터\"}]",
    "thesis_en": "Ad revenue funds AI data centers, partly through off-balance-sheet financing. Capex is a leading signal for AI infrastructure demand."
+  },
+  {
+   "ticker": "NVDA",
+   "name": "NVIDIA",
+   "name_ko": "엔비디아",
+   "market": "NASDAQ",
+   "sector": "AI 가속기(GPU)",
+   "thesis": "AI 가속기(GPU)·랙 단위 시스템(NVL72)·네트워킹. 칩은 TSMC(대만)가 만들고 CoWoS로 HBM(SK하이닉스·삼성·마이크론)과 묶은 뒤, 대만·멕시코 ODM(폭스콘·콴타·위스트론)이 서버·랙으로 조립해 미국 데이터센터로 보냄. 매출은 칩·보드를 ODM에 넘길 때 인식돼 미국 서버 수입보다 앞섬 → 미국 수입은 교차 확인용, 추정은 회사 가이던스(분기 매출 ±2~3%) 중심. 한국 HBM 수출은 몇 달 앞선 투입 신호.",
+   "sec_ticker": "NVDA",
+   "fy_note": "FY 1월말 종료",
+   "sort": 285,
+   "dart_fs": null,
+   "dart_segment": null,
+   "grp": "반도체",
+   "sites": "[{\"name\": \"TSMC\", \"country\": \"대만\", \"what\": \"GPU 웨이퍼·CoWoS 패키징\"}, {\"name\": \"폭스콘·콴타·위스트론\", \"country\": \"대만·멕시코\", \"what\": \"서버·랙(NVL72) 조립\"}, {\"name\": \"SK하이닉스·삼성·마이크론\", \"country\": \"한국·대만\", \"what\": \"HBM 공급\"}]",
+   "thesis_en": "AI GPUs and rack-scale systems built at TSMC with HBM from Korea, assembled into servers by Taiwanese and Mexican ODMs. Revenue is booked when chips ship to ODMs, ahead of US server imports — so the estimate leans on company guidance, with trade flows as a cross-check."
   }
  ],
  "series": [
@@ -1885,6 +1901,18 @@
    "partner": "일본",
    "spec": "{\"dataset\": \"imports/statehs\", \"hs\": \"850760\", \"filters\": {\"STATE\": \"TX\", \"CTY_CODE\": \"5880\"}}",
    "label_en": "Texas imports of Japanese Li-ion batteries"
+  },
+  {
+   "id": "us_imp_tw_compsys",
+   "label": "대만산 컴퓨터 시스템(랙 단위 AI 서버) 수입",
+   "source": "census",
+   "reporter": "🇺🇸 미국",
+   "flow": "수입",
+   "region": "전국",
+   "hs": "8471.49",
+   "partner": "대만",
+   "spec": "{\"dataset\": \"imports/hs\", \"hs\": \"847149\", \"filters\": {\"CTY_CODE\": \"5830\"}}",
+   "label_en": "US imports of Taiwanese computer systems (rack-scale AI servers)"
   }
  ],
  "mappings": [
@@ -3307,6 +3335,46 @@
    "caveat": "메타 매출(광고)과는 무관 — 설비투자 업황 참고.",
    "include_in_total": 0,
    "sort": 12
+  },
+  {
+   "ticker": "NVDA",
+   "series_id": "us_imp_tw_compsys",
+   "role": "회사출하",
+   "confidence": "낮음",
+   "rationale": "GB200·GB300 NVL72 같은 랙 단위 시스템은 8471.49로 신고 — 대만 ODM이 조립해 미국으로 보내는 랙 물량. 전년비 상관 0.14~0.24로 약함(D), 최근 8분기 0.62.",
+   "caveat": "대만 ODM이 AMD·자체칩(ASIC) 랙도 함께 조립 — 엔비디아만의 물량은 아님. 매출 인식(칩 출하)이 미국 반입보다 앞서 시차가 흔들림.",
+   "include_in_total": 0,
+   "sort": 30
+  },
+  {
+   "ticker": "NVDA",
+   "series_id": "kr_exp_hbm",
+   "role": "생산투입",
+   "confidence": "중간",
+   "rationale": "HBM(복합구조칩) 수출 = SK하이닉스·삼성 HBM이 대만 TSMC CoWoS로 가는 투입. 전년비 상관 0.45, 최근 8분기 0.88 (C) — 엔비디아 흐름 중 가장 잘 맞음.",
+   "caveat": "AMD·구글 TPU 등 다른 가속기용 HBM 포함 — 업계 투입 신호.",
+   "include_in_total": 0,
+   "sort": 10
+  },
+  {
+   "ticker": "NVDA",
+   "series_id": "us_imp_all_gpuboard",
+   "role": "최종수요",
+   "confidence": "낮음",
+   "rationale": "GPU 보드 등 컴퓨터 회로기판 조립품 수입(8473.30.1180) — 전년비 상관 0.42 (C).",
+   "caveat": "서버 메인보드·기타 부품 포함, 2025년 이후 랙 단위(8471.49) 신고로 옮겨 가 최근 8분기 −0.38.",
+   "include_in_total": 0,
+   "sort": 20
+  },
+  {
+   "ticker": "NVDA",
+   "series_id": "us_imp_mx_server",
+   "role": "최종수요",
+   "confidence": "낮음",
+   "rationale": "멕시코 ODM(폭스콘 등) 조립 서버 수입 — 금액 상관 0.94지만 전년비는 −0.18 (D).",
+   "caveat": "델·HPE 서버 포함, 매출보다 늦게 잡힘 — 업황 참고만.",
+   "include_in_total": 0,
+   "sort": 40
   }
  ],
  "hs_tags": [
@@ -3574,6 +3642,11 @@
    "hs_prefix": "854232",
    "ticker": "000660.KS",
    "note": "메모리 IC"
+  },
+  {
+   "hs_prefix": "847149",
+   "ticker": "NVDA",
+   "note": "랙 단위 AI 시스템"
   }
  ]
 }

@@ -3,7 +3,7 @@
 - 총차입금: 그 분기에 값이 있는 첫 정의 (회사·시기마다 태그가 달라 우선순위로)
     단·장기 합계 태그 → LongTermDebt(유동 포함)+단기차입·CP → 비유동+유동 → 리스 포함 태그 → DebtInstrumentCarryingAmount(코어위브)
   + 금융리스 부채(별도 보고 시). 운용리스는 제외(신용평가사는 포함하기도 함)
-- 현금 = 현금성자산(10x 지노믹스처럼 CashEquivalentsAtCarryingValue로만 내는 곳도) + 단기 투자·유가증권
+- 현금 = 현금성자산(10x 지노믹스처럼 CashEquivalentsAtCarryingValue로만 내는 곳도) + 단기 투자·유가증권(엔비디아는 DebtSecuritiesCurrent)
 - 순부채/EBITDA, 이자보상배율 = 영업이익(TTM) ÷ 이자비용(TTM, 없으면 이자 지급액), FCF = 영업현금흐름 − 설비투자
 - 1년 내 만기: '12개월 안 상환 원금' 공시 → 없으면 유동성 부채(유동 차입금+CP)
 - 현금흐름표는 연초 누적(YTD)이라 분기값 = 누적 차이
@@ -27,7 +27,8 @@ DEBT_DEFS = [["DebtLongtermAndShorttermCombinedAmount"], ["LongTermDebt", "+Shor
              ["ConvertibleDebtNoncurrent", "+ConvertibleDebtCurrent", "+ShortTermBorrowings"], ["ConvertibleDebtCurrent", "+ShortTermBorrowings"],  # 비유동이 사라진 상환 직전(옥타)  # 전환사채만 있는 회사(플루언스 등)
              ["LongTermLineOfCredit|LineOfCredit", "+LongTermDebtCurrent|DebtCurrent", "+ShortTermBorrowings"]]  # 회전 한도 대출만 있는 회사(AAON 2026-06 4.35억 달러)
 LEASE = ["FinanceLeaseLiabilityNoncurrent", "FinanceLeaseLiabilityCurrent"]
-CASH = ["CashAndCashEquivalentsAtCarryingValue|CashEquivalentsAtCarryingValue", "+ShortTermInvestments", "+MarketableSecuritiesCurrent", "+AvailableForSaleSecuritiesDebtSecuritiesCurrent"]
+CASH = ["CashAndCashEquivalentsAtCarryingValue|CashEquivalentsAtCarryingValue", "+ShortTermInvestments", "+MarketableSecuritiesCurrent",
+        "+AvailableForSaleSecuritiesDebtSecuritiesCurrent|DebtSecuritiesCurrent"]  # 엔비디아는 시장성 증권을 DebtSecuritiesCurrent로만 냄($34B)
 DUE = ["LongTermDebtMaturitiesRepaymentsOfPrincipalInNextTwelveMonths"]
 DUE_ALT = ["LongTermDebtCurrent|DebtCurrent|LongTermDebtAndCapitalLeaseObligationsCurrent", "+ShortTermBorrowings", "+CommercialPaper"]
 FLOWS = {"oi": ["OperatingIncomeLoss"], "da": ["DepreciationDepletionAndAmortization", "DepreciationAmortizationAndAccretionNet", "DepreciationAndAmortization", "Depreciation"],
@@ -285,10 +286,8 @@ def first(g, labels: list[str]) -> float | None:
 def nbis(ticker: str, sec_t: str) -> list[dict]:
     """6-K 분기 실적 보도자료(첨부 99.1) 표에서 — 20-F 외국 발행사라 SEC XBRL엔 연간만 있음. 백만 달러"""
     import html
-    import requests
 
     from etl import sec6k
-    from etl.sec import UA
     f = sec6k.FILERS[sec_t]
     res = json.loads(sec6k.RESULTS.read_text()) if sec6k.RESULTS.exists() else {}
     q: dict[str, dict] = {}
@@ -299,7 +298,7 @@ def nbis(ticker: str, sec_t: str) -> list[dict]:
         try:
             items = json.loads(sec6k._get(f"{base}/index.json"))["directory"]["item"]
         except Exception:  # noqa: BLE001
-            items = requests.get(f"{base}/index.json", headers=UA, timeout=60).json()["directory"]["item"]
+            items = sec6k._json(f"{base}/index.json")["directory"]["item"]
         for name in sorted(i["name"] for i in items if i["name"].endswith(".htm") and "index" not in i["name"]):
             t = re.sub(r"\s+", " ", html.unescape(re.sub(r"<[^>]+>", " ", sec6k._get(f"{base}/{name}"))))
             if "balance sheet" not in t.lower() or "Cash and cash equivalents" not in t:
@@ -327,6 +326,68 @@ def nbis(ticker: str, sec_t: str) -> list[dict]:
                     "equity": x["equity"] * 1e6 if x["equity"] is not None else None, "liabilities": x["liab"] * 1e6 if x["liab"] is not None else None,
                     "due_1y": None, "ebit_ttm": o, "ebitda_ttm": o + dep if o is not None and dep is not None else None,
                     "interest_ttm": it or None, "interest_basis": "이자비용" if it else None, "ocf_ttm": ocf, "capex_ttm": capex,
+                    "fcf_ttm": ocf - capex if ocf is not None and capex is not None else None})
+    return out
+
+
+def asml(ticker: str, sec_t: str) -> list[dict]:
+    """ASML 분기 실적 6-K의 'Quarterly Summary US GAAP' 표(최근 5개 분기 열) — 20-F 외국 발행사라 SEC XBRL엔 연간만. 백만 유로.
+    차입 = 장기 차입(Long-term debt) — 요약 대차대조표에 유동 차입 줄이 따로 없음(유동부채에 포함)"""
+    import html
+
+    from etl import sec6k
+    f = sec6k.FILERS[sec_t]
+    sub = sec6k._json(f"https://data.sec.gov/submissions/CIK{f['cik']:010d}.json")["filings"]["recent"]
+    num = r"(\(?-?[\d,]+(?:\.\d+)?\)?|—)"
+    q: dict[str, dict] = {}
+    for form, filed, doc, acc in sorted(zip(sub["form"], sub["filingDate"], sub["primaryDocument"], sub["accessionNumber"]), key=lambda x: x[1]):
+        d = pd.Timestamp(filed)
+        if form != "6-K" or "quarterly" not in doc or filed < "2022-01-01" or d.month not in sec6k.QUARTER_END:
+            continue
+        base = f"https://www.sec.gov/Archives/edgar/data/{f['cik']}/{acc.replace('-', '')}"
+        items = json.loads(sec6k._get(f"{base}/index.json"))["directory"]["item"]
+        t = None
+        for name in (i["name"] for i in items if i["name"].endswith(".htm") and "financial" in i["name"].lower()):
+            x = re.sub(r"\s+", " ", html.unescape(re.sub(r"<[^>]+>", " ", sec6k._get(f"{base}/{name}"))))
+            if "Quarterly Summary US GAAP" in x and "Long-term debt" in x:
+                t = x
+                break
+        if not t:
+            continue
+        dy, m_, day = sec6k.QUARTER_END[d.month]
+        ends = [(pd.Timestamp(d.year + dy, m_, day) - pd.offsets.QuarterEnd(4 - k)).strftime("%Y-%m-%d") for k in range(5)]
+
+        def row(label: str) -> list[float | None] | None:  # 5개 분기 열이 있는 줄(분기 요약 표)
+            m = re.search(re.escape(label) + r" " + r" ".join([num] * 5) + r"(?: |$)", t)
+            if not m:
+                return None
+            return [None if g == "—" else float(g.replace(",", "").replace("(", "-").replace(")", "")) for g in m.groups()]
+        cols = {"cash": row("Cash and cash equivalents"), "sti": row("Short-term investments"), "debt": row("Long-term debt"),
+                "equity": row("Total shareholders’ equity") or row("Total shareholders' equity") or row("Total equity"), "liab": row("Total liabilities"),
+                "oi": row("Income from operations"), "dep": row("Depreciation and amortization"),
+                "ocf": row("Net cash provided by (used in) operating activities") or row("Net cash provided by operating activities"),
+                "ppe": row("Purchase of property, plant and equipment"), "intang": row("Purchase of intangible assets")}
+        if not cols["cash"] or not cols["oi"]:
+            continue
+        for k, end in enumerate(ends):  # 나중 공시가 앞선 값을 덮음(재작성)
+            q[end] = {key: (v[k] if v else None) for key, v in cols.items()}
+    ends = sorted(q)
+    out = []
+    for i, end in enumerate(ends):
+        x = q[end]
+        last4 = [q[e] for e in ends[max(0, i - 3): i + 1]]
+        if len(last4) == 4 and pd.Timestamp(ends[i - 3]) < pd.Timestamp(end) - pd.Timedelta(days=300):
+            last4 = []  # 빠진 분기가 있으면 4분기 합을 내지 않음
+        ttm = (lambda k: sum(y[k] for y in last4) * 1e6 if len(last4) == 4 and all(y[k] is not None for y in last4) else None)  # noqa: E731
+        o, dep, ocf = ttm("oi"), ttm("dep"), ttm("ocf")
+        capex = -sum((y["ppe"] or 0) + (y["intang"] or 0) for y in last4) * 1e6 if len(last4) == 4 and all(y["ppe"] is not None for y in last4) else None
+        if x["cash"] is None:
+            continue
+        debt, cash = (x["debt"] or 0.0) * 1e6, (x["cash"] + (x["sti"] or 0.0)) * 1e6
+        out.append({"ticker": ticker, "q_end": end, "currency": "EUR", "debt": debt, "cash": cash, "net_debt": debt - cash,
+                    "equity": x["equity"] * 1e6 if x["equity"] is not None else None, "liabilities": x["liab"] * 1e6 if x["liab"] is not None else None,
+                    "due_1y": None, "ebit_ttm": o, "ebitda_ttm": o + dep if o is not None and dep is not None else None,
+                    "interest_ttm": None, "interest_basis": None, "ocf_ttm": ocf, "capex_ttm": capex,
                     "fcf_ttm": ocf - capex if ocf is not None and capex is not None else None})
     return out
 
@@ -360,6 +421,7 @@ def collect(con, log=print) -> int:
     from etl import sec6k
     _prefetch_kr(con, log)
     rows = []
+    kept = []
     for ticker, sec_t, dart_fs in con.execute("SELECT ticker, sec_ticker, dart_fs FROM companies ORDER BY sort").fetchall():
         try:
             if dart_fs:
@@ -368,12 +430,21 @@ def collect(con, log=print) -> int:
                 got = us(ticker, sec_t)
             elif sec_t == "NBIS":  # 20-F 외국 발행사 — 분기 실적 보도자료 표에서
                 got = nbis(ticker, sec_t)
+            elif sec_t == "ASML":  # 20-F — 분기 실적 6-K의 US GAAP 분기 요약 표
+                got = asml(ticker, sec_t)
             else:
-                continue  # ASML(IFRS 6-K)은 아직
+                continue
         except Exception as e:  # noqa: BLE001
             log(f"  ✗ 신용 {ticker}: {e}")
-            continue
+            got = []
+        if not got:  # 이번에 못 받으면(SEC 빈 응답 등) 지난 값을 유지 — 하루 동안 신용 표에서 종목이 사라지지 않게(11/17 NBIS)
+            prev = [dict(zip(COLS, r)) for r in con.execute(f"SELECT {', '.join(COLS)} FROM credit_metrics WHERE ticker=?", (ticker,)).fetchall()]
+            if prev:
+                kept.append(ticker)
+            got = prev
         rows += got
+    if kept:
+        log(f"  · 신용 이번 수집 실패 → 지난 값 유지: {', '.join(kept)}")
     con.execute("DELETE FROM credit_metrics")
     con.executemany(f"INSERT INTO credit_metrics ({', '.join(COLS)}) VALUES ({','.join('?' * len(COLS))})", [tuple(r[c] for c in COLS) for r in rows])
     con.commit()

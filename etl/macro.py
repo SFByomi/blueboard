@@ -35,7 +35,16 @@ def collect(con, log=print) -> int:
     except Exception as e:  # noqa: BLE001
         log(f"  ✗ 거시 유동성: {e}")
         return 0
-    con.execute("DELETE FROM macro_obs")
+    # FRED CSV가 가끔 한 주 전 사본을 돌려줌(연준 총자산 날짜가 11/11 ↔ 11/05 오락가락) → 이미 가진 최신일보다 뒤로 가지 않게
+    # 새로 받은 마지막 날 이후의 기존 행은 그대로 둔다
+    old = pd.DataFrame(con.execute("SELECT series, date, value FROM macro_obs WHERE series NOT LIKE 'DGS%'").fetchall(), columns=["series", "date", "value"])
+    if len(old):
+        new_last = df.groupby("series")["date"].max()
+        keep = old[old.apply(lambda r: r.series in new_last and r.date > new_last[r.series], axis=1)]
+        if len(keep):
+            log(f"  · 거시 유동성: 받은 값이 기존보다 오래됨 → 최근 {len(keep)}행 유지 ({', '.join(sorted(set(keep.series)))})")
+            df = pd.concat([df, keep], ignore_index=True).sort_values(["series", "date"]).reset_index(drop=True)
+    con.execute("DELETE FROM macro_obs WHERE series NOT LIKE 'DGS%'")
     con.executemany("INSERT INTO macro_obs (series, date, value) VALUES (?,?,?)", list(df.itertuples(index=False, name=None)))
     con.commit()
     last = df.groupby("series").tail(1).set_index("series")

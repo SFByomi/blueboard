@@ -187,7 +187,10 @@ export const inflationContrib = () =>
 export type MacroObs = { series: string; date: string; value: number };
 /** 거시 유동성 (etl/macro.py) — 금액 십억 달러, DEBT_* 배 */
 export const macroObs = () => query<MacroObs>("SELECT series, date, value FROM macro_obs WHERE series NOT LIKE 'DGS%' ORDER BY date").catch(noTable<MacroObs>);
-/** 미 국채 금리 (DGS*, %) — 신용 탭 */
+/** 미 국채 금리 (DGS*, %) — 매크로 탭 '금리' (10년물·2년물·30년물·3개월, 최근 10년) */
+export const ratesObs = () =>
+  query<MacroObs>("SELECT series, date, value FROM macro_obs WHERE series IN ('DGS10','DGS2','DGS30','DGS3MO') AND date >= ? ORDER BY date",
+    [new Date(Date.now() - 10.2 * 365 * 864e5).toISOString().slice(0, 10)]).catch(noTable<MacroObs>);
 /** 미국 집값·주거비 (etl/housing.py): FHFA 지수·CPI OER·주거 지수 원값, 30년 주담대 % */
 export const housingObs = () => query<MacroObs>("SELECT series, date, value FROM housing_obs ORDER BY date").catch(noTable<MacroObs>);
 export const ustCurve = () => query<MacroObs>("SELECT series, date, value FROM macro_obs WHERE series LIKE 'DGS%' ORDER BY date").catch(noTable<MacroObs>);
@@ -261,8 +264,15 @@ export const multipleHist = (ticker: string) =>
 /** 한 종목의 재무 신용 지표 (분기 이력) · 주가 내재 부도확률 최신값 */
 export const creditFor = (ticker: string) =>
   query<CreditRow>("SELECT * FROM credit_metrics WHERE ticker=? ORDER BY q_end", [ticker]).catch(noTable<CreditRow>);
+/** 그 종목의 최근 계산값 — 전체 최신일보다 2주 넘게 오래됐으면 null (부채가 시가총액의 1% 밑으로 내려가 계산을 멈춘 종목: 삼성전자는 2023-11 값이 남아 있었음) */
 export const marketCreditLast = (ticker: string) =>
-  query<MarketCredit>("SELECT * FROM market_credit WHERE ticker=? ORDER BY date DESC LIMIT 1", [ticker]).then((r) => r[0] ?? null).catch(() => null);
+  Promise.all([
+    query<MarketCredit>("SELECT * FROM market_credit WHERE ticker=? ORDER BY date DESC LIMIT 1", [ticker]),
+    query<{ d: string }>("SELECT max(date) AS d FROM market_credit"),
+  ]).then(([r, m]) => {
+    const x = r[0], latest = m[0]?.d;
+    return x && (!latest || Date.parse(latest) - Date.parse(x.date) <= 14 * 864e5) ? x : null;
+  }).catch(() => null);
 
 export type PartnerKey = { key: string; label: string; source: string; tickers: string; series: string; others: number | null };
 export type PartnerFlow = { key: string; month: string; partner: string; value_usd: number };
