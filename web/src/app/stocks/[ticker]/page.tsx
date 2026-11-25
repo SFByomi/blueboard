@@ -12,6 +12,7 @@ import { scorecard } from "@/lib/en";
 import { PartnerMix } from "@/components/PartnerMix";
 import { PeerSection } from "@/components/PeerSection";
 import { SectionNav } from "@/components/SectionNav";
+import { UnitPriceCard } from "@/components/UnitPriceCard";
 import { Spark } from "@/components/Spark";
 import { StockView, type FlowData, type QuarterRow } from "@/components/StockView";
 import { Badge, Card, CardHead, Defs, Fold, Stat } from "@/components/ui";
@@ -22,6 +23,7 @@ import { ADMIN_ENABLED } from "@/lib/db";
 import { yoy3m } from "@/lib/estimate";
 import { INDEX_FOR_GROUP, dday, estCaution, estGuide, estRange, estReported, estTier, estWeak, money, parseSites, pct, TIER_STYLE, tone, usd } from "@/lib/format";
 import { aiArr, aiDeals, alertsFor, company, creditFor, earningsBasis, earningsDates, estimateDate, estimateHistory, estimateReviews, financials, flowScores, indicators, mappingsFor, marketCreditLast, multipleHist, multipleNow, observations, oiEstimate, partnersFor, peerRevenue, priceSnapshots, reportedQuarters, surgeForTicker, unestimated, valuations } from "@/lib/queries";
+import { UNIT_PRICE, type UnitSeries } from "@/lib/unitprice";
 import { valuationBrief } from "@/lib/valuation";
 
 // 게시 직후 바로 보이도록 요청마다 렌더 (ISR 캐시가 게시 후에도 이전 데이터로 남던 문제). DB가 작아 부담 없음
@@ -125,7 +127,12 @@ export default async function StockPage({ params }: PageProps<"/stocks/[ticker]"
   if (core && core3 != null && (core.grade === "A" || core.grade === "B")) points.push(<>{core.label} 최근 3개월 <b className={tone(core3)}>{pct(core3, 0)}</b> (매출 연관도 {core.grade})</>);
   if (crLvl && crLvl !== "양호") points.push(<>신용 <b className={crLvl === "주의" ? "text-down" : "text-amber-300"}>{crLvl}</b> — {crWhy.join(" · ")}</>);
 
-  const hasIndustry = gpuLatest.length > 0 || deals.length > 0 || hasPeers || (idxGroups.length > 0 && defs.length > 0);
+  // 메모리 종목: 매핑된 흐름 중 수량이 있는 것의 출하 단가(금액 ÷ 수량)
+  const unitSeries: UnitSeries[] = maps.filter((m) => UNIT_PRICE[m.series_id]).map((m) => ({
+    id: m.series_id, label: m.label,
+    rows: obs.filter((o) => o.series_id === m.series_id && o.value_usd != null && o.qty != null).map((o) => ({ month: o.month, value: o.value_usd!, qty: o.qty! })),
+  })).filter((s) => s.rows.length > 12);
+  const hasIndustry = unitSeries.length > 0 || gpuLatest.length > 0 || deals.length > 0 || hasPeers || (idxGroups.length > 0 && defs.length > 0);
   const nav = [
     { id: "earnings", label: "실적 추정" },
     { id: "valuation", label: "밸류에이션" },
@@ -262,6 +269,7 @@ export default async function StockPage({ params }: PageProps<"/stocks/[ticker]"
 
       {hasIndustry && (
         <section id="industry" className="scroll-mt-28 space-y-4">
+          {unitSeries.length > 0 && <UnitPriceCard series={unitSeries} />}
           {gpuLatest.length > 0 && (
             <Card title="GPU 렌탈가" sub={`${gpuLatest[0].date} · Vast.ai 온디맨드 중앙값`} right={<Link href="/prices#ai" className="text-xs text-muted hover:text-accent">업황 →</Link>}>
               <div className="grid grid-cols-3 gap-2">
