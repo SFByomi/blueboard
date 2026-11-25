@@ -687,6 +687,22 @@
    "grp": "반도체",
    "sites": "[{\"name\": \"TSMC\", \"country\": \"대만\", \"what\": \"GPU 웨이퍼·CoWoS 패키징\"}, {\"name\": \"폭스콘·콴타·위스트론\", \"country\": \"대만·멕시코\", \"what\": \"서버·랙(NVL72) 조립\"}, {\"name\": \"SK하이닉스·삼성·마이크론\", \"country\": \"한국·대만\", \"what\": \"HBM 공급\"}]",
    "thesis_en": "AI GPUs and rack-scale systems built at TSMC with HBM from Korea, assembled into servers by Taiwanese and Mexican ODMs. Revenue is booked when chips ship to ODMs, ahead of US server imports — so the estimate leans on company guidance, with trade flows as a cross-check."
+  },
+  {
+   "ticker": "484590.KQ",
+   "name": "Samyang Comtech",
+   "name_ko": "삼양컴텍",
+   "market": "KOSDAQ",
+   "sector": "방탄·방호(세라믹 장갑)",
+   "thesis": "K2 전차 특수장갑·차륜형 장갑차 부가장갑·소형전술차량 방호 킷·헬기 방탄판 — 방탄 세라믹(SiC·탄화붕소)을 직접 소결해 장갑까지 만드는 국내 유일 방탄 전문업체. 상위 3개 고객이 매출의 85~89%(현대로템 중심), 수출은 대부분 현대로템을 거친 폴란드 K2(간접 수출). 2026년 1~3분기 매출 979억 원(전년 −4%)이지만 수출 620억 원(+157%)·내수 359억 원(−54%)으로 구성이 크게 바뀜. 장갑을 먼저 납품하고 전차가 뒤에 나가 회사 수출 매출이 창원 전차 수출보다 1~2분기 앞섬. 방산 특성상 4분기에 매출이 몰림(2022~2024년 평균 41.7%). SiC는 방탄 세라믹 원료(SiC 파우더 매입 9개월 295억 원)이고, 반도체 증착 챔버용 세라믹 부품은 진출 계획 단계(매출 없음). 모니터링: 폴란드 K2 2차 계약 인도 속도, 중동·동남아 추가 수출, 내수 물량 회복, 구미 증설(296억 원, 2027년).",
+   "sec_ticker": null,
+   "fy_note": "FY 12월 · 2025년 8월 상장 — 분기 매출 이력이 짧음(2025년 1·4분기는 공시 API에 없음)",
+   "sort": 420,
+   "dart_fs": "OFS",
+   "dart_segment": null,
+   "grp": "방산·우주",
+   "sites": "[{\"name\": \"안성공장\", \"country\": \"한국 경기 안성\", \"what\": \"장갑 조립·체계 부품\"}, {\"name\": \"광주공장(곤지암)\", \"country\": \"한국 경기 광주\", \"what\": \"방탄 세라믹 소결\"}, {\"name\": \"구미공장\", \"country\": \"한국 경북 구미\", \"what\": \"방탄 세라믹(2023년 신설, 증축 중)\"}]",
+   "thesis_en": "Korean armor maker (K2 tank special armor, vehicle add-on armor, helicopter ballistic plates) that sinters its own SiC/boron-carbide ceramics. Exports mostly go through Hyundai Rotem's K2 tanks for Poland — armor deliveries lead Changwon tank exports by 1–2 quarters."
   }
  ],
  "series": [
@@ -1913,6 +1929,42 @@
    "partner": "대만",
    "spec": "{\"dataset\": \"imports/hs\", \"hs\": \"847149\", \"filters\": {\"CTY_CODE\": \"5830\"}}",
    "label_en": "US imports of Taiwanese computer systems (rack-scale AI servers)"
+  },
+  {
+   "id": "kr_sgg_changwon_tank",
+   "label": "경남 창원시 전차·장갑차 수출",
+   "source": "kcs",
+   "reporter": "🇰🇷 한국",
+   "flow": "수출",
+   "region": "경상남도 창원시",
+   "hs": "8710",
+   "partner": "전세계",
+   "spec": "{\"api\": \"sigungu\", \"hs\": \"871000\", \"flow\": \"export\", \"sido\": \"48\", \"sgg\": \"경상남도 창원시\"}",
+   "label_en": "Tank & armored vehicle exports from Changwon, Korea"
+  },
+  {
+   "id": "kr_exp_tank_pl",
+   "label": "한국 → 폴란드 전차·장갑차 수출",
+   "source": "kcs",
+   "reporter": "🇰🇷 한국",
+   "flow": "수출",
+   "region": "전국",
+   "hs": "8710",
+   "partner": "폴란드",
+   "spec": "{\"api\": \"item_cty\", \"hs\": \"871000\", \"flow\": \"export\", \"cnty\": \"PL\"}",
+   "label_en": "Korea → Poland tank & armored vehicle exports"
+  },
+  {
+   "id": "kr_imp_sic",
+   "label": "한국 탄화규소(SiC) 수입",
+   "source": "kcs",
+   "reporter": "🇰🇷 한국",
+   "flow": "수입",
+   "region": "전국",
+   "hs": "2849.20",
+   "partner": "전세계",
+   "spec": "{\"api\": \"item\", \"hs\": \"284920\", \"flow\": \"import\"}",
+   "label_en": "Korea silicon carbide imports"
   }
  ],
  "mappings": [
@@ -3375,6 +3427,36 @@
    "caveat": "델·HPE 서버 포함, 매출보다 늦게 잡힘 — 업황 참고만.",
    "include_in_total": 0,
    "sort": 40
+  },
+  {
+   "ticker": "484590.KQ",
+   "series_id": "kr_sgg_changwon_tank",
+   "role": "최종수요",
+   "confidence": "중간",
+   "rationale": "현대로템 창원공장의 K2 전차·장갑차 수출 — 삼양컴텍 장갑이 들어가는 완제품 출하. 2025년 4분기~2026년 1분기 1.2~1.3억 달러로 끊겼다가 2026년 2분기 5.1억·3분기 6.6억 달러로 재개, 회사 수출 매출(2025년 4분기 296억·2026년 2분기 322억 원)이 1~2분기 앞섬.",
+   "caveat": "분기 매출 이력이 7분기뿐이라 상관 등급은 참고만. 현대로템 K9·차륜형 등 삼양컴텍 장갑이 없는 물량도 섞임.",
+   "include_in_total": 0,
+   "sort": 10
+  },
+  {
+   "ticker": "484590.KQ",
+   "series_id": "kr_exp_tank_pl",
+   "role": "최종수요",
+   "confidence": "중간",
+   "rationale": "폴란드향 전차·장갑차 수출 — 회사 수출 매출의 대부분인 폴란드 K2(1·2차 이행계약)의 인도 흐름. 2026년 2분기 4.9억·3분기 5.3억 달러.",
+   "caveat": "창원 흐름의 대부분과 겹침. 인도 시점은 장갑 납품보다 1~2분기 늦음.",
+   "include_in_total": 0,
+   "sort": 20
+  },
+  {
+   "ticker": "484590.KQ",
+   "series_id": "kr_imp_sic",
+   "role": "생산투입",
+   "confidence": "낮음",
+   "rationale": "방탄 세라믹 원료 SiC 수입(분기 약 1,300만~1,500만 달러). 회사 SiC 파우더 매입(9개월 295억 원 ≈ 2,100만 달러)이 한국 수입의 상당 부분일 수 있음.",
+   "caveat": "국내 조달분·연마재 등 다른 용도 포함 — 투입 규모 참고만.",
+   "include_in_total": 0,
+   "sort": 30
   }
  ],
  "hs_tags": [
@@ -3647,6 +3729,16 @@
    "hs_prefix": "847149",
    "ticker": "NVDA",
    "note": "랙 단위 AI 시스템"
+  },
+  {
+   "hs_prefix": "871000",
+   "ticker": "484590.KQ",
+   "note": "전차·장갑차"
+  },
+  {
+   "hs_prefix": "284920",
+   "ticker": "484590.KQ",
+   "note": "탄화규소(SiC)"
   }
  ]
 }
