@@ -1649,5 +1649,62 @@
   "flows": [
    "tsla_storage_gwh"
   ]
+ },
+ {
+  "id": 95,
+  "company": "삼양컴텍",
+  "ticker": "484590.KQ",
+  "category": "방산",
+  "site": "안성공장",
+  "city": "안성",
+  "country": "한국",
+  "lat": 37.01,
+  "lon": 127.28,
+  "status": "가동",
+  "product": "K2 특수장갑·방호 킷 조립",
+  "note": "장갑 체계 부품 조립·시험(KOLAS 방탄 시험)",
+  "asof": "2026-11",
+  "flows": [
+   "kr_sgg_changwon_tank",
+   "kr_exp_tank_pl"
+  ]
+ },
+ {
+  "id": 96,
+  "company": "삼양컴텍",
+  "ticker": "484590.KQ",
+  "category": "방산",
+  "site": "광주공장(곤지암)",
+  "city": "광주(경기)",
+  "country": "한국",
+  "lat": 37.34,
+  "lon": 127.35,
+  "status": "가동",
+  "product": "방탄 세라믹 소결",
+  "note": "연속로·박스로 소결, 가동률 97%(2026년 3분기)",
+  "asof": "2026-11",
+  "flows": [
+   "kr_sgg_changwon_tank",
+   "kr_exp_tank_pl"
+  ]
+ },
+ {
+  "id": 97,
+  "company": "삼양컴텍",
+  "ticker": "484590.KQ",
+  "category": "방산",
+  "site": "구미공장",
+  "city": "구미",
+  "country": "한국",
+  "lat": 36.1,
+  "lon": 128.4,
+  "status": "증설중",
+  "product": "방탄 세라믹",
+  "note": "2023년 신설, 증축 296억 원(2026~2027)",
+  "asof": "2026-11",
+  "flows": [
+   "kr_sgg_changwon_tank",
+   "kr_exp_tank_pl"
+  ]
  }
 ]

@@ -64,11 +64,41 @@ def _report(corp, year, reprt, fs_div):
     return out
 
 
+def _prior(corp, year, reprt, fs_div):
+    """year년 보고서가 없을 때(상장 전 분기) 다음 해 같은 보고서의 '전기' 열로 채움 — 분기보고서는 frmtrm_q_amount(전년 동분기 3개월),
+    사업보고서는 frmtrm_amount(전년 연간). 삼양컴텍(2025년 8월 상장)의 2025년 1분기처럼 공시 API에 없는 분기. 다음 해 보고서가 아직 없으면 None"""
+    path = CACHE / f"{corp}_{year + 1}_{reprt}_{fs_div}_prior.json"
+    if path.exists():
+        return json.loads(path.read_text(encoding="utf-8"))
+    d = requests.get(f"{BASE}/fnlttSinglAcntAll.json", params={"crtfc_key": os.environ["DART_API_KEY"], "corp_code": corp,
+                     "bsns_year": year + 1, "reprt_code": reprt, "fs_div": fs_div}, timeout=60).json()
+    if d["status"] != "000":
+        return None
+    is_rows = [x for x in d["list"] if x["sj_div"] in ("IS", "CIS")]
+    rev = (next((x for x in is_rows if x["account_id"] in REV_IDS), None)
+           or next((x for x in is_rows if x["account_nm"].replace(" ", "") in REV_NAMES), None))
+    oi = (next((x for x in is_rows if x["account_id"] in OI_IDS), None)
+          or next((x for x in is_rows if x["account_nm"].replace(" ", "") in OI_NAMES), None))
+    col = "frmtrm_amount" if reprt == "11011" else "frmtrm_q_amount"
+    num = lambda x: float(x[col].replace(",", "")) if x and x.get(col) and x[col] != "-" else None  # noqa: E731
+    out = {"amount": num(rev), "oi": num(oi)}
+    path.parent.mkdir(parents=True, exist_ok=True)
+    path.write_text(json.dumps(out))
+    return out
+
+
 def _quarterly(stock_code: str, fs_div: str, key: str, start_year: int) -> pd.DataFrame:
     corp = corp_code(stock_code)
     rows = []
-    for y in range(start_year, date.today().year + 1):
-        got = {q: _report(corp, y, r, fs_div) for r, q in REPORTS}
+    years = range(start_year, date.today().year + 1)
+    reports = {y: {q: _report(corp, y, r, fs_div) for r, q in REPORTS} for y in years}
+    first = next((y for y in years if any(reports[y].values())), None)  # 처음 공시가 있는 해 — 그 해의 빈 분기만 다음 해 '전기'로 채움
+    for y in years:
+        got = reports[y]
+        if y == first and y + 1 in reports and any(reports[y + 1].values()):
+            for r, q in REPORTS:
+                if (not got[q] or got[q].get(key) is None) and reports[y + 1][q]:
+                    got[q] = _prior(corp, y, r, fs_div)
         for q in (1, 2, 3):
             if got[q] and got[q].get(key) is not None:
                 rows.append((y, q, got[q][key]))
