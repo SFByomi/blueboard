@@ -157,6 +157,6 @@ export function checkBreadth(rel: MacroObs[]): CheckItem | null {
     facts: [["중소형주 4주", f(sm.d4)], ["13주", f(sm.d13)], ["경기민감 4주", f(cy.d4)], ["13주", f(cy.d13)], ...(eq ? [["동일가중 13주", f(eq.d13)] as [string, string]] : [])],
     rule: "상대 강세 = 중소형주·경기민감주 모두 S&P 500 대비 13주 수익률이 플러스이고 50일 평균 위 · 상대 약세 = 둘 다 13주 마이너스이고 50일 평균 아래 · 그 밖은 엇갈림. 숫자는 S&P 500(SPY) 대비 초과 수익률: 중소형주 = 러셀 2000(IWM), 경기민감 = 산업재·소재·금융·에너지 업종 ETF 평균, 동일가중 = S&P 500 동일가중(RSP) — 동일가중이 약하면 상승이 소수 대형주에 쏠렸다는 뜻. 차트는 1년 전 = 100인 S&P 500 대비 비율(오르면 S&P 500보다 강함). 배당 반영 종가로 계산한 비율만 표시.",
     href: "/macro", hrefLabel: "매크로",
-    chart: { x: "time", unit: "", lines: [{ name: "중소형주", color: C.b, data: rebase(S.SMALL) }, { name: "경기민감", color: C.a, data: rebase(S.CYC) }, { name: "동일가중", color: C.c, data: rebase(S.EQUAL), dashed: true }] },
+    chart: { x: "time", unit: "", lines: [{ name: "중소형주", color: C.b, data: rebase(S.SMALL) }, { name: "경기민감", color: C.a, data: rebase(S.CYC) }, { name: "동일가중", color: C.d, data: rebase(S.EQUAL), dashed: true }] },
   };
 }

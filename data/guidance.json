@@ -3518,6 +3518,44 @@
 "fye": "0131",
 "v": 13
 },
+"0001535527-26-000035": {
+"ticker": "CRWD",
+"filed": "2026-11-23",
+"cands": [
+{
+"low": 1638.1,
+"high": 1644.1,
+"unit_low": 1000000.0,
+"unit_high": 1000000.0,
+"ctx": "Total revenue $1,638.1 - $1,644.1 million"
+}
+],
+"annual": [
+{
+"low": 1638.1,
+"high": 1644.1,
+"unit_low": 1000000.0,
+"unit_high": 1000000.0,
+"ctx": "Total revenue $1,638.1 - $1,644.1 million"
+}
+],
+"actual": {
+"value": 1.58,
+"unit": 1000000000.0,
+"ctx": "Total revenue was $1.58 billion"
+},
+"margin": {
+"oi": {
+"low": 438.1,
+"high": 441.5,
+"unit_low": 1000000.0,
+"unit_high": 1000000.0
+},
+"basis": "non-GAAP"
+},
+"fye": "0131",
+"v": 13
+},
 "0001769628-25-000059": {
 "ticker": "CRWV",
 "filed": "2025-11-10",
@@ -3844,6 +3882,27 @@
 "value": 47.0,
 "unit": 1000000000.0,
 "ctx": "revenue of $47 billion"
+},
+"fye": "0129",
+"v": 13
+},
+"0001571996-26-000050": {
+"ticker": "DELL",
+"filed": "2026-11-24",
+"cands": [
+{
+"low": 56.3,
+"high": 56.3,
+"unit_low": null,
+"unit_high": null,
+"ctx": "Revenue $ 56.3 "
+}
+],
+"annual": [],
+"actual": {
+"value": 54.9,
+"unit": 1000000000.0,
+"ctx": "revenue of $54.9 billion"
 },
 "fye": "0129",
 "v": 13
@@ -4249,6 +4308,19 @@
 }
 ],
 "actual": null,
+"fye": "0930",
+"v": 13
+},
+"0001868941-26-000056": {
+"ticker": "FLNC",
+"filed": "2026-11-23",
+"cands": [],
+"annual": [],
+"actual": {
+"value": 2.3,
+"unit": 1000000000.0,
+"ctx": "Revenue of $2.3 billion"
+},
 "fye": "0930",
 "v": 13
 },
@@ -5856,6 +5928,27 @@
 "value": 12.2,
 "unit": 1000000000.0,
 "ctx": "Revenue : $12.2 billion"
+},
+"fye": "1031",
+"v": 13
+},
+"0001645590-26-000097": {
+"ticker": "HPE",
+"filed": "2026-11-23",
+"cands": [
+{
+"low": 14.0,
+"high": 14.6,
+"unit_low": 1000000000.0,
+"unit_high": 1000000000.0,
+"ctx": "revenue to be in the range of $14.0 billion to $14.6 billion"
+}
+],
+"annual": [],
+"actual": {
+"value": 14.5,
+"unit": 1000000000.0,
+"ctx": "Revenue : $14.5 billion"
 },
 "fye": "1031",
 "v": 13
@@ -13218,6 +13311,30 @@
 "fye": "0731",
 "v": 13
 },
+"0001327567-26-000030": {
+"ticker": "PANW",
+"filed": "2026-11-18",
+"cands": [
+{
+"low": 3.53,
+"high": 3.55,
+"unit_low": 1000000000.0,
+"unit_high": 1000000000.0,
+"ctx": "Total revenue in the range of $3.530 billion to $3.550 billion"
+}
+],
+"annual": [],
+"actual": null,
+"margin": {
+"om": [
+0.295,
+0.295
+],
+"basis": "non-GAAP"
+},
+"fye": "0731",
+"v": 13
+},
 "0001943896-24-000005": {
 "ticker": "RBRK",
 "filed": "2024-06-11",
@@ -15360,6 +15477,470 @@
 "ctx": "revenue was $11.0 billion"
 },
 "fye": "0628",
+"v": 13
+},
+"0001137789-21-000041": {
+"ticker": "STX",
+"filed": "2021-07-21",
+"cands": [
+{
+"low": 2.95,
+"high": 3.25,
+"unit_low": 1000000000.0,
+"unit_high": 1000000000.0,
+"ctx": "Revenue of $3.1 billion, plus or minus $150 million"
+}
+],
+"annual": [],
+"actual": {
+"value": 3.01,
+"unit": 1000000000.0,
+"ctx": "Revenue of $3.01 billion"
+},
+"fye": "0627",
+"v": 13
+},
+"0001137789-21-000105": {
+"ticker": "STX",
+"filed": "2021-10-22",
+"cands": [
+{
+"low": 2.95,
+"high": 3.25,
+"unit_low": 1000000000.0,
+"unit_high": 1000000000.0,
+"ctx": "Revenue of $3.1 billion, plus or minus $150 million"
+}
+],
+"annual": [],
+"actual": {
+"value": 3.12,
+"unit": 1000000000.0,
+"ctx": "Revenue of $3.12 billion"
+},
+"fye": "0627",
+"v": 13
+},
+"0001137789-22-000008": {
+"ticker": "STX",
+"filed": "2022-01-26",
+"cands": [
+{
+"low": 2.75,
+"high": 3.05,
+"unit_low": 1000000000.0,
+"unit_high": 1000000000.0,
+"ctx": "Revenue of $2.9 billion, plus or minus $150 million"
+}
+],
+"annual": [],
+"actual": {
+"value": 3.12,
+"unit": 1000000000.0,
+"ctx": "Revenue of $3.12 billion"
+},
+"fye": "0627",
+"v": 13
+},
+"0001137789-22-000028": {
+"ticker": "STX",
+"filed": "2022-04-27",
+"cands": [
+{
+"low": 2.65,
+"high": 2.9499999999999997,
+"unit_low": 1000000000.0,
+"unit_high": 1000000000.0,
+"ctx": "Revenue of $2.8 billion, plus or minus $150 million"
+}
+],
+"annual": [],
+"actual": {
+"value": 2.8,
+"unit": 1000000000.0,
+"ctx": "Revenue of $2.8 billion"
+},
+"fye": "0627",
+"v": 13
+},
+"0001137789-22-000039": {
+"ticker": "STX",
+"filed": "2022-07-21",
+"cands": [
+{
+"low": 2.35,
+"high": 2.65,
+"unit_low": 1000000000.0,
+"unit_high": 1000000000.0,
+"ctx": "Revenue of $2.5 billion, plus or minus $150 million"
+}
+],
+"annual": [],
+"actual": {
+"value": 2.63,
+"unit": 1000000000.0,
+"ctx": "Revenue of $2.63 billion"
+},
+"fye": "0627",
+"v": 13
+},
+"0001137789-22-000116": {
+"ticker": "STX",
+"filed": "2022-10-26",
+"cands": [
+{
+"low": 1.7000000000000002,
+"high": 2.0,
+"unit_low": 1000000000.0,
+"unit_high": 1000000000.0,
+"ctx": "Revenue of $1.85 billion, plus or minus $150 million"
+}
+],
+"annual": [],
+"actual": {
+"value": 2.04,
+"unit": 1000000000.0,
+"ctx": "Revenue of $2.04 billion"
+},
+"fye": "0627",
+"v": 13
+},
+"0001137789-23-000007": {
+"ticker": "STX",
+"filed": "2023-01-25",
+"cands": [
+{
+"low": 1.85,
+"high": 2.15,
+"unit_low": 1000000000.0,
+"unit_high": 1000000000.0,
+"ctx": "Revenue of $2.0 billion, plus or minus $150 million"
+}
+],
+"annual": [],
+"actual": {
+"value": 1.89,
+"unit": 1000000000.0,
+"ctx": "Revenue of $1.89 billion"
+},
+"fye": "0627",
+"v": 13
+},
+"0001193125-23-106624": {
+"ticker": "STX",
+"filed": "2023-04-19",
+"cands": [],
+"annual": [],
+"actual": null,
+"fye": "0627",
+"v": 13
+},
+"0001137789-23-000025": {
+"ticker": "STX",
+"filed": "2023-04-20",
+"cands": [
+{
+"low": 0.7,
+"high": 2.7,
+"unit_low": 1000000000.0,
+"unit_high": 1000000000.0,
+"ctx": "Revenue of $1.7 billion, plus or minus $1"
+}
+],
+"annual": [],
+"actual": {
+"value": 1.86,
+"unit": 1000000000.0,
+"ctx": "Revenue of $1.86 billion"
+},
+"fye": "0627",
+"v": 13
+},
+"0001137789-23-000045": {
+"ticker": "STX",
+"filed": "2023-07-26",
+"cands": [
+{
+"low": 1.4000000000000001,
+"high": 1.7,
+"unit_low": 1000000000.0,
+"unit_high": 1000000000.0,
+"ctx": "Revenue of $1.55 billion, plus or minus $150 million"
+}
+],
+"annual": [],
+"actual": {
+"value": 1.6,
+"unit": 1000000000.0,
+"ctx": "Revenue of $1.60 billion"
+},
+"fye": "0627",
+"v": 13
+},
+"0001137789-23-000125": {
+"ticker": "STX",
+"filed": "2023-10-26",
+"cands": [
+{
+"low": 1.4000000000000001,
+"high": 1.7,
+"unit_low": 1000000000.0,
+"unit_high": 1000000000.0,
+"ctx": "Revenue of $1.55 billion, plus or minus $150 million"
+}
+],
+"annual": [],
+"actual": {
+"value": 1.45,
+"unit": 1000000000.0,
+"ctx": "Revenue of $1.45 billion"
+},
+"fye": "0627",
+"v": 13
+},
+"0001137789-24-000004": {
+"ticker": "STX",
+"filed": "2024-01-24",
+"cands": [
+{
+"low": 1.5,
+"high": 1.7999999999999998,
+"unit_low": 1000000000.0,
+"unit_high": 1000000000.0,
+"ctx": "Revenue of $1.65 billion, plus or minus $150 million"
+}
+],
+"annual": [],
+"actual": {
+"value": 1.56,
+"unit": 1000000000.0,
+"ctx": "Revenue of $1.56 billion"
+},
+"fye": "0627",
+"v": 13
+},
+"0001137789-24-000030": {
+"ticker": "STX",
+"filed": "2024-04-23",
+"cands": [
+{
+"low": 1.7000000000000002,
+"high": 2.0,
+"unit_low": 1000000000.0,
+"unit_high": 1000000000.0,
+"ctx": "Revenue of $1.85 billion, plus or minus $150 million"
+}
+],
+"annual": [],
+"actual": {
+"value": 1.66,
+"unit": 1000000000.0,
+"ctx": "Revenue of $1.66 billion"
+},
+"fye": "0627",
+"v": 13
+},
+"0001137789-24-000061": {
+"ticker": "STX",
+"filed": "2024-07-23",
+"cands": [
+{
+"low": 1.9500000000000002,
+"high": 2.25,
+"unit_low": 1000000000.0,
+"unit_high": 1000000000.0,
+"ctx": "Revenue of $2.10 billion, plus or minus $150 million"
+}
+],
+"annual": [],
+"actual": {
+"value": 1.89,
+"unit": 1000000000.0,
+"ctx": "Revenue of $1.89 billion"
+},
+"fye": "0627",
+"v": 13
+},
+"0001137789-24-000141": {
+"ticker": "STX",
+"filed": "2024-10-22",
+"cands": [
+{
+"low": 2.15,
+"high": 2.4499999999999997,
+"unit_low": 1000000000.0,
+"unit_high": 1000000000.0,
+"ctx": "Revenue of $2.30 billion, plus or minus $150 million"
+}
+],
+"annual": [],
+"actual": null,
+"fye": "0627",
+"v": 13
+},
+"0001137789-25-000006": {
+"ticker": "STX",
+"filed": "2025-01-21",
+"cands": [],
+"annual": [],
+"actual": null,
+"fye": "0627",
+"v": 13
+},
+"0001137789-25-000070": {
+"ticker": "STX",
+"filed": "2025-04-29",
+"cands": [
+{
+"low": 2.25,
+"high": 2.55,
+"unit_low": 1000000000.0,
+"unit_high": 1000000000.0,
+"ctx": "Revenue of $2.40 billion, plus or minus $150 million"
+}
+],
+"annual": [],
+"actual": {
+"value": 2.16,
+"unit": 1000000000.0,
+"ctx": "Revenue of $2.16 billion"
+},
+"fye": "0627",
+"v": 13
+},
+"0001137789-25-000148": {
+"ticker": "STX",
+"filed": "2025-07-29",
+"cands": [
+{
+"low": 2.35,
+"high": 2.65,
+"unit_low": 1000000000.0,
+"unit_high": 1000000000.0,
+"ctx": "Revenue of $2.50 billion, plus or minus $150 million"
+}
+],
+"annual": [],
+"actual": {
+"value": 2.44,
+"unit": 1000000000.0,
+"ctx": "Revenue of $2.44 billion"
+},
+"fye": "0627",
+"v": 13
+},
+"0001137789-25-000150": {
+"ticker": "STX",
+"filed": "2025-07-30",
+"cands": [],
+"annual": [],
+"actual": null,
+"fye": "0627",
+"v": 13
+},
+"0001137789-25-000283": {
+"ticker": "STX",
+"filed": "2025-10-28",
+"cands": [
+{
+"low": 2.6,
+"high": 2.8000000000000003,
+"unit_low": 1000000000.0,
+"unit_high": 1000000000.0,
+"ctx": "Revenue of $2.70 billion, plus or minus $100 million"
+}
+],
+"annual": [],
+"actual": {
+"value": 2.63,
+"unit": 1000000000.0,
+"ctx": "Revenue of $2.63 billion"
+},
+"fye": "0627",
+"v": 13
+},
+"0001137789-26-000016": {
+"ticker": "STX",
+"filed": "2026-01-27",
+"cands": [
+{
+"low": 2.8,
+"high": 3.0,
+"unit_low": 1000000000.0,
+"unit_high": 1000000000.0,
+"ctx": "Revenue of $2.90 billion, plus or minus $100 million"
+}
+],
+"annual": [],
+"actual": {
+"value": 2.83,
+"unit": 1000000000.0,
+"ctx": "Revenue of $2.83 billion"
+},
+"fye": "0627",
+"v": 13
+},
+"0001137789-26-000084": {
+"ticker": "STX",
+"filed": "2026-04-28",
+"cands": [
+{
+"low": 3.35,
+"high": 3.5500000000000003,
+"unit_low": 1000000000.0,
+"unit_high": 1000000000.0,
+"ctx": "Revenue of $3.45 billion, plus or minus $100 million"
+}
+],
+"annual": [],
+"actual": {
+"value": 3.11,
+"unit": 1000000000.0,
+"ctx": "Revenue of $3.11 billion"
+},
+"fye": "0627",
+"v": 13
+},
+"0001137789-26-000153": {
+"ticker": "STX",
+"filed": "2026-07-28",
+"cands": [
+{
+"low": 3.9999999999999996,
+"high": 4.199999999999999,
+"unit_low": 1000000000.0,
+"unit_high": 1000000000.0,
+"ctx": "Revenue of $4.1 billion, plus or minus $100 million"
+}
+],
+"annual": [],
+"actual": {
+"value": 3.6,
+"unit": 1000000000.0,
+"ctx": "Revenue of $3.6 billion"
+},
+"fye": "0627",
+"v": 13
+},
+"0001137789-26-000300": {
+"ticker": "STX",
+"filed": "2026-10-27",
+"cands": [
+{
+"low": 4.7,
+"high": 4.8999999999999995,
+"unit_low": 1000000000.0,
+"unit_high": 1000000000.0,
+"ctx": "Revenue of $4.8 billion, plus or minus $100 million"
+}
+],
+"annual": [],
+"actual": {
+"value": 4.2,
+"unit": 1000000000.0,
+"ctx": "Revenue of $4.2 billion"
+},
+"fye": "0627",
 "v": 13
 },
 "0000950170-21-000423": {
@@ -17921,6 +18502,19 @@
 "unit_high": 1000000.0
 },
 "basis": "non-GAAP"
+},
+"fye": "0731",
+"v": 13
+},
+"0001193125-26-470942": {
+"ticker": "ZS",
+"filed": "2026-11-23",
+"cands": [],
+"annual": [],
+"actual": {
+"value": 949.3,
+"unit": 1000000.0,
+"ctx": "Revenue grew 20% to $949.3 million"
 },
 "fye": "0731",
 "v": 13

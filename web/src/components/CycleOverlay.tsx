@@ -11,7 +11,7 @@ export type CycleSide = {
   rows: Record<string, string>;      // 표: 항목 → 값
 };
 const ROWS = ["주가 고점", "주가 저점 · 지금", "출하 단가 고점", "분기 매출", "회사 코멘트"] as const;
-const C = { old: "#8a90ad", now: "#22d3ee" };
+const C = { old: "#f59e0b", now: "#38bdf8" };  // 2018 주황 · 이번 파랑 — 계열이 다른 색
 
 /** 2018년 사이클과 이번 사이클을 '주가 고점 = 0주'로 맞춰 겹침 — 실선 주가, 점선 한국 DRAM 수출 단가 */
 export function CycleOverlay({ old, now }: { old: CycleSide; now: CycleSide }) {
