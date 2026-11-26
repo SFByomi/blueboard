@@ -153,6 +153,15 @@ CREATE TABLE IF NOT EXISTS finra_market ( -- FINRA 회사채 시장 집계 (etl/
   dataset TEXT NOT NULL, date TEXT NOT NULL, category TEXT NOT NULL, field TEXT NOT NULL, value REAL,
   PRIMARY KEY (dataset, date, category, field)
 );
+CREATE TABLE IF NOT EXISTS bigtech_cash ( -- 빅테크 분기 이익·현금흐름 (etl/bigtech.py, SEC XBRL, 달러): 시장 점검 탭
+  ticker TEXT NOT NULL, q_end TEXT NOT NULL, cal_q TEXT NOT NULL,   -- cal_q = 가장 가까운 달력 분기 '2026Q3' (오라클 8월 말 → Q3)
+  oi REAL, ocf REAL, capex REAL, fcf REAL, raised REAL,             -- 영업이익·영업현금흐름·설비투자·FCF(OCF − 설비투자)·외부 조달(차입+주식 발행 총액)
+  PRIMARY KEY (ticker, q_end)
+);
+CREATE TABLE IF NOT EXISTS rel_strength ( -- 상대 강도 (etl/relstrength.py): ETF 수익률 비율, 첫날 = 100 (주가 자체는 저장하지 않음)
+  series TEXT NOT NULL, date TEXT NOT NULL, value REAL,             -- SMALL(IWM÷SPY) · EQUAL(RSP÷SPY) · CYC(XLI·XLB·XLF·XLE 평균÷SPY)
+  PRIMARY KEY (series, date)
+);
 CREATE TABLE IF NOT EXISTS housing_obs ( -- 미국 집값·주거비 (etl/housing.py): FHFA 주택가격지수·CPI OER·주거 지수 원값, 30년 주담대 %
   series TEXT NOT NULL, date TEXT NOT NULL, value REAL,
   PRIMARY KEY (series, date)

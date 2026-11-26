@@ -191,6 +191,14 @@ export const macroObs = () => query<MacroObs>("SELECT series, date, value FROM m
 export const ratesObs = () =>
   query<MacroObs>("SELECT series, date, value FROM macro_obs WHERE series IN ('DGS10','DGS2','DGS30','DGS3MO') AND date >= ? ORDER BY date",
     [new Date(Date.now() - 10.2 * 365 * 864e5).toISOString().slice(0, 10)]).catch(noTable<MacroObs>);
+/** 시장 점검 탭: 10년물 금리 (최근 2년) */
+export const dgs10 = () =>
+  query<MacroObs>("SELECT series, date, value FROM macro_obs WHERE series='DGS10' AND date >= ? ORDER BY date", [new Date(Date.now() - 2 * 365 * 864e5).toISOString().slice(0, 10)]).catch(noTable<MacroObs>);
+/** 빅테크 분기 이익·현금흐름 (etl/bigtech.py, 달러) */
+export const bigtechCash = () =>
+  query<{ ticker: string; q_end: string; cal_q: string; oi: number | null; ocf: number; capex: number; fcf: number; raised: number | null }>("SELECT * FROM bigtech_cash ORDER BY q_end").catch(() => []);
+/** 중소형·동일가중·경기민감 ÷ S&P 500 상대 강도 (etl/relstrength.py, 3년 전 = 100) */
+export const relStrength = () => query<MacroObs>("SELECT series, date, value FROM rel_strength ORDER BY date").catch(noTable<MacroObs>);
 /** 미국 집값·주거비 (etl/housing.py): FHFA 지수·CPI OER·주거 지수 원값, 30년 주담대 % */
 export const housingObs = () => query<MacroObs>("SELECT series, date, value FROM housing_obs ORDER BY date").catch(noTable<MacroObs>);
 export const ustCurve = () => query<MacroObs>("SELECT series, date, value FROM macro_obs WHERE series LIKE 'DGS%' ORDER BY date").catch(noTable<MacroObs>);
