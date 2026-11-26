@@ -43,7 +43,12 @@ export function MemoryPair({ pair }: { pair: Pair }) {
   const lead = v.stock ? monthsBetween(v.stock.peak[0], main.peak[0]) : null;  // 양수 = 주가 고점이 먼저
   const opt = {
     ...baseOption(),
-    grid: { left: 40, right: 14, top: 16, bottom: 56 },
+    grid: { left: 40, right: 14, top: 16, bottom: 86 },
+    legend: { ...baseOption().legend, bottom: 30 },
+    dataZoom: [
+      { type: "inside" as const, preventDefaultMouseMove: false },  // 끌어서 이동, 두 손가락·휠로 확대
+      { type: "slider" as const, height: 16, bottom: 6, borderColor: "#2c3358", fillerColor: "rgba(56,189,248,0.15)", handleStyle: { color: "#38bdf8" }, textStyle: { color: "#8a90ad", fontSize: 10 }, brushSelect: false },
+    ],
     tooltip: { ...baseOption().tooltip, valueFormatter: (x: unknown) => (x == null ? "-" : `${Number(x).toFixed(0)}`) },
     xAxis: { type: "time" as const, ...axis, axisLabel: { ...axis.axisLabel, hideOverlap: true } },
     yAxis: { type: "value" as const, ...axis, max: 100, min: (m: { min: number }) => Math.max(0, Math.floor(m.min / 10) * 10) },
@@ -80,7 +85,7 @@ export function MemoryPair({ pair }: { pair: Pair }) {
           </div>
         ))}
       </div>
-      <EChart option={opt} height={280} />
+      <EChart option={opt} height={310} />
       <div className="text-right text-xs"><Link href={`/stocks/${pair.ticker}`} className="text-muted hover:text-accent">{pair.name} 종목 화면 →</Link></div>
     </section>
   );

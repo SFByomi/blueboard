@@ -1,5 +1,5 @@
 import type { Metadata } from "next";
-import { CycleOverlay, type CycleSide } from "@/components/CycleOverlay";
+import { CycleOverlay, type CycleData, type CycleRows } from "@/components/CycleOverlay";
 import { MemoryPair, type Pair, type PriceLine } from "@/components/MemoryPair";
 import { T } from "@/components/Names";
 import { SectionNav } from "@/components/SectionNav";
@@ -32,56 +32,49 @@ function unitPrice(obs: Obs[], id: string): [string, number][] {
   }).filter((x): x is [string, number] => x != null);
 }
 
+type Pt = [string, number];
 const WEEK = 7 * 864e5;
 const usdB = (v: number) => "$" + (v / 1e9).toFixed(2) + "B";
-const drop = (v: number) => "−" + (100 - v).toFixed(0) + "%";
+const maxOf = (pts: Pt[]) => pts.reduce((a, p) => (p[1] > a[1] ? p : a), pts[0]);
+const minOf = (pts: Pt[]) => pts.reduce((a, p) => (p[1] < a[1] ? p : a), pts[0]);
+const months = (a: string, b: string) => Math.round((Date.parse(b) - Date.parse(a)) / (30.44 * 864e5));
 
-/** 주가 고점 주를 0으로 맞춘 한 사이클: 주가·단가를 각자 고점 = 100으로, 가로는 주(週) 차이 */
-function cycleSide(label: string, stock: [string, number][], unit: [string, number][], from: string, to: string, fin: Fin[], comment: string, ongoing: boolean): CycleSide | null {
+/** 한 사이클의 주가·출하 단가·분기 매출과 기준일(고점들). from~to 안에서 주가 고점을 찾음 */
+function cycle(stock: Pt[], unitMonthly: Pt[], fin: Fin[], from: string, to: string, ongoing: boolean): { data: CycleData; row: Record<string, string> } | null {
   const win = stock.filter(([d]) => d >= from && d <= to);
-  if (win.length < 10 || unit.length < 6) return null;
-  const peak = win.reduce((a, p) => (p[1] > a[1] ? p : a), win[0]);
-  const t0 = Date.parse(peak[0]);
-  const wk = (d: string) => Math.round((Date.parse(d) - t0) / WEEK);
-  const sLine = stock.map(([d, v]): [number, number] => [wk(d), +((v / peak[1]) * 100).toFixed(1)]).filter(([x]) => x >= -78 && x <= 52);
-  const uWin = unit.map(([m, v]): [number, number, string] => [wk(m + "-15"), v, m]).filter(([x]) => x >= -78 && x <= 52);
-  if (!uWin.length) return null;
-  const uPeak = uWin.reduce((a, p) => (p[1] > a[1] ? p : a), uWin[0]);
-  const uLine = uWin.map(([x, v]): [number, number] => [x, +((v / uPeak[1]) * 100).toFixed(1)]);
-  const after = sLine.filter(([x]) => x >= 0);
-  const low = after.reduce((a, p) => (p[1] < a[1] ? p : a), after[0]);
-  const last = after.at(-1)!;
-  const uLast = uLine.at(-1)!;
-  const uMonths = Math.round(uPeak[0] / 4.33);
-  const uWhen = uMonths >= 0 ? "주가 고점 " + uMonths + "개월 뒤" : "주가 고점 " + -uMonths + "개월 전";
-
-  let revenue = "-";
+  if (win.length < 10 || unitMonthly.length < 6) return null;
+  const sPeak = maxOf(win);
+  const t0 = Date.parse(sPeak[0]);
+  const near = (d: string, before = 110, after = 80) => Date.parse(d) >= t0 - before * WEEK && Date.parse(d) <= t0 + after * WEEK;
+  const s = stock.filter(([d]) => near(d));
+  const unit = unitMonthly.map(([m, v]): Pt => [m + "-15", v]).filter(([d]) => near(d));
+  const rev = fin.filter((f) => near(f.period_end)).map((f): Pt => [f.period_end, f.revenue]);
+  if (!unit.length || rev.length < 2) return null;
+  const uPeak = maxOf(unit);
+  const rPeak = ongoing ? rev.at(-1)! : maxOf(rev);
+  const rIdx = rev.findIndex((r) => r[0] === rPeak[0]);
+  const rPrev = rev[Math.max(0, rIdx - 1)];
+  const after = s.filter(([d]) => d >= sPeak[0]);
+  const low = minOf(after), last = after.at(-1)!;
+  const pctDown = (v: number) => "−" + ((1 - v / sPeak[1]) * 100).toFixed(0) + "%";
+  const weeks = (d: string) => Math.round((Date.parse(d) - t0) / WEEK);
+  const uM = months(sPeak[0], uPeak[0]);
+  const uLast = unit.at(-1)!;
+  let revenue: string;
   if (ongoing) {
-    const lastQ = fin.at(-1), prevQ = fin.at(-2);
-    if (lastQ && prevQ) {
-      const g = (lastQ.revenue / prevQ.revenue - 1) * 100;
-      revenue = "최근 분기(" + lastQ.period_end.slice(0, 7) + ") " + usdB(lastQ.revenue) + ", 전분기 대비 " + (g >= 0 ? "+" : "−") + Math.abs(g).toFixed(0) + "%";
-    }
+    const g = (rPeak[1] / rPrev[1] - 1) * 100;
+    revenue = "최근 분기(" + rPeak[0].slice(0, 7) + ") " + usdB(rPeak[1]) + ", 전분기 대비 " + (g >= 0 ? "+" : "−") + Math.abs(g).toFixed(0) + "% — 아직 꺾이지 않음";
   } else {
-    const q = fin.filter((f) => Date.parse(f.period_end) >= t0 - 30 * WEEK && Date.parse(f.period_end) <= t0 + 80 * WEEK);
-    if (q.length) {
-      const qPeak = q.reduce((a, f) => (f.revenue > a.revenue ? f : a), q[0]);
-      const qAfter = q.filter((f) => f.period_end > qPeak.period_end);
-      revenue = qPeak.period_end.slice(0, 7) + " 분기 " + usdB(qPeak.revenue) + "가 고점";
-      if (qAfter.length) {
-        const qLow = qAfter.reduce((a, f) => (f.revenue < a.revenue ? f : a), qAfter[0]);
-        revenue += " → " + qLow.period_end.slice(0, 7) + " 분기 " + usdB(qLow.revenue) + " (−" + ((1 - qLow.revenue / qPeak.revenue) * 100).toFixed(0) + "%)";
-      }
-    }
+    const rLow = minOf(rev.filter((r) => r[0] > rPeak[0]));
+    revenue = rPeak[0].slice(0, 7) + " 분기 " + usdB(rPeak[1]) + "가 고점 → " + rLow[0].slice(0, 7) + " 분기 " + usdB(rLow[1]) + " (−" + ((1 - rLow[1] / rPeak[1]) * 100).toFixed(0) + "%)";
   }
   return {
-    label, stockPeak: peak[0], stock: sLine, unit: uLine,
-    rows: {
-      "주가 고점": peak[0],
-      "주가 저점 · 지금": ongoing ? last[0] + "주 뒤 지금 " + drop(last[1]) + " (가장 낮았던 주 " + drop(low[1]) + ")" : low[0] + "주 뒤 " + drop(low[1]) + "에서 저점",
-      "출하 단가 고점": uPeak[2] + " (" + uWhen + ")" + (ongoing ? (uLast[1] >= 99.5 ? " · 아직 고점" : " · 지금 고점 대비 " + drop(uLast[1])) : ""),
+    data: { stock: s, unit, rev, stockPeak: sPeak[0], unitPeak: uPeak[0], revPeak: rPeak[0], revPrev: rPrev[0] },
+    row: {
+      "주가 고점": sPeak[0],
+      "주가 저점 · 지금": ongoing ? weeks(last[0]) + "주 뒤 지금 " + pctDown(last[1]) + " (가장 낮았던 주 " + pctDown(low[1]) + ")" : weeks(low[0]) + "주 뒤 " + pctDown(low[1]) + "에서 저점",
+      "출하 단가 고점": uPeak[0].slice(0, 7) + " (주가 고점 " + (uM >= 0 ? uM + "개월 뒤" : -uM + "개월 전") + ")" + (ongoing ? (uLast[1] >= uPeak[1] * 0.995 ? " · 아직 고점" : " · 지금 고점 대비 −" + ((1 - uLast[1] / uPeak[1]) * 100).toFixed(0) + "%") : ""),
       "분기 매출": revenue,
-      "회사 코멘트": comment,
     },
   };
 }
@@ -92,24 +85,27 @@ export default async function MemoryPage() {
   const pairs: Pair[] = PAIRS.map((p) => ({
     id: p.id, title: p.title, ticker: p.ticker, name: p.name, note: p.note,
     prices: p.prices.map(([id, label, unit, color]): PriceLine => ({ id, label, unit, color, data: unitPrice(obs, id) })).filter((x) => x.data.length > 3),
-    stock: stock.filter((s) => s.ticker === p.ticker).map((s): [string, number] => [s.date, s.value]),
+    stock: stock.filter((s) => s.ticker === p.ticker).map((s): Pt => [s.date, s.value]),
   })).filter((p) => p.prices.length > 0);
 
-  const muStock = stock.filter((x) => x.ticker === "MU").map((x): [string, number] => [x.date, x.value]);
+  const muStock = stock.filter((x) => x.ticker === "MU").map((x): Pt => [x.date, x.value]);
   const lastDay = muStock.at(-1)?.[0] ?? "";
   const twoYearsAgo = lastDay ? new Date(Date.parse(lastDay) - 104 * WEEK).toISOString().slice(0, 10) : "";
-  const old = cycleSide("2018년 사이클", ref2018.stock as [string, number][], ref2018.unit as [string, number][], "2018-01-01", "2018-12-31", muFin.filter((f) => f.period_end < "2020"),
-    "2018-09-20 다음 분기 가이던스를 처음 낮춤 → 2018-12-18 실적 발표에서 수요 약화 인정", false);
-  const now = lastDay ? cycleSide("이번 사이클", muStock, unitPrice(obs, "kr_exp_dram"), twoYearsAgo, lastDay, muFin, "다음 실적 발표의 가이던스 방향이 확인 지점", true) : null;
-  const nav = [...pairs.map((p) => ({ id: p.id, label: p.title.split(" ↔ ")[0] })), ...(old && now ? [{ id: "cycle", label: "2018년과 비교" }] : [])];
+  const old = cycle(ref2018.stock as Pt[], ref2018.unit as Pt[], muFin.filter((f) => f.period_end < "2020"), "2018-01-01", "2018-12-31", false);
+  const now = lastDay ? cycle(muStock, unitPrice(obs, "kr_exp_dram"), muFin, twoYearsAgo, lastDay, true) : null;
+  const rows: CycleRows | null = old && now ? {
+    ...Object.fromEntries(Object.keys(old.row).map((k) => [k, [old.row[k], now.row[k]] as [string, string]])),
+    "회사 코멘트": ["2018-09-20 다음 분기 가이던스를 처음 낮춤 → 2018-12-18 실적 발표에서 수요 약화 인정", "다음 실적 발표의 가이던스 방향이 확인 지점"],
+  } : null;
+  const nav = [...pairs.map((p) => ({ id: p.id, label: p.title.split(" ↔ ")[0] })), ...(rows ? [{ id: "cycle", label: "2018년과 비교" }] : [])];
 
   return (
     <div className="space-y-5">
       <PageHead title={<T ko="메모리 가격·주가" en="Memory prices vs stocks" />} sub="DRAM · NAND · HDD 출하 단가와 대표 종목 주가 — 어느 쪽이 먼저 움직였나"
-        info={<p>가격 선은 현물가가 아니라 세관에 신고된 수출입 금액 ÷ 수량(출하 단가)입니다 — 실제 거래된 물건의 평균 단가라 계약가에 가깝고, 현물가보다 몇 달 늦게 움직이며 고용량 제품 비중이 늘어도 오릅니다. 현물가(TrendForce·DRAMeXchange)는 재게시가 제한돼 싣지 않습니다. 주가는 가격이 아니라 지수로만(주 단위, 기간 고점 = 100) 보여주며, 하루 한 번 갱신됩니다. 투자 권유가 아닙니다.</p>} />
+        info={<p>가격 선은 현물가가 아니라 세관에 신고된 수출입 금액 ÷ 수량(출하 단가)입니다 — 실제 거래된 물건의 평균 단가라 계약가에 가깝고, 현물가보다 몇 달 늦게 움직이며 고용량 제품 비중이 늘어도 오릅니다. 현물가(TrendForce·DRAMeXchange)는 재게시가 제한돼 싣지 않습니다. 주가는 가격이 아니라 지수로만(주 단위, 기간 고점 = 100) 보여주며, 하루 한 번 갱신됩니다. 차트는 끌어서 옮기고 두 손가락(또는 휠)으로 확대할 수 있습니다. 투자 권유가 아닙니다.</p>} />
       <SectionNav items={nav} />
       {pairs.length === 0 ? <div className="card text-sm text-muted">수집 전입니다.</div> : pairs.map((p) => <MemoryPair key={p.id} pair={p} />)}
-      {old && now && <CycleOverlay old={old} now={now} />}
+      {old && now && rows && <CycleOverlay old={old.data} now={now.data} rows={rows} lastDay={lastDay} />}
       <p className="text-xs leading-relaxed text-muted">
         주가는 보통 가격보다 먼저 움직입니다 — 2018년에는 주가가 6월에 고점을 찍은 뒤에도 출하 단가는 10월까지 올랐습니다. 단가가 아직 버티는데 주가가 먼저 꺾였다면 시장이 가격 고점을 미리 반영하는 것일 수 있지만, 이 차트만으로 다음 방향을 알 수는 없습니다.
         출처: 한국 관세청, 일본 재무성 무역통계, U.S. Census Bureau, SEC EDGAR. 현물가 참고: <a className="text-accent" href="https://www.trendforce.com/price" target="_blank" rel="noreferrer">TrendForce</a>
