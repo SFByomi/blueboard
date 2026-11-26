@@ -3,7 +3,8 @@
 import * as echarts from "echarts";
 import { useEffect, useRef } from "react";
 
-export function EChart({ option, height = 360, onAxis }: { option: echarts.EChartsOption; height?: number; onAxis?: (i: number | null) => void }) {
+/** keepZoom: 옵션이 바뀌어도(겹침 이동 등) 사용자가 확대·이동해 둔 구간을 유지 */
+export function EChart({ option, height = 360, onAxis, keepZoom = false }: { option: echarts.EChartsOption; height?: number; onAxis?: (i: number | null) => void; keepZoom?: boolean }) {
   const ref = useRef<HTMLDivElement>(null);
   const chart = useRef<echarts.ECharts | null>(null);
 
@@ -18,7 +19,13 @@ export function EChart({ option, height = 360, onAxis }: { option: echarts.EChar
     return () => { ro.disconnect(); chart.current?.dispose(); };
   }, []); // eslint-disable-line react-hooks/exhaustive-deps -- onAxis는 setState라 바뀌지 않음
 
-  useEffect(() => { chart.current?.setOption(option, true); }, [option]);
+  useEffect(() => {
+    const c = chart.current;
+    if (!c) return;
+    const dz = keepZoom ? (c.getOption()?.dataZoom as { start?: number; end?: number }[] | undefined)?.[0] : undefined;
+    c.setOption(option, true);
+    if (dz && dz.start != null && dz.end != null) c.dispatchAction({ type: "dataZoom", start: dz.start, end: dz.end });
+  }, [option, keepZoom]);
 
   return <div ref={ref} style={{ height }} className="w-full" />;
 }
