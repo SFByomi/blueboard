@@ -9,7 +9,8 @@ export type PriceLine = { id: string; label: string; unit: string; color: string
 export type Pair = { id: string; title: string; ticker: string; name: string; prices: PriceLine[]; stock: [string, number][]; note: string };
 
 const PERIODS = [["1y", "1년", 12], ["2y", "2년", 24], ["all", "전체", 60]] as const;
-const C_STOCK = "#e6e8f2";
+// 선 색은 역할로 고정 — 색상 계열이 확실히 다른 셋(주황·초록·파랑). 비슷한 색(보라·회색·흰색)을 한 차트에 같이 쓰지 않음
+const C_MAIN = "#f59e0b", C_SUB = "#22c55e", C_STOCK = "#38bdf8";
 const pct = (v: number | null) => (v == null ? "-" : `${v >= 0 ? "+" : "−"}${Math.abs(v).toFixed(0)}%`);
 const money = (v: number, unit: string) => (v >= 1000 ? `$${(v / 1000).toFixed(1)}K/${unit}` : `$${v.toFixed(2)}/${unit}`);
 const monthsBetween = (a: string, b: string) => (+b.slice(0, 4) - +a.slice(0, 4)) * 12 + (+b.slice(5, 7) - +a.slice(5, 7));
@@ -47,8 +48,8 @@ export function MemoryPair({ pair }: { pair: Pair }) {
     xAxis: { type: "time" as const, ...axis, axisLabel: { ...axis.axisLabel, hideOverlap: true } },
     yAxis: { type: "value" as const, ...axis, max: 100, min: (m: { min: number }) => Math.max(0, Math.floor(m.min / 10) * 10) },
     series: [
-      ...v.prices.map((p, i) => ({ name: `${p.label} 단가`, type: "line" as const, showSymbol: false, data: p.idx, lineStyle: { color: p.color, width: i ? 1.5 : 2.5, type: i ? ("dashed" as const) : ("solid" as const) }, itemStyle: { color: p.color } })),
-      ...(v.stock ? [{ name: `${pair.name} 주가`, type: "line" as const, showSymbol: false, data: v.stock.idx, lineStyle: { color: C_STOCK, width: 1.5 }, itemStyle: { color: C_STOCK } }] : []),
+      ...v.prices.map((p, i) => ({ name: `${p.label} 단가`, type: "line" as const, showSymbol: false, data: p.idx, lineStyle: { color: i ? C_SUB : C_MAIN, width: i ? 1.5 : 2.5, type: i ? ("dashed" as const) : ("solid" as const) }, itemStyle: { color: i ? C_SUB : C_MAIN } })),
+      ...(v.stock ? [{ name: `${pair.name} 주가`, type: "line" as const, showSymbol: false, data: v.stock.idx, lineStyle: { color: C_STOCK, width: 2 }, itemStyle: { color: C_STOCK } }] : []),
     ],
   };
   const tiles: [string, string, string][] = [
