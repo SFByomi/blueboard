@@ -13,6 +13,7 @@ const TABS: Tab[] = [
   { href: "/earnings", label: "실적 추정", en: "Earnings", icon: "target" },
   { href: "/prices", label: "업황", en: "Industry", icon: "pulse" },
   { href: "/macro", label: "매크로", en: "Macro", icon: "globe" },
+  { href: "/check", label: "시장 점검", en: "Check", icon: "check" },
   { href: "/credit", label: "신용", en: "Credit", icon: "shield" },
   { href: "/surge", label: "무역 탐색", en: "Trade", icon: "ship" },
   { href: "/calendar", label: "일정", en: "Calendar", icon: "cal" },
@@ -30,6 +31,7 @@ const ICONS = {
   cal: <><rect x="3.5" y="5" width="17" height="15" rx="2" /><path d="M3.5 10h17M8 3v4M16 3v4" /></>,
   pin: <><path d="M12 21s-7-6.2-7-11.5a7 7 0 0 1 14 0C19 14.8 12 21 12 21z" /><circle cx="12" cy="9.5" r="2.5" /></>,
   info: <><circle cx="12" cy="12" r="9" /><path d="M12 11v6M12 7.5v.5" /></>,
+  check: <path d="M4 6.5l1.6 1.6L8.5 5M4 12.5l1.6 1.6 2.9-3.1M4 18.5l1.6 1.6 2.9-3.1M12 7h8M12 13h8M12 19h8" />,
   more: <><circle cx="5" cy="12" r="1.6" /><circle cx="12" cy="12" r="1.6" /><circle cx="19" cy="12" r="1.6" /></>,
 };
 const Icon = ({ k, className = "h-5 w-5" }: { k: keyof typeof ICONS; className?: string }) => (
