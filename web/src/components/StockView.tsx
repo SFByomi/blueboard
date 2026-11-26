@@ -38,6 +38,13 @@ export function gradeWhy(x: Pick<FlowData, "grade" | "best" | "bestLag" | "nYoy"
   return `${base}${short ? ` — 표본이 ${SOLID + 2 * (x.bestLag ?? 0)}분기 미만이라 상관이 높아도 최대 C` : ""}${weak ? ` · 최근 8분기 ${x.recent!.toFixed(2)}로 약해지는 중` : ""}`;
 }
 
+/** 자동 감지(etl/breaks.py) 종류별 짧은 이름 — '단절'이라는 말 대신 무엇이 감지됐는지 */
+const ALERT_LABEL: Record<string, string> = { price_break: "재분류 의심", level_break: "수준 급변", unit_change: "수량 단위 변경", gap: "값 공백" };
+type AlertRow = FlowData["alerts"][number];
+/** 지금 읽는 숫자에 영향을 주는 경고만: 최근 3년 안의 것 (그 전 것은 전년비·추세에 영향 없음). lumpy는 흐름의 성격이라 따로 */
+const recentAlerts = (x: FlowData): AlertRow[] => x.alerts.filter((a) => a.kind !== "lumpy" && a.month >= (x.lastMonth ? shiftMonth(x.lastMonth, -36) : ""));
+const lumpyOf = (x: FlowData): AlertRow | undefined => x.alerts.find((a) => a.kind === "lumpy");
+
 export function StockView({ flows, months, quarters, currency, initial = 0 }: { flows: FlowData[]; months: string[]; quarters: QuarterRow[]; currency: string; initial?: number }) {
   const [sel, setSel] = useState(initial);
   const f = flows[sel];
@@ -51,8 +58,12 @@ export function StockView({ flows, months, quarters, currency, initial = 0 }: { 
 
   const totalYoY = useMemo(() => {
     const t = months.map((_, i) => shown.reduce<number | null>((s, x) => (s == null || x.values[i] == null ? null : s + x.values[i]!), 0));
-    return yoyArr(t);
+    if (!shown.some(lumpyOf)) return yoyArr(t);
+    // 납품이 몰려 나가는 흐름은 한 달 전년비가 수만 %로 튀어 읽을 수 없음 → 3개월 합의 전년비
+    const t3 = t.map((_, i) => (i < 2 || t[i] == null || t[i - 1] == null || t[i - 2] == null ? null : t[i]! + t[i - 1]! + t[i - 2]!));
+    return yoyArr(t3);
   }, [months, shown]);
+  const lumpyShown = shown.some(lumpyOf);
 
   const revByMonth = useMemo(() => {
     const map = new Map(quarters.map((q) => [q.end.slice(0, 7), q.revYoY]));
@@ -64,14 +75,14 @@ export function StockView({ flows, months, quarters, currency, initial = 0 }: { 
     xAxis: { type: "category", data: months, ...axis, splitLine: { show: false } },
     yAxis: [
       { type: "value", ...axis, axisLabel: { ...axis.axisLabel, formatter: shown.every(isCount) ? `{value}${shown[0].unit}` : "{value}M" } },
-      { type: "value", ...axis, splitLine: { show: false }, axisLabel: { ...axis.axisLabel, formatter: "{value}%" } },
+      { type: "value", ...axis, splitLine: { show: false }, axisLabel: { ...axis.axisLabel, formatter: "{value}%" }, max: (v: { max: number }) => Math.min(Math.ceil(v.max / 100) * 100, 1000) },
     ],
     series: [
       ...shown.map((x) => ({
         name: x.label, type: "bar" as const, stack: "t", barMaxWidth: 12,
         itemStyle: { color: COLORS[flows.indexOf(x) % COLORS.length] }, data: scaled(x),
       })),
-      { name: "합산 YoY", type: "line", yAxisIndex: 1, symbol: "none", lineStyle: { color: "#22d3ee", width: 2 }, itemStyle: { color: "#22d3ee" }, data: totalYoY.map(P) },
+      { name: lumpyShown ? "합산 YoY (3개월 합)" : "합산 YoY", type: "line", yAxisIndex: 1, symbol: "none", lineStyle: { color: "#22d3ee", width: 2 }, itemStyle: { color: "#22d3ee" }, data: totalYoY.map(P) },
       { name: "매출 YoY", type: "line", yAxisIndex: 1, connectNulls: true, symbolSize: 7, lineStyle: { color: "#34d399", width: 2 }, itemStyle: { color: "#34d399" }, data: revByMonth },
     ],
   });
@@ -84,9 +95,9 @@ export function StockView({ flows, months, quarters, currency, initial = 0 }: { 
     series: [
       {
         name: isCount(f) ? `값 (${f.unit})` : "금액 (USD M)", type: "bar", barMaxWidth: 8, itemStyle: { color: COLORS[sel % COLORS.length] }, data: scaled(f),
-        markLine: f.alerts.length ? {
-          symbol: "none", lineStyle: { color: "#f59e0b", type: "dashed" }, label: { color: "#f59e0b", formatter: "단절?" },
-          data: f.alerts.map((a) => ({ xAxis: a.month })),
+        markLine: recentAlerts(f).length ? {
+          symbol: "none", lineStyle: { color: "#f59e0b", type: "dashed" }, label: { color: "#f59e0b", fontSize: 10, formatter: (p: { name?: string }) => p.name ?? "" },
+          data: recentAlerts(f).map((a) => ({ xAxis: a.month, name: ALERT_LABEL[a.kind] ?? "확인" })),
         } : undefined,
       },
       ...(hasQty ? [{ name: `단가 (USD/${f.unit ?? "단위"})`, type: "line" as const, yAxisIndex: 1, symbol: "none", lineStyle: { color: "#f87171", width: 2 }, itemStyle: { color: "#f87171" }, data: d.price.map((v) => (v == null ? null : +v.toFixed(4))) }] : []),
@@ -150,7 +161,8 @@ export function StockView({ flows, months, quarters, currency, initial = 0 }: { 
                         <span className="flex shrink-0 items-center gap-1.5 whitespace-nowrap text-xs text-muted" title={gradeWhy(x)}>
                           연관도 <GradeBadge grade={x.grade} />
                           {!x.include && <span>합산 제외</span>}
-                          {x.alerts.length > 0 && <span className="rounded-full bg-amber-950 px-1.5 text-[11px] text-amber-300" title={x.alerts.map((a) => `${a.month} ${a.detail}`).join(" / ")}>⚠ 단절</span>}
+                          {recentAlerts(x).length > 0 && <span className="rounded-full bg-amber-950 px-1.5 text-[11px] text-amber-300" title={recentAlerts(x).map((a) => `${a.month} ${a.detail}`).join(" / ")}>⚠ {ALERT_LABEL[recentAlerts(x)[0].kind] ?? "확인"}</span>}
+                          {lumpyOf(x) && <span className="rounded-full bg-panel px-1.5 text-[11px] text-muted" title={lumpyOf(x)!.detail}>출렁임 큼</span>}
                         </span>
                         <span className="ml-auto text-right font-mono">
                           <span className={`text-base font-bold ${tone(v3.value)}`} title={baseEffect(v3.value)}>{pct(v3.value)}{baseEffect(v3.value) ? <sup className="text-amber-300">*</sup> : null}</span>
@@ -171,10 +183,11 @@ export function StockView({ flows, months, quarters, currency, initial = 0 }: { 
         <div className="flex flex-wrap items-center gap-2"><b>{f.label}</b><GradeBadge grade={f.grade} /><span className="text-xs text-muted">{gradeWhy(f)}</span></div>
         {f.rationale && <p className="mt-1.5 text-[#c9cde3]">{f.rationale}</p>}
         {f.caveat && <p className="mt-1.5 text-xs text-amber-400">⚠ {f.caveat}</p>}
-        {f.alerts.length > 0 && (
+        {lumpyOf(f) && <p className="mt-1.5 text-xs text-muted">{lumpyOf(f)!.detail}</p>}
+        {recentAlerts(f).length > 0 && (
           <ul className="mt-1.5 space-y-0.5 text-xs text-amber-300">
-            {f.alerts.slice(0, 2).map((a) => <li key={a.month + a.kind}>자동 감지 · <span className="font-mono">{a.month}</span> {a.detail}</li>)}
-            {f.alerts.length > 2 && <li className="text-muted" title={f.alerts.slice(2).map((a) => `${a.month} ${a.detail}`).join(" / ")}>그 밖에 {f.alerts.length - 2}건 (같은 종류)</li>}
+            {recentAlerts(f).slice(0, 2).map((a) => <li key={a.month + a.kind}>⚠ {ALERT_LABEL[a.kind] ?? "확인"} · <span className="font-mono">{a.month}</span> {a.detail}</li>)}
+            {recentAlerts(f).length > 2 && <li className="text-muted" title={recentAlerts(f).slice(2).map((a) => `${a.month} ${a.detail}`).join(" / ")}>그 밖에 {recentAlerts(f).length - 2}건</li>}
           </ul>
         )}
       </div>
