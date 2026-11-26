@@ -703,6 +703,22 @@
    "grp": "방산·우주",
    "sites": "[{\"name\": \"안성공장\", \"country\": \"한국 경기 안성\", \"what\": \"장갑 조립·체계 부품\"}, {\"name\": \"광주공장(곤지암)\", \"country\": \"한국 경기 광주\", \"what\": \"방탄 세라믹 소결\"}, {\"name\": \"구미공장\", \"country\": \"한국 경북 구미\", \"what\": \"방탄 세라믹(2023년 신설, 증축 중)\"}]",
    "thesis_en": "Korean armor maker (K2 tank special armor, vehicle add-on armor, helicopter ballistic plates) that sinters its own SiC/boron-carbide ceramics. Exports mostly go through Hyundai Rotem's K2 tanks for Poland — armor deliveries lead Changwon tank exports by 1–2 quarters."
+  },
+  {
+   "ticker": "STX",
+   "name": "Seagate Technology",
+   "name_ko": "시게이트",
+   "market": "NASDAQ",
+   "sector": "HDD(대용량 저장장치)",
+   "thesis": "HDD 양강(시게이트·웨스턴디지털) 중 하나 — 데이터센터용 대용량(니어라인) HDD가 매출 대부분. 드라이브 조립은 태국(코랏·테파락)·중국 우시, 미디어는 싱가포르, 헤드 웨이퍼는 북아일랜드·미네소타. 미국으로 들어오는 태국산 HDD가 회사·업계 출하를 보여줌(전년비 상관 0.72, A) — 다만 최근 8분기는 −0.21로 약해짐: 물량보다 대당 가격·용량(HAMR) 상승과 미국 밖 데이터센터향 출하가 매출을 끌기 때문. 대당 수입 단가가 HDD 가격 흐름의 대용 지표. 모니터링: 니어라인 엑사바이트 출하, HAMR 전환, 장기 공급 계약 가격.",
+   "sec_ticker": "STX",
+   "fy_note": "FY 6월말 종료",
+   "sort": 25,
+   "dart_fs": null,
+   "dart_segment": null,
+   "grp": "메모리",
+   "sites": "[{\"name\": \"코랏·테파락\", \"country\": \"태국\", \"what\": \"드라이브·헤드 조립\"}, {\"name\": \"우시\", \"country\": \"중국\", \"what\": \"드라이브 조립\"}, {\"name\": \"우드랜즈\", \"country\": \"싱가포르\", \"what\": \"미디어(디스크)\"}, {\"name\": \"스프링타운·노먼데일\", \"country\": \"영국 북아일랜드·미국 미네소타\", \"what\": \"헤드 웨이퍼\"}]",
+   "thesis_en": "One of two HDD makers; nearline data-center drives dominate revenue. Drives are assembled in Thailand and China. US imports of Thai hard drives track shipments (grade A long-run, weaker recently as price and capacity per drive drive revenue); import value per drive is a proxy for HDD pricing."
   }
  ],
  "series": [
@@ -1965,6 +1981,30 @@
    "partner": "전세계",
    "spec": "{\"api\": \"item\", \"hs\": \"284920\", \"flow\": \"import\"}",
    "label_en": "Korea silicon carbide imports"
+  },
+  {
+   "id": "us_imp_th_hdd",
+   "label": "태국산 HDD 수입",
+   "source": "census",
+   "reporter": "🇺🇸 미국",
+   "flow": "수입",
+   "region": "전국",
+   "hs": "8471.70.4065",
+   "partner": "태국",
+   "spec": "{\"dataset\": \"imports/hs\", \"hs\": \"8471704065\", \"filters\": {\"CTY_CODE\": \"5490\"}}",
+   "label_en": "US imports of Thai hard disk drives"
+  },
+  {
+   "id": "us_imp_all_hdd",
+   "label": "전체 HDD 수입",
+   "source": "census",
+   "reporter": "🇺🇸 미국",
+   "flow": "수입",
+   "region": "전국",
+   "hs": "8471.70.4065",
+   "partner": "전세계",
+   "spec": "{\"dataset\": \"imports/hs\", \"hs\": \"8471704065\", \"filters\": {\"CTY_CODE\": \"-\"}}",
+   "label_en": "US hard disk drive imports (all origins)"
   }
  ],
  "mappings": [
@@ -3457,6 +3497,26 @@
    "caveat": "국내 조달분·연마재 등 다른 용도 포함 — 투입 규모 참고만.",
    "include_in_total": 0,
    "sort": 30
+  },
+  {
+   "ticker": "STX",
+   "series_id": "us_imp_th_hdd",
+   "role": "회사출하",
+   "confidence": "중간",
+   "rationale": "태국(코랏·테파락) 조립 HDD의 미국 반입 — 전년비 상관 0.72(동분기)·0.62(1분기 선행), A. 대당 단가 약 $320(2026년 8월).",
+   "caveat": "웨스턴디지털 태국 공장 물량 포함(업계 합산). 최근 8분기 −0.21로 약해짐 — 대당 가격·용량 상승과 미국 밖 출하가 매출을 끄는 구간.",
+   "include_in_total": 0,
+   "sort": 10
+  },
+  {
+   "ticker": "STX",
+   "series_id": "us_imp_all_hdd",
+   "role": "최종수요",
+   "confidence": "중간",
+   "rationale": "미국 전체 HDD 수입(태국 약 80%·필리핀 약 17%) — 전년비 상관 0.78, A.",
+   "caveat": "업계 전체 수요. 최근 8분기 −0.13.",
+   "include_in_total": 0,
+   "sort": 20
   }
  ],
  "hs_tags": [
@@ -3739,6 +3799,11 @@
    "hs_prefix": "284920",
    "ticker": "484590.KQ",
    "note": "탄화규소(SiC)"
+  },
+  {
+   "hs_prefix": "847170",
+   "ticker": "STX",
+   "note": "저장장치(HDD)"
   }
  ]
 }

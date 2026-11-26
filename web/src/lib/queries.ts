@@ -199,6 +199,8 @@ export const bigtechCash = () =>
   query<{ ticker: string; q_end: string; cal_q: string; oi: number | null; ocf: number; capex: number; fcf: number; raised: number | null }>("SELECT * FROM bigtech_cash ORDER BY q_end").catch(() => []);
 /** 중소형·동일가중·경기민감 ÷ S&P 500 상대 강도 (etl/relstrength.py, 3년 전 = 100) */
 export const relStrength = () => query<MacroObs>("SELECT series, date, value FROM rel_strength ORDER BY date").catch(noTable<MacroObs>);
+/** 메모리 가격·주가 탭: 주 단위 주가 지수 (etl/stockidx.py, 첫 주 = 100 — 가격 아님) */
+export const stockIndex = () => query<{ ticker: string; date: string; value: number }>("SELECT ticker, date, value FROM stock_index ORDER BY date").catch(() => []);
 /** 미국 집값·주거비 (etl/housing.py): FHFA 지수·CPI OER·주거 지수 원값, 30년 주담대 % */
 export const housingObs = () => query<MacroObs>("SELECT series, date, value FROM housing_obs ORDER BY date").catch(noTable<MacroObs>);
 export const ustCurve = () => query<MacroObs>("SELECT series, date, value FROM macro_obs WHERE series LIKE 'DGS%' ORDER BY date").catch(noTable<MacroObs>);

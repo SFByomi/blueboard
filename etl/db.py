@@ -162,6 +162,10 @@ CREATE TABLE IF NOT EXISTS rel_strength ( -- 상대 강도 (etl/relstrength.py):
   series TEXT NOT NULL, date TEXT NOT NULL, value REAL,             -- SMALL(IWM÷SPY) · EQUAL(RSP÷SPY) · CYC(XLI·XLB·XLF·XLE 평균÷SPY)
   PRIMARY KEY (series, date)
 );
+CREATE TABLE IF NOT EXISTS stock_index ( -- 메모리 가격·주가 탭 (etl/stockidx.py): 주 단위 주가 지수, 첫 주 = 100 (가격 자체는 저장하지 않음)
+  ticker TEXT NOT NULL, date TEXT NOT NULL, value REAL,
+  PRIMARY KEY (ticker, date)
+);
 CREATE TABLE IF NOT EXISTS housing_obs ( -- 미국 집값·주거비 (etl/housing.py): FHFA 주택가격지수·CPI OER·주거 지수 원값, 30년 주담대 %
   series TEXT NOT NULL, date TEXT NOT NULL, value REAL,
   PRIMARY KEY (series, date)
