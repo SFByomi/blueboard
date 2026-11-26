@@ -23,7 +23,7 @@
 - `etl/` Python 수집기 → `data/yomin.db`(SQLite, git 미포함 — `python -m etl.build`로 재생성)
   - 큐레이션(companies·series·mappings·hs_tags)은 `seed.py`로 INSERT OR IGNORE → 이후 관리 페이지 편집이 우선
   - 소스: census.py(미국) · estat.py(일본, 엔→달러) · kcs.py(한국 관세청, 시군구) · sec.py/dart.py/dart_segment.py(매출)
-  - surge.py 급등 탐지 · breaks.py 통계 단절 경고
+  - surge.py 급등 탐지 · breaks.py 통계 단절 경고(재분류 의심·수준 급변·수량 단위 변경·값 공백). 달마다 2배 넘게 출렁이는 흐름(창원 전차 수출·네덜란드 노광장비)은 단절이 아니라 `lumpy`(납품 몰림) 한 줄로 묶고 화면엔 회색 "출렁임 큼" — 추정의 단절 검사에서도 빠짐
   - **상관 모델(핵심 원칙: 어떤 품목이 매출과 직접 연결되는지 숫자로)**: scores.py가 빌드마다 모든 매핑을 분기 매출과 비교 → `flow_scores`(전년비 상관 0~2분기 선행·최근 8분기·등급 A~D). check.py로 개별 검증, discover.py로 HS×국가/주 후보 자동 탐색
   - **공시 전 실적(속도)**: 분기보고서·10-Q는 발표 몇 주 뒤라 그 전에 — 미국은 실적 보도자료(guidance.parse_actual, 회사별 과거 일치율 90% 이상만), 한국 연결 매출은 DART 영업(잠정)실적 공정공시(dart_prelim.py, 전기실적이 우리 직전 분기와 맞을 때만, `data/dart_prelim.json` 캐시), 부문 매출은 estimate_reviews.json actual. 공식 공시가 들어오면 그 값으로 대체
   - **진행 분기 매출 추정**: estimates.py가 (가이던스 종목은 같은 분기 상관 0.7 이상 흐름의 진행 분기 전분기·전년비를 `guide.xcheck`로 교차 확인 — 모델엔 안 넣음) A·B 흐름으로 전년비·금액 회귀(+직전 4분기 편향 보정판) 중 백테스트 오차가 작은 모델을 골라 추정 → `revenue_estimates`(Supabase 누적: 추정·괴리율 추이). consensus.py가 야후 매출 컨센서스 수집 → `consensus`는 **재게시 금지라 로컬 전용**(publish.PRIVATE), 공개엔 괴리율만. 원 금액은 /admin/consensus

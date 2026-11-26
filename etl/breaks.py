@@ -5,6 +5,7 @@
 - level_break : (수량 없는 시리즈) 금액 수준이 ×3 이상 바뀌어 유지
 - unit_change : 수량 ×3 이상·단가 ÷3 이하(또는 반대)로 동시에 변함 → 금액은 이어지나 수량 단위가 바뀐 것
 - gap         : 앞뒤로 값이 있는데 0/결측인 달이 2개월 이상 연속 (세관 경유 변경 등)
+- lumpy       : level_break가 있는데 최근 36개월 중 40% 이상의 달이 전월의 2배 넘게 변함 — 통계 단절이 아니라 납품이 몰려 나가는 품목(창원 전차 수출, 네덜란드 노광장비 수출)
 변화 후 수준이 최소 2개월 유지돼야 경고(일시적 급등락은 급등 탐지가 담당).
 """
 import numpy as np
@@ -12,6 +13,7 @@ import pandas as pd
 
 RATIO = 3.0
 QTY_STABLE = 1.5
+LUMPY = 0.4  # 최근 36개월 중 전월 대비 2배 이상 변한 달의 비율이 이 이상이면 납품 몰림(lumpy)
 
 
 def _shift(before: pd.Series, after: pd.Series):
@@ -54,6 +56,17 @@ def detect(df: pd.DataFrame) -> list[dict]:
         if not (last and last[0] == a["kind"] and (m - last[1]).n <= 3):
             dedup.append(a)
         last = (a["kind"], m)
+    # 달마다 금액이 2배 넘게 오르내리는 흐름은 통계 변경이 아니라 원래 납품이 몰려 나가는 품목(전차·노광장비처럼 대당 금액이 큰 것)
+    # → 계단식 변화를 달마다 경고하지 않고 '납품 몰림' 한 줄로 (추정의 단절 검사에서도 빠짐)
+    lv = [a for a in dedup if a["kind"] == "level_break"]
+    if lv:
+        r = (v / v.shift(1)).replace([np.inf, -np.inf], np.nan).dropna()
+        r = r[r > 0].tail(36)
+        share = float(((r >= 2) | (r <= 0.5)).mean()) if len(r) >= 12 else 0.0
+        if share >= LUMPY:
+            dedup = [a for a in dedup if a["kind"] != "level_break"]
+            dedup.append({"month": lv[-1]["month"], "kind": "lumpy",
+                          "detail": f"월 금액이 원래 크게 출렁이는 흐름 — 최근 3년 중 {share:.0%}의 달이 전월의 2배 넘게 변함(대형 납품이 몰려 나가는 품목). 통계 변경이 아니니 분기·연 단위로 볼 것"})
     # 결측 구간
     zero = (v <= 0).values
     i = 0
