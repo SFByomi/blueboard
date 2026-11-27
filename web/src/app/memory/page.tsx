@@ -5,7 +5,7 @@ import { T } from "@/components/Names";
 import { SectionNav } from "@/components/SectionNav";
 import { PageHead } from "@/components/ui";
 import ref2018 from "@/lib/cycle2018.json";
-import { financials, observations, stockIndex, type Fin, type Obs } from "@/lib/queries";
+import { earningsDates, financials, latestEstimates, observations, stockIndex, type Fin, type Obs, type RevEstimate } from "@/lib/queries";
 
 export const dynamic = "force-dynamic";
 export const metadata: Metadata = { title: "메모리 가격·주가", description: "DRAM·NAND·HDD 출하 단가(세관 신고 금액 ÷ 수량)와 마이크론·샌디스크·시게이트 주가를 기간 고점 = 100으로 비교, 2018년 사이클과 겹쳐 보기" };
@@ -38,9 +38,16 @@ const usdB = (v: number) => "$" + (v / 1e9).toFixed(2) + "B";
 const maxOf = (pts: Pt[]) => pts.reduce((a, p) => (p[1] > a[1] ? p : a), pts[0]);
 const minOf = (pts: Pt[]) => pts.reduce((a, p) => (p[1] < a[1] ? p : a), pts[0]);
 const months = (a: string, b: string) => Math.round((Date.parse(b) - Date.parse(a)) / (30.44 * 864e5));
+/** 분기가 덮는 달 — 마이크론처럼 달력과 어긋난 회계 분기(5/29~9/3)를 '6~8월'로. 월말·월초 며칠은 가까운 달로 */
+function monthSpan(start: string, end: string): string {
+  const a = new Date(Date.parse(start) + 6 * 864e5), b = new Date(Date.parse(end) - 6 * 864e5);
+  return (a.getUTCMonth() + 1) + "~" + (b.getUTCMonth() + 1) + "월";
+}
+type Pending = { est: RevEstimate; next: string | null };  // 아직 발표 전인 진행 분기 추정
 
 /** 한 사이클의 주가·출하 단가·분기 매출과 기준일(고점들). from~to 안에서 주가 고점을 찾음 */
-function cycle(stock: Pt[], unitMonthly: Pt[], fin: Fin[], from: string, to: string, ongoing: boolean): { data: CycleData; row: Record<string, string> } | null {
+function cycle(stock: Pt[], unitMonthly: Pt[], fin: Fin[], from: string, to: string, pending: Pending | null | false): { data: CycleData; row: Record<string, string> } | null {
+  const ongoing = pending !== false;
   const win = stock.filter(([d]) => d >= from && d <= to);
   if (win.length < 10 || unitMonthly.length < 6) return null;
   const sPeak = maxOf(win);
@@ -48,7 +55,9 @@ function cycle(stock: Pt[], unitMonthly: Pt[], fin: Fin[], from: string, to: str
   const near = (d: string, before = 110, after = 80) => Date.parse(d) >= t0 - before * WEEK && Date.parse(d) <= t0 + after * WEEK;
   const s = stock.filter(([d]) => near(d));
   const unit = unitMonthly.map(([m, v]): Pt => [m + "-15", v]).filter(([d]) => near(d));
-  const rev = fin.filter((f) => near(f.period_end)).map((f): Pt => [f.period_end, f.revenue]);
+  const fins = fin.filter((f) => near(f.period_end));
+  const rev = fins.map((f): Pt => [f.period_end, f.revenue]);
+  const span = (end: string) => { const f = fins.find((x) => x.period_end === end); return f ? monthSpan(f.period_start, f.period_end) : end.slice(0, 7); };
   if (!unit.length || rev.length < 2) return null;
   const uPeak = maxOf(unit);
   const rPeak = ongoing ? rev.at(-1)! : maxOf(rev);
@@ -60,28 +69,42 @@ function cycle(stock: Pt[], unitMonthly: Pt[], fin: Fin[], from: string, to: str
   const weeks = (d: string) => Math.round((Date.parse(d) - t0) / WEEK);
   const uM = months(sPeak[0], uPeak[0]);
   const uLast = unit.at(-1)!;
-  let revenue: string;
+  const qoq = (v: number, base: number) => { const g = (v / base - 1) * 100; return (g >= 0 ? "+" : "−") + Math.abs(g).toFixed(0) + "%"; };
+  const md = (d: string) => +d.slice(5, 7) + "/" + +d.slice(8, 10);
+  let revenue: string, nextQ: string, revEst: Pt | null = null;
   if (ongoing) {
-    const g = (rPeak[1] / rPrev[1] - 1) * 100;
-    revenue = "최근 분기(" + rPeak[0].slice(0, 7) + ") " + usdB(rPeak[1]) + ", 전분기 대비 " + (g >= 0 ? "+" : "−") + Math.abs(g).toFixed(0) + "% — 아직 꺾이지 않음";
+    revenue = "발표된 마지막 분기(" + span(rPeak[0]) + ", " + md(rPeak[0]) + " 마감) " + usdB(rPeak[1]) + ", 전분기 대비 " + qoq(rPeak[1], rPrev[1]) + " — 아직 꺾이지 않음";
+    const e = pending && pending.est.q_end > rPeak[0] ? pending.est : null;  // 이미 발표된 분기의 추정이면 쓰지 않음
+    if (e) {
+      revEst = [e.q_end, e.est];
+      let g: { low?: number; high?: number } = {};
+      try { g = JSON.parse(e.guide ?? "{}"); } catch { /* 가이던스 없음 */ }
+      nextQ = monthSpan(e.q_start, e.q_end) + " 분기(" + md(e.q_end) + " 마감)는 아직 발표 전" + (pending && pending.next ? " — " + md(pending.next) + " 발표 예정" : "")
+        + " · 우리 추정 " + usdB(e.est) + " (전분기 대비 " + qoq(e.est, rPeak[1]) + ", 범위 " + usdB(e.low) + "~" + usdB(e.high) + ")"
+        + (g.low && g.high ? " · 회사 가이던스 " + usdB(g.low) + "~" + usdB(g.high) : "");
+    } else nextQ = "추정 없음";
   } else {
     const rLow = minOf(rev.filter((r) => r[0] > rPeak[0]));
-    revenue = rPeak[0].slice(0, 7) + " 분기 " + usdB(rPeak[1]) + "가 고점 → " + rLow[0].slice(0, 7) + " 분기 " + usdB(rLow[1]) + " (−" + ((1 - rLow[1] / rPeak[1]) * 100).toFixed(0) + "%)";
+    const rNext = rev[rIdx + 1];
+    revenue = span(rPeak[0]) + " 분기(" + rPeak[0].slice(0, 7) + " 마감) " + usdB(rPeak[1]) + "가 고점 → " + rLow[0].slice(0, 7) + " 마감 분기 " + usdB(rLow[1]) + " (−" + ((1 - rLow[1] / rPeak[1]) * 100).toFixed(0) + "%)";
+    nextQ = rNext ? "고점 다음 분기(" + span(rNext[0]) + ") " + usdB(rNext[1]) + ", 전분기 대비 " + qoq(rNext[1], rPeak[1]) + " — 여기서 꺾이기 시작" : "-";
   }
   return {
-    data: { stock: s, unit, rev, stockPeak: sPeak[0], unitPeak: uPeak[0], revPeak: rPeak[0], revPrev: rPrev[0] },
+    data: { stock: s, unit, rev, revEst, stockPeak: sPeak[0], unitPeak: uPeak[0], revPeak: rPeak[0], revPrev: rPrev[0] },
     row: {
       "주가 고점": sPeak[0],
       "주가 저점 · 지금": ongoing ? weeks(last[0]) + "주 뒤 지금 " + pctDown(last[1]) + " (가장 낮았던 주 " + pctDown(low[1]) + ")" : weeks(low[0]) + "주 뒤 " + pctDown(low[1]) + "에서 저점",
       "출하 단가 고점": uPeak[0].slice(0, 7) + " (주가 고점 " + (uM >= 0 ? uM + "개월 뒤" : -uM + "개월 전") + ")" + (ongoing ? (uLast[1] >= uPeak[1] * 0.995 ? " · 아직 고점" : " · 지금 고점 대비 −" + ((1 - uLast[1] / uPeak[1]) * 100).toFixed(0) + "%") : ""),
       "분기 매출": revenue,
+      "그다음 분기": nextQ,
     },
   };
 }
 
 export default async function MemoryPage() {
   const ids = PAIRS.flatMap((p) => p.prices.map((x) => x[0]));
-  const [obs, stock, muFin] = await Promise.all([observations([...ids]), stockIndex(), financials("MU")]);
+  const [obs, stock, muFin, ests, nextDates] = await Promise.all([observations([...ids]), stockIndex(), financials("MU"), latestEstimates(), earningsDates()]);
+  const muEst = ests.find((e) => e.ticker === "MU");
   const pairs: Pair[] = PAIRS.map((p) => ({
     id: p.id, title: p.title, ticker: p.ticker, name: p.name, note: p.note,
     prices: p.prices.map(([id, label, unit, color]): PriceLine => ({ id, label, unit, color, data: unitPrice(obs, id) })).filter((x) => x.data.length > 3),
@@ -92,7 +115,7 @@ export default async function MemoryPage() {
   const lastDay = muStock.at(-1)?.[0] ?? "";
   const twoYearsAgo = lastDay ? new Date(Date.parse(lastDay) - 104 * WEEK).toISOString().slice(0, 10) : "";
   const old = cycle(ref2018.stock as Pt[], ref2018.unit as Pt[], muFin.filter((f) => f.period_end < "2020"), "2018-01-01", "2018-12-31", false);
-  const now = lastDay ? cycle(muStock, unitPrice(obs, "kr_exp_dram"), muFin, twoYearsAgo, lastDay, true) : null;
+  const now = lastDay ? cycle(muStock, unitPrice(obs, "kr_exp_dram"), muFin, twoYearsAgo, lastDay, muEst ? { est: muEst, next: nextDates.MU ?? null } : null) : null;
   const rows: CycleRows | null = old && now ? {
     ...Object.fromEntries(Object.keys(old.row).map((k) => [k, [old.row[k], now.row[k]] as [string, string]])),
     "회사 코멘트": ["2018-09-20 다음 분기 가이던스를 처음 낮춤 → 2018-12-18 실적 발표에서 수요 약화 인정", "다음 실적 발표의 가이던스 방향이 확인 지점"],
