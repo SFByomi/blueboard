@@ -13,6 +13,7 @@ const TABS: Tab[] = [
   { href: "/earnings", label: "실적 추정", en: "Earnings", icon: "target" },
   { href: "/prices", label: "업황", en: "Industry", icon: "pulse" },
   { href: "/memory", label: "메모리", en: "Memory", icon: "chip" },
+  { href: "/bio", label: "바이오", en: "Bio", icon: "flask" },
   { href: "/macro", label: "매크로", en: "Macro", icon: "globe" },
   { href: "/check", label: "시장 점검", en: "Check", icon: "check" },
   { href: "/credit", label: "신용", en: "Credit", icon: "shield" },
@@ -34,6 +35,7 @@ const ICONS = {
   info: <><circle cx="12" cy="12" r="9" /><path d="M12 11v6M12 7.5v.5" /></>,
   check: <path d="M4 6.5l1.6 1.6L8.5 5M4 12.5l1.6 1.6 2.9-3.1M4 18.5l1.6 1.6 2.9-3.1M12 7h8M12 13h8M12 19h8" />,
   chip: <><rect x="6.5" y="6.5" width="11" height="11" rx="1.5" /><path d="M9.5 3v3.5M14.5 3v3.5M9.5 17.5V21M14.5 17.5V21M3 9.5h3.5M3 14.5h3.5M17.5 9.5H21M17.5 14.5H21" /></>,
+  flask: <path d="M9.5 3h5M10 3v6.2L4.8 18a2 2 0 0 0 1.7 3h11a2 2 0 0 0 1.7-3L14 9.2V3M7.3 14.5h9.4" />,
   more: <><circle cx="5" cy="12" r="1.6" /><circle cx="12" cy="12" r="1.6" /><circle cx="19" cy="12" r="1.6" /></>,
 };
 const Icon = ({ k, className = "h-5 w-5" }: { k: keyof typeof ICONS; className?: string }) => (

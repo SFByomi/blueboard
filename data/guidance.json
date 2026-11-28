@@ -2673,6 +2673,297 @@
 "fye": "0630",
 "v": 13
 },
+"0001157523-21-000990": {
+"ticker": "CRL",
+"filed": "2021-08-04",
+"cands": [],
+"annual": [],
+"actual": {
+"value": 914.6,
+"unit": 1000000.0,
+"ctx": "Revenue of $914.6 Million"
+},
+"fye": "1227",
+"v": 13
+},
+"0001157523-21-001314": {
+"ticker": "CRL",
+"filed": "2021-11-03",
+"cands": [],
+"annual": [],
+"actual": {
+"value": 895.9,
+"unit": 1000000.0,
+"ctx": "Revenue of $895.9 Million"
+},
+"fye": "1227",
+"v": 13
+},
+"0001157523-22-000208": {
+"ticker": "CRL",
+"filed": "2022-02-16",
+"cands": [],
+"annual": [],
+"actual": null,
+"fye": "1227",
+"v": 13
+},
+"0001157523-22-000551": {
+"ticker": "CRL",
+"filed": "2022-05-04",
+"cands": [],
+"annual": [],
+"actual": {
+"value": 913.9,
+"unit": 1000000.0,
+"ctx": "Revenue of $913.9 Million"
+},
+"fye": "1227",
+"v": 13
+},
+"0001157523-22-000999": {
+"ticker": "CRL",
+"filed": "2022-08-03",
+"cands": [],
+"annual": [],
+"actual": {
+"value": 973.1,
+"unit": 1000000.0,
+"ctx": "Revenue of $973.1 Million"
+},
+"fye": "1227",
+"v": 13
+},
+"0001157523-22-001470": {
+"ticker": "CRL",
+"filed": "2022-11-02",
+"cands": [],
+"annual": [],
+"actual": {
+"value": 989.2,
+"unit": 1000000.0,
+"ctx": "Revenue of $989.2 Million"
+},
+"fye": "1227",
+"v": 13
+},
+"0001157523-23-000326": {
+"ticker": "CRL",
+"filed": "2023-02-22",
+"cands": [],
+"annual": [],
+"actual": null,
+"fye": "1227",
+"v": 13
+},
+"0001157523-23-000819": {
+"ticker": "CRL",
+"filed": "2023-05-11",
+"cands": [],
+"annual": [],
+"actual": {
+"value": 1.03,
+"unit": 1000000000.0,
+"ctx": "Revenue of $1.03 Billion"
+},
+"fye": "1227",
+"v": 13
+},
+"0001157523-23-001294": {
+"ticker": "CRL",
+"filed": "2023-08-09",
+"cands": [],
+"annual": [],
+"actual": {
+"value": 1.06,
+"unit": 1000000000.0,
+"ctx": "Revenue of $1.06 Billion"
+},
+"fye": "1227",
+"v": 13
+},
+"0001157523-23-001678": {
+"ticker": "CRL",
+"filed": "2023-11-08",
+"cands": [],
+"annual": [],
+"actual": {
+"value": 1.03,
+"unit": 1000000000.0,
+"ctx": "Revenue of $1.03 Billion"
+},
+"fye": "1227",
+"v": 13
+},
+"0001157523-24-000238": {
+"ticker": "CRL",
+"filed": "2024-02-14",
+"cands": [],
+"annual": [],
+"actual": null,
+"fye": "1227",
+"v": 13
+},
+"0001100682-24-000014": {
+"ticker": "CRL",
+"filed": "2024-05-09",
+"cands": [],
+"annual": [],
+"actual": {
+"value": 1.01,
+"unit": 1000000000.0,
+"ctx": "Revenue of $1.01 Billion"
+},
+"fye": "1227",
+"v": 13
+},
+"0001100682-24-000025": {
+"ticker": "CRL",
+"filed": "2024-08-07",
+"cands": [],
+"annual": [],
+"actual": {
+"value": 1.03,
+"unit": 1000000000.0,
+"ctx": "Revenue of $1.03 Billion"
+},
+"fye": "1227",
+"v": 13
+},
+"0001100682-24-000033": {
+"ticker": "CRL",
+"filed": "2024-11-06",
+"cands": [],
+"annual": [],
+"actual": {
+"value": 1.01,
+"unit": 1000000000.0,
+"ctx": "Revenue of $1.01 Billion"
+},
+"fye": "1227",
+"v": 13
+},
+"0001100682-25-000009": {
+"ticker": "CRL",
+"filed": "2025-02-19",
+"cands": [],
+"annual": [],
+"actual": null,
+"fye": "1227",
+"v": 13
+},
+"0001100682-25-000019": {
+"ticker": "CRL",
+"filed": "2025-05-07",
+"cands": [],
+"annual": [],
+"actual": {
+"value": 984.2,
+"unit": 1000000.0,
+"ctx": "Revenue of $984.2 Million"
+},
+"fye": "1227",
+"v": 13
+},
+"0001100682-25-000032": {
+"ticker": "CRL",
+"filed": "2025-08-06",
+"cands": [],
+"annual": [],
+"actual": {
+"value": 1.03,
+"unit": 1000000000.0,
+"ctx": "Revenue of $1.03 Billion"
+},
+"fye": "1227",
+"v": 13
+},
+"0001100682-25-000041": {
+"ticker": "CRL",
+"filed": "2025-11-05",
+"cands": [],
+"annual": [],
+"actual": {
+"value": 1.0,
+"unit": 1000000000.0,
+"ctx": "Revenue of $1.00 Billion"
+},
+"fye": "1227",
+"v": 13
+},
+"0001628280-26-001905": {
+"ticker": "CRL",
+"filed": "2026-01-13",
+"cands": [
+{
+"low": 0.25,
+"high": 0.25,
+"unit_low": null,
+"unit_high": null,
+"ctx": "revenue going forward; however, the transaction is expected to be accretive to non-GAAP earnings per share by approximately $0.25 "
+}
+],
+"annual": [
+{
+"low": 15.0,
+"high": 20.0,
+"unit_low": 1000000.0,
+"unit_high": 1000000.0,
+"ctx": "revenue of approximately $15 to $20 million"
+}
+],
+"actual": null,
+"fye": "1227",
+"v": 13
+},
+"0001100682-26-000020": {
+"ticker": "CRL",
+"filed": "2026-02-18",
+"cands": [],
+"annual": [],
+"actual": null,
+"fye": "1227",
+"v": 13
+},
+"0001100682-26-000036": {
+"ticker": "CRL",
+"filed": "2026-05-07",
+"cands": [],
+"annual": [],
+"actual": {
+"value": 995.8,
+"unit": 1000000.0,
+"ctx": "Revenue of $995.8 Million"
+},
+"fye": "1227",
+"v": 13
+},
+"0001100682-26-000115": {
+"ticker": "CRL",
+"filed": "2026-08-05",
+"cands": [],
+"annual": [],
+"actual": {
+"value": 1.0,
+"unit": 1000000000.0,
+"ctx": "revenue of $1.00 billion"
+},
+"fye": "1227",
+"v": 13
+},
+"0001100682-26-000156": {
+"ticker": "CRL",
+"filed": "2026-11-04",
+"cands": [],
+"annual": [],
+"actual": {
+"value": 982.7,
+"unit": 1000000.0,
+"ctx": "revenue of $982.7 million"
+},
+"fye": "1227",
+"v": 13
+},
 "0001535527-21-000011": {
 "ticker": "CRWD",
 "filed": "2021-06-03",
