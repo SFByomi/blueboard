@@ -719,6 +719,22 @@
    "grp": "메모리",
    "sites": "[{\"name\": \"코랏·테파락\", \"country\": \"태국\", \"what\": \"드라이브·헤드 조립\"}, {\"name\": \"우시\", \"country\": \"중국\", \"what\": \"드라이브 조립\"}, {\"name\": \"우드랜즈\", \"country\": \"싱가포르\", \"what\": \"미디어(디스크)\"}, {\"name\": \"스프링타운·노먼데일\", \"country\": \"영국 북아일랜드·미국 미네소타\", \"what\": \"헤드 웨이퍼\"}]",
    "thesis_en": "One of two HDD makers; nearline data-center drives dominate revenue. Drives are assembled in Thailand and China. US imports of Thai hard drives track shipments (grade A long-run, weaker recently as price and capacity per drive drive revenue); import value per drive is a proxy for HDD pricing."
+  },
+  {
+   "ticker": "CRL",
+   "name": "Charles River Laboratories",
+   "name_ko": "찰스리버",
+   "market": "NYSE",
+   "sector": "비임상 CRO(동물실험)",
+   "thesis": "세계 최대 비임상 CRO — 신약을 사람에게 투여하기 전의 동물 독성시험(DSA 부문)이 매출의 약 60%. 병목은 실험용 원숭이(NHP): 중국이 2020년 수출을 멈추고, 2022년 11월 캄보디아산 밀수 기소로 2023년부터 캄보디아산이 끊겨 미국 수입이 연 3만 마리 → 1.7만 마리로 줄고 마리당 신고 단가는 2.6천 → 8천 달러대로 올랐음. 미국 전체 원숭이 수입 금액은 찰스리버 매출을 2분기 앞서는 모습(전년비 상관 0.75, 표본 17분기) — 수입 → 검역 → 시험 착수 순서와 맞지만 표본이 짧아 참고용. 2026년 9월까지 단가는 8천 달러대에서 횡보, 물량도 2025년 수준이라 새 부족 신호는 아직 세관 숫자에 없음. 모니터링: DSA 수주잔고·수주/매출 비율, 마리당 수입 단가, 캄보디아산 재개 규모, FDA 동물실험 대체 정책.",
+   "sec_ticker": "CRL",
+   "fy_note": "FY 12월 마지막 토요일 종료",
+   "sort": 325,
+   "dart_fs": null,
+   "dart_segment": null,
+   "grp": "바이오",
+   "sites": "[{\"name\": \"윌밍턴\", \"country\": \"미국 매사추세츠\", \"what\": \"본사\"}, {\"name\": \"리노·매터완·애슐랜드\", \"country\": \"미국 네바다·미시간·오하이오\", \"what\": \"안전성 평가(독성시험) 시설\"}, {\"name\": \"휴스턴\", \"country\": \"미국 텍사스\", \"what\": \"수입 원숭이 검역·사육\"}, {\"name\": \"Noveprim\", \"country\": \"모리셔스\", \"what\": \"실험용 원숭이 사육·수출 (2023년 지분 확대)\"}]",
+   "thesis_en": "World's largest preclinical CRO; animal safety testing (DSA) is about 60% of revenue. The bottleneck is research monkeys (NHP): US imports fell from ~30k to ~17k a year after Cambodian supply stopped in 2023 while the declared unit value rose from ~$2.6k to ~$8k. Total US primate imports lead revenue by about two quarters (YoY corr 0.75, 17 quarters) — reference only."
   }
  ],
  "series": [
@@ -2005,6 +2021,54 @@
    "partner": "전세계",
    "spec": "{\"dataset\": \"imports/hs\", \"hs\": \"8471704065\", \"filters\": {\"CTY_CODE\": \"-\"}}",
    "label_en": "US hard disk drive imports (all origins)"
+  },
+  {
+   "id": "us_imp_all_nhp",
+   "label": "실험용 원숭이 수입 (전체)",
+   "source": "census",
+   "reporter": "🇺🇸 미국",
+   "flow": "수입",
+   "region": "전국",
+   "hs": "0106.11.0000",
+   "partner": "전세계",
+   "spec": "{\"dataset\": \"imports/hs\", \"hs\": \"0106110000\", \"filters\": {\"CTY_CODE\": \"-\"}}",
+   "label_en": "US live primate imports (all origins)"
+  },
+  {
+   "id": "us_imp_kh_nhp",
+   "label": "캄보디아산 원숭이 수입",
+   "source": "census",
+   "reporter": "🇺🇸 미국",
+   "flow": "수입",
+   "region": "전국",
+   "hs": "0106.11.0000",
+   "partner": "캄보디아",
+   "spec": "{\"dataset\": \"imports/hs\", \"hs\": \"0106110000\", \"filters\": {\"CTY_CODE\": \"5550\"}}",
+   "label_en": "US live primate imports from Cambodia"
+  },
+  {
+   "id": "us_imp_mu_nhp",
+   "label": "모리셔스산 원숭이 수입",
+   "source": "census",
+   "reporter": "🇺🇸 미국",
+   "flow": "수입",
+   "region": "전국",
+   "hs": "0106.11.0000",
+   "partner": "모리셔스",
+   "spec": "{\"dataset\": \"imports/hs\", \"hs\": \"0106110000\", \"filters\": {\"CTY_CODE\": \"7850\"}}",
+   "label_en": "US live primate imports from Mauritius"
+  },
+  {
+   "id": "us_imp_vn_nhp",
+   "label": "베트남산 원숭이 수입",
+   "source": "census",
+   "reporter": "🇺🇸 미국",
+   "flow": "수입",
+   "region": "전국",
+   "hs": "0106.11.0000",
+   "partner": "베트남",
+   "spec": "{\"dataset\": \"imports/hs\", \"hs\": \"0106110000\", \"filters\": {\"CTY_CODE\": \"5520\"}}",
+   "label_en": "US live primate imports from Vietnam"
   }
  ],
  "mappings": [
@@ -3517,6 +3581,16 @@
    "caveat": "업계 전체 수요. 최근 8분기 −0.13.",
    "include_in_total": 0,
    "sort": 20
+  },
+  {
+   "ticker": "CRL",
+   "series_id": "us_imp_all_nhp",
+   "role": "생산투입",
+   "confidence": "중간",
+   "rationale": "독성시험에 쓰는 실험용 원숭이(살아 있는 영장류, HS 0106.11)의 미국 전체 수입 — 찰스리버가 최대 수입·사용 업체. 매출 전년비와 같은 분기 상관 0.14, 무역이 2분기 앞설 때 0.75(표본 17분기): 수입 → 검역(약 한 달) → 시험 착수·매출 인식 순서와 맞음.",
+   "caveat": "업계 전체 수입(다른 CRO·연구기관 포함)이고 전세기 단위로 들어와 달마다 크게 출렁임. 회사 전체 매출에는 원숭이와 무관한 사업(실험동물 판매·제조 지원)도 섞여 있음. 표본이 짧아 우연일 수 있음 — 합산 제외.",
+   "include_in_total": 0,
+   "sort": 10
   }
  ],
  "hs_tags": [
@@ -3804,6 +3878,11 @@
    "hs_prefix": "847170",
    "ticker": "STX",
    "note": "저장장치(HDD)"
+  },
+  {
+   "hs_prefix": "010611",
+   "ticker": "CRL",
+   "note": "실험용 원숭이(영장류)"
   }
  ]
 }
